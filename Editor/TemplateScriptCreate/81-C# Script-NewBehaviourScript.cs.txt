@@ -1,0 +1,21 @@
+/** 
+ *Copyright(C) 2020 by #COMPANY# 
+ *All rights reserved. 
+ *Author:       #AUTHOR# 
+ *UnityVersion：#UNITYVERSION# 
+ *创建时间:         #DATE# 
+*/  
+using UnityEngine;  
+using System.Collections;  
+  
+public class #SCRIPTNAME# : MonoBehaviour 
+{  
+	#region 变量
+	#endregion
+	
+	#region 生命周期
+	#endregion
+	
+	#region 方法
+	#endregion
+} 

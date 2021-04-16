@@ -1,0 +1,1 @@
+//16:9   if (((float)Screen.height / (float)Screen.width) < 1.775f/*(16.0f / 9.0f)*/) =====适配屏幕的分割线

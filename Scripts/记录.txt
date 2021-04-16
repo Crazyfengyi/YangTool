@@ -1,0 +1,220 @@
+
+
+
+ EditorUtility.DisplayDialog("提示", "打包AssetBundle完毕", "确定");
+
+
+
+
+
+
+
+ ==============================================================================参考
+ /** 
+ *Copyright(C) 2020 by Yang 
+ *All rights reserved. 
+ *脚本功能:     #FUNCTION# 
+ *Author:       陈春洋 
+ *UnityVersion：2019.4.17f1c1 
+ *创建时间:         2021-02-18 
+*/
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+/// <summary>
+/// Log信息
+/// </summary>
+public struct LogInfo
+{
+    /// <summary>
+    /// Log`类型
+    /// </summary>
+    public LogType type;
+    /// <summary>
+    /// Log字符串信息
+    /// </summary>
+    public string des;
+
+    public LogInfo(LogType type, string des)
+    {
+        this.type = type;
+        this.des = des;
+    }
+}
+
+public class YangToolDebugLog : MonoBehaviour
+{
+    #region 变量
+    /// <summary>
+    /// 是否开启Debug
+    /// </summary>
+    public static bool IsOpenDebug = true;
+    /// <summary>
+    /// 是否显示错误窗口
+    /// </summary>
+    private bool m_IsVisible = true;
+    /// <summary>
+    /// 所有错误列表
+    /// </summary>
+    public List<LogInfo> m_logAllLog = new List<LogInfo>();
+    /// <summary>
+    /// 普通Log列表
+    /// </summary>
+    public List<LogInfo> m_logLog = new List<LogInfo>();
+    /// <summary>
+    /// 警告列表
+    /// </summary>
+    public List<LogInfo> m_logWarning = new List<LogInfo>();
+    /// <summary>
+    /// 错误列表
+    /// </summary>
+    public List<LogInfo> m_logError = new List<LogInfo>();
+    /// <summary>
+    /// 当前屏幕显示列表
+    /// </summary>
+    public List<LogInfo> curShowLog = new List<LogInfo>();
+
+    //窗口显示区域
+    private Rect m_WindowRect = /*new Rect(0, 0, Screen.width, Screen.height);*/new Rect(0, 0, 720, 1280);
+    //窗口滚动区域
+    private Vector2 m_scrollPositionText = Vector2.zero;
+    //字体大小
+    private int fontSize = 16;
+    private GUISkin skin;
+    #endregion
+
+    #region 生命周期
+    private void Start()
+    {
+        skin = Resources.Load<GUISkin>("GUISkin");
+        curShowLog = m_logAllLog;
+
+        //向UnityLog信息接口添加添加回调 condition:环境 stackTrace:堆栈踪迹 type:类型
+        Application.logMessageReceivedThreaded += (condition, stackTrace, type) =>
+        {
+            if (!m_IsVisible)
+            {
+                m_IsVisible = true;
+            }
+
+            switch (type)
+            {
+                case LogType.Log:
+                    m_logLog.Add(new LogInfo(type, string.Format("{0}\n{1}", condition, stackTrace)));
+                    break;
+                case LogType.Warning:
+                    m_logWarning.Add(new LogInfo(type, string.Format("{0}\n{1}", condition, stackTrace)));
+                    break;
+                case LogType.Error:
+                case LogType.Exception://异常
+                    m_logError.Add(new LogInfo(type, string.Format("{0}\n{1}", condition, stackTrace)));
+                    break;
+            }
+            m_logAllLog.Add(new LogInfo(type, string.Format("{0}\n{1}", condition, stackTrace)));
+        };
+    }
+
+    public void Update()
+    {
+        //测试用
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            IsOpenDebug = !IsOpenDebug;
+            Debug.LogError("sssss");
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!IsOpenDebug) return;
+
+        if (m_IsVisible)
+        {
+            m_WindowRect = GUILayout.Window(0, m_WindowRect, ConsoleWindow, "输出框");
+        }
+    }
+    #endregion
+
+    #region 方法
+    //日志窗口
+    void ConsoleWindow(int windowID)
+    {
+        #region 按钮显示
+        GUILayout.BeginHorizontal();
+        skin.button.fontSize = fontSize;
+        skin.textArea.fontSize = fontSize;
+        //清除按钮
+        if (GUILayout.Button("清除所有Log", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            m_logAllLog.Clear();
+        }
+        if (GUILayout.Button("关闭显示", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            m_IsVisible = false;
+        }
+        if (GUILayout.Button("增加字体大小", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            fontSize++;
+            fontSize = Mathf.Clamp(fontSize, 1, int.MaxValue);
+        }
+        if (GUILayout.Button("减少字体大小", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            fontSize--;
+            fontSize = Mathf.Clamp(fontSize, 1, int.MaxValue);
+        }
+        if (GUILayout.Button("只看Log", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            if (curShowLog == m_logLog)
+                curShowLog = m_logAllLog;
+            else
+                curShowLog = m_logLog;
+        }
+        if (GUILayout.Button("只看Warning", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            if (curShowLog == m_logWarning)
+                curShowLog = m_logAllLog;
+            else
+                curShowLog = m_logWarning;
+        }
+        if (GUILayout.Button("只看Error", skin.button, GUILayout.MaxWidth(m_WindowRect.width / 7), GUILayout.MaxHeight(60)))
+        {
+            if (curShowLog == m_logError)
+                curShowLog = m_logAllLog;
+            else
+                curShowLog = m_logError;
+        }
+        GUILayout.EndHorizontal();
+        #endregion
+
+        #region Log显示
+        m_scrollPositionText = GUILayout.BeginScrollView(m_scrollPositionText, skin.horizontalScrollbar, skin.verticalScrollbar);
+        Color currentColor = GUI.contentColor;
+        foreach (LogInfo item in curShowLog)
+        {
+            switch (item.type)
+            {
+                case LogType.Log:
+                    GUI.contentColor = Color.green;
+                    break;
+                case LogType.Warning:
+                    GUI.contentColor = Color.yellow;
+                    break;
+                case LogType.Assert:
+                    GUI.contentColor = Color.black;
+                    break;
+                case LogType.Error:
+                case LogType.Exception:
+                    GUI.contentColor = Color.red;
+                    break;
+            }
+            GUILayout.Label(item.des, skin.textArea);
+        }
+        GUI.contentColor = currentColor;
+        GUILayout.EndScrollView();
+        #endregion
+    }
+    #endregion
+}
+
+———— THE END ————

@@ -22,11 +22,17 @@ public class AutohookPropertyDrawer : PropertyDrawer
             return;
         }
 
-        //不是RectTransform
-        if (!(property.serializedObject.targetObject is RectTransform))
+        if (property.serializedObject.targetObject is Component)
         {
-            Debug.LogError("请挂载在RectTransform下(只能在UI下用特性--Autohook)");
-            return;
+            // 然后使用GetComponent(type)查看我们的对象上是否有RectTransform
+            Component component = (Component)property.serializedObject.targetObject;
+            RectTransform rctTransform = component.GetComponent<RectTransform>();
+            if (rctTransform == null)
+            {
+                Debug.LogError("请挂载在RectTransform下(只能在UI下用特性--Autohook)");
+                EditorGUI.PropertyField(position, property, label);
+                return;
+            }
         }
 
         AutohookAttribute autohookAttribute = (AutohookAttribute)attribute;
@@ -125,32 +131,8 @@ public class AutohookPropertyDrawer : PropertyDrawer
                 }
                 else
                 {
-                    #region 获得路径
-                    string resultPath = "";
-
-                    Transform tempNode = item.gameObject.transform;
-                    string nodePath = "/" + tempNode.name;
-
-                    //遍历到顶，求得路径
-                    while (tempNode != Selection.activeGameObject.transform)
-                    {
-                        //取得上级
-                        tempNode = tempNode.parent;
-                        //求出/在哪
-                        int index = nodePath.IndexOf('/');
-                        //把得到的路径插入
-                        nodePath = nodePath.Insert(index, "/" + tempNode.name);
-                    }
-
-                    //去掉开头斜杠
-                    if (nodePath.StartsWith("/"))
-                    {
-                        nodePath = nodePath.Remove(0, 1);
-                    }
-
-                    //最终路径
-                    resultPath = nodePath;
-                    #endregion
+                    //获得路径
+                    string resultPath = CommonEditorTool.GetPath(item.gameObject);
 
                     if (resultPath == autohookAttribute.relativePath)
                     {

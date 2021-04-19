@@ -43,4 +43,61 @@ public static class CommonEditorTool
 
         return display;
     }
+
+    /// <summary>
+    /// 获得相对路径--会去掉名字开头#
+    /// </summary>
+    public static string GetPath(GameObject gameObject)
+    {
+        string resultPath = "";
+
+        Transform tempNode = gameObject.transform;
+        //去掉开头#
+        var tempName = tempNode.name.StartsWith("#") ? tempNode.name.Substring(1, tempNode.name.Length - 1) : tempNode.name;
+        string nodePath = "/" + tempName;
+
+        //遍历到顶，求得路径
+        while (tempNode != Selection.activeGameObject.transform)
+        {
+            //取得上级
+            tempNode = tempNode.parent;
+            //求出/在哪
+            int index = nodePath.IndexOf('/');
+            //去掉开头#
+            var tempName2 = RemoveMark(tempNode.name);
+
+            //把得到的路径插入
+            nodePath = nodePath.Insert(index, "/" + tempName2);
+        }
+
+        //去掉开头斜杠
+        if (nodePath.StartsWith("/"))
+        {
+            nodePath = nodePath.Remove(0, 1);
+        }
+
+        //最终路径
+        resultPath = nodePath;
+
+        return resultPath;
+    }
+
+    /// <summary>
+    /// 去掉开头#
+    /// </summary>
+    /// <returns>如果有的话去掉，没有就返回原来</returns>
+    public static string RemoveMark(string str)
+    {
+        return str.StartsWith("#") ? str.Substring(1, str.Length - 1) : str;
+    }
+
+    /// <summary>
+    /// 首字母小写
+    /// </summary>
+    public static string Lowercase(string str)
+    {
+        str = str.Replace(str[0], str[0].ToString().ToLower().ToCharArray()[0]);
+
+        return str;
+    }
 }

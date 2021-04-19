@@ -120,7 +120,7 @@ public class AniEditor : Editor
             clip.SampleAnimation(animator.gameObject, timer);
         }
 
-        _Foldout = Foldout(_Foldout, "测试折叠栏");
+        _Foldout = CommonEditorTool.Foldout(_Foldout, "测试折叠栏");
         if (_Foldout)
         {
 
@@ -146,33 +146,5 @@ public class AniEditor : Editor
         }
     }
 
-    /// <summary>
-    /// 收折菜单
-    /// </summary>
-    static bool Foldout(bool display, string title)
-    {
-        GUIStyle style = new GUIStyle("ShurikenModuleTitle");
-        style.font = new GUIStyle(EditorStyles.boldLabel).font;
-        style.border = new RectOffset(15, 7, 4, 4);
-        style.fixedHeight = 23;
-        style.contentOffset = new Vector2(20f, -3f);
 
-        Rect rect = GUILayoutUtility.GetRect(16f, 22f, style);
-        GUI.Box(rect, title, style);
-
-        Event e = Event.current;
-        Rect toggleRect = new Rect(rect.x + 4f, rect.y + 2f, 13f, 13f);
-        if (e.type == EventType.Repaint)
-        {
-            EditorStyles.foldout.Draw(toggleRect, false, false, display, false);
-        }
-
-        if (e.type == EventType.MouseDown && rect.Contains(e.mousePosition))
-        {
-            display = !display;
-            e.Use();
-        }
-
-        return display;
-    }
 }

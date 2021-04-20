@@ -360,6 +360,12 @@ public class #类名# : MonoBehaviour
     public void SetHierarchyNameAdd()
     {
         GameObject gameObject = Selection.activeGameObject;
+        if (gameObject == null)
+        {
+            YangToolDebuger.Debuger.ToError("未选中物体");
+            return;
+        }
+
         RectTransform[] allRect = gameObject.GetComponentsInChildren<RectTransform>();
 
         //去掉所有开头#
@@ -384,11 +390,17 @@ public class #类名# : MonoBehaviour
         //TODO 有缺点--多个脚本使用自动生成时，#开头以最后一次生成为准
     }
 
-    [MenuItem("YangTools/移除选中物体下所有的#开头")]
+    [MenuItem("YangTools/辅助功能/移除选中物体下所有的#开头")]
     public static void RemoveAllMark()
     {
         GameObject gameObject = Selection.activeGameObject;
-        RectTransform[] allRect = gameObject.GetComponentsInChildren<RectTransform>();
+        if (gameObject == null)
+        {
+            YangToolDebuger.Debuger.ToError("未选中物体");
+            return;
+        }
+
+        RectTransform[] allRect = gameObject.GetComponentsInChildren<RectTransform>(true);
 
         //去掉所有开头#
         for (int i = 0; i < allRect.Length; i++)

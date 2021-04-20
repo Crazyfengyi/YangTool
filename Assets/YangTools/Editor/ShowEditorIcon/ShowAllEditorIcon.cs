@@ -18,7 +18,7 @@ namespace YangTools
     {
         static string[] text;
 
-        [MenuItem("YangTools/显示Unity编辑器资源")]
+        [MenuItem("YangTools/辅助功能/显示Unity编辑器资源")]
         public static void ShowWindow()
         {
             EditorWindow.GetWindow(typeof(ShowAllEditorIcon));

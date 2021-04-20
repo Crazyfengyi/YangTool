@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace YangTools
 
         #region 复制文件|移除脚本
 
-        [MenuItem("YangTools/CopyToFolder")]
+        [MenuItem("YangTools/辅助功能/CopyToFolder")]
         public static void CopyToTargetFolder()
         {
             //读id文件
@@ -88,7 +89,7 @@ namespace YangTools
             Debug.LogError("Copy完成");
         }
 
-        [MenuItem("YangTools/RemoveScript")]
+        [MenuItem("YangTools/辅助功能/RemoveScript")]
         public static void RemoveScript()
         {
             //读id文件
@@ -162,7 +163,7 @@ namespace YangTools
 
         #endregion
 
-        [MenuItem("YangTools/TestScript")]
+        [MenuItem("YangTools/TestScript", priority = 100000)]
         public static void TestScrpit()
         {
 
@@ -242,7 +243,7 @@ namespace YangTools
         }
 
 
-        [MenuItem("YangTools/自动切割动画")]
+        [MenuItem("YangTools/辅助功能/自动切割动画")]
         /// <summary>
         /// 自动切割动画
         /// </summary>
@@ -251,7 +252,7 @@ namespace YangTools
             SplitAni.OpenWindow();
         }
 
-        [MenuItem("YangTools/移除选中物体丢失的脚本")]
+        [MenuItem("YangTools/辅助功能/移除选中物体丢失的脚本")]
         public static void RemoveMissScript()
         {
             GameObject[] objs = Selection.gameObjects;
@@ -265,13 +266,13 @@ namespace YangTools
 
             AssetDatabase.Refresh();
 
-            Debug.LogError("移除动画事件成功!");
+            Debug.LogError("移除丢失脚本成功!");
         }
         /// <summary>
         /// 删除所有动画事件
         /// </summary>
         /// <param name="modelPath"></param>
-        [MenuItem("YangTools/移除选中物体所有动画事件")]
+        [MenuItem("YangTools/辅助功能/移除选中物体所有动画事件")]
         public static void RemoveAllAnimationEvent()
         {
             UnityEngine.Object obj = Selection.activeObject;
@@ -301,7 +302,6 @@ namespace YangTools
             Debug.LogError("移除动画事件成功!");
         }
 
-
     }
 
     #region 扩展编辑器窗口类
@@ -317,9 +317,9 @@ namespace YangTools
 
         private static GameObject model;
         //动画文件
-        private static UnityEngine.Object aniObj;
+        public static UnityEngine.Object aniObj;
         //切割表
-        private static UnityEngine.Object frameObj;
+        public static UnityEngine.Object frameObj;
         //打开界面
         public static void OpenWindow()
         {
@@ -330,13 +330,14 @@ namespace YangTools
         {
             GUILayout.BeginVertical();
             aniObj = EditorGUILayout.ObjectField("动画文件", aniObj, typeof(UnityEngine.Object), false);
-            frameObj = EditorGUILayout.ObjectField("切割表", frameObj, typeof(UnityEngine.TextAsset), false);
+            frameObj = EditorGUILayout.ObjectField("切分表", frameObj, typeof(UnityEngine.TextAsset), false);
 
-            if (GUILayout.Button("开始生成"))
+            if (GUILayout.Button("开始切分动画"))
             {
                 if (aniObj != null && frameObj != null)
                 {
                     SplitClips(AssetDatabase.GetAssetPath(aniObj), LoadFrameTable(Application.dataPath + AssetDatabase.GetAssetPath(frameObj).Substring(6)));
+                    base.Close();
                 }
                 else
                 {
@@ -475,9 +476,10 @@ namespace YangTools
             }
             else
             {
-                TipsShowWindow.OpenWindow("动画切分结果", "<color=#00F5FF>完美运行</color>");
+                TipsShowWindow.OpenWindow("动画切分结果", "<color=#00F5FF>切分完成,完美运行</color>");
             }
         }
+
     }
 
     /// <summary>
@@ -486,6 +488,7 @@ namespace YangTools
     public class TipsShowWindow : EditorWindow
     {
         private Vector2 scroll;
+        ///搜索文字
         private static string search;
         //提示文字
         private static string ShowTips;
@@ -499,6 +502,7 @@ namespace YangTools
         /// <param name="tips">提示</param>
         public static void OpenWindow(string title, string tips)
         {
+            search = "";
             ShowTips = tips;
             ShowStr = EditorAutoTools.consleString.GetString();
             GetWindowWithRect<TipsShowWindow>(new Rect(500, 500, 300, 300), true, title, true);
@@ -516,7 +520,11 @@ namespace YangTools
             //EditorGUI.EndChangeCheck();
 
             GUILayout.Space(20);
-            GUILayout.Label(ShowTips);
+
+            var temp = new GUIStyle();
+            temp.richText = true;
+
+            GUILayout.Label(ShowTips, temp);
             GUILayout.Space(20);
 
             scroll = GUILayout.BeginScrollView(scroll);
@@ -642,36 +650,32 @@ namespace YangTools
             foreach (string str in importedAssets)
             {
                 //导入
-                //Debug.Log("importedAsset = " + str);
             }
             foreach (string str in deletedAssets)
             {
                 //删除
-                //Debug.Log("deletedAssets = " + str);
             }
             foreach (string str in movedAssets)
             {
                 //移动结束位置
-                //Debug.Log("movedAssets = " + str);
             }
 
             foreach (string str in movedFromAssetPaths)
             {
                 //移动起始位置
-                //Debug.Log("movedFromAssetPaths = " + str);
             }
         }
 
         //模型导入之前调用
         public void OnPreprocessModel()
         {
-            //Debug.Log("OnPreprocessModel=" + this.assetPath);
+
         }
 
         //模型导入之后调用
         public void OnPostprocessModel(GameObject go)
         {
-            //Debug.Log("OnPostprocessModel=" + go.name);
+
         }
 
         //纹理导入之前调用
@@ -685,7 +689,7 @@ namespace YangTools
             //impor.mipmapEnabled = false;
         }
 
-        // Texture名字正则表达式匹配----事例："宝箱&1204"名字
+        // 正则表达式匹配--示例："宝箱&1204"名字
         private string RegexTextureMaxSize = @"[&]\d{2,4}";
         //纹理导入之后调用
         public void OnPostprocessTexture(Texture2D tex)
@@ -830,7 +834,6 @@ namespace YangTools
         public void OnPostprocessAudio(AudioClip clip)
         {
             AudioImporter audio = assetImporter as AudioImporter;
-
         }
         #endregion
     }

@@ -41,6 +41,9 @@ public static class CommonEditorTool
             e.Use();
         }
 
+        //unity默认内容折叠
+        //display = EditorGUILayout.Foldout(display, title);
+
         return display;
     }
 

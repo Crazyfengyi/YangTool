@@ -6,23 +6,26 @@ using UnityEngine.UI;
 
 namespace YangTools
 {
-    public class changeText : EditorWindow
+    /// <summary>
+    /// 替换字体
+    /// </summary>
+    public class ChangeTextWindow : EditorWindow
     {
-        [MenuItem("YangTools/替换字体")]
-        public static void OpenWindow()
-        {
-            changeText changeText = EditorWindow.GetWindow<changeText>();
-            changeText.Show();
-        }
-
         Font change;
         static Font changeFont;
         Font toChange;
         static Font toChangeFont;
 
+        [MenuItem("YangTools/辅助功能/替换字体")]
+        public static void OpenWindow()
+        {
+            ChangeTextWindow changeText = EditorWindow.GetWindow<ChangeTextWindow>();
+            changeText.Show();
+        }
+
         void OnGUI()
         {
-            EditorGUILayout.HelpBox("将会替换场景中Canvas名称下的所有Text的字体", MessageType.Info);
+            EditorGUILayout.HelpBox("将会替换场景中第一个找到的Canvas下的所有Text的字体", MessageType.Info);
             EditorGUILayout.Space(60);
             change = (Font)EditorGUILayout.ObjectField("目标字体", change, typeof(Font), true, GUILayout.MinWidth(100f));
             changeFont = change;
@@ -35,6 +38,10 @@ namespace YangTools
                 ChangeText();
             }
         }
+
+        /// <summary>
+        /// 切换字体
+        /// </summary>
         public static void ChangeText()
         {
             Transform canvas = GameObject.Find("Canvas").transform;
@@ -43,18 +50,16 @@ namespace YangTools
                 Debug.Log("Sence no canvas");
                 return;
             }
-            Transform[] tArray = canvas.GetComponentsInChildren<Transform>(true);
-            for (int i = 0; i < tArray.Length; i++)
+
+            Text[] textArray = canvas.GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < textArray.Length; i++)
             {
-                Text t = tArray[i].GetComponent<Text>();
-                if (t)
+                Text text = textArray[i];
+                Undo.RecordObject(text, text.gameObject.name);
+                if (text.font == changeFont)
                 {
-                    Undo.RecordObject(t, t.gameObject.name);
-                    if (t.font == changeFont)
-                    {
-                        t.font = toChangeFont;
-                        EditorUtility.SetDirty(t);
-                    }
+                    text.font = toChangeFont;
+                    EditorUtility.SetDirty(text);
                 }
             }
         }

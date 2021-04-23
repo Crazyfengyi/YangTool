@@ -44,6 +44,8 @@ namespace YangTools
         private static void InitDontDestoryObject()
         {
             DontDestoryObject = new GameObject("YangToolsObject");
+            //在层级面板隐藏
+            //DontDestoryObject.hideFlags = HideFlags.HideInHierarchy;
             UnityEngine.Object.DontDestroyOnLoad(DontDestoryObject);
         }
         #endregion

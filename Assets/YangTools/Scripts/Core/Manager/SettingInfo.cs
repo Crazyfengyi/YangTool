@@ -15,7 +15,7 @@ namespace YangTools
     /// </summary>
     public sealed class SettingInfo
     {
-        //public static readonly string mark = "辅助功能";
+        public const string mark = "辅助功能";
 
     }
 }

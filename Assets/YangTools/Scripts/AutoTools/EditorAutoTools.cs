@@ -26,7 +26,7 @@ namespace YangTools
 
         #region 复制文件|移除脚本
 
-        [MenuItem("YangTools/辅助功能/CopyToFolder")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/CopyToFolder")]
         public static void CopyToTargetFolder()
         {
             //读id文件
@@ -89,7 +89,7 @@ namespace YangTools
             Debug.LogError("Copy完成");
         }
 
-        [MenuItem("YangTools/辅助功能/RemoveScript")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/RemoveScript")]
         public static void RemoveScript()
         {
             //读id文件
@@ -243,7 +243,7 @@ namespace YangTools
         }
 
 
-        [MenuItem("YangTools/辅助功能/自动切割动画")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/自动切割动画")]
         /// <summary>
         /// 自动切割动画
         /// </summary>
@@ -252,7 +252,7 @@ namespace YangTools
             SplitAni.OpenWindow();
         }
 
-        [MenuItem("YangTools/辅助功能/移除选中物体丢失的脚本")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/移除选中物体丢失的脚本")]
         public static void RemoveMissScript()
         {
             GameObject[] objs = Selection.gameObjects;
@@ -272,7 +272,7 @@ namespace YangTools
         /// 删除所有动画事件
         /// </summary>
         /// <param name="modelPath"></param>
-        [MenuItem("YangTools/辅助功能/移除选中物体所有动画事件")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/移除选中物体所有动画事件")]
         public static void RemoveAllAnimationEvent()
         {
             UnityEngine.Object obj = Selection.activeObject;

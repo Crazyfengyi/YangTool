@@ -16,7 +16,7 @@ namespace YangTools
         Font toChange;
         static Font toChangeFont;
 
-        [MenuItem("YangTools/辅助功能/替换字体")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/替换字体")]
         public static void OpenWindow()
         {
             ChangeTextWindow changeText = EditorWindow.GetWindow<ChangeTextWindow>();

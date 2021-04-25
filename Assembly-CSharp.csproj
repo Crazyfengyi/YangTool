@@ -245,6 +245,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\FABRIKChain.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\BipedReferences.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\HoldingHands.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\Manager\SettingInfo.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModulePhysics.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Parabola\ParabolaPath.cs" />
     <Compile Include="Assets\YangTools\Scripts\AutoTools\AllScenes.cs" />
@@ -311,7 +312,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\InteractionSystemTestGUI.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\PickUp2Handed.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\Manager\SettingInfo.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\YangTools\Resources\SoundMusic\说明.txt" />

@@ -23,6 +23,7 @@ namespace YangTools
 
     [TypeInfoBox("文字适配")]
     [RequireComponent(typeof(Text))]
+    [AddComponentMenu(SettingInfo.menuMark + "/TextAdaptive", 20)]
     /// <summary>
     /// Text文本自动适配
     /// </summary>
@@ -47,24 +48,24 @@ namespace YangTools
         /// 是否适配
         /// </summary>
         [HideInInspector]
-        public bool mAdaptiveSize = true;
+        public bool m_AdaptiveSize = true;
         /// <summary>
         /// 适配模式：默认纵向适配
         /// </summary>
         [Header("适配模式")]
-        public StartAxisType mStartAxis = StartAxisType.Vertical;
+        public StartAxisType m_StartAxis = StartAxisType.Vertical;
         /// <summary>
         /// 最开始字体大小
         /// </summary>
-        private int mBeginFontSize;
+        private int m_BeginFontSize;
         /// <summary>
         /// 文字框的大小
         /// </summary>
-        private Rect mRectSize;
+        private Rect m_RectSize;
         /// <summary>
         /// 适配的文字
         /// </summary>
-        private Text mText;
+        private Text m_Text;
         /// <summary>
         /// 是否已经完成适配
         /// </summary>
@@ -74,15 +75,15 @@ namespace YangTools
         #region 生命周期
         void Awake()
         {
-            mText = transform.GetComponent<Text>();
-            mText.alignByGeometry = false;
-            mText.resizeTextForBestFit = false;
-            mBeginFontSize = mText.fontSize;
+            m_Text = transform.GetComponent<Text>();
+            m_Text.alignByGeometry = false;
+            m_Text.resizeTextForBestFit = false;
+            m_BeginFontSize = m_Text.fontSize;
         }
 
         void OnEnable()
         {
-            mText.RegisterDirtyVerticesCallback(OnTextChange);
+            m_Text.RegisterDirtyVerticesCallback(OnTextChange);
 
             if (isReuse)
             {
@@ -93,30 +94,30 @@ namespace YangTools
         void LateUpdate()
         {
             //不适配直接return
-            if (!mAdaptiveSize) return;
+            if (!m_AdaptiveSize) return;
             //如果已经适配return
             if (isAdaptiveOver) return;
 
-            mRectSize = transform.GetComponent<RectTransform>().rect;
-            switch (mStartAxis)
+            m_RectSize = transform.GetComponent<RectTransform>().rect;
+            switch (m_StartAxis)
             {
                 case StartAxisType.Horizontal:
                     {
-                        mText.fontSize = mBeginFontSize;
+                        m_Text.fontSize = m_BeginFontSize;
                         int time = whileMax;
-                        while (mText.preferredWidth > mRectSize.width)
+                        while (m_Text.preferredWidth > m_RectSize.width)
                         {
-                            mText.fontSize -= 1;
+                            m_Text.fontSize -= 1;
 
-                            if (mText.fontSize < 1)
+                            if (m_Text.fontSize < 1)
                             {
-                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{mText.text}");
+                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{m_Text.text}");
                                 break;
                             }
                             time--;
                             if (time <= 0)
                             {
-                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{mText.text}");
+                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{m_Text.text}");
                                 break;
                             }
                         }
@@ -124,21 +125,21 @@ namespace YangTools
                     }
                 case StartAxisType.Vertical:
                     {
-                        mText.fontSize = mBeginFontSize;
+                        m_Text.fontSize = m_BeginFontSize;
                         int time = whileMax;
-                        while (mText.preferredHeight > mRectSize.height)
+                        while (m_Text.preferredHeight > m_RectSize.height)
                         {
-                            mText.fontSize -= 1;
+                            m_Text.fontSize -= 1;
 
-                            if (mText.fontSize < 1)
+                            if (m_Text.fontSize < 1)
                             {
-                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{mText.text}");
+                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{m_Text.text}");
                                 break;
                             }
                             time--;
                             if (time <= 0)
                             {
-                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{mText.text}");
+                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{m_Text.text}");
                                 break;
                             }
                         }
@@ -151,7 +152,7 @@ namespace YangTools
 
         private void OnDisable()
         {
-            mText.UnregisterDirtyVerticesCallback(OnTextChange);
+            m_Text.UnregisterDirtyVerticesCallback(OnTextChange);
         }
         #endregion
 
@@ -161,7 +162,7 @@ namespace YangTools
         /// </summary>
         public void OnTextChange()
         {
-            //TODO 中文添加，英文添加会有问题(会不按单词换行)
+            //TODO 中文添加，英文会有问题(会不按单词换行)
             //if (mText.text.Contains(" "))
             //{
             //    mText.text = mText.text.Replace(" ", no_breaking_space);

@@ -16,6 +16,6 @@ namespace YangTools
     public sealed class SettingInfo
     {
         public const string mark = "辅助功能";
-
+        public const string menuMark = "YangTools";
     }
 }

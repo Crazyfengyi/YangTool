@@ -117,6 +117,19 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\_DEMOS\BendGoalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\uGUITools.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\CUIBezierCurveEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\NonDrawingGraphicEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\ReadOnlyDrawer.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\CUIGraphicEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\CUIImageEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\CanvasGroupActivator.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\CUITextEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\TextPicEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\AccordionElementEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\BoxSliderEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\BezierLineRendererEditor.cs" />
+    <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\UIExtensionsMenuOptions.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />
@@ -782,6 +795,24 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>Library\ScriptAssemblies\Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.CacheServer">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.CacheServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>Library\ScriptAssemblies\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

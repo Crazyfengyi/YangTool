@@ -59,7 +59,6 @@ namespace YangTools
             UnityWebRequest webRequest = UnityWebRequest.Get($"{url}");
 
             yield return webRequest.SendWebRequest();
-            //异常处理，很多博文用了error!=null这是错误的
 
             if (webRequest.result == UnityWebRequest.Result.ProtocolError ||
                 webRequest.result == UnityWebRequest.Result.ConnectionError ||

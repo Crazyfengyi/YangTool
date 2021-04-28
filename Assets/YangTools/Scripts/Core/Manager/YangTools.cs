@@ -61,79 +61,93 @@ namespace YangTools
     public class AutoSaveValue<TValue>
     {
         /// <summary>
-        /// 通过储存键来构造
+        /// 键
         /// </summary>
-        public AutoSaveValue(string key)
-        {
-            Key = key;
-        }
+        public string Key { get; }
         /// <summary>
-        /// 通过储存键和默认值来构造（如果有存档，将不使用默认值）
+        /// 值
         /// </summary>
-        public AutoSaveValue(string key, TValue defaultValue)
-        {
-            Key = key;
-            _value = defaultValue;
-        }
-        /// <summary>
-        /// 获得储存键
-        /// </summary>
-        public string Key { get; private set; }
+        private TValue value;
         /// <summary>
         /// 是否自动存档
         /// </summary>
         public bool isAutoSave = true;
-        private TValue _value;
-        private bool _hasInit;
+        /// <summary>
+        /// 是否加载过存档
+        /// </summary>
+        private bool hasLoadArchive;
 
         /// <summary>
-        /// 获得值（该值初始化时会自动从存档读取一次，设置时也会自动存档，除非你将值保存出去之后自己更改，如果这样，你需要调用手动存档Save）
+        /// 初始化构建
+        /// </summary>
+        /// <param name="key"> 存档键</param>
+        public AutoSaveValue(string key)
+        {
+            Key = key;
+        }
+
+        /// <summary>
+        /// 初始化构建
+        /// </summary>
+        /// <param name="key">存档键</param>
+        /// <param name="defaultValue">默认值</param>
+        public AutoSaveValue(string key, TValue defaultValue)
+        {
+            Key = key;
+            value = defaultValue;
+        }
+
+        /// <summary>
+        /// 获得值（首次获取默认会从存档读取一次,"="赋值将自动存档,其它更改需手动Save）
         /// </summary>
         public TValue Value
         {
             get
             {
                 AutoLoad();
-                return _value;
+                return value;
             }
 
             set
             {
-                _value = value;
-                _hasInit = true;
-                if (isAutoSave) Save();
+                this.value = value;
+                hasLoadArchive = true;
+                if (isAutoSave)
+                {
+                    Save();
+                }
             }
         }
 
         /// <summary>
-        /// 手动储存（当你对Value的内部属性进行手动更改后，你需要调用手动储存，否则不会储存）
+        /// 存档
         /// </summary>
         public void Save()
         {
             AutoLoad();
-            if (_value == null)
+            if (value == null)
             {
                 DataCore.RemoveKey(Key);
             }
             else
             {
-                DataCore.SaveValue(Key, _value);
+                DataCore.SaveValue(Key, value);
             }
         }
 
         /// <summary>
-        /// 自动读档（内部方法）
+        /// 自动读档
         /// </summary>
-        public void AutoLoad()
+        private void AutoLoad()
         {
-            if (!_hasInit)
+            if (!hasLoadArchive)
             {
                 TValue tValue;
                 if (DataCore.LoadValue(Key, out tValue))
                 {
-                    _value = tValue;
+                    value = tValue;
                 }
-                _hasInit = true;
+                hasLoadArchive = true;
             }
         }
 

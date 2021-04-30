@@ -8,6 +8,8 @@
 using UnityEngine;
 using System.Collections;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
+using System;
 
 public abstract class BuffBase : ScriptableObject
 {
@@ -22,8 +24,12 @@ public abstract class BuffBase : ScriptableObject
     [LabelText("Buff描述")]
     [MultiLineProperty]
     public string skillDescribe;
-
+    /// <summary>
+    /// 图标
+    /// </summary>
     public Texture2D icon;
+
+    #region 运行时用
     /// <summary>
     /// Buff施加者
     /// </summary>
@@ -37,9 +43,16 @@ public abstract class BuffBase : ScriptableObject
     /// </summary>
     [HideInInspector] public int ability;
     /// <summary>
+    /// buff状态
+    /// </summary>
+    [HideInInspector] public BuffState buffState;
+    /// <summary>
     /// 层数
     /// </summary>
     [HideInInspector] public int buffLayer;
+    #endregion
+
+    #region 表格相关数据
     /// <summary>
     /// 等级
     /// </summary>
@@ -53,6 +66,24 @@ public abstract class BuffBase : ScriptableObject
     [LabelText("持续时间")]
     public int buffDuration;
     /// <summary>
+    /// 检测间隔
+    /// </summary>
+    [BoxGroup("数据")]
+    [LabelText("检测间隔")]
+    public float interval;
+    /// <summary>
+    /// 是否为增益buff
+    /// </summary>
+    [BoxGroup("数据")]
+    [LabelText("是增益buff")]
+    public bool IsBuff = true;
+    /// <summary>
+    /// 特效路径
+    /// </summary>
+    [BoxGroup("数据")]
+    [LabelText("特效路径")]
+    public string effectsPath;
+    /// <summary>
     /// 标签--属性？
     /// </summary>
     [BoxGroup("数据")]
@@ -64,6 +95,12 @@ public abstract class BuffBase : ScriptableObject
     [BoxGroup("数据")]
     [LabelText("免疫标签")]
     public string buffImmuneTag;
+    #endregion
+
+    /// <summary>
+    /// 触发点和事件
+    /// </summary>
+    public Dictionary<BuffLifeTime, List<BuffAction>> eventDic = new Dictionary<BuffLifeTime, List<BuffAction>>();
     #endregion
 
     /// <summary>
@@ -86,15 +123,17 @@ public abstract class BuffBase : ScriptableObject
     /// </summary>
     public virtual void OnBuffStart()
     {
-
+        //遍历eventDic字典下对应点的方法执行
     }
 
     /// <summary>
-    /// 存在相同类型且为相同来源(caster:施加者)
+    /// 存在相同类型
     /// </summary>
-    public virtual void OnBuffRefresh()
+    /// <returns>是否继续添加(手动处理返回false)</returns>
+    public virtual bool OnBuffRefresh(BuffManager manager, BuffBase buff)
     {
 
+        return false;
     }
 
     /// <summary>

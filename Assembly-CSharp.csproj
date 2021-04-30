@@ -483,6 +483,7 @@
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\AttributeBuff.cs" />
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffDataStruct.cs" />
     <Compile Include="Assets\Test.cs" />
+    <Compile Include="Assets\YangTools\Scripts\SkillSystem\CustomBuff.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\YangTools\AddIn\unity-ui-extensions\Shaders\UIAdditive.shader" />

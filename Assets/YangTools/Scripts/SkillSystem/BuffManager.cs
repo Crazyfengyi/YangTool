@@ -52,13 +52,12 @@ public class BuffManager
             if (buff.OnBuffAwake(this, true))
             {
 
-                buff.OnBuffRefresh();
-                //if (buff.caster == )
-                //{
+                if (buff.OnBuffRefresh(this, buff))
+                {
+                    buffDic[buff.buffTypeId].Add(buff);
+                }
 
-
-                //}
-                buffDic[buff.buffTypeId].Add(buff);
+                //TODO:不管怎么处理都调start
                 buff.OnBuffStart();
             }
         }

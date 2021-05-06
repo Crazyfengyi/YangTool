@@ -254,46 +254,6 @@ public class ToleranceJsonData
             return new ToleranceJsonData(jsonData[key]);
         }
     }
-
-    /// <summary>
-    /// 通过序号取数组的值，如果有错，返回有错的信息
-    /// </summary>
-    /// <param name="index">数组序号</param>
-    public ToleranceJsonData this[int index]
-    {
-        get
-        {
-            if (!IsArray || jsonData.Count <= index) return new ToleranceJsonData();
-            return new ToleranceJsonData(jsonData[index]);
-        }
-    }
-
-    /// <summary>
-    /// 作为字典进行遍历
-    /// </summary>
-    /// <param name="onUnitAction">遍历的每个元素需要执行的方法，其中第一个参数是Key，第二个参数是Value，返回true表示需要继续循环，fasle则退出循环</param>
-    public void ForEachInMap(System.Func<string, ToleranceJsonData, bool> onUnitAction)
-    {
-        if (!IsMap) return;
-        foreach (KeyValuePair<string, JsonData> pair in jsonData)
-        {
-            if (!onUnitAction(pair.Key, pair.Value)) break;
-        }
-    }
-
-    /// <summary>
-    /// 作为数组进行遍历
-    /// </summary>
-    /// <param name="onUnitAction">遍历的每个元素需要执行的方法，其中第一个参数是序号，第二个参数是Value，返回true表示需要继续循环，fasle则退出循环</param>
-    public void ForEachInArray(System.Func<int, ToleranceJsonData, bool> onUnitAction)
-    {
-        if (!IsArray) return;
-        int index = 0;
-        foreach (JsonData value in jsonData)
-        {
-            if (!onUnitAction(index++, value)) break;
-        }
-    }
 }
 
 #region 容器序列化处理器

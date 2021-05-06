@@ -1,14 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace YangTools
 {
     public partial class Extends
     {
+        /// <summary>
+        /// 检查字段是否包含某个特性
+        /// </summary>
+        /// <param name="fieldInfo">字段信息</param>
+        public static bool HasAttribute<T>(this FieldInfo fieldInfo) where T : System.Attribute
+        {
+            try
+            {
+                var attrs = fieldInfo.GetCustomAttributes(typeof(T), false).Cast<T>();
+                return attrs.First() != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// 是否为2的N次幂
         /// </summary>
@@ -72,63 +91,22 @@ namespace YangTools
         }
 
         /// <summary>
-        /// 尝试将键和值添加到字典中：如果不存在，才添加；存在，不添加也不抛导常
-        /// </summary>
-        public static Dictionary<TKey, TValue> TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
-        {
-            if (!dict.ContainsKey(key)) dict.Add(key, value);
-            return dict;
-        }
-
-        /// <summary>
-        /// 将键和值添加或替换到字典中：如果不存在，则添加；存在，则替换
-        /// </summary>
-        public static Dictionary<TKey, TValue> AddOrReplace<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
-        {
-            dict[key] = value;
-            return dict;
-        }
-
-        /// <summary>
-        /// 获取与指定的键相关联的值，如果没有则返回输入的默认值
-        /// </summary>
-        public static TValue GetValue<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue defaultValue = default(TValue))
-        {
-            //return dict.ContainsKey(key) ? dict[key] : defaultValue;
-            return dict.TryGetValue(key, out TValue a) ? a : defaultValue;
-        }
-
-        /// <summary>
-        /// 向字典中批量添加键值对 未考虑线程
-        /// </summary>
-        /// <param name="replaceExisted">如果已存在，是否替换</param>
-        public static Dictionary<TKey, TValue> AddRange<TKey, TValue>(this Dictionary<TKey, TValue> dict, IEnumerable<KeyValuePair<TKey, TValue>> values, bool replaceExisted)
-        {
-            foreach (var item in values)
-            {
-                if (!dict.ContainsKey(item.Key) || replaceExisted)
-                    dict[item.Key] = item.Value;
-            }
-            return dict;
-        }
-
-        /// <summary>
         /// 随机返回bool值
         /// </summary>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static bool RandomBool(this Random random)
+        public static bool RandomBool(this System.Random random)
         {
             return random.NextDouble() > 0.5d;
         }
 
         /// <summary>
-        /// 随机返回枚举--不知道手动枚举值是否有效需考验
+        /// 随机返回枚举--不知道手动枚举值是否有效，需验证
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static T RandomEnum<T>(this Random random) where T : struct
+        public static T RandomEnum<T>(this System.Random random) where T : struct
         {
             Type type = typeof(T);
             if (type.IsEnum == false) throw new InvalidOperationException();
@@ -143,7 +121,7 @@ namespace YangTools
         /// </summary>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static Int32 NextInt16(this Random random)
+        public static Int32 NextInt16(this System.Random random)
         {
             return BitConverter.ToInt32(random.NextBytes(4), 0);
         }
@@ -152,7 +130,7 @@ namespace YangTools
         /// </summary>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static float NextFloat(this Random random)
+        public static float NextFloat(this System.Random random)
         {
             return BitConverter.ToSingle(random.NextBytes(4), 0);
         }
@@ -163,7 +141,7 @@ namespace YangTools
         /// <param name="random"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static byte[] NextBytes(this Random random, int length)
+        public static byte[] NextBytes(this System.Random random, int length)
         {
             var data = new byte[length];
             random.NextBytes(data);
@@ -171,55 +149,7 @@ namespace YangTools
         }
 
         /// <summary>
-        /// string是否为空
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static bool IsNullOrEmpty(this string s)
-        {
-            return string.IsNullOrEmpty(s);
-        }
-
-        /// <summary>
-        /// 字符串连接
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static string FormatWith(this string format, params object[] args)
-        {
-            return string.Format(format, args);
-        }
-
-        /// <summary>
-        /// 是否是Int
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static bool IsInt(this string s)
-        {
-            int i;
-            return int.TryParse(s, out i);
-        }
-
-        /// <summary>
-        /// 转Int
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static int ToInt(this string s)
-        {
-            if (int.TryParse(s, out int i))
-            {
-                return i;
-            }
-
-            return int.Parse(s); //让它抛出错误
-            //return int.Parse(s);
-        }
-
-        /// <summary>
-        /// 替换字符串里的html标签
+        /// 去掉字符串的html标签
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -249,43 +179,76 @@ namespace YangTools
             return input;
         }
 
-        //正则表达式===========================
-        public static bool IsMatch(this string s, string pattern)
-        {
-            if (s == null)
-            {
-                return false;
-            }
-            else
-            {
-                return Regex.IsMatch(s, pattern);
-            }
-        }
-
-        public static string Match(this string s, string pattern)
-        {
-            if (s == null) return "";
-            return Regex.Match(s, pattern).Value;
-        }
-
-        public static void Test3()
-        {
-            bool b = "12345".IsMatch(@"\d+");
-            string s = "ldp615".Match("[a-zA-Z]+");
-        }
-        //========================================
-
-
-        //=================需整理==================
+        //=================需整理+验证==================
         //随机时间
-        public static DateTime NextDateTime(this Random random, DateTime minValue, DateTime maxValue)
+        public static DateTime NextDateTime(this System.Random random, DateTime minValue, DateTime maxValue)
         {
             long ticks = minValue.Ticks + (long)((maxValue.Ticks - minValue.Ticks) * random.NextDouble());
             return new DateTime(ticks);
         }
-        public static DateTime NextDateTime(this Random random)
+        public static DateTime NextDateTime(this System.Random random)
         {
             return NextDateTime(random, DateTime.MinValue, DateTime.MaxValue);
         }
+
+        #region 根据权重获取
+
+        /// <summary>
+        /// 从权重信息组里根据权重随机一个
+        /// </summary>
+        /// <typeparam name="T">权重类</typeparam>
+        /// <param name="weightInfos">权重组</param>
+        /// <param name="isRemoveWhenFind">是否在找到时从容器移除(需要容器允许该操作)</param>
+        public static T GetRandomInfo<T>(IEnumerable<T> weightInfos, bool isRemoveWhenFind = false)
+            where T : IWeight<T>
+        {
+            T ret = default;
+
+            int totalWeight = 0;//总权重值
+            foreach (T i in weightInfos)
+            {
+                totalWeight += i.GetWeight();
+            }
+
+            if (totalWeight == 0) return ret;
+            int indexWeight = 0;
+            int randomWeight = UnityEngine.Random.Range(1, totalWeight + 1);
+
+            foreach (T item in weightInfos)
+            {
+                indexWeight += item.GetWeight();
+                if (randomWeight <= indexWeight)
+                {
+                    ret = item;
+                    if (isRemoveWhenFind)
+                    {
+                        ICollection<T> collection = weightInfos as ICollection<T>;
+                        collection?.Remove(item);
+                    }
+                    break;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 权重接口
+        /// </summary>
+        public interface IWeight<T>
+        {
+            /// <summary>
+            /// 获得权重
+            /// </summary>
+            /// <returns>权重值</returns>
+            public int GetWeight();
+            /// <summary>
+            /// 获得类型
+            /// </summary>
+            /// <returns>类型</returns>
+            public T GetItem();
+        }
+
+        #endregion
     }
 }

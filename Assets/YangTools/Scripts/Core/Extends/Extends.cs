@@ -13,7 +13,7 @@ namespace YangTools
     {
         //TODO 读表，时间，通用范型类，多语言，SDKManager,/*事件系统*/，/*定时器*/，广告，支付
 
-        #region 事件监听器扩展
+        #region 事件系统扩展
         /// <summary>
         /// 添加事件监听
         /// </summary>
@@ -56,41 +56,7 @@ namespace YangTools
         }
         #endregion
 
-        #region 小工具扩展
-
-        /// <summary>
-        /// 检查字段是否包含某个特性
-        /// </summary>
-        /// <param name="fieldInfo">字段信息</param>
-        public static bool HasAttribute<T>(this FieldInfo fieldInfo)
-            where T : System.Attribute
-        {
-            try
-            {
-                var attrs = fieldInfo.GetCustomAttributes(typeof(T), false).Cast<T>();
-                return attrs.First() != null;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 从一组权重信息中根据权重获得一个信息
-        /// </summary>
-        /// <typeparam name="T">权重信息类</typeparam>
-        /// <param name="weightInfos">权重信息组</param>
-        /// <param name="deleteFromInfosWhenFind">返回结果后，是否将该结果从组里删除（只有支持删除操作的容器才可以使用该功能）</param>
-        public static T GetRandomInfo<T>(this IEnumerable<T> weightInfos, bool deleteFromInfosWhenFind = false)
-            where T : WeightInfo
-        {
-            return WeightInfo.GetRandomInfo(weightInfos, deleteFromInfosWhenFind);
-        }
-
-        #endregion
     }
 
     //——THE END——
 }
-

@@ -7,9 +7,8 @@ namespace YangTools
     public partial class Extends
     {
         /// <summary>
-        /// 在物体位置播放声音，世界坐标--不要离AudioListener太远
+        /// 在物体世界坐标播放声音
         /// </summary>
-        /// <param name="obj"></param>
         /// <param name="clipName">音效名称</param>
         public static void PlayAtPoint(this GameObject obj, AudioClip clipName)
         {
@@ -20,8 +19,7 @@ namespace YangTools
         /// 获得组件，如果没有就添加一个
         /// </summary>
         /// <typeparam name="T">组件(必须继承自Behaviour)</typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <returns>组件</returns>
         public static T GetComponent_Extend<T>(this GameObject obj) where T : Behaviour
         {
             T scrpitType = obj.transform.GetComponent<T>();
@@ -35,13 +33,12 @@ namespace YangTools
         }
 
         /// <summary>
-        /// 刷新ContentSizeFitter，刷新自己和所有子节点(所有带该组件的都刷新)
+        /// 刷新自己和子节点的ContentSizeFitter(倒序刷新)
         /// </summary>
-        /// <param name="_content"></param>
-        public static void RefreshContent(this GameObject _content)
+        /// <param name="node">目标节点</param>
+        public static void RefreshAllContentSizeFitter(this GameObject node)
         {
-            Transform Node = _content.transform;
-            ContentSizeFitter[] allComponent = Node.GetComponentsInChildren<ContentSizeFitter>(true);
+            ContentSizeFitter[] allComponent = node.transform.GetComponentsInChildren<ContentSizeFitter>(true);
 
             for (int i = allComponent.Length - 1; i >= 0; i--)
             {
@@ -51,12 +48,12 @@ namespace YangTools
         }
 
         /// <summary>
-        /// 刷新ContentSizeFitter，刷新自己和父节点(直至根节点)
+        /// 刷新自身和父节点ContentSizeFitter(直至根节点)
         /// </summary>
-        /// <param name="_content"></param>
-        public static void UpdateContent(this GameObject _content)
+        /// <param name="node">目标节点</param>
+        public static void UpdateContent(this GameObject node)
         {
-            Transform content = _content.transform;
+            Transform content = node.transform;
             while (content != null)
             {
                 if (content.TryGetComponent<ContentSizeFitter>(out ContentSizeFitter fitter))
@@ -67,22 +64,21 @@ namespace YangTools
                 content = content.parent;
             }
         }
-
     }
 
     /// <summary>
-    /// 范围检测
+    /// 范围检测类
     /// </summary>
     public static class RangeCheck
     {
         /// <summary>
-        /// 扇形-范围检测
+        /// 扇形检测
         /// </summary>
         /// <param name="self">原点</param>
         /// <param name="target">检测目标</param>
         /// <param name="maxDistance">最大距离</param>
         /// <param name="maxAngle">检测角度</param>
-        /// <returns></returns>
+        /// <returns>是否在扇形内</returns>
         public static bool CurveRange(Transform self, Transform target, float maxDistance, float maxAngle)
         {
             return CurveRange(self, target, 0, maxDistance, maxAngle);
@@ -114,7 +110,7 @@ namespace YangTools
         /// <param name="self">原点</param>
         /// <param name="target">检测目标</param>
         /// <param name="maxDistance">最大距离</param>
-        /// <returns></returns>
+        /// <returns>是否在圆形内</returns>
         public static bool CircleRange(Transform self, Transform target, float maxDistance)
         {
             return CircleRange(self, target, 0, maxDistance);
@@ -148,6 +144,10 @@ namespace YangTools
         {
             return SquareRange(self, target, maxWidth, 0, maxHeight);
         }
+
+        /// <summary>
+        /// 矩形
+        /// </summary>
         public static bool SquareRange(Transform self, Transform target, float maxWidth, float minHeight, float maxHeight)
         {
             Vector3 enemyDir = (target.position - self.position).normalized;

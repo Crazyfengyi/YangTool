@@ -118,6 +118,7 @@ public abstract class BuffBase : ScriptableObject
     {
         return false;
     }
+
     /// <summary>
     /// buff添加到玩家buff列表后
     /// </summary>

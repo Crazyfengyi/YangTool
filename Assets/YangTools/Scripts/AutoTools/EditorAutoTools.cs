@@ -24,7 +24,7 @@ namespace YangTools
         /// </summary>
         public static ConsleString consleString = new ConsleString();
 
-        #region 复制文件|移除脚本
+        #region 复制文件|移除脚本 
 
         [MenuItem("YangTools/" + SettingInfo.mark + "/CopyToFolder")]
         public static void CopyToTargetFolder()
@@ -268,40 +268,31 @@ namespace YangTools
 
             Debug.LogError("移除丢失脚本成功!");
         }
+
         /// <summary>
         /// 删除所有动画事件
         /// </summary>
         /// <param name="modelPath"></param>
-        [MenuItem("YangTools/" + SettingInfo.mark + "/移除选中物体所有动画事件")]
+        [MenuItem("YangTools/" + SettingInfo.mark + "/移除选中动画文件所有动画事件")]
         public static void RemoveAllAnimationEvent()
         {
             UnityEngine.Object obj = Selection.activeObject;
-            string dire = AssetDatabase.GetAssetPath(obj);
-            DirectoryInfo directory = new DirectoryInfo(Application.dataPath + "/" + dire.Replace("Assets/", ""));
-            DirectoryInfo[] dirs = directory.GetDirectories();
-            for (int i = 0; i < dirs.Length; i++)
+            string modelPath = AssetDatabase.GetAssetPath(obj);
+            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+            ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
+            for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
             {
-                FileInfo[] files = dirs[i].GetFiles("*.fbx");
-                for (int j = 0; j < files.Length; j++)
-                {
-                    string modelPath = files[j].FullName.Substring(files[j].FullName.IndexOf("Assets")).Replace("\\", "/");
-                    ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
-                    ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
-                    for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
-                    {
-                        tempModelClips[k] = modelImporter.clipAnimations[k];
-                        tempModelClips[k].events = new AnimationEvent[0];
-                    }
-                    modelImporter.clipAnimations = tempModelClips;
-                    modelImporter.SaveAndReimport();
-                }
+                tempModelClips[k] = modelImporter.clipAnimations[k];
+                tempModelClips[k].events = new AnimationEvent[0];
             }
+            modelImporter.clipAnimations = tempModelClips;
+            modelImporter.SaveAndReimport();
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             Debug.LogError("移除动画事件成功!");
         }
-
     }
 
     #region 扩展编辑器窗口类

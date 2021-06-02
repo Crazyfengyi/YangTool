@@ -8,6 +8,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System;
 
 /// <summary>
 /// 编辑器通用方法
@@ -45,6 +46,19 @@ public static class CommonEditorTool
         //display = EditorGUILayout.Foldout(display, title);
 
         return display;
+    }
+
+    /// <summary>
+    /// 通用弹窗提示
+    /// </summary>
+    /// <param name="tips"></param>
+    /// <param name="overCallBack"></param>
+    public static void CommonTipsPanel(string tips, Action overCallBack)
+    {
+        if (EditorUtility.DisplayDialog("提示", tips, "OK"))
+        {
+            overCallBack?.Invoke();//TODO 可能没有需要update?
+        }
     }
 
     /// <summary>

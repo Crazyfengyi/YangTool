@@ -8,7 +8,9 @@ using System.Threading;
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace YangTools
 {
@@ -24,7 +26,7 @@ namespace YangTools
         /// </summary>
         public static ConsleString consleString = new ConsleString();
 
-        #region 复制文件|移除脚本 
+        #region 复制文件|移除脚本
 
         [MenuItem("YangTools/" + SettingInfo.mark + "/CopyToFolder")]
         public static void CopyToTargetFolder()
@@ -293,6 +295,19 @@ namespace YangTools
 
             Debug.LogError("移除动画事件成功!");
         }
+
+        [MenuItem("YangTools/" + "/脱离寻路组件数据")]
+        public static void SetNavMeshDateNull()
+        {
+            Transform obj = Selection.activeTransform;
+
+            if (obj.GetComponentInChildren<NavMeshSurface>(true))
+            {
+                NavMeshSurface script = obj.GetComponentInChildren<NavMeshSurface>(true);
+                script.navMeshData = null;
+            }
+        }
+
     }
 
     #region 扩展编辑器窗口类
@@ -450,13 +465,41 @@ namespace YangTools
                 clip.firstFrame = frameInfos[i].firstFrame;
                 clip.lastFrame = frameInfos[i].endFrame;
                 clip.loopTime = frameInfos[i].name.Contains("Loop");
+
+                if (frameInfos[i].name.Contains("Idle") || frameInfos[i].name.Contains("_Move") || frameInfos[i].name.Contains("_b"))
+                {
+                    clip.loopTime = true;
+                }
                 //List<AnimationEvent> evnets = new List<AnimationEvent>();
                 //clip.events = evnets.ToArray();
                 clipList.Add(clip);
             }
-            modelImporter.clipAnimations = clipList.ToArray();
-            modelImporter.SaveAndReimport();
 
+            //已有同名的直接设置原clip
+            for (int i = 0; i < modelImporter.clipAnimations.Length; i++)
+            {
+                for (int j = 0; j < clipList.Count; j++)
+                {
+                    if (modelImporter.clipAnimations[i].name == clipList[j].name)
+                    {
+                        modelImporter.clipAnimations[i].firstFrame = clipList[j].firstFrame;
+                        modelImporter.clipAnimations[i].lastFrame = clipList[j].lastFrame;
+                        modelImporter.clipAnimations[i].loopTime = clipList[j].loopTime;
+                        clipList.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            //将剩下的放进数组
+            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
+            for (int i = 0; i < clipList.Count; i++)
+            {
+                tempList.Add(clipList[i]);
+            }
+            modelImporter.clipAnimations = tempList.ToArray();
+
+            modelImporter.SaveAndReimport();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -685,6 +728,7 @@ namespace YangTools
         //纹理导入之后调用
         public void OnPostprocessTexture(Texture2D tex)
         {
+            return;
             //判断导入资源的路径名中,是否含有sprites文件夹,如果有则该图片自动设置Sprite,并做一些初始化。
             if (assetPath.ToUpper().Contains("/UI/"))
             {

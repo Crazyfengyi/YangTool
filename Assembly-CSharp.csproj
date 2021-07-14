@@ -329,6 +329,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\ScrollRectLinker.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\InspectorComment.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\BodyTilt.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Function\Common\GhostTrail.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\DemoGUIMessage.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorValues.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\ArmIK.cs" />
@@ -484,7 +485,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\PickUp2Handed.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Layout\ScrollSnap.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Function\Common\GhostTrail.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Function\Common\BaiduTranslate.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\YangTools\AddIn\unity-ui-extensions\Shaders\UIAdditive.shader" />

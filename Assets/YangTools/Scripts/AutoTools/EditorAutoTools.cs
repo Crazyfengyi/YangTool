@@ -244,7 +244,6 @@ namespace YangTools
             AssetDatabase.Refresh();
         }
 
-
         [MenuItem("YangTools/" + SettingInfo.mark + "/自动切割动画")]
         /// <summary>
         /// 自动切割动画
@@ -877,7 +876,7 @@ namespace YangTools
     }
     #endregion
 
-    #region 扩展编辑器创建物体(自动设置一些东西)
+    #region 编辑器创建物体(添加自动设置)
     public static partial class EditorAutoTools
     {
         [MenuItem("GameObject/UI/YangImage")]
@@ -918,7 +917,6 @@ namespace YangTools
                 }
             }
         }
-
     }
     #endregion
 

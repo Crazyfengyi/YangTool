@@ -1,0 +1,23 @@
+Axe_Idle_01: 0-40
+Axe_FallDown_01_a:45-61
+Axe_FallDown_01_b:62-82
+Axe_FallDown_01_c:83-140
+Axe_SpecialMove_01_a:150-154
+Axe_SpecialMove_01_b:155-177
+Axe_SpecialMove_01_c:178-197
+Axe_HitFly_01_a:226-249
+Axe_HitFly_01_b:250-274
+Axe_HitFly_01_c:275-343
+Axe_Vertigo:348-398
+Axe_Take_01:413-443
+Axe_TakeBack_01:448-478
+Axe_Atk_01_a:483-502
+Axe_Atk_01_b:522-530
+Axe_Victory_01_a:547-579
+Axe_Victory_01_b:580-640
+Axe_Fail_01_a:645-668
+Axe_Fail_01_b:669-781
+Axe_Hit_01:786-810
+Axe_Die_01:815-872
+Axe_Move_01:877-897
+Axe_Ice_01:900-903

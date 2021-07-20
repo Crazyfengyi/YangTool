@@ -296,17 +296,17 @@ namespace YangTools
             Debug.LogError("移除动画事件成功!");
         }
 
-        [MenuItem("YangTools/" + "/脱离寻路组件数据")]
-        public static void SetNavMeshDateNull()
-        {
-            Transform obj = Selection.activeTransform;
+        //[MenuItem("YangTools/" + "/脱离寻路组件数据")]
+        //public static void SetNavMeshDateNull()
+        //{
+        //    Transform obj = Selection.activeTransform;
 
-            if (obj.GetComponentInChildren<NavMeshSurface>(true))
-            {
-                NavMeshSurface script = obj.GetComponentInChildren<NavMeshSurface>(true);
-                script.navMeshData = null;
-            }
-        }
+        //    if (obj.GetComponentInChildren<NavMeshSurface>(true))
+        //    {
+        //        NavMeshSurface script = obj.GetComponentInChildren<NavMeshSurface>(true);
+        //        script.navMeshData = null;
+        //    }
+        //}
 
     }
 
@@ -475,29 +475,32 @@ namespace YangTools
                 clipList.Add(clip);
             }
 
+            //将剩下的放进数组
+            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
+
             //已有同名的直接设置原clip
-            for (int i = 0; i < modelImporter.clipAnimations.Length; i++)
+            for (int i = 0; i < tempList.Count; i++)
             {
                 for (int j = 0; j < clipList.Count; j++)
                 {
                     if (modelImporter.clipAnimations[i].name == clipList[j].name)
                     {
-                        modelImporter.clipAnimations[i].firstFrame = clipList[j].firstFrame;
-                        modelImporter.clipAnimations[i].lastFrame = clipList[j].lastFrame;
-                        modelImporter.clipAnimations[i].loopTime = clipList[j].loopTime;
+                        tempList[i].firstFrame = clipList[j].firstFrame;
+                        tempList[i].lastFrame = clipList[j].lastFrame;
+                        tempList[i].loopTime = clipList[j].loopTime;
+
                         clipList.RemoveAt(j);
                         break;
                     }
                 }
             }
 
-            //将剩下的放进数组
-            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
             for (int i = 0; i < clipList.Count; i++)
             {
                 tempList.Add(clipList[i]);
             }
             modelImporter.clipAnimations = tempList.ToArray();
+            EditorUtility.SetDirty(modelImporter);
 
             modelImporter.SaveAndReimport();
             AssetDatabase.SaveAssets();

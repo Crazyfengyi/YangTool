@@ -4,18 +4,17 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 using System.Linq;
 
 namespace YangTools
 {
+    #region 工具类--显示在unity面板上
     /// <summary>
-    /// 对外显示工具类
+    /// 工具类
     /// </summary>
     public static partial class EditorAutoTools
     {
@@ -26,7 +25,7 @@ namespace YangTools
         /// </summary>
         public static ConsleString consleString = new ConsleString();
 
-        #region 复制文件|移除脚本
+        #region 复制文件-移除脚本
 
         [MenuItem("YangTools/" + SettingInfo.mark + "/CopyToFolder")]
         public static void CopyToTargetFolder()
@@ -165,6 +164,7 @@ namespace YangTools
 
         #endregion
 
+        #region 测试用相关
         [MenuItem("YangTools/TestScript", priority = 100000)]
         public static void TestScrpit()
         {
@@ -243,16 +243,9 @@ namespace YangTools
 
             AssetDatabase.Refresh();
         }
+        #endregion
 
-        [MenuItem("YangTools/" + SettingInfo.mark + "/自动切割动画")]
-        /// <summary>
-        /// 自动切割动画
-        /// </summary>
-        public static void AutoSplitAni()
-        {
-            SplitAni.OpenWindow();
-        }
-
+        #region 小功能
         [MenuItem("YangTools/" + SettingInfo.mark + "/移除选中物体丢失的脚本")]
         public static void RemoveMissScript()
         {
@@ -307,9 +300,25 @@ namespace YangTools
         //    }
         //}
 
+        #endregion
+
+        #region 大功能
+        [MenuItem("YangTools/" + SettingInfo.mark + "/自动切割动画")]
+        /// <summary>
+        /// 自动切割动画
+        /// </summary>
+        public static void AutoSplitAni()
+        {
+            SplitAni.OpenWindow();
+        }
+        #endregion
     }
 
-    #region 扩展编辑器窗口类
+    #endregion
+
+    #region 窗口类
+
+    #region 切割动画弹窗
     /// <summary>
     /// 切割动画弹窗
     /// </summary>
@@ -319,7 +328,6 @@ namespace YangTools
         {
             public string id;
         }
-
         private static GameObject model;
         //动画文件
         public static UnityEngine.Object aniObj;
@@ -330,7 +338,6 @@ namespace YangTools
         {
             GetWindowWithRect<SplitAni>(new Rect(500, 500, 360, 360), false, "自动切割动画", true);
         }
-
         private void OnGUI()
         {
             GUILayout.BeginVertical();
@@ -352,7 +359,87 @@ namespace YangTools
 
             GUILayout.EndVertical();
         }
+        /// <summary>
+        /// 从模型文件切分动画
+        /// </summary>
+        /// <param name="modelPath"></param>
+        public static void SplitClips(string modelPath, List<(string name, int firstFrame, int endFrame)> frameInfos)
+        {
+            //clip列表
+            List<ModelImporterClipAnimation> clipList = new List<ModelImporterClipAnimation>();
+            //模型信息
+            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
 
+            for (int i = 0; i < frameInfos.Count; i++)
+            {
+                if (frameInfos[i].firstFrame >= frameInfos[i].endFrame)
+                {
+                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首帧比尾帧大");
+                    return;
+                }
+                if (frameInfos[i].firstFrame < 0 || frameInfos[i].endFrame < 0)
+                {
+                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首尾帧有个小于0");
+                    return;
+                }
+
+                //clip
+                ModelImporterClipAnimation clip = new ModelImporterClipAnimation();
+                clip.name = frameInfos[i].name;
+                clip.firstFrame = frameInfos[i].firstFrame;
+                clip.lastFrame = frameInfos[i].endFrame;
+                clip.loopTime = frameInfos[i].name.Contains("Loop");
+
+                if (frameInfos[i].name.Contains("Idle") || frameInfos[i].name.Contains("_Move") || frameInfos[i].name.Contains("_b"))
+                {
+                    clip.loopTime = true;
+                }
+                //List<AnimationEvent> evnets = new List<AnimationEvent>();
+                //clip.events = evnets.ToArray();
+                clipList.Add(clip);
+            }
+
+            //数组
+            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
+
+            //已有同名的直接设置原clip
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                for (int j = 0; j < clipList.Count; j++)
+                {
+                    if (modelImporter.clipAnimations[i].name == clipList[j].name)
+                    {
+                        tempList[i].firstFrame = clipList[j].firstFrame;
+                        tempList[i].lastFrame = clipList[j].lastFrame;
+                        tempList[i].loopTime = clipList[j].loopTime;
+
+                        clipList.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < clipList.Count; i++)
+            {
+                tempList.Add(clipList[i]);
+            }
+            modelImporter.clipAnimations = tempList.ToArray();
+            EditorUtility.SetDirty(modelImporter);
+
+            modelImporter.SaveAndReimport();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            if (EditorAutoTools.consleString.CheackHaveValue())
+            {
+                EditorAutoTools.consleString.OutPutToDeBug();
+                TipsShowWindow.OpenWindow("动画切分结果", "下面是运行结果提示:");
+            }
+            else
+            {
+                TipsShowWindow.OpenWindow("动画切分结果", "<color=#00F5FF>切分完成,完美运行</color>");
+            }
+        }
         /// <summary>
         /// 读取切割文件并规范格式--(名称，首帧，尾帧)
         /// </summary>
@@ -433,91 +520,10 @@ namespace YangTools
 
             return frameInfos;
         }
-
-        /// <summary>
-        /// 从模型文件切分动画
-        /// </summary>
-        /// <param name="modelPath"></param>
-        public static void SplitClips(string modelPath, List<(string name, int firstFrame, int endFrame)> frameInfos)
-        {
-            //clip列表
-            List<ModelImporterClipAnimation> clipList = new List<ModelImporterClipAnimation>();
-            //模型信息
-            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
-
-            for (int i = 0; i < frameInfos.Count; i++)
-            {
-                if (frameInfos[i].firstFrame >= frameInfos[i].endFrame)
-                {
-                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首帧比尾帧大");
-                    return;
-                }
-                if (frameInfos[i].firstFrame < 0 || frameInfos[i].endFrame < 0)
-                {
-                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首尾帧有个小于0");
-                    return;
-                }
-
-                //clip
-                ModelImporterClipAnimation clip = new ModelImporterClipAnimation();
-                clip.name = frameInfos[i].name;
-                clip.firstFrame = frameInfos[i].firstFrame;
-                clip.lastFrame = frameInfos[i].endFrame;
-                clip.loopTime = frameInfos[i].name.Contains("Loop");
-
-                if (frameInfos[i].name.Contains("Idle") || frameInfos[i].name.Contains("_Move") || frameInfos[i].name.Contains("_b"))
-                {
-                    clip.loopTime = true;
-                }
-                //List<AnimationEvent> evnets = new List<AnimationEvent>();
-                //clip.events = evnets.ToArray();
-                clipList.Add(clip);
-            }
-
-            //将剩下的放进数组
-            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
-
-            //已有同名的直接设置原clip
-            for (int i = 0; i < tempList.Count; i++)
-            {
-                for (int j = 0; j < clipList.Count; j++)
-                {
-                    if (modelImporter.clipAnimations[i].name == clipList[j].name)
-                    {
-                        tempList[i].firstFrame = clipList[j].firstFrame;
-                        tempList[i].lastFrame = clipList[j].lastFrame;
-                        tempList[i].loopTime = clipList[j].loopTime;
-
-                        clipList.RemoveAt(j);
-                        break;
-                    }
-                }
-            }
-
-            for (int i = 0; i < clipList.Count; i++)
-            {
-                tempList.Add(clipList[i]);
-            }
-            modelImporter.clipAnimations = tempList.ToArray();
-            EditorUtility.SetDirty(modelImporter);
-
-            modelImporter.SaveAndReimport();
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            if (EditorAutoTools.consleString.CheackHaveValue())
-            {
-                EditorAutoTools.consleString.OutPutToDeBug();
-                TipsShowWindow.OpenWindow("动画切分结果", "下面是运行结果提示:");
-            }
-            else
-            {
-                TipsShowWindow.OpenWindow("动画切分结果", "<color=#00F5FF>切分完成,完美运行</color>");
-            }
-        }
-
     }
+    #endregion
 
+    #region 提示弹窗
     /// <summary>
     /// 提示弹窗
     /// </summary>
@@ -588,7 +594,11 @@ namespace YangTools
     }
     #endregion
 
+    #endregion
+
     #region 辅助类
+
+    #region 字符串记录
     /// <summary>
     /// 面板输出字符串记录
     /// </summary>
@@ -640,13 +650,14 @@ namespace YangTools
     }
     #endregion
 
+    #endregion
+
     #region 资源管理器监听
     /// <summary>
-    /// 资源管理器
+    /// 资源流程管理
     /// </summary>
     public class AssetChangeListener : AssetPostprocessor
     {
-
         #region 预制体更改
         /// <summary>
         /// 预制体修改监听
@@ -695,36 +706,15 @@ namespace YangTools
             {
                 //移动结束位置
             }
-
             foreach (string str in movedFromAssetPaths)
             {
                 //移动起始位置
             }
         }
-
-        //模型导入之前调用
-        public void OnPreprocessModel()
-        {
-
-        }
-
         //模型导入之后调用
         public void OnPostprocessModel(GameObject go)
         {
-
         }
-
-        //纹理导入之前调用
-        public void OnPreprocessTexture()
-        {
-            //Debug.Log("OnPreProcessTexture=" + this.assetPath);
-            //TextureImporter impor = this.assetImporter as TextureImporter;
-            //impor.textureFormat = TextureImporterFormat.ARGB32;
-            //impor.maxTextureSize = 512;
-            //impor.textureType = TextureImporterType.Default;
-            //impor.mipmapEnabled = false;
-        }
-
         // 正则表达式匹配--示例："宝箱&1204"名字
         private string RegexTextureMaxSize = @"[&]\d{2,4}";
         //纹理导入之后调用
@@ -781,13 +771,10 @@ namespace YangTools
                 }
             }
         }
-
         //精灵导入之后调用
         public void OnPostprocessSprites(Sprite spr)
         {
-
         }
-
         //声音导入前调用
         public void OnPreprocessAudio()
         {
@@ -866,11 +853,9 @@ namespace YangTools
             }
             #endregion
         }
-
         //声音导入后调用
         public void OnPostprocessAudio(AudioClip clip)
         {
-            AudioImporter audio = assetImporter as AudioImporter;
         }
         #endregion
     }

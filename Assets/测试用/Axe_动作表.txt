@@ -21,3 +21,10 @@ Axe_Hit_01:786-810
 Axe_Die_01:815-872
 Axe_Move_01:877-897
 Axe_Ice_01:900-903
+Axe_Ice_02:900-903
+Axe_Ice_03:901-903
+Axe_Ice_04:902-903
+Axe_Ice_05:901-903
+Axe_Ice_06:901-903
+Axe_Ice_07:901-903
+Axe_Ice_08:901-903

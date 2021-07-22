@@ -75,6 +75,27 @@ ModelImporter:
   - first:
       74: 5056813156798676374
     second: Axe_Ice_01
+  - first:
+      74: -2494217608016235294
+    second: Axe_Ice_02
+  - first:
+      74: -744344324690400625
+    second: Axe_Ice_03
+  - first:
+      74: -5738002273590206869
+    second: Axe_Ice_04
+  - first:
+      74: -2660329155372308299
+    second: Axe_Ice_05
+  - first:
+      74: 6011771512702824190
+    second: Axe_Ice_06
+  - first:
+      74: 5787714677822209000
+    second: Axe_Ice_07
+  - first:
+      74: -2956253459875112401
+    second: Axe_Ice_08
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -107,8 +128,8 @@ ModelImporter:
       name: Axe_Idle_01
       takeName: 
       internalID: 4927032029285364480
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 0
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -136,8 +157,8 @@ ModelImporter:
       name: Axe_FallDown_01_a
       takeName: 
       internalID: 5955974637693302204
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 45
+      lastFrame: 61
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -165,8 +186,8 @@ ModelImporter:
       name: Axe_FallDown_01_b
       takeName: 
       internalID: 6703264883863792107
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 62
+      lastFrame: 82
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -194,8 +215,8 @@ ModelImporter:
       name: Axe_FallDown_01_c
       takeName: 
       internalID: -3285925313919905031
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 83
+      lastFrame: 140
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -223,8 +244,8 @@ ModelImporter:
       name: Axe_SpecialMove_01_a
       takeName: 
       internalID: -6663420114414869745
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 150
+      lastFrame: 154
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -252,8 +273,8 @@ ModelImporter:
       name: Axe_SpecialMove_01_b
       takeName: 
       internalID: -6309859819302750138
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 155
+      lastFrame: 177
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -281,8 +302,8 @@ ModelImporter:
       name: Axe_SpecialMove_01_c
       takeName: 
       internalID: 5084060255593960134
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 178
+      lastFrame: 197
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -310,8 +331,8 @@ ModelImporter:
       name: Axe_HitFly_01_a
       takeName: 
       internalID: -1241678802205595329
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 226
+      lastFrame: 249
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -339,8 +360,8 @@ ModelImporter:
       name: Axe_HitFly_01_b
       takeName: 
       internalID: -542686788544424765
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 250
+      lastFrame: 274
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -368,8 +389,8 @@ ModelImporter:
       name: Axe_HitFly_01_c
       takeName: 
       internalID: -386592285234985520
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 275
+      lastFrame: 343
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -397,8 +418,8 @@ ModelImporter:
       name: Axe_Vertigo
       takeName: 
       internalID: 4151890937021741309
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 348
+      lastFrame: 398
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -426,8 +447,8 @@ ModelImporter:
       name: Axe_Take_01
       takeName: 
       internalID: 6581152506678176694
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 413
+      lastFrame: 443
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -455,8 +476,8 @@ ModelImporter:
       name: Axe_TakeBack_01
       takeName: 
       internalID: -8968583731850853291
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 448
+      lastFrame: 478
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -484,8 +505,8 @@ ModelImporter:
       name: Axe_Atk_01_a
       takeName: 
       internalID: -8329585067405671922
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 483
+      lastFrame: 502
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -513,8 +534,8 @@ ModelImporter:
       name: Axe_Atk_01_b
       takeName: 
       internalID: 4367545653380290343
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 522
+      lastFrame: 530
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -542,8 +563,8 @@ ModelImporter:
       name: Axe_Victory_01_a
       takeName: 
       internalID: 2242528607098571530
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 547
+      lastFrame: 579
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -571,8 +592,8 @@ ModelImporter:
       name: Axe_Victory_01_b
       takeName: 
       internalID: 4699493887857346490
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 580
+      lastFrame: 640
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -600,8 +621,8 @@ ModelImporter:
       name: Axe_Fail_01_a
       takeName: 
       internalID: 5663688216630422310
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 645
+      lastFrame: 668
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -629,8 +650,8 @@ ModelImporter:
       name: Axe_Fail_01_b
       takeName: 
       internalID: 6185387722821108696
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 669
+      lastFrame: 781
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -658,8 +679,8 @@ ModelImporter:
       name: Axe_Hit_01
       takeName: 
       internalID: -5588044805363587691
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 786
+      lastFrame: 810
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -687,8 +708,8 @@ ModelImporter:
       name: Axe_Die_01
       takeName: 
       internalID: 4952360796633801098
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 815
+      lastFrame: 872
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -716,8 +737,8 @@ ModelImporter:
       name: Axe_Move_01
       takeName: 
       internalID: 9143049859929468554
-      firstFrame: 900
-      lastFrame: 901
+      firstFrame: 877
+      lastFrame: 897
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -746,7 +767,210 @@ ModelImporter:
       takeName: 
       internalID: 5056813156798676374
       firstFrame: 900
-      lastFrame: 901
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_02
+      takeName: 
+      internalID: -2494217608016235294
+      firstFrame: 900
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_03
+      takeName: 
+      internalID: -744344324690400625
+      firstFrame: 901
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_04
+      takeName: 
+      internalID: -5738002273590206869
+      firstFrame: 902
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_05
+      takeName: 
+      internalID: -2660329155372308299
+      firstFrame: 901
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_06
+      takeName: 
+      internalID: 6011771512702824190
+      firstFrame: 901
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_07
+      takeName: 
+      internalID: 5787714677822209000
+      firstFrame: 901
+      lastFrame: 903
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Axe_Ice_08
+      takeName: 
+      internalID: -2956253459875112401
+      firstFrame: 901
+      lastFrame: 903
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

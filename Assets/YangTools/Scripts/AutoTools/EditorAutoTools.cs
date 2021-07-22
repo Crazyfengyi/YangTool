@@ -711,6 +711,33 @@ namespace YangTools
                 //移动起始位置
             }
         }
+
+        //模型导入之前调用
+        public void OnPreprocessModel()
+        {
+            ModelImporter modelImporter = this.assetImporter as ModelImporter;
+            modelImporter.isReadable = false;
+            modelImporter.meshCompression = ModelImporterMeshCompression.Off;
+
+            //带动画的FBX资源
+            if (/*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_anim.fbx"))
+            {
+                modelImporter.importAnimation = true;
+                modelImporter.importBlendShapes = true;
+                modelImporter.animationCompression = ModelImporterAnimationCompression.KeyframeReduction;
+            }
+            //蒙皮模型
+            else if (/*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_skin.fbx"))
+            {
+                modelImporter.importAnimation = false;
+                modelImporter.importBlendShapes = false;
+                modelImporter.materialImportMode = ModelImporterMaterialImportMode.None;
+                modelImporter.meshCompression = ModelImporterMeshCompression.Medium;
+                modelImporter.importCameras = false;
+                modelImporter.importLights = false;
+            }
+        }
+
         //模型导入之后调用
         public void OnPostprocessModel(GameObject go)
         {

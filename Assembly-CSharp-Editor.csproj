@@ -130,6 +130,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\_DEMOS\BendGoalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Editor\UIExtensionsMenuOptions.cs" />
+    <Compile Include="Assets\YangTools\Editor\ShowTransformPos.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />

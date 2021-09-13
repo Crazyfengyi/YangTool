@@ -55,7 +55,6 @@ public class GhostTrail : MonoBehaviour
     {
         skinnedMesh = GetComponent<SkinnedMeshRenderer>();
     }
-
     void LateUpdate()
     {
         if ((lastPos - transform.position).sqrMagnitude > 0.01f * 0.01f)
@@ -78,7 +77,6 @@ public class GhostTrail : MonoBehaviour
             DrawGhostItem();
         }
     }
-
     /// <summary>
     /// 创建残影
     /// </summary>

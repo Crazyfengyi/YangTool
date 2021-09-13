@@ -14,7 +14,6 @@ namespace Yang
         /// </summary>
         /// <returns>GameObject</returns>
         GameObject GetprogressReceiver();
-
         /// <summary>
         /// 进度更新事件
         /// </summary>
@@ -101,7 +100,6 @@ namespace Yang
         {
             loadScene();
         }
-
         /// <summary>
         /// 是否正在加载
         /// </summary>
@@ -109,7 +107,6 @@ namespace Yang
         {
             get { return async != null; }
         }
-
         /// <summary>
         /// 加载进度
         /// </summary>
@@ -132,7 +129,6 @@ namespace Yang
             progressReceiver?.GetprogressReceiver()?.SetActive(true);
             progressReceiver?.onProgress(progress);
         }
-
         /// <summary>
         /// 开启协程加载场景
         /// </summary>
@@ -158,5 +154,4 @@ namespace Yang
 
         #endregion
     }
-
 }

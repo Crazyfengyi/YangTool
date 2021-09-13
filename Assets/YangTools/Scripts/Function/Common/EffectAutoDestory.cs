@@ -49,7 +49,6 @@ namespace YangTools
                 }
             }
         }
-
         public void Update()
         {
             if (!isOpen) return;

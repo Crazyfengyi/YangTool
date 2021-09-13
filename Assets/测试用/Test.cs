@@ -12,5 +12,4 @@ public class Test : MonoBehaviour
         AttributeBuff one = ScriptableObject.CreateInstance<AttributeBuff>();
         one.Init(10);
     }
-
 }

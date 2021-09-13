@@ -8,7 +8,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 [CreateAssetMenu(fileName = "AttributeBuff", menuName = "BuffSystem/AttributeBuff")]
 public class AttributeBuff : BuffBase
 {

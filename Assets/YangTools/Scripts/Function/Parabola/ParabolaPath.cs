@@ -95,7 +95,6 @@ public class ParabolaPath
     {
         Init(start, end, height, gravity);
     }
-
     /// <summary>
     /// 初始化抛物线运动轨迹 
     /// </summary>
@@ -135,7 +134,6 @@ public class ParabolaPath
         m_position = m_start;
         m_time = 0;
     }
-
     /// <summary> 
     /// 获取某个时间点的位置 
     /// </summary>
@@ -146,7 +144,6 @@ public class ParabolaPath
         float dY = 0.5f * m_gravity * time * time;//自由落体运动---h=1/2*g*t*t
         return m_start + m_velocityStart * time + new Vector3(0, dY, 0);
     }
-
     /// <summary> 
     /// 获取某个时间点的速度 
     /// </summary>

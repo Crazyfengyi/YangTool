@@ -153,5 +153,22 @@ public class ParabolaPath
         //抛物线运动--只有y方向受重力影响力,x方向受力不变(初速度)
         return m_velocityStart + new Vector3(0, m_velocityStart.y + m_gravity * time, 0);
     }
+    /// <summary>
+    /// 获得抛物线位置数组
+    /// </summary>
+    public Vector3[] GetParabolaList(int segmentNum)
+    {
+        Vector3[] path = new Vector3[segmentNum];
+
+        for (int i = 0; i <= segmentNum; i++)
+        {
+            float ratio = i / (float)segmentNum;
+            float time = ratio * m_totalTime;
+            Vector3 pos = GetPosition(time);
+            path[i] = pos;
+        }
+
+        return path;
+    }
     #endregion
 }

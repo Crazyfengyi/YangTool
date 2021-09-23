@@ -715,6 +715,8 @@ namespace YangTools
         //模型导入之前调用
         public void OnPreprocessModel()
         {
+            //该方法有问题,每次更改模型都会调用
+            return;
             ModelImporter modelImporter = this.assetImporter as ModelImporter;
             modelImporter.isReadable = false;
             modelImporter.meshCompression = ModelImporterMeshCompression.Off;
@@ -805,6 +807,8 @@ namespace YangTools
         //声音导入前调用
         public void OnPreprocessAudio()
         {
+            //每次更改都会调用
+            return;
             AudioImporter audioImporter = (AudioImporter)assetImporter;
             string path = Application.dataPath + assetPath.Substring(6);
 
@@ -849,10 +853,12 @@ namespace YangTools
             {
 
                 AudioImporterSampleSettings defaultSetting = audioImporter.defaultSampleSettings;
-                if (defaultSetting.loadType != AudioClipLoadType.Streaming || defaultSetting.compressionFormat != AudioCompressionFormat.PCM)
+                if (defaultSetting.loadType != AudioClipLoadType.Streaming || defaultSetting.compressionFormat != AudioCompressionFormat.Vorbis)
                 {
                     defaultSetting.loadType = AudioClipLoadType.Streaming;
-                    defaultSetting.compressionFormat = AudioCompressionFormat.PCM;
+                    defaultSetting.compressionFormat = AudioCompressionFormat.Vorbis;
+                    defaultSetting.quality = 70;
+
                     audioImporter.defaultSampleSettings = defaultSetting;
                 }
             }

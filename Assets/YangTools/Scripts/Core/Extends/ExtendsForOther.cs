@@ -262,8 +262,6 @@ namespace YangTools
         /// <summary>
         /// 获得按键
         /// </summary>
-        /// <param name="_code"></param>
-        /// <returns></returns>
         public static bool GetKeyDown(KeyCode _code)
         {
 #if UNITY_EDITOR

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
@@ -935,4 +934,142 @@ namespace YangTools
     #region 备注
     //Process.Start(fullTablePath);C# 打开文件方法
     #endregion
+
+    /*  移动文件夹 
+         /// <summary>
+    /// 角色管理窗口
+    /// </summary>
+    public class RoleManagerWindow : EditorWindow
+    {
+        private Vector2 scroll;
+        private const string runtimePath = "Assets/0.Game/_Bundle/Prefab_EditCreateRole";
+        private const string editorPath = "Assets/GameEditor/角色编辑器/角色保存";
+        private static bool moveType;//移动文件类型 true:编辑器移动到打包 false:打包移动到编辑器
+        private static bool lastMoveType;
+        private static bool needRefresh;
+        public static string currentSelect;//当前选择角色
+        public static List<string> allRoleName = new List<string>();
+        /// <summary>
+        /// 打开页面
+        /// </summary>
+        public static void OpenWindow()
+        {
+            GetWindow<RoleManagerWindow>("角色管理窗口");
+            needRefresh = true;
+            moveType = true;
+            lastMoveType = moveType;
+            currentSelect = null;
+            Refresh();
+        }
+        private void OnGUI()
+        {
+            GUILayout.Label("选择要操作的文件");
+            Texture2D editorImage = EditorGUIUtility.FindTexture("d_BuildSettings.Standalone");
+            Texture2D runtimeImage = EditorGUIUtility.FindTexture("d_BuildSettings.Android");
+
+            GUILayout.BeginHorizontal();
+            moveType = GUILayout.Toggle(moveType, moveType ? editorImage : runtimeImage);
+            GUILayout.BeginVertical();
+            GUILayout.Label("===>");
+            GUILayout.Label("===>");
+            GUILayout.EndVertical();
+
+            GUILayout.Label(moveType ? runtimeImage : editorImage);
+            GUILayout.EndHorizontal();
+
+            if (moveType)
+            {
+                GUILayout.Label("现在是:编辑器路径=>打包路径");
+            }
+            else
+            {
+                GUILayout.Label("现在是:打包路径=>编辑器路径");
+            }
+
+            if (lastMoveType != moveType)
+            {
+                needRefresh = true;
+            }
+
+            if (needRefresh)
+            {
+                Refresh();
+            }
+
+            if (currentSelect != null)
+            {
+                GUILayout.Label("当前选择角色:" + currentSelect);
+            }
+
+            //列表
+            scroll = GUILayout.BeginScrollView(scroll);
+
+            for (int i = 0; i < allRoleName.Count; i++)
+            {
+                var item = allRoleName[i];
+                if (GUILayout.Button(allRoleName[i]))
+                {
+                    currentSelect = item;
+                }
+            }
+
+            GUILayout.Space(10);
+            GUILayout.EndScrollView();
+
+            lastMoveType = moveType;
+
+            if (GUILayout.Button("开始移动"))
+            {
+                StartMove();
+            }
+            GUILayout.Space(10);
+
+            if (GUILayout.Button("关闭"))
+            {
+                Close();
+            }
+        }
+        /// <summary>
+        /// 刷新
+        /// </summary>
+        public static void Refresh()
+        {
+            allRoleName.Clear();
+
+            string currentPath = moveType ? editorPath : runtimePath;//当前路径
+            DirectoryInfo root = new DirectoryInfo(currentPath);
+            DirectoryInfo[] dics = root.GetDirectories();
+
+            for (int i = 0; i < dics.Length; i++)
+            {
+                allRoleName.Add(dics[i].Name);
+            }
+
+            currentSelect = null;
+            needRefresh = false;
+        }
+        public static void StartMove()
+        {
+            if (currentSelect == null)
+            {
+                EditorUtility.DisplayDialog("提示", "需要选择单个角色", "确定");
+                return;
+            }
+
+            string oldPath = moveType ? editorPath : runtimePath;//当前路径
+            string targtPath = moveType ? runtimePath : editorPath;//目标路径
+            oldPath += "/" + currentSelect;
+            targtPath += "/" + currentSelect;
+            AssetDatabase.MoveAsset(oldPath, targtPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            EditorUtility.DisplayDialog("结果", "移动完成", "确定");
+            currentSelect = null;
+            needRefresh = true;
+        }
+    }
+     
+     
+     */
 }

@@ -665,16 +665,16 @@ namespace YangTools
         private static void PrefabStageListen()
         {
             // 打开Prefab编辑界面回调
-            PrefabStage.prefabStageOpened += OnPrefabOpened;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageOpened += OnPrefabOpened;
             // Prefab被保存之前回调
-            PrefabStage.prefabSaving += OnPrefabSaving;
+            UnityEditor.SceneManagement.PrefabStage.prefabSaving += OnPrefabSaving;
             // Prefab被保存之后回调
-            PrefabStage.prefabSaved += OnPrefabSaved;
+            UnityEditor.SceneManagement.PrefabStage.prefabSaved += OnPrefabSaved;
             // 关闭Prefab编辑界面回调
-            PrefabStage.prefabStageClosing += OnPrefabClosing;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += OnPrefabClosing;
         }
 
-        private static void OnPrefabOpened(PrefabStage prefabStage)
+        private static void OnPrefabOpened(UnityEditor.SceneManagement.PrefabStage prefabStage)
         {
         }
         private static void OnPrefabSaving(GameObject prefab)
@@ -683,7 +683,7 @@ namespace YangTools
         private static void OnPrefabSaved(GameObject prefab)
         {
         }
-        private static void OnPrefabClosing(PrefabStage prefabStage)
+        private static void OnPrefabClosing(UnityEditor.SceneManagement.PrefabStage prefabStage)
         {
         }
         #endregion

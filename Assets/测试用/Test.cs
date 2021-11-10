@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Test : MonoBehaviour
 {
@@ -11,5 +12,8 @@ public class Test : MonoBehaviour
     {
         AttributeBuff one = ScriptableObject.CreateInstance<AttributeBuff>();
         one.Init(10);
+
+        PooledObject<Test> pooledObject = new PooledObject<Test>();
+        ObjectPool<Test> objectPool = new ObjectPool<Test>(null, null, null);
     }
 }

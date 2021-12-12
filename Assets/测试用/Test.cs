@@ -1,19 +1,26 @@
+using System.Runtime.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEditor;
+using System.Linq;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+     void Start()
     {
-        AttributeBuff one = ScriptableObject.CreateInstance<AttributeBuff>();
-        one.Init(10);
-
-        PooledObject<Test> pooledObject = new PooledObject<Test>();
-        ObjectPool<Test> objectPool = new ObjectPool<Test>(null, null, null);
+        // TestFun("test");
     }
+    public void TestFun(string str, [CallerMemberNameAttribute] string callName = "")
+    {
+        Debug.LogError($"{callName}");
+        List<int> temp = new List<int>();
+        temp.ForEach(a =>
+        {
+        });
+    }
+
 }

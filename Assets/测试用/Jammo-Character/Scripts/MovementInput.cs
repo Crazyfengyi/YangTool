@@ -58,8 +58,6 @@ public class MovementInput : MonoBehaviour {
         }
         moveVector = new Vector3(0, verticalVel * .2f * Time.deltaTime, 0);
         controller.Move(moveVector);
-
-
     }
 
     void PlayerMoveAndRotation() {
@@ -69,7 +67,7 @@ public class MovementInput : MonoBehaviour {
 		var camera = Camera.main;
 		var forward = cam.transform.forward;
 		var right = cam.transform.right;
-
+ 
 		forward.y = 0f;
 		right.y = 0f;
 

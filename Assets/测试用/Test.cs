@@ -7,12 +7,13 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEditor;
 using System.Linq;
+using YangTools;
 
 public class Test : MonoBehaviour
 {
-     void Start()
+    void Start()
     {
-        // TestFun("test");
+
     }
     public void TestFun(string str, [CallerMemberNameAttribute] string callName = "")
     {

@@ -100,6 +100,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\NonDrawingGraphic.cs" />
     <Compile Include="Assets\YangTools\AddIn\TurbochargedScrollList\VerticalScrollList.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintRotation.cs" />
+    <Compile Include="Assets\UserTest\Scripts\Role\Interface.cs" />
     <Compile Include="Assets\UserTest\TestSo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverHeuristic.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\OffsetEffector.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\HandPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolver.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\OffsetModifierVRIK.cs" />
+    <Compile Include="Assets\UserTest\Scripts\Manager\RoleManager.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\switchToRectTransform.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\SelectableScaler.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingLeg.cs" />
@@ -395,6 +397,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKConstraintBend.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\InteractionDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Misc\SlowMo.cs" />
+    <Compile Include="Assets\UserTest\Scripts\Role\DataStruct.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\Extends\ExtendsForTool.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\Extends\ExtendsForValue.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LegIK.cs" />
@@ -457,6 +460,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Camera Controllers\CameraControllerFPS.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKLODController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Navigator.cs" />
+    <Compile Include="Assets\UserTest\Scripts\Role\RoleBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpiderLeg.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\ExtensionsToggle.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Effects\ShaderEffects\UIAdditiveEffect.cs" />
@@ -466,6 +470,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Controls\ColorPicker\HexColorField.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\Extends\ExtendsForPools.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Effects\LetterSpacing.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\Manager\ToolClass.cs" />
     <Compile Include="Assets\YangTools\AddIn\TurbochargedScrollList\UnityComponents\TurbochargedGridScrollList.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverLimb.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModuleAudio.cs" />
@@ -491,11 +496,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
-    <Compile Include="Assets\UserTest\Scripts\Role\RoleBase.cs" />
-    <Compile Include="Assets\UserTest\Scripts\Role\Interface.cs" />
-    <Compile Include="Assets\UserTest\Scripts\Role\DataStruct.cs" />
-    <Compile Include="Assets\UserTest\Scripts\Manager\RoleManager.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\Manager\ToolClass.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\CommonObjectPool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\AddIn\unity-ui-extensions\Shaders\UIAdditive.shader" />

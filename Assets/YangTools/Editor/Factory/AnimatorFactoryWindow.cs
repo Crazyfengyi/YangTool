@@ -3,32 +3,35 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEditor;
 using UnityEngine;
+using YangTools;
+using System.IO;
 
 public class AnimatorFactoryWindow : EditorWindow
 {
     #region const
-    private const string AnimatorSavePath = "Assets/Standard Assets/Characters/ThirdPersonCharacter/Animator/";
-    private const string PrefabSavePath = "Assets/Standard Assets/Characters/ThirdPersonCharacter/Prefabs/";
-    private const string ModelPath = "Assets/Standard Assets/Characters/ThirdPersonCharacter/Models/";
-    private const string AnimationPath = "Assets/Standard Assets/Characters/ThirdPersonCharacter/Animation/Humanoid";
-    private const string AnimatorControllerSuffix = "AnimatorController.controller";
-    #endregion const
+    //动画机保存路径
+    private const string AnimatorSavePath = "Assets/Animator/";
+    //动画路径
+    private const string AnimationPath = "Assets/UserTest/MyTest/Axe_anim.fbx";
+    //后缀
+    private const string AnimatorControllerSuffix = "_AniController.controller";
+    #endregion
 
     #region private members
     private string controllerName;
     private AnimatorController aniController;
     private AnimatorStateMachine baseLayerMachine;
-    #endregion private members
+    #endregion
 
     #region EditorWindow
-    [MenuItem("Window/AnimatorFactory")]
+    [MenuItem(SettingInfo.YongToolsFunctionPath + "动画机工厂")]
     public static void OpenWindow()
     {
         EditorWindow.GetWindow(typeof(AnimatorFactoryWindow));
     }
     void OnEnable()
     {
-        controllerName = "default name";
+        controllerName = "defaultName";
     }
     void OnGUI()
     {
@@ -47,10 +50,22 @@ public class AnimatorFactoryWindow : EditorWindow
     public void GenerateController()
     {
         if (string.IsNullOrEmpty(controllerName))
+        {
+            CommonEditorTool.CommonTipsPanel("创建失败,请动画机输入名称");
             return;
+        }
+        string path = AnimatorSavePath + controllerName + AnimatorControllerSuffix;
+        if (File.Exists(path))
+        {
+            CommonEditorTool.CommonTipsPanel("创建失败,已经包含同名动画机文件");
+            return;
+        }
         CreateController();
         AddParameters();
         CreateState();
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        CommonEditorTool.CommonTipsPanel("创建成功");
     }
     /// <summary>
 	/// 创建动画状态机
@@ -60,8 +75,19 @@ public class AnimatorFactoryWindow : EditorWindow
         aniController = AnimatorController.CreateAnimatorControllerAtPath(AnimatorSavePath + controllerName + AnimatorControllerSuffix);
         baseLayerMachine = aniController.layers[0].stateMachine;
         baseLayerMachine.entryPosition = Vector3.zero;
-        baseLayerMachine.exitPosition = new Vector3(400f, 200f);
         baseLayerMachine.anyStatePosition = new Vector3(0f, 200f);
+        baseLayerMachine.exitPosition = new Vector3(0f, 300f);
+
+        //创建一个Null的State
+        AnimatorState stateIdle = baseLayerMachine.AddState("Null", new Vector3(0, 100, 0));
+        stateIdle.speedParameter = "speedControl";
+        stateIdle.speedParameterActive = true;
+        stateIdle.motion = null;
+        baseLayerMachine.defaultState = stateIdle;
+
+        EditorUtility.SetDirty(aniController);
+        EditorUtility.SetDirty(baseLayerMachine);
+        EditorUtility.SetDirty(stateIdle);
     }
     /// <summary>
 	/// 设置动画状态机参数
@@ -79,9 +105,28 @@ public class AnimatorFactoryWindow : EditorWindow
 	/// </summary>
 	private void CreateState()
     {
-        AnimationClip idleClip = AnimatorFactoryTool.LoadAnimClip(AnimationPath + "Idle.FBX");
-        AnimatorState stateIdle = baseLayerMachine.AddState("Idle", new Vector3(300f, 0f));
-        stateIdle.motion = idleClip;
-        baseLayerMachine.defaultState = stateIdle;
+        AnimationClip[] clips = AnimatorFactoryTool.LoadAllAnimClip(AnimationPath);
+        int rowCount = 8;//一列几个 
+        int currentRow = 0;//当前列数
+        int currentRowCount = 0;//当前列clip个数
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            if (i % rowCount == 0)
+            {
+                currentRow += 1;
+                currentRowCount = 0;
+            }
+
+            var x = currentRow * 300;
+            var y = currentRowCount * 100;
+            currentRowCount++;
+
+            AnimatorState stateIdle = baseLayerMachine.AddState(clips[i].name, new Vector3(x, y, 0));
+            stateIdle.speedParameter = "speedControl";
+            stateIdle.speedParameterActive = true;
+            stateIdle.motion = clips[i];
+            EditorUtility.SetDirty(stateIdle);
+        }
     }
 }

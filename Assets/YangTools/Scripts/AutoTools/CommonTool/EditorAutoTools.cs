@@ -24,8 +24,15 @@ namespace YangTools
         /// </summary>
         public static ConsleString consleString = new ConsleString();
 
-        #region 复制文件-移除脚本
+        #region 测试
+        [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
+        public static void TestScrpit()
+        {
 
+        }
+        #endregion
+
+        #region 复制文件-移除脚本
         [MenuItem(SettingInfo.YongToolsFunctionPath + "CopyToFolder")]
         public static void CopyToTargetFolder()
         {
@@ -43,7 +50,6 @@ namespace YangTools
                     newList.Add(tempList[i]);
                 }
             }
-
 
             for (int i = 0; i < newList.Count; i++)
             {
@@ -88,7 +94,6 @@ namespace YangTools
             AssetDatabase.Refresh();
             Debug.LogError("Copy完成");
         }
-
         [MenuItem(SettingInfo.YongToolsFunctionPath + "RemoveScript")]
         public static void RemoveScript()
         {
@@ -120,22 +125,12 @@ namespace YangTools
 
                     //修改资源
                     var script1List = obj.GetComponents<MySample>();
-
                     for (int j = 0; j < script1List.Length; j++)
                     {
                         GameObject.DestroyImmediate(script1List[j], true);
                     }
-
-                    var script2List = obj.GetComponents<MySample>();
-
-                    for (int j = 0; j < script2List.Length; j++)
-                    {
-                        GameObject.DestroyImmediate(script2List[j], true);
-                    }
-
                     // 通知编辑器有资源被修改了
                     EditorUtility.SetDirty(obj);
-
                     Resources.UnloadAsset(obj);
                 }
                 catch (System.Exception)
@@ -143,16 +138,13 @@ namespace YangTools
                     Debug.LogError($"{newList[i]}:修改失败");
                 }
             }
-
             Resources.UnloadAsset(idList);
-
             //保存所有修改
             AssetDatabase.SaveAssets();
             //// 刷新编辑器，使刚创建的资源立刻被导入，才能接下来立刻使用上该资源
             //AssetDatabase.Refresh();
             Debug.LogError("修改完成");
         }
-
         /// <summary>
         /// 占位用--工具脚本需要MonoBehaviour站位
         /// </summary>
@@ -160,108 +152,22 @@ namespace YangTools
         {
 
         }
-
         #endregion
 
-        #region 测试用相关
-        [MenuItem("YangTools/TestScript", priority = 100000)]
-        public static void TestScrpit()
-        {
-
-        }
-
-        /// <summary>
-        /// 清空Log输出
-        /// </summary>
-        private static void ClearConsole()
-        {
-            Assembly assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-            Type type = assembly.GetType("UnityEditor.LogEntries");
-            MethodInfo method = type.GetMethod("Clear");
-            method.Invoke(new object(), null);
-        }
-
-        //[MenuItem("Tools/生成常用文件夹--GenerateFolders")]
-        private static void GenerateFolder()
-        {
-            //string resPath = Application.dataPath + "/Resources/";//resources路径 
-            //string path = Application.dataPath + "/";//路径 
-
-            //Directory.CreateDirectory(resPath + "Audio");
-            //Directory.CreateDirectory(resPath + "Materials");
-            //Directory.CreateDirectory(resPath + "Prefabs");
-            //Directory.CreateDirectory(resPath + "Shaders");
-            //Directory.CreateDirectory(resPath + "Textures");
-
-            //Directory.CreateDirectory(path + "Scenes");
-            //Directory.CreateDirectory(path + "Editor");
-            //Directory.CreateDirectory(path + "StreamingAssets");
-            //Directory.CreateDirectory(path + "Scripts");
-
-            //AssetDatabase.Refresh();
-
-            //Debug.Log("Folders Created");
-        }
-
-        /// <summary>
-        /// 保存字符串到Txt
-        /// </summary>
-        public static void SaveStringToTxt(string fileName, string text)
-        {
-            string dicPath = Application.dataPath + $"/YangTools/Editor/SaveData";
-            string path = dicPath + $"/{fileName}.txt";
-
-            if (!Directory.Exists(dicPath))
-            {
-                Directory.CreateDirectory(dicPath);
-            }
-
-            FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-
-            //定义存放文件信息的字节数组
-            byte[] tempBytes = new byte[fileStream.Length];
-            //读取文件信息
-            fileStream.Read(tempBytes, 0, tempBytes.Length);
-            //将得到的字节型数组重写编码为字符型数组
-            char[] chars = Encoding.UTF8.GetChars(tempBytes);
-            //转换成字符串
-            string tempStr = new string(chars);
-            //=========更改=========
-
-            tempStr += text + "|";
-
-            //======================
-            //将字符串转换为字节数组
-            byte[] bytes = Encoding.UTF8.GetBytes(tempStr);
-            //向文件中写入字节数组
-            fileStream.Write(bytes, 0, bytes.Length);
-            //刷新缓冲区
-            fileStream.Flush();
-            //关闭流
-            fileStream.Close();
-
-            AssetDatabase.Refresh();
-        }
-        #endregion
-
-        #region 小功能
-        [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中物体丢失的脚本")]
+        #region 快捷工具
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中Asset预制体丢失的脚本")]
         public static void RemoveMissScript()
         {
             GameObject[] objs = Selection.gameObjects;
-
             for (int i = 0; i < objs.Length; i++)
             {
-                GameObject obj = GameObject.Instantiate(objs[i]);
-                GameObjectUtility.RemoveMonoBehavioursWithMissingScript(obj);
-                PrefabUtility.SaveAsPrefabAsset(obj, AssetDatabase.GetAssetPath(objs[i]));
+                GameObjectUtility.RemoveMonoBehavioursWithMissingScript(objs[i]);
+                EditorUtility.SetDirty(objs[i]);
             }
-
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-
-            Debug.LogError("移除丢失脚本成功!");
+            Debug.LogError("移除丢失脚本结束");
         }
-
         /// <summary>
         /// 删除所有动画事件
         /// </summary>
@@ -269,385 +175,33 @@ namespace YangTools
         [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中动画文件所有动画事件")]
         public static void RemoveAllAnimationEvent()
         {
-            UnityEngine.Object obj = Selection.activeObject;
-            string modelPath = AssetDatabase.GetAssetPath(obj);
-            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
-            ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
-            for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
+            GameObject[] objs = Selection.gameObjects;
+            for (int i = 0; i < objs.Length; i++)
             {
-                tempModelClips[k] = modelImporter.clipAnimations[k];
-                tempModelClips[k].events = new AnimationEvent[0];
+                GameObject item = objs[i];
+                string modelPath = AssetDatabase.GetAssetPath(item);
+                ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+                if (modelImporter == null)
+                {
+                    continue;
+                }
+                ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
+                for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
+                {
+                    tempModelClips[k] = modelImporter.clipAnimations[k];
+                    tempModelClips[k].events = new AnimationEvent[0];
+                }
+                modelImporter.clipAnimations = tempModelClips;
+                modelImporter.SaveAndReimport();
+                EditorUtility.SetDirty(modelImporter);
             }
-            modelImporter.clipAnimations = tempModelClips;
-            modelImporter.SaveAndReimport();
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-
-            Debug.LogError("移除动画事件成功!");
-        }
-
-        //[MenuItem("YangTools/" + "/脱离寻路组件数据")]
-        //public static void SetNavMeshDateNull()
-        //{
-        //    Transform obj = Selection.activeTransform;
-
-        //    if (obj.GetComponentInChildren<NavMeshSurface>(true))
-        //    {
-        //        NavMeshSurface script = obj.GetComponentInChildren<NavMeshSurface>(true);
-        //        script.navMeshData = null;
-        //    }
-        //}
-
-        #endregion
-
-        #region 大功能
-        [MenuItem(SettingInfo.YongToolsFunctionPath + "自动切割动画")]
-        /// <summary>
-        /// 自动切割动画
-        /// </summary>
-        public static void AutoSplitAni()
-        {
-            SplitAni.OpenWindow();
+            Debug.LogError("移除动画事件结束!");
         }
         #endregion
     }
-
-    #endregion
-
-    #region 窗口类
-
-    #region 切割动画弹窗
-    /// <summary>
-    /// 切割动画弹窗
-    /// </summary>
-    public class SplitAni : EditorWindow
-    {
-        public class monsterInfo
-        {
-            public string id;
-        }
-        private static GameObject model;
-        //动画文件
-        public static UnityEngine.Object aniObj;
-        //切割表
-        public static UnityEngine.Object frameObj;
-        //打开界面
-        public static void OpenWindow()
-        {
-            GetWindowWithRect<SplitAni>(new Rect(500, 500, 360, 360), false, "自动切割动画", true);
-        }
-        private void OnGUI()
-        {
-            GUILayout.BeginVertical();
-            aniObj = EditorGUILayout.ObjectField("动画文件", aniObj, typeof(UnityEngine.Object), false);
-            frameObj = EditorGUILayout.ObjectField("切分表", frameObj, typeof(UnityEngine.TextAsset), false);
-
-            if (GUILayout.Button("开始切分动画"))
-            {
-                if (aniObj != null && frameObj != null)
-                {
-                    SplitClips(AssetDatabase.GetAssetPath(aniObj), LoadFrameTable(Application.dataPath + AssetDatabase.GetAssetPath(frameObj).Substring(6)));
-                    base.Close();
-                }
-                else
-                {
-                    TipsShowWindow.OpenWindow("提示", "文件为空");
-                }
-            }
-
-            GUILayout.EndVertical();
-        }
-        /// <summary>
-        /// 从模型文件切分动画
-        /// </summary>
-        /// <param name="modelPath"></param>
-        public static void SplitClips(string modelPath, List<(string name, int firstFrame, int endFrame)> frameInfos)
-        {
-            //clip列表
-            List<ModelImporterClipAnimation> clipList = new List<ModelImporterClipAnimation>();
-            //模型信息
-            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
-
-            for (int i = 0; i < frameInfos.Count; i++)
-            {
-                if (frameInfos[i].firstFrame >= frameInfos[i].endFrame)
-                {
-                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首帧比尾帧大");
-                    return;
-                }
-                if (frameInfos[i].firstFrame < 0 || frameInfos[i].endFrame < 0)
-                {
-                    EditorAutoTools.consleString.Add($"{frameInfos[i].name}的首尾帧有个小于0");
-                    return;
-                }
-
-                //clip
-                ModelImporterClipAnimation clip = new ModelImporterClipAnimation();
-                clip.name = frameInfos[i].name;
-                clip.firstFrame = frameInfos[i].firstFrame;
-                clip.lastFrame = frameInfos[i].endFrame;
-                clip.loopTime = frameInfos[i].name.Contains("Loop");
-
-                if (frameInfos[i].name.Contains("Idle") || frameInfos[i].name.Contains("_Move") || frameInfos[i].name.Contains("_b"))
-                {
-                    clip.loopTime = true;
-                }
-                //List<AnimationEvent> evnets = new List<AnimationEvent>();
-                //clip.events = evnets.ToArray();
-                clipList.Add(clip);
-            }
-
-            //数组
-            List<ModelImporterClipAnimation> tempList = modelImporter.clipAnimations.ToList();
-
-            //已有同名的直接设置原clip
-            for (int i = 0; i < tempList.Count; i++)
-            {
-                for (int j = 0; j < clipList.Count; j++)
-                {
-                    if (modelImporter.clipAnimations[i].name == clipList[j].name)
-                    {
-                        tempList[i].firstFrame = clipList[j].firstFrame;
-                        tempList[i].lastFrame = clipList[j].lastFrame;
-                        tempList[i].loopTime = clipList[j].loopTime;
-
-                        clipList.RemoveAt(j);
-                        break;
-                    }
-                }
-            }
-
-            for (int i = 0; i < clipList.Count; i++)
-            {
-                tempList.Add(clipList[i]);
-            }
-            modelImporter.clipAnimations = tempList.ToArray();
-            EditorUtility.SetDirty(modelImporter);
-
-            modelImporter.SaveAndReimport();
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            if (EditorAutoTools.consleString.CheackHaveValue())
-            {
-                EditorAutoTools.consleString.OutPutToDeBug();
-                TipsShowWindow.OpenWindow("动画切分结果", "下面是运行结果提示:");
-            }
-            else
-            {
-                TipsShowWindow.OpenWindow("动画切分结果", "<color=#00F5FF>切分完成,完美运行</color>");
-            }
-        }
-        /// <summary>
-        /// 读取切割文件并规范格式--(名称，首帧，尾帧)
-        /// </summary>
-        public static List<(string, int, int)> LoadFrameTable(string path)
-        {
-            EditorAutoTools.consleString.Clear();
-
-            FileStream fileStream = File.Open(path, FileMode.Open);
-
-            byte[] content = new byte[fileStream.Length];
-            fileStream.Read(content, 0, (int)fileStream.Length);
-
-            string frameTable = "";
-            try
-            {
-                frameTable = System.Text.Encoding.GetEncoding("utf-8", new EncoderExceptionFallback(), new DecoderExceptionFallback()).GetString(content);
-            }
-            catch (DecoderFallbackException e)
-            {
-                frameTable = System.Text.Encoding.GetEncoding("gb2312").GetString(content);
-            }
-
-            fileStream.Close();
-
-            //容错符号
-            frameTable = frameTable.Replace("：", ":");
-            frameTable = frameTable.Replace("：", ":");
-            frameTable = frameTable.Replace("\r\n", "\n");
-
-            string[] datas = frameTable.Split('\r', '\n');
-            //帧数信息
-            List<(string, int, int)> frameInfos = new List<(string, int, int)>();
-
-            for (int i = 0; i < datas.Length; i++)
-            {
-                datas[i] = datas[i].Replace("\0", "");//字符串结束用\0占位表示结束
-                if (string.IsNullOrEmpty(datas[i]))
-                {
-                    EditorAutoTools.consleString.Add($"第{i + 1}行是空行");
-                    continue;
-                }
-
-                //名称，首帧，尾帧
-                (string name, int firstFrame, int endFrame) info = (string.Empty, 0, 0);
-                //分割 Q_Run:195-225 =>  Q_Run + 195-225
-                string[] tempArray = datas[i].Split(':');
-
-                if (tempArray.Length < 1)
-                {
-                    EditorAutoTools.consleString.Add($"第{i + 1}行分割有问题");
-                    continue;
-                }
-
-                info.name = tempArray[0].Trim();
-
-                MatchCollection matches = Regex.Matches(tempArray[1], @"[0-9]+");
-                for (int j = 0; j < matches.Count; j++)
-                {
-                    switch (j)
-                    {
-                        case 0:
-                            info.firstFrame = int.Parse(matches[j].Value);
-                            break;
-                        case 1:
-                            info.endFrame = int.Parse(matches[j].Value);
-                            break;
-                    }
-                }
-
-                if (info.endFrame <= 0)
-                {
-                    EditorAutoTools.consleString.Add($"{info.name}的尾帧为小于等于0");
-                    continue;
-                }
-
-                frameInfos.Add(info);
-            }
-
-            return frameInfos;
-        }
-    }
-    #endregion
-
-    #region 提示弹窗
-    /// <summary>
-    /// 提示弹窗
-    /// </summary>
-    public class TipsShowWindow : EditorWindow
-    {
-        private Vector2 scroll;
-        ///搜索文字
-        private static string search;
-        //提示文字
-        private static string ShowTips;
-        //输出文字
-        private static string ShowStr;
-
-        /// <summary>
-        /// 打开页面
-        /// </summary>
-        /// <param name="title">标题</param>
-        /// <param name="tips">提示</param>
-        public static void OpenWindow(string title, string tips)
-        {
-            search = "";
-            ShowTips = tips;
-            ShowStr = EditorAutoTools.consleString.GetString();
-            GetWindowWithRect<TipsShowWindow>(new Rect(500, 500, 300, 300), true, title, true);
-        }
-
-        private void OnGUI()
-        {
-            GUILayout.BeginVertical();
-
-            GUILayout.Label("搜索框");
-
-            //检查代码块中是否有任何控件被更改
-            //EditorGUI.BeginChangeCheck();
-            search = GUILayout.TextField(search);
-            //EditorGUI.EndChangeCheck();
-
-            GUILayout.Space(20);
-
-            var temp = new GUIStyle();
-            temp.richText = true;
-
-            GUILayout.Label(ShowTips, temp);
-            GUILayout.Space(20);
-
-            scroll = GUILayout.BeginScrollView(scroll);
-            string[] charArray = ShowStr.Split('\n', '\r');
-            for (int i = 0; i < charArray.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(search))
-                {
-                    if (!charArray[i].Contains(search)) continue;
-                }
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(charArray[i]);
-                GUILayout.Space(20);
-                GUILayout.EndHorizontal();
-            }
-            GUILayout.EndScrollView();
-            GUILayout.EndVertical();
-
-            if (GUILayout.Button("关闭"))
-            {
-                Close();
-            }
-        }
-    }
-    #endregion
-
-    #endregion
-
-    #region 辅助类
-
-    #region 字符串记录
-    /// <summary>
-    /// 面板输出字符串记录
-    /// </summary>
-    public class ConsleString
-    {
-        StringBuilder value = new StringBuilder();
-
-        /// <summary>
-        /// 清理
-        /// </summary>
-        public void Clear()
-        {
-            value.Clear();
-        }
-
-        /// <summary>
-        /// 添加-自动换行
-        /// </summary>
-        public void Add(string str)
-        {
-            value.Append(str + "\n");
-        }
-
-        /// <summary>
-        /// 检测是否有值
-        /// </summary>
-        /// <returns></returns>
-        public bool CheackHaveValue()
-        {
-            return value.Length > 0;
-        }
-
-        /// <summary>
-        /// 获得字符串
-        /// </summary>
-        /// <returns></returns>
-        public string GetString()
-        {
-            return value.ToString();
-        }
-
-        /// <summary>
-        /// 输出到DeBug面板
-        /// </summary>
-        public void OutPutToDeBug()
-        {
-            Debug.LogError(value.ToString());
-        }
-    }
-    #endregion
 
     #endregion
 
@@ -673,7 +227,6 @@ namespace YangTools
             // 关闭Prefab编辑界面回调
             UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += OnPrefabClosing;
         }
-
         private static void OnPrefabOpened(UnityEditor.SceneManagement.PrefabStage prefabStage)
         {
         }
@@ -710,7 +263,6 @@ namespace YangTools
                 //移动起始位置
             }
         }
-
         //模型导入之前调用
         public void OnPreprocessModel()
         {
@@ -738,7 +290,6 @@ namespace YangTools
                 modelImporter.importLights = false;
             }
         }
-
         //模型导入之后调用
         public void OnPostprocessModel(GameObject go)
         {
@@ -893,7 +444,7 @@ namespace YangTools
     }
     #endregion
 
-    #region 编辑器创建物体(添加自动设置)
+    #region 编辑器创建物体扩展
     public static partial class EditorAutoTools
     {
         [MenuItem("GameObject/UI/YangImage")]
@@ -910,7 +461,6 @@ namespace YangTools
                 }
             }
         }
-
         [MenuItem("GameObject/UI/YangText")]
         static void CreatText()
         {
@@ -942,7 +492,7 @@ namespace YangTools
     #endregion
 
     /*  移动文件夹 
-         /// <summary>
+    /// <summary>
     /// 角色管理窗口
     /// </summary>
     public class RoleManagerWindow : EditorWindow
@@ -1075,7 +625,5 @@ namespace YangTools
             needRefresh = true;
         }
     }
-     
-     
      */
 }

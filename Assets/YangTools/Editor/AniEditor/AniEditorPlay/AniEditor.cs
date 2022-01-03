@@ -22,15 +22,12 @@ public class AniEditor : Editor
     private float lastFrameTime;
     //是在播放中
     private bool isPlaying;
-
     //收折栏
     static bool _Foldout = true;
-
     public void OnEnable()
     {
         Init();
     }
-
     /// <summary>
     /// 初始化
     /// </summary>
@@ -51,7 +48,6 @@ public class AniEditor : Editor
             clips = new AnimationClip[0];
         }
     }
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -128,7 +124,6 @@ public class AniEditor : Editor
 
         //EditorGUI.Foldout(new Rect(100, 100, 10, 10), true, new GUIContent("Test"));
     }
-
     /// <summary>
     /// 播放动画
     /// </summary>

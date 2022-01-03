@@ -18,13 +18,13 @@ namespace YangTools
         /// <summary>
         /// 自动生成代码路径
         /// </summary>
-        static readonly string ScenesMenuPath = "YangTools/Scripts/AutoTools/AllScenes.cs";
+        static readonly string ScenesMenuPath = "YangTools/Scripts/AutoTools/SceneTool/AllScenes.cs";
         /// <summary>
         /// 场景计数(暂时未操作计数)
         /// </summary>
         static int secensCount = 0;//TODO 设置成可以自己控制开关
 
-        [MenuItem("YangTools/自动写入所有场景到快捷切换列表")]
+        [MenuItem(SettingInfo.MenuPath + "自动写入所有场景到快捷切换列表")]
         public static void UpdateList()
         {
             string scenesMenuPath = Path.Combine(Application.dataPath, ScenesMenuPath);
@@ -53,7 +53,7 @@ namespace YangTools
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("YangTools/移除显示场景外的其他场景")]
+        [MenuItem(SettingInfo.MenuPath + "移除显示场景外的其他场景")]
         public static void ReomveAllNotActiveScene()
         {
             //当前场景
@@ -69,11 +69,9 @@ namespace YangTools
                 }
             }
         }
-
         /// <summary>
         /// 编辑器打开场景
         /// </summary>
-        /// <param name="filename"></param>
         public static void OpenScene(string filename)
         {
             if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

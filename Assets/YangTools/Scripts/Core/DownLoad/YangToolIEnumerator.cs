@@ -12,7 +12,6 @@ namespace YangTools
     /// </summary>
     public class YangToolIEnumerator : MonoBehaviour
     {
-
         /// <summary>
         /// 单例
         /// </summary>
@@ -41,7 +40,6 @@ namespace YangTools
                 }
             }
         }
-
         /// <summary>
         /// 初始化
         /// </summary>
@@ -49,7 +47,6 @@ namespace YangTools
         {
 
         }
-
         /// <summary>
         /// 标准下载
         /// </summary>

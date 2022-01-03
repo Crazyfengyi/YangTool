@@ -23,7 +23,7 @@ namespace YangTools
 
     [TypeInfoBox("文字适配")]
     [RequireComponent(typeof(Text))]
-    [AddComponentMenu(SettingInfo.menuPath + "/TextAdaptive", 20)]
+    [AddComponentMenu(SettingInfo.MenuPath + "TextAdaptive", 20)]
     /// <summary>
     /// Text文本自动适配
     /// </summary>

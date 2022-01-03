@@ -52,12 +52,10 @@ namespace YangTools
             //Directory.CreateDirectory(path + "Editor");
             //Directory.CreateDirectory(path + "StreamingAssets");
             //Directory.CreateDirectory(path + "Scripts");
-
             AssetDatabase.Refresh();
 
             Debug.Log("生成常用文件夹完成");
         }
-
         /// <summary>
         /// 创建说明文本
         /// </summary>

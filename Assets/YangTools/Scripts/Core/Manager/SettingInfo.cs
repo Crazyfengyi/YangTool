@@ -16,16 +16,20 @@ namespace YangTools
     public sealed class SettingInfo
     {
         /// <summary>
-        /// 菜单主路径
+        /// 菜单名称
         /// </summary>
-        public const string menuPath = "YangTools";
+        public const string menuName = "YangTools";
         /// <summary>
-        /// 功能路径
+        /// 辅助功能
         /// </summary>
         public const string functionName = "辅助功能";
         /// <summary>
+        /// 菜单主路径
+        /// </summary>
+        public const string MenuPath = menuName + "/";
+        /// <summary>
         /// 辅助功能路径
         /// </summary>
-        public const string YongToolsFunctionPath = menuPath + "/" + functionName + "/";
+        public const string YongToolsFunctionPath = menuName + "/" + functionName + "/";
     }
 }

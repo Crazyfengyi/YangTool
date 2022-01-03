@@ -40,8 +40,7 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
     [ShowIf("$CheckSameMD5ResultGroup")]
     [DictionaryDrawerSettings(KeyLabel = "MD5值", ValueLabel = "相同MD5值文件名称")]
     private Dictionary<string, List<string>> sameMD5Result5Group = new Dictionary<string, List<string>>();
-
-
+    
     [BoxGroup("重复文件列表/重复文件/名称值相同", CenterLabel = true)]
     [ShowInInspector]
     [PropertyOrder(1000)]
@@ -49,17 +48,14 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
     [ShowIf("$CheckSameNameResultGroup")]
     [DictionaryDrawerSettings(KeyLabel = "相同文件名称", ValueLabel = "对应绝对路径列表")]
     private Dictionary<string, List<string>> sameNameResultGroup = new Dictionary<string, List<string>>();
-
     public bool CheckSameMD5ResultGroup()
     {
         return sameMD5Result5Group.Count > 0;
     }
-
     private bool CheckSameNameResultGroup()
     {
         return sameNameResultGroup.Count > 0;
     }
-
     [PropertySpace(10, 20)]
     [ShowIf("@ IsToggled== false")]
     [Button("开始搜索", ButtonSizes.Large)]
@@ -78,7 +74,6 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
         IsToggled = true;
         EditorApplication.update += Updte;
     }
-
     /// <summary>
     /// 重置数据
     /// </summary>
@@ -92,7 +87,6 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
         sameNameResultGroup.Clear();
         fileInfoIEnumerator = null;
     }
-
     /// <summary>
     /// 过滤掉没有重复文件的数据
     /// </summary>
@@ -101,20 +95,17 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
         sameMD5Result5Group = sameMD5Group.Where(x => x.Value.Count > 1).ToDictionary(p => p.Key, p => p.Value);
         sameNameResultGroup = sameNameGroup.Where(x => x.Value.Count > 1).ToDictionary(p => p.Key, p => p.Value);
     }
-
     [ReadOnly]
     [ProgressBar(0, "maxCount", DrawValueLabel = true, ValueLabelAlignment = TextAlignment.Left, ColorMember = "GetHealthBarColor", Height = 30)]
     [ShowInInspector]
     [HideLabel]
     [ShowIf("@ IsToggled== true")]
     public int MaxCount { get; set; }//绘制进度条
-
     private Color GetHealthBarColor(int value)
     {
         maxCount = maxCount == 0 ? 1 : maxCount;
         return Color.Lerp(Color.red, Color.green, Mathf.Pow((float)value / maxCount, 2));
     }
-
     public void Updte()
     {
         if (IsToggled)
@@ -149,12 +140,9 @@ public class OneKeySearchDuplicateFiles : SerializedScriptableObject
             }
         }
     }
-
     /// <summary>
     /// 计算文件MD5值
     /// </summary>
-    /// <param name="fileFullName"></param>
-    /// <returns></returns>
     public string GetMD5HashFromFile(string fileFullName)
     {
         try

@@ -15,13 +15,13 @@ namespace YangTools
     {
         static Component[] copiedComponents;
 
-        [MenuItem("YangTools/" + SettingInfo.mark + "/CopyCurrentComponents &C")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "CopyCurrentComponents &C")]
         public static void Copy()
         {
             copiedComponents = Selection.activeGameObject.GetComponents<Component>();
         }
 
-        [MenuItem("YangTools/" + SettingInfo.mark + "/PasteCurrentComponents &P")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "PasteCurrentComponents &P")]
         public static void Paste()
         {
             foreach (var targetGameObject in Selection.gameObjects)

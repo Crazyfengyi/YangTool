@@ -145,6 +145,4 @@ public class AniEditor : Editor
             isPlaying = !isPlaying;
         }
     }
-
-
 }

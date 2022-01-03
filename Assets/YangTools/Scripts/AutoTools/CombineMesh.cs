@@ -22,7 +22,7 @@ namespace YangTools
         }
 
 #if UNITY_EDITOR
-        [MenuItem("YangTools/" + SettingInfo.mark + "/CombineMesh")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "CombineMesh")]
         static void StartCombineMesh()
         {
             if (Selection.activeTransform)

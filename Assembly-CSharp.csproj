@@ -80,6 +80,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\SetPropertyUtility.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Layout\CurvedLayout.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\GenericBaker.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\CommonObjectPool.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Layout\IScrollSnap.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\GenericPoser.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Effects\MonoSpacing.cs" />
@@ -450,6 +451,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\UILineConnector.cs" />
     <Compile Include="Assets\YangTools\AddIn\TurbochargedScrollList\UnityComponents\ScrollListAdapter.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModuleUI.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Function\LoopList\UIExtractEggs.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\UserControlThirdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFABRIKRoot.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Examples\FancyScrollView\01_Basic\Example01ScrollViewCell.cs" />
@@ -496,7 +498,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\CommonObjectPool.cs" />
+    <Compile Include="Assets\YangTools\Scripts\AutoTools\FactoryTool\AnimatorFactoryTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\AddIn\unity-ui-extensions\Shaders\UIAdditive.shader" />

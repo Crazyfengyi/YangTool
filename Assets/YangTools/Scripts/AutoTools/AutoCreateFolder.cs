@@ -10,11 +10,10 @@ namespace YangTools
     {
         public static string path = Application.dataPath + "/";//路径
         public static string resPath = path + "/YangTools/Resources/";//resources路径
-
         /// <summary>
         /// 自动生成工具文件夹
         /// </summary>
-        [MenuItem("YangTools/" + SettingInfo.mark + "/生成工具类文件夹")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "生成工具类文件夹")]
         public static void AutoCreate()
         {
             //对象池物体放在这里面

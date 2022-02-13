@@ -15,7 +15,7 @@ namespace YangTools
         /// <summary>
         /// 判断事件列表中是否存在这个委托
         /// </summary>
-        public static bool EventHaveFunction (Action<int> onClick, Action<int> func)
+        public static bool EventHaveFunction(Action<int> onClick, Action<int> func)
         {
             Delegate[] list = onClick.GetInvocationList();
 
@@ -139,12 +139,10 @@ namespace YangTools
         {
             return (1 - t) * ((1 - t) * p0 + t * p1) + t * ((1 - t) * p1 + t * p2);
         }
-
         public static void Bezier_2ref(ref Vector3 outValue, Vector3 p0, Vector3 p1, Vector3 p2, float t)
         {
             outValue = (1 - t) * ((1 - t) * p0 + t * p1) + t * ((1 - t) * p1 + t * p2);
         }
-
         /// <summary>
         /// 三次贝塞尔
         /// </summary>
@@ -152,10 +150,28 @@ namespace YangTools
         {
             return (1 - t) * ((1 - t) * ((1 - t) * p0 + t * p1) + t * ((1 - t) * p1 + t * p2)) + t * ((1 - t) * ((1 - t) * p1 + t * p2) + t * ((1 - t) * p2 + t * p3));
         }
-
         public static void Bezier_3ref(ref Vector3 outValue, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
             outValue = (1 - t) * ((1 - t) * ((1 - t) * p0 + t * p1) + t * ((1 - t) * p1 + t * p2)) + t * ((1 - t) * ((1 - t) * p1 + t * p2) + t * ((1 - t) * p2 + t * p3));
+        }
+        /// <summary>
+        /// Catmull-Rom 曲线插值---返回点1-2的曲线
+        /// </summary>
+        /// <param name="P0">点0</param>
+        /// <param name="P1">点1</param>
+        /// <param name="P2">点2</param>
+        /// <param name="P3">点3</param>
+        /// <param name="t">百分比0-1</param>
+        public static Vector3 CatmullRomPoint(Vector3 P0, Vector3 P1, Vector3 P2, Vector3 P3, float t)
+        {
+            float factor = 0.5f;
+            Vector3 c0 = P1;
+            Vector3 c1 = (P2 - P0) * factor;
+            Vector3 c2 = (P2 - P1) * 3f - (P3 - P1) * factor - (P2 - P0) * 2f * factor;
+            Vector3 c3 = (P2 - P1) * -2f + (P3 - P1) * factor + (P2 - P0) * factor;
+
+            Vector3 curvePoint = c3 * t * t * t + c2 * t * t + c1 * t + c0;
+            return curvePoint;
         }
     }
 }

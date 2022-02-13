@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,6 +53,9 @@
     <UnityVersion>2021.2.1f1c1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Primitives\UILineTextureRenderer.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\vThirdPersonMotor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBBIKSettings.cs" />
@@ -81,6 +84,7 @@
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Utilities\SetPropertyUtility.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Layout\CurvedLayout.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\GenericBaker.cs" />
+    <Compile Include="Assets\UserTest\EndlessWorlds\Script\Tools\FollowTarget.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\CommonObjectPool.cs" />
     <Compile Include="Assets\YangTools\AddIn\unity-ui-extensions\Scripts\Layout\IScrollSnap.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\GenericPoser.cs" />
@@ -823,6 +827,9 @@
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>Assets\PlugIn\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
@@ -849,9 +856,6 @@
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
-      <HintPath>Assets\PlugIn\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>D:\Unity\UnityHub\2021.2.1f1c1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -1309,13 +1313,13 @@
       <Project>{F1C49B2B-6EDC-8E4F-D6C5-3B1EED4D203B}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="AstarPathfindingProject.csproj">
-      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
-      <Name>AstarPathfindingProject</Name>
-    </ProjectReference>
     <ProjectReference Include="PackageToolsEditor.csproj">
       <Project>{2EACC277-124E-A0E7-9A8D-9B980F2EB1F4}</Project>
       <Name>PackageToolsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="AstarPathfindingProject.csproj">
+      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
+      <Name>AstarPathfindingProject</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
       <Project>{13C30237-0C02-8625-E701-E974EE7A5850}</Project>

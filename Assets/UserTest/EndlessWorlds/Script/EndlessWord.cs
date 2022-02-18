@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using YangTools;
+using YangTools.Extend;
 
 /// <summary>
 /// 程序生成无限世界的脚本
@@ -67,11 +68,11 @@ public class EndlessWord : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Extends.SetCursorLock(true);
+            YangExtend.SetCursorLock(true);
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Extends.SetCursorLock(false);
+            YangExtend.SetCursorLock(false);
         }
 
         //计算目标所在的地图块

@@ -67,7 +67,6 @@ public class IOSManager : MonoBehaviour
         }
     }
 
-
     void OnGUI()
     {
         GUI.TextArea(new Rect(Screen.width - 200, 0, 200, 100), "GameCenter:" + GameCenterState);

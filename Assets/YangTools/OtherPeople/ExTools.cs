@@ -283,7 +283,7 @@ public static partial class Extend
         tempRenderer.bones = boneList.ToArray();
         tempRenderer.material = material;
 
-        Texture2D skinnedMeshAtlas = new Texture2D(YangTools.Extends.GetThanPowerOfTwo(width), YangTools.Extends.GetThanPowerOfTwo(height));
+        Texture2D skinnedMeshAtlas = new Texture2D(YangTools.Extend.YangExtend.GetThanPowerOfTwo(width), YangTools.Extend.YangExtend.GetThanPowerOfTwo(height));
         Rect[] packingResult = skinnedMeshAtlas.PackTextures(textures.ToArray(), 0);
         Vector2[] atlasUVs = new Vector2[uvCount];
 

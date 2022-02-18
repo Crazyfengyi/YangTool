@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -177,6 +180,36 @@ namespace YangTools.Extend
             //去两端空格，中间多余空格
             input = Regex.Replace(input.Trim(), "\\s+", " ");
             return input;
+        }
+
+        /// <summary>
+        /// 克隆List
+        /// </summary>
+        public static List<T> GetClone<T>(this List<T> list)
+        {
+            List<T> newList = new List<T>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                newList.Add(list[i]);
+            }
+            return newList;
+        }
+        /// <summary>
+        /// 克隆类对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="RealObject"></param>
+        /// <returns></returns>
+        public static T Clone<T>(T RealObject)
+        {
+            using (Stream objStream = new MemoryStream())
+            {
+                //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(objStream, RealObject);
+                objStream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(objStream);
+            }
         }
 
         //=================需整理+验证==================

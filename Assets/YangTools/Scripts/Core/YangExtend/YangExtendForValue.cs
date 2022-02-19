@@ -212,6 +212,208 @@ namespace YangTools.Extend
             }
         }
 
+        #region Unity相关
+        /// <summary>
+        /// vector3转vector2
+        /// </summary>
+        /// <returns>去掉y</returns>
+        public static Vector2 ToVector2(this Vector3 vector3)
+        {
+            return new Vector2(vector3.x, vector3.z);
+        }
+        /// <summary>
+        /// vector2转vector3
+        /// </summary>
+        /// <returns>y默认为0</returns>
+        public static Vector3 ToVector3(this Vector2 vector2, float y = 0f)
+        {
+            return new Vector3(vector2.x, y, vector2.y);
+        }
+        /// <summary>
+        /// 设置绝对位置的x坐标。
+        /// </summary>
+        /// <param name="newValue">x坐标值</param>
+        public static void SetPositionX(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.position;
+            v.x = newValue;
+            transform.position = v;
+        }
+        /// <summary>
+        /// 设置绝对位置的y坐标。
+        /// </summary>
+        /// <param name="newValue">y坐标值</param>
+        public static void SetPositionY(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.position;
+            v.y = newValue;
+            transform.position = v;
+        }
+        /// <summary>
+        /// 设置绝对位置的z坐标。
+        /// </summary>
+        /// <param name="newValue">z坐标值</param>
+        public static void SetPositionZ(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.position;
+            v.z = newValue;
+            transform.position = v;
+        }
+        /// <summary>
+        /// 增加绝对位置的x坐标。
+        /// </summary>
+        /// <param name="deltaValue">x坐标值增量</param>
+        public static void AddPositionX(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.position;
+            v.x += deltaValue;
+            transform.position = v;
+        }
+        /// <summary>
+        /// 增加绝对位置的y坐标。
+        /// </summary>
+        /// <param name="deltaValue">y坐标值增量</param>
+        public static void AddPositionY(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.position;
+            v.y += deltaValue;
+            transform.position = v;
+        }
+        /// <summary>
+        /// 增加绝对位置的 z 坐标。
+        /// </summary>
+        /// <param name="deltaValue">z坐标值增量</param>
+        public static void AddPositionZ(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.position;
+            v.z += deltaValue;
+            transform.position = v;
+        }
+
+        /// <summary>
+        /// 设置相对位置的x坐标。
+        /// </summary>
+        /// <param name="newValue">x坐标值</param>
+        public static void SetLocalPositionX(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.x = newValue;
+            transform.localPosition = v;
+        }
+        /// <summary>
+        /// 设置相对位置的y坐标。
+        /// </summary>
+        /// <param name="newValue">y坐标值</param>
+        public static void SetLocalPositionY(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.y = newValue;
+            transform.localPosition = v;
+        }
+        /// <summary>
+        /// 设置相对位置的z坐标。
+        /// </summary>
+        /// <param name="newValue">z坐标值</param>
+        public static void SetLocalPositionZ(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.z = newValue;
+            transform.localPosition = v;
+        }
+        /// <summary>
+        /// 增加相对位置的x坐标。
+        /// </summary>
+        /// <param name="deltaValue">x坐标值</param>
+        public static void AddLocalPositionX(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.x += deltaValue;
+            transform.localPosition = v;
+        }
+        /// <summary>
+        /// 增加相对位置的y坐标。
+        /// </summary>
+        /// <param name="deltaValue">y坐标值</param>
+        public static void AddLocalPositionY(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.y += deltaValue;
+            transform.localPosition = v;
+        }
+        /// <summary>
+        /// 增加相对位置的z坐标。
+        /// </summary>
+        /// <param name="deltaValue">z坐标值</param>
+        public static void AddLocalPositionZ(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localPosition;
+            v.z += deltaValue;
+            transform.localPosition = v;
+        }
+
+        /// <summary>
+        /// 设置相对尺寸的x分量。
+        /// </summary>
+        /// <param name="newValue">x分量值</param>
+        public static void SetLocalScaleX(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localScale;
+            v.x = newValue;
+            transform.localScale = v;
+        }
+        /// <summary>
+        /// 设置相对尺寸的y分量。
+        /// </summary>
+        /// <param name="newValue">y分量值</param>
+        public static void SetLocalScaleY(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localScale;
+            v.y = newValue;
+            transform.localScale = v;
+        }
+        /// <summary>
+        /// 设置相对尺寸的z分量。
+        /// </summary>
+        /// <param name="newValue">z分量值</param>
+        public static void SetLocalScaleZ(this Transform transform, float newValue)
+        {
+            Vector3 v = transform.localScale;
+            v.z = newValue;
+            transform.localScale = v;
+
+        }
+        /// <summary>
+        /// 增加相对尺寸的x分量。
+        /// </summary>
+        /// <param name="deltaValue">x分量增量</param>
+        public static void AddLocalScaleX(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localScale;
+            v.x += deltaValue;
+            transform.localScale = v;
+        }
+        /// <summary>
+        /// 增加相对尺寸的y分量。
+        /// </summary>
+        /// <param name="deltaValue">y分量增量</param>
+        public static void AddLocalScaleY(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localScale;
+            v.y += deltaValue;
+            transform.localScale = v;
+        }
+        /// <summary>
+        /// 增加相对尺寸的z分量。
+        /// </summary>
+        /// <param name="deltaValue">z分量增量</param>
+        public static void AddLocalScaleZ(this Transform transform, float deltaValue)
+        {
+            Vector3 v = transform.localScale;
+            v.z += deltaValue;
+            transform.localScale = v;
+        }
+
+        #endregion
         //=================需整理+验证==================
         //随机时间
         public static DateTime NextDateTime(this System.Random random, DateTime minValue, DateTime maxValue)

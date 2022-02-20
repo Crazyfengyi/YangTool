@@ -414,6 +414,7 @@ namespace YangTools.Extend
         }
 
         #endregion
+
         //=================需整理+验证==================
         //随机时间
         public static DateTime NextDateTime(this System.Random random, DateTime minValue, DateTime maxValue)

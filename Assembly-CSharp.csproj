@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -52,9 +52,6 @@
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.2.1f1c1</UnityVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Primitives\UILineTextureRenderer.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\vThirdPersonMotor.cs" />
@@ -232,6 +229,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\ScrollPositionController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintPositionOffset.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\EffectorOffset.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\YangUIManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\FancyScrollView\01_Basic\Example01CellDto.cs" />
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\BuffBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\RecoilTest.cs" />
@@ -274,6 +272,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\MenuExample\Scripts\Menus\MainMenu.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Primitives\DiamondGraph.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\Generic\Utils\vPickupItem.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UISetting.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\FancyScrollView\02_CellEventHandling\Example02CellDto.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\FABRIKRoot.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\MenuExample\Scripts\Menus\AwesomeMenu.cs" />
@@ -327,6 +326,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\ShaderEffects\UIScreenEffect.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\SVBoxSlider.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\MenuExample\Scripts\Menus\GameMenu.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForValue.cs" />
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\AttributeBuff.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\FancyScrollView.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\RagdollUtilityDemo.cs" />
@@ -515,7 +515,10 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForValue.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIPanelBase.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIPanelLogic.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIHelper.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIMonoInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />

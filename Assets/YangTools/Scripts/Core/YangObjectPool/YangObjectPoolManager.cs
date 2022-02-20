@@ -9,22 +9,20 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reflection;
-using UnityEngine.Pool;
-using static UnityEditor.Progress;
+using System.Linq;
 
 namespace YangTools.ObjectPool
 {
     /// <summary>
     /// 通用对象池
     /// </summary>
-    public class YangObjectPool
+    internal class YangObjectPool : GameModuleManager
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
         /// </summary>
-        public static bool isCheckRelease = true;
+        public static bool isCheckRecyle = true;
         //所有对象池
         private static readonly Dictionary<string, PoolPackage> m_allPools = new Dictionary<string, PoolPackage>();
         /// <summary>
@@ -44,6 +42,9 @@ namespace YangTools.ObjectPool
                 ObjectPool<T> pool = new ObjectPool<T>();
                 PoolPackage package = new PoolPackage();
                 package.objectPool = pool;
+                package.T_type = typeof(T);
+                package.Pool_type = pool.GetType();
+                package.Binding<T>();
                 m_allPools.Add(key, package);
                 return m_allPools[key].GetPool<T>().Get();
             }
@@ -54,23 +55,26 @@ namespace YangTools.ObjectPool
         /// <typeparam name="T">对象类型</typeparam>
         /// <param name="item">要回收的对象</param>
         /// <returns>是否回收成功</returns> 
-        public static bool Release<T>(T item) where T : class, IPoolItem<T>, new()
+        public static bool Recycle<T>(T item) where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
             if (m_allPools.ContainsKey(key))
             {
-                m_allPools[key].GetPool<T>().Release(item);
+                m_allPools[key].GetPool<T>().Recycle(item);
                 return true;
             }
             else
             {
-                if (isCheckRelease)
+                if (isCheckRecyle)
                 {
                     ObjectPool<T> pool = new ObjectPool<T>();
                     PoolPackage package = new PoolPackage();
                     package.objectPool = pool;
+                    package.T_type = item.GetType();
+                    package.Pool_type = pool.GetType();
+                    package.Binding<T>();
                     m_allPools.Add(key, package);
-                    m_allPools[key].GetPool<T>().Release(item);
+                    m_allPools[key].GetPool<T>().Recycle(item);
                     return true;
                 }
             }
@@ -90,37 +94,80 @@ namespace YangTools.ObjectPool
                 m_allPools[key].GetPool<T>().Clear();
                 return true;
             }
-
             return false;
         }
         /// <summary>
-        /// 是否有泛型接口
+        /// 获得自动回收包裹
         /// </summary>
-        private static bool HaveInterface(Type type)
+        /// <typeparam name="T">对象类型</typeparam>
+        public static PooledObjectPackage<T> GetAutoRecycleItem<T>() where T : class, IPoolItem<T>, new()
         {
-            return Array.Exists(type.GetInterfaces(), t =>
+            string key = typeof(T).FullName;
+            if (m_allPools.ContainsKey(key))
             {
-                if (t.IsGenericType)
-                {
-                    return t.GetGenericTypeDefinition() == typeof(IPoolItem<>);
-                }
-
-                return false;
-            });
+                return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
+            }
+            return default;
+        }
+        internal override void Init()
+        {
+        }
+        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        {
+            foreach (KeyValuePair<string, PoolPackage> item in m_allPools)
+            {
+                item.Value.Update(elapseSeconds, realElapseSeconds);
+            }
+        }
+        internal override void CloseModule()
+        {
+            m_allPools.Clear();
         }
     }
     /// <summary>
     /// 对象池包裹类
     /// </summary>
-    public class PoolPackage
+    internal class PoolPackage
     {
-        public dynamic objectPool;
+        public object objectPool;
+        public Type Pool_type;
+        public Type T_type;
+        private ReflectionInfo updateAction;//轮询方法
         public ObjectPool<T> GetPool<T>() where T : class, IPoolItem<T>, new()
         {
             return (ObjectPool<T>)(object)objectPool;
         }
+        /// <summary>
+        /// 绑定轮询方法
+        /// </summary>
+        public void Binding<T>()
+        {
+            Type type = typeof(T);
+            FieldInfo inter = null;
+            Type[] interNames = type.GetInterfaces();
+            for (int i = 0; i < interNames.Length; i++)
+            {
+                Type item = interNames[i];
+                if (item.Name.Contains("IPoolItem"))
+                {
+                    inter = item.GetField("objectPool", BindingFlags.Static | BindingFlags.NonPublic);
+                    break;
+                }
+            }
+            object instance = inter.GetValue(type);
+            System.Reflection.MethodInfo createFunc = type.GetMethod("Update");
+            updateAction = new ReflectionInfo(instance, createFunc);
+        }
+        public void Update(float elapseSeconds, float realElapseSeconds)
+        {
+            updateAction?.Invoke(elapseSeconds, realElapseSeconds);
+        }
     }
-    public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
+    /// <summary>
+    /// 对象池
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    internal class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         internal readonly Stack<T> m_Stack;//栈
         private readonly ReflectionInfo m_CreateFunc;//创建方法
@@ -130,6 +177,8 @@ namespace YangTools.ObjectPool
 
         private readonly int m_MaxSize;//最大数量
         internal bool m_CollectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
+
+        internal int m_defaultCapacity;//默认对象池大小
         /// <summary>
         /// 所有对象数
         /// </summary>
@@ -147,19 +196,35 @@ namespace YangTools.ObjectPool
         /// </summary>
         public int CountInactive => m_Stack.Count;
         /// <summary>
+        /// 自动回收间隔时间
+        /// </summary>
+        public float AutoRecycleInterval { get; set; }
+        /// <summary>
+        /// 自动回收计时
+        /// </summary>
+        public float AutoRecycleTime { get; set; }
+        /// <summary>
+        /// 优先级
+        /// </summary>
+        public float Priority { get; set; }
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="collectionCheck">是否回收检查</param>
         /// <param name="defaultCapacity">默认容量</param>
         /// <param name="maxSize">最大大小</param>
-        public ObjectPool(int defaultCapacity = 10, int maxSize = 10000, bool collectionCheck = true)
+        public ObjectPool(int defaultCapacity = 10, int maxSize = 10000, float autoRecycleTime = 60, float priority = 0, bool collectionCheck = true)
         {
             if (maxSize <= 0)
             {
                 throw new ArgumentException("Max Size must be greater than 0", "maxSize");
             }
             m_Stack = new Stack<T>(defaultCapacity);
+            m_defaultCapacity = defaultCapacity;
             m_MaxSize = maxSize;
+            AutoRecycleInterval = autoRecycleTime;
+            AutoRecycleTime = AutoRecycleInterval;
+            Priority = priority;
             m_CollectionCheck = collectionCheck;
 
             #region 反射获取方法
@@ -176,7 +241,6 @@ namespace YangTools.ObjectPool
                     break;
                 }
             }
-
             object instance = inter.GetValue(type);
             System.Reflection.MethodInfo createFunc = type.GetMethod("Create");
             System.Reflection.MethodInfo getAction = type.GetMethod("OnGet");
@@ -189,7 +253,19 @@ namespace YangTools.ObjectPool
             m_ActionOnDestroy = new ReflectionInfo(instance, destroyAction);
             #endregion
         }
-
+        public void Update(float elapseSeconds, float realElapseSeconds)
+        {
+            AutoRecycleTime += realElapseSeconds;
+            if (AutoRecycleTime < AutoRecycleInterval)
+            {
+                return;
+            }
+            RecycleToDefaultCount();
+        }
+        public PooledObjectPackage<T> GetAutoRecycleItem()
+        {
+            return new PooledObjectPackage<T>(Get(), this);
+        }
         public T Get()
         {
             T item;
@@ -207,11 +283,7 @@ namespace YangTools.ObjectPool
             m_ActionOnGet?.Invoke<T>(false, item);
             return item;
         }
-        public PooledObjectPackage<T> GetAutoReleaseItem()
-        {
-            return new PooledObjectPackage<T>(Get(), this);
-        }
-        public void Release(T item)
+        public void Recycle(T item)
         {
             if (m_CollectionCheck && m_Stack.Count > 0 && m_Stack.Contains(item))
             {
@@ -227,6 +299,15 @@ namespace YangTools.ObjectPool
             else
             {
                 m_ActionOnDestroy?.Invoke<T>(false, item);
+            }
+        }
+        public void RecycleToDefaultCount()
+        {
+            AutoRecycleTime = 0f;
+            while (m_Stack.Count > m_defaultCapacity)
+            {
+                T item = m_Stack.Peek();
+                Recycle(item);
             }
         }
         public void Clear()
@@ -268,6 +349,23 @@ namespace YangTools.ObjectPool
                 return (T)Func.Invoke(instanceT, new object[] { paramlist[0] });
             }
         }
+        /// <summary>
+        /// 无返回值
+        /// </summary>
+        /// <param name="paramlist">参数列表</param>
+        public void Invoke(params object[] paramlist)
+        {
+            bool isNull = paramlist.Length == 0;
+            if (isNull)
+            {
+                Func.Invoke(instanceT, null);
+            }
+            else
+            {
+                //反射调用
+                Func.Invoke(instanceT, paramlist);
+            }
+        }
     }
     /// <summary>
     /// 对象池
@@ -282,9 +380,40 @@ namespace YangTools.ObjectPool
         {
             get;
         }
+        /// <summary>
+        /// 自动回收间隔
+        /// </summary>
+        float AutoRecycleInterval { get; set; }
+        /// <summary>
+        /// 自动回收计时
+        /// </summary>
+        float AutoRecycleTime { get; set; }
+        /// <summary>
+        /// 优先级
+        /// </summary>
+        float Priority { get; set; }
+        void Update(float elapseSeconds, float realElapseSeconds);
+        /// <summary>
+        /// 获得对象
+        /// </summary>
+        /// <returns></returns>
         T Get();
-        PooledObjectPackage<T> GetAutoReleaseItem();
-        void Release(T element);
+        /// <summary>
+        /// 获得自动回收包裹
+        /// </summary>
+        PooledObjectPackage<T> GetAutoRecycleItem();
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        /// <param name="element"></param>
+        void Recycle(T element);
+        /// <summary>
+        /// 释放对象池中的对象到默认大小
+        /// </summary>
+        void RecycleToDefaultCount();
+        /// <summary>
+        /// 清空对象池
+        /// </summary>
         void Clear();
     }
     // C# 8.0 可在接口中实现static方法 和 构造函数--可以改的更好--https://zhuanlan.zhihu.com/p/268278929
@@ -297,11 +426,11 @@ namespace YangTools.ObjectPool
         protected static T instanceT = new T(); /* (T)Activator.CreateInstance(typeof(T))*/
         T Create();
         void OnGet(T t);
-        void OnRelease(T t);
+        void OnRecycle(T t);
         void OnDestroy(T t);
     }
     /// <summary>
-    /// 值类型-对象池物体包裹-值类型回收时(销毁时)自动回收到对象池
+    /// 值类型-对象池物体包裹-值类型回收时(销毁时)自动回收对象到对象池--需要二次测试
     /// </summary>
     /// <typeparam name="T">对象</typeparam>
     public struct PooledObjectPackage<T> : IDisposable where T : class
@@ -319,7 +448,7 @@ namespace YangTools.ObjectPool
         }
         void IDisposable.Dispose()
         {
-            m_Pool.Release(m_ToReturn);
+            m_Pool.Recycle(m_ToReturn);
         }
     }
     /// <summary>
@@ -335,7 +464,7 @@ namespace YangTools.ObjectPool
         public void OnGet(DefaultObjectPoolItem t)
         {
         }
-        public void OnRelease(DefaultObjectPoolItem t)
+        public void OnRecycle(DefaultObjectPoolItem t)
         {
         }
         public void OnDestroy(DefaultObjectPoolItem t)

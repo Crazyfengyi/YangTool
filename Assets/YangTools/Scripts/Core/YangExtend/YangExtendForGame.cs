@@ -81,6 +81,21 @@ namespace YangTools.Extend
             return component;
         }
 
+        private static readonly List<Transform> cachedTransforms = new List<Transform>();
+        /// <summary>
+        /// 递归设置游戏对象的层次。
+        /// </summary>
+        /// <param name="gameObject"><see cref="GameObject" /> 对象。</param>
+        /// <param name="layer">目标层次的编号。</param>
+        public static void SetLayerRecursively(this GameObject gameObject, int layer)
+        {
+            gameObject.GetComponentsInChildren(true, cachedTransforms);
+            for (int i = 0; i < cachedTransforms.Count; i++)
+            {
+                cachedTransforms[i].gameObject.layer = layer;
+            }
+            cachedTransforms.Clear();
+        }
         #region 射线和网格合并
         /// <summary>
         /// 合并蒙皮网格，刷新骨骼

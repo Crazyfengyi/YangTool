@@ -77,6 +77,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\InputFieldEnterSubmit.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Adaptive\TextAdaptive.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Rotation Limits\RotationLimitPolygonal.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIHelper.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\SetPropertyUtility.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\CurvedLayout.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\GenericBaker.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderFBBIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\Gradient.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverLookAt.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIPanelLogicBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRLeg.cs" />
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffManager\BuffDataStruct.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\EditorIK.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\InputModules\AimerInputModule.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Parabola\Missile.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\InspectorComment.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIMonoInstance.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\DemoGUIMessage.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\vThirdPersonAnimator.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\AimPoser.cs" />
@@ -377,6 +380,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\IK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverArm.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFABRIK.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIPanel.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Common\TextWalkingLantern.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorPickerPresets.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\MenuSystem\SimpleMenu.cs" />
@@ -515,10 +519,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIPanelBase.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIPanelLogic.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIHelper.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIMonoInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />

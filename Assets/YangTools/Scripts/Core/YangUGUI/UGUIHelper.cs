@@ -10,69 +10,25 @@ using System.Collections;
 using YangTools.Extend;
 using UnityEngine.UI;
 
-namespace YangTools.UI
+namespace YangTools.UGUI
 {
-    /// <summary>
-    /// UGUI界面辅助器
-    /// </summary>
-    public class UGUIPanelHelper : MonoBehaviour, IUIPanelHelper
-    {
-        /// <summary>
-        /// 实例化界面。
-        /// </summary>
-        /// <param name="uiFormAsset">要实例化的界面资源。</param>
-        /// <returns>实例化后的界面。</returns>
-        public object InstantiateUIForm(object uiFormAsset)
-        {
-            return Instantiate((Object)uiFormAsset);
-        }
-        /// <summary>
-        /// 创建界面。
-        /// </summary>
-        /// <param name="uiFormInstance">界面实例。</param>
-        /// <param name="uiGroup">界面所属的界面组。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        /// <returns>界面</returns>
-        public IUIPanel CreateUIPanel(object uiFormInstance, IUIGroup uiGroup, object userData)
-        {
-            GameObject gameObject = uiFormInstance as GameObject;
-            if (gameObject == null)
-            {
-                Debug.LogError("UI form instance is invalid.");
-                return null;
-            }
-            Transform transform = gameObject.transform;
-            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
-            transform.localScale = Vector3.one;
-            return gameObject.GetOrAddComponent<UIPanelBase>();
-        }
-        /// <summary>
-        /// 释放界面。
-        /// </summary>
-        /// <param name="uiFormAsset">要释放的界面资源。</param>
-        /// <param name="uiFormInstance">要释放的界面实例。</param>
-        public void ReleaseUIPanel(object uiFormAsset, object uiFormInstance)
-        {
-            Destroy((Object)uiFormInstance);
-        }
-    }
     /// <summary>
     /// UGUI界面组辅助器
     /// </summary>
     public class UGUIGroupHelper : MonoBehaviour, IUIGroupHelper
     {
         public const int DepthFactor = 1000;
-        private int m_Depth = 0;
-        private Canvas m_CachedCanvas = null;
+        private int depth = 0;//深度
+        private Canvas cachedCanvas = null;//缓存的canvas
         private void Awake()
         {
-            m_CachedCanvas = gameObject.GetOrAddComponent<Canvas>();
+            cachedCanvas = gameObject.GetOrAddComponent<Canvas>();
             gameObject.GetOrAddComponent<GraphicRaycaster>();
         }
         private void Start()
         {
-            m_CachedCanvas.overrideSorting = true;
-            m_CachedCanvas.sortingOrder = DepthFactor * m_Depth;
+            cachedCanvas.overrideSorting = true;
+            cachedCanvas.sortingOrder = DepthFactor * depth;
 
             RectTransform transform = GetComponent<RectTransform>();
             transform.anchorMin = Vector2.zero;
@@ -81,14 +37,58 @@ namespace YangTools.UI
             transform.sizeDelta = Vector2.zero;
         }
         /// <summary>
-        /// 设置界面组深度
+        /// 设置UI界面组深度
         /// </summary>
-        /// <param name="depth">界面组深度</param>
+        /// <param name="depth">UI界面组深度</param>
         public void SetDepth(int depth)
         {
-            m_Depth = depth;
-            m_CachedCanvas.overrideSorting = true;
-            m_CachedCanvas.sortingOrder = DepthFactor * depth;
+            this.depth = depth;
+            cachedCanvas.overrideSorting = true;
+            cachedCanvas.sortingOrder = DepthFactor * depth;
+        }
+    }
+    /// <summary>
+    /// UGUI界面辅助器
+    /// </summary>
+    public class UGUIPanelHelper : MonoBehaviour, IUIPanelHelper
+    {
+        /// <summary>
+        /// 实例化UI界面
+        /// </summary>
+        /// <param name="uiPanelAsset">要实例化的界面资源</param>
+        /// <returns>实例化后的界面</returns>
+        public object InstantiateUIPanel(object uiPanelAsset)
+        {
+            return Instantiate((Object)uiPanelAsset);
+        }
+        /// <summary>
+        /// 创建UI界面
+        /// </summary>
+        /// <param name="uiPanelInstance">界面实例</param>
+        /// <param name="uiGroup">界面所属的界面组</param>
+        /// <param name="userData">用户自定义数据</param>
+        /// <returns>界面</returns>
+        public IUIPanel CreateUIPanel(object uiPanelInstance, IUIGroup uiGroup, object userData)
+        {
+            GameObject gameObject = uiPanelInstance as GameObject;
+            if (gameObject == null)
+            {
+                Debug.LogError("UI form instance is invalid.");
+                return null;
+            }
+            Transform transform = gameObject.transform;
+            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
+            transform.localScale = Vector3.one;
+            return gameObject.GetOrAddComponent<UIPanel>();
+        }
+        /// <summary>
+        /// 释放UI界面
+        /// </summary>
+        /// <param name="uiPanelAsset">要释放的界面资源</param>
+        /// <param name="uiPanelInstance">要释放的界面实例</param>
+        public void ReleaseUIPanel(object uiPanelAsset, object uiPanelInstance)
+        {
+            Destroy((Object)uiPanelInstance);
         }
     }
 }

@@ -13,30 +13,39 @@ using Debug = UnityEngine.Debug;
 using YangTools.Extend;
 using UnityEngine.UI;
 
-namespace YangTools.UI
+namespace YangTools.UGUI
 {
     /// <summary>
-    /// UGUI界面逻辑基类。
+    /// UGUI界面逻辑基类
     /// </summary>
-    public abstract class UGUIPanelLogic : MonoBehaviour
+    public abstract class UGUIPanelLogicBase : MonoBehaviour
     {
-        private bool m_Available = false;
-        private bool m_Visible = false;
-        private UIPanelBase m_UIForm = null;
-        private Transform m_CachedTransform = null;
-        private int m_OriginalLayer = 0;
+        public const int DepthFactor = 100;//UI界面深度系数
+        private static Font mainFont = null;//主字体
+
+        private bool available = false;//是否可用的
+        private bool visible = false;//是否显示
+        private UIPanel uiPanel = null;//UI界面
+        private Transform cachedTransform = null;//缓存的Transform
+        private CanvasGroup canvasGroup = null;//缓存的CanvasGroup
+        private Canvas cachedCanvas = null;//缓存的Canvas
+        private List<Canvas> cachedCanvasList = new List<Canvas>();//缓存的Canvas列表
+
+        private int originalLayer = 0;//原始层级
+
+        #region 对外属性
         /// <summary>
-        /// 获取界面。
+        /// 获取界面
         /// </summary>
-        public UIPanelBase UIForm
+        public UIPanel UIPanel
         {
             get
             {
-                return m_UIForm;
+                return uiPanel;
             }
         }
         /// <summary>
-        /// 获取或设置界面名称。
+        /// 获取或设置界面名称
         /// </summary>
         public string Name
         {
@@ -50,78 +59,70 @@ namespace YangTools.UI
             }
         }
         /// <summary>
-        /// 获取界面是否可用。
+        /// 获取界面是否可用
         /// </summary>
         public bool Available
         {
             get
             {
-                return m_Available;
+                return available;
             }
         }
         /// <summary>
-        /// 获取或设置界面是否可见。
+        /// 获取或设置界面是否可见
         /// </summary>
         public bool Visible
         {
             get
             {
-                return m_Available && m_Visible;
+                return available && visible;
             }
             set
             {
-                if (!m_Available)
+                if (!available)
                 {
                     Debug.LogWarning(string.Format("UI form '{0}' is not available.", Name));
                     return;
                 }
-                if (m_Visible == value)
+                if (visible == value)
                 {
                     return;
                 }
-                m_Visible = value;
+                visible = value;
                 SetVisible(value);
             }
         }
         /// <summary>
-        /// 获取已缓存的 Transform。
+        /// 获取已缓存的Transform
         /// </summary>
         public Transform CachedTransform
         {
             get
             {
-                return m_CachedTransform;
+                return cachedTransform;
             }
         }
-
-        //======================================
-        public const int DepthFactor = 100;
-        private const float FadeTime = 0.3f;
-        private static Font s_MainFont = null;
-        private Canvas m_CachedCanvas = null;
-        private CanvasGroup m_CanvasGroup = null;
-        private List<Canvas> m_CachedCanvasContainer = new List<Canvas>();
+        /// <summary>
+        /// 原始深度
+        /// </summary>
         public int OriginalDepth
         {
             get;
             private set;
         }
+        /// <summary>
+        /// 深度
+        /// </summary>
         public int Depth
         {
             get
             {
-                return m_CachedCanvas.sortingOrder;
+                return cachedCanvas.sortingOrder;
             }
         }
+        #endregion
 
         #region 父类设置
-        /// <summary>
-        /// 播放声音
-        /// </summary>
-        /// <param name="uiSoundId"></param>
-        public void PlayUISound(int uiSoundId)
-        {
-        }
         /// <summary>
         /// 设置字体
         /// </summary>
@@ -133,7 +134,15 @@ namespace YangTools.UI
                 Debug.LogError("Main font is invalid.");
                 return;
             }
-            s_MainFont = mainFont;
+            UGUIPanelLogicBase.mainFont = mainFont;
+        }
+        /// <summary>
+        /// 播放声音
+        /// </summary>
+        /// <param name="uiSoundId"></param>
+        public void PlayUISound(int uiSoundId)
+        {
+            //TODO 差实现
         }
         /// <summary>
         /// 关闭页面
@@ -145,7 +154,7 @@ namespace YangTools.UI
 
             if (ignoreFade)
             {
-                UIMonoInstance.Instance.CloseUIPanel(this.UIForm);
+                UIMonoInstance.Instance.CloseUIPanel(this.UIPanel);
             }
             else
             {
@@ -163,24 +172,24 @@ namespace YangTools.UI
 
         #region 生命周期
         /// <summary>
-        /// 界面初始化。
+        /// 界面初始化
         /// </summary>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="userData">用户自定义数据</param>
         protected internal virtual void OnInit(object userData)
         {
-            if (m_CachedTransform == null)
+            if (cachedTransform == null)
             {
-                m_CachedTransform = transform;
+                cachedTransform = transform;
             }
 
-            m_UIForm = GetComponent<UIPanelBase>();
-            m_OriginalLayer = gameObject.layer;
+            uiPanel = GetComponent<UIPanel>();
+            originalLayer = gameObject.layer;
 
-            m_CachedCanvas = gameObject.GetOrAddComponent<Canvas>();
-            m_CachedCanvas.overrideSorting = true;
-            OriginalDepth = m_CachedCanvas.sortingOrder;
+            cachedCanvas = gameObject.GetOrAddComponent<Canvas>();
+            cachedCanvas.overrideSorting = true;
+            OriginalDepth = cachedCanvas.sortingOrder;
 
-            m_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+            canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
 
             RectTransform trans = GetComponent<RectTransform>();
             trans.anchorMin = Vector2.zero;
@@ -193,7 +202,7 @@ namespace YangTools.UI
             Text[] texts = GetComponentsInChildren<Text>(true);
             for (int i = 0; i < texts.Length; i++)
             {
-                texts[i].font = s_MainFont;
+                texts[i].font = mainFont;
                 if (!string.IsNullOrEmpty(texts[i].text))
                 {
                     texts[i].text = texts[i].text.ToString();//多语言
@@ -201,95 +210,95 @@ namespace YangTools.UI
             }
         }
         /// <summary>
-        /// 界面回收。
+        /// 界面回收
         /// </summary>
         protected internal virtual void OnRecycle()
         {
         }
         /// <summary>
-        /// 界面打开。
+        /// 界面打开
         /// </summary>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="userData">用户自定义数据</param>
         protected internal virtual void OnOpen(object userData)
         {
-            m_Available = true;
+            available = true;
             Visible = true;
 
-            m_CanvasGroup.alpha = 0f;
+            canvasGroup.alpha = 0f;
             StopAllCoroutines();
             //StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));//动画
         }
         /// <summary>
-        /// 界面关闭。
+        /// 界面关闭
         /// </summary>
-        /// <param name="isShutdown">是否是关闭界面管理器时触发。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="isShutdown">是否是关闭界面管理器时触发</param>
+        /// <param name="userData">用户自定义数据</param>
         protected internal virtual void OnClose(bool isShutdown, object userData)
         {
-            //gameObject.SetLayerRecursively(m_OriginalLayer);
+            gameObject.SetLayerRecursively(originalLayer);
             Visible = false;
-            m_Available = false;
+            available = false;
         }
         /// <summary>
-        /// 界面暂停。
+        /// 界面暂停
         /// </summary>
         protected internal virtual void OnPause()
         {
             Visible = false;
         }
         /// <summary>
-        /// 界面暂停恢复。
+        /// 界面暂停恢复
         /// </summary>
         protected internal virtual void OnResume()
         {
             Visible = true;
-            m_CanvasGroup.alpha = 0f;
+            canvasGroup.alpha = 0f;
             StopAllCoroutines();
             //StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));
         }
         /// <summary>
-        /// 界面遮挡。
+        /// 界面遮挡
         /// </summary>
         protected internal virtual void OnCover()
         {
         }
         /// <summary>
-        /// 界面遮挡恢复。
+        /// 界面遮挡恢复
         /// </summary>
         protected internal virtual void OnReveal()
         {
         }
         /// <summary>
-        /// 界面激活。
+        /// 界面激活
         /// </summary>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="userData">用户自定义数据</param>
         protected internal virtual void OnRefocus(object userData)
         {
         }
         /// <summary>
-        /// 界面轮询。
+        /// 界面轮询
         /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
-        /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
+        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位</param>
+        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位</param>
         protected internal virtual void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
         }
         /// <summary>
-        /// 界面深度改变。
+        /// 界面深度改变
         /// </summary>
-        /// <param name="uiGroupDepth">界面组深度。</param>
-        /// <param name="depthInUIGroup">界面在界面组中的深度。</param>
+        /// <param name="uiGroupDepth">界面组深度</param>
+        /// <param name="depthInUIGroup">界面在界面组中的深度</param>
         protected internal virtual void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
             int oldDepth = Depth;
             int deltaDepth = UGUIGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
-            GetComponentsInChildren(true, m_CachedCanvasContainer);
-            for (int i = 0; i < m_CachedCanvasContainer.Count; i++)
+            GetComponentsInChildren(true, cachedCanvasList);
+            for (int i = 0; i < cachedCanvasList.Count; i++)
             {
-                m_CachedCanvasContainer[i].sortingOrder += deltaDepth;
+                cachedCanvasList[i].sortingOrder += deltaDepth;
             }
 
-            m_CachedCanvasContainer.Clear();
+            cachedCanvasList.Clear();
         }
         #endregion
     }

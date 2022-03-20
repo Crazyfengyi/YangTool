@@ -167,7 +167,7 @@ namespace YangTools.ObjectPool
     /// 对象池
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
+    /*internal*/ public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         internal readonly Stack<T> m_Stack;//栈
         private readonly ReflectionInfo m_CreateFunc;//创建方法

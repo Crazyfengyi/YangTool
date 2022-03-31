@@ -174,23 +174,6 @@ namespace YangTools.UGUI
         /// <returns>所有已加载的界面</returns>
         IUIPanel[] GetAllLoadedUIPanels();
         /// <summary>
-        /// 获取所有正在加载UI界面的序列编号
-        /// </summary>
-        /// <returns>所有正在加载界面的序列编号</returns>
-        int[] GetAllLoadingUIPanelSerialIds();
-        /// <summary>
-        /// 是否正在加载UI界面
-        /// </summary>
-        /// <param name="serialId">界面序列编号</param>
-        /// <returns>是否正在加载界面</returns>
-        bool IsLoadingUIPanel(int serialId);
-        /// <summary>
-        /// 是否正在加载UI界面
-        /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>是否正在加载界面</returns>
-        bool IsLoadingUIPanel(string uiPanelAssetName);
-        /// <summary>
         /// 是否是合法的UI界面
         /// </summary>
         /// <param name="uiPanel">界面</param>
@@ -295,10 +278,6 @@ namespace YangTools.UGUI
         /// </summary>
         /// <param name="userData">用户自定义数据</param>
         void CloseAllLoadedUIPanels(object userData);
-        /// <summary>
-        /// 关闭所有正在加载的UI界面
-        /// </summary>
-        void CloseAllLoadingUIPanels();
         /// <summary>
         /// 激活UI界面
         /// </summary>

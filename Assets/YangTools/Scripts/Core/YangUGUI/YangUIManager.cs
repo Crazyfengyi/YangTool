@@ -17,9 +17,6 @@ namespace YangTools.UGUI
     internal class YangUIManager : GameModuleManager, IUIManager
     {
         private readonly Dictionary<string, UIGroup> uiGroups;//UI组
-
-        private readonly Dictionary<int, string> uiPanelsBeingLoaded;//正在加载的UI界面
-        private readonly HashSet<int> uiPanelsToReleaseOnLoad;//正在释放的UI界面
         private readonly Queue<IUIPanel> recycleQueue;//回收队列
         private IObjectPool<UIPanelInstanceObject> instancePool;//对象池
 
@@ -54,8 +51,6 @@ namespace YangTools.UGUI
         public YangUIManager()
         {
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
-            uiPanelsBeingLoaded = new Dictionary<int, string>();
-            uiPanelsToReleaseOnLoad = new HashSet<int>();
             recycleQueue = new Queue<IUIPanel>();
             //TODO:对象池优化
             instancePool = null;
@@ -97,8 +92,6 @@ namespace YangTools.UGUI
             isShutdown = true;
             CloseAllLoadedUIPanels();
             uiGroups.Clear();
-            uiPanelsBeingLoaded.Clear();
-            uiPanelsToReleaseOnLoad.Clear();
             recycleQueue.Clear();
         }
         #endregion
@@ -160,28 +153,6 @@ namespace YangTools.UGUI
                 results[index++] = uiGroup.Value;
             }
             return results;
-        }
-        /// <summary>
-        /// 是否正在加载界面
-        /// </summary>
-        /// <param name="serialId">界面序列编号</param>
-        /// <returns>是否正在加载界面</returns>
-        public bool IsLoadingUIPanel(int serialId)
-        {
-            return uiPanelsBeingLoaded.ContainsKey(serialId);
-        }
-        /// <summary>
-        /// 是否正在加载界面
-        /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>是否正在加载界面</returns>
-        public bool IsLoadingUIPanel(string uiPanelAssetName)
-        {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI Panel asset name is invalid.");
-            }
-            return uiPanelsBeingLoaded.ContainsValue(uiPanelAssetName);
         }
         /// <summary>
         /// 是否是合法的界面
@@ -336,20 +307,6 @@ namespace YangTools.UGUI
             return results.ToArray();
         }
         /// <summary>
-        /// 获取所有正在加载界面的序列编号
-        /// </summary>
-        /// <returns>所有正在加载界面的序列编号</returns>
-        public int[] GetAllLoadingUIPanelSerialIds()
-        {
-            int index = 0;
-            int[] results = new int[uiPanelsBeingLoaded.Count];
-            foreach (KeyValuePair<int, string> uiPanelBeingLoaded in uiPanelsBeingLoaded)
-            {
-                results[index++] = uiPanelBeingLoaded.Key;
-            }
-            return results;
-        }
-        /// <summary>
         /// 获取所有已加载的界面
         /// </summary>
         /// <returns>所有已加载的界面</returns>
@@ -481,7 +438,6 @@ namespace YangTools.UGUI
 
             if (uiPanelInstanceObject == null)
             {
-                uiPanelsBeingLoaded.Add(serialId, uiPanelAssetName);
                 //TODO 需要完整的资源加载器
                 UnityEngine.Object panelAsset = Resources.Load(uiPanelAssetName);//资源
                 if (panelAsset == null)
@@ -553,12 +509,6 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         public void CloseUIPanel(int serialId, object userData)
         {
-            if (IsLoadingUIPanel(serialId))
-            {
-                uiPanelsToReleaseOnLoad.Add(serialId);
-                uiPanelsBeingLoaded.Remove(serialId);
-                return;
-            }
             IUIPanel uiPanel = GetUIPanel(serialId);
             if (uiPanel == null)
             {
@@ -603,18 +553,6 @@ namespace YangTools.UGUI
             }
 
             recycleQueue.Enqueue(uiPanel);
-        }
-        /// <summary>
-        /// 关闭所有正在加载的界面
-        /// </summary>
-        public void CloseAllLoadingUIPanels()
-        {
-            foreach (KeyValuePair<int, string> uiPanelBeingLoaded in uiPanelsBeingLoaded)
-            {
-                uiPanelsToReleaseOnLoad.Add(uiPanelBeingLoaded.Key);
-            }
-
-            uiPanelsBeingLoaded.Clear();
         }
         /// <summary>
         /// 关闭所有已加载的界面

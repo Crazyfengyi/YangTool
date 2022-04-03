@@ -17,7 +17,19 @@ public class Test : MonoBehaviour
         //Create();
         //Create2();
     }
- 
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var textScript = GetComponentInChildren<CustomText>();
+            textScript.ShowTextByTyping(textScript.text);
+        }
+    }
+    IEnumerator Tets2()
+    {
+        yield return new WaitWhile(() => { return true; });
+    }
     public void TestFun(string str, [CallerMemberNameAttribute] string callName = "")
     {
         Debug.LogError($"{callName}");

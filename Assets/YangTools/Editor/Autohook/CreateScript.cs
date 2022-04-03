@@ -97,7 +97,8 @@ public class #类名# : MonoBehaviour
     {
         editor.OnInspectorGUI();
         tagetTranform.position = EditorGUILayout.Vector3Field("世界坐标：", tagetTranform.position);
-        tagetTranform.localPosition = EditorGUILayout.Vector3Field("相对坐标：", tagetTranform.localPosition);
+        EditorGUILayout.Vector3Field("相对坐标：", tagetTranform.localPosition);
+
         m_Foldout = CommonEditorTool.Foldout(m_Foldout, "显示自动生成代码菜单");
         if (m_Foldout)
         {

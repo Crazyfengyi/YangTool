@@ -17,13 +17,13 @@ public class Test : MonoBehaviour
         //Create();
         //Create2();
     }
-
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var textScript = GetComponentInChildren<CustomText>();
-            textScript.ShowTextByTyping(textScript.text);
+            //var textScript = GetComponentInChildren<CustomText>();
+            //textScript.ShowTextByTyping(textScript.text);
+            UIMonoInstance.Instance.OpenUIPanel("DialoguePanel","One");
         }
     }
     IEnumerator Tets2()

@@ -18,9 +18,9 @@ namespace YangTools.UGUI
     /// <summary>
     /// UGUI界面逻辑基类
     /// </summary>
-    public abstract class UGUIPanelLogicBase : MonoBehaviour
+    public abstract class UGUIPanelBase : MonoBehaviour
     {
-        public const int DepthFactor = 100;//UI界面深度系数
+        public const int DepthFactor = 10;//UI界面深度系数
         private static Font mainFont = null;//主字体
 
         private bool available = false;//是否可用的
@@ -134,7 +134,7 @@ namespace YangTools.UGUI
                 Debug.LogError("Main font is invalid.");
                 return;
             }
-            UGUIPanelLogicBase.mainFont = mainFont;
+            UGUIPanelBase.mainFont = mainFont;
         }
         /// <summary>
         /// 播放声音
@@ -224,7 +224,7 @@ namespace YangTools.UGUI
             available = true;
             Visible = true;
 
-            canvasGroup.alpha = 0f;
+            canvasGroup.alpha = 1f;
             StopAllCoroutines();
             //StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));//动画
         }

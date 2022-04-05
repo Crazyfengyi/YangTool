@@ -13,7 +13,7 @@ using YangTools.UGUI;
 namespace YangTools.UGUI
 {
     /// <summary>
-    /// UI页面
+    /// UI页面管理类--框架啊自动生成挂载到UI
     /// </summary>
     public class UIPanel : MonoBehaviour, IUIPanel
     {
@@ -23,7 +23,7 @@ namespace YangTools.UGUI
         private int depthInUIGroup;//在组里的深度
         private bool pauseCoveredUIPanel;//是否暂停被覆盖的页面
 
-        private UGUIPanelLogicBase uiPanelLogic;//UGUI界面逻辑类
+        private UGUIPanelBase uiPanelLogic;//UGUI界面逻辑类
 
         #region 对外属性
         /// <summary>
@@ -89,7 +89,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面逻辑类
         /// </summary>
-        public UGUIPanelLogicBase Logic
+        public UGUIPanelBase Logic
         {
             get
             {
@@ -121,7 +121,7 @@ namespace YangTools.UGUI
                 return;
             }
 
-            uiPanelLogic = GetComponent<UGUIPanelLogicBase>();
+            uiPanelLogic = GetComponent<UGUIPanelBase>();
             if (uiPanelLogic == null)
             {
                 Debug.LogError(string.Format("UI form '{0}' can not get UI form logic.", uiPanelAssetName));

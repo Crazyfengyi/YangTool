@@ -47,7 +47,7 @@ public class UIMonoInstance : MonoBehaviour
             Debug.LogError("UIMonoInstance 有重复");
         }
 
-        UIManager = YangToolsManager.GetModule<IUIManager>();
+        UIManager = YangToolsManager.GetModule<YangUIManager>();
         if (UIManager == null)
         {
             Debug.LogError("UI manager is null.");

@@ -94,13 +94,8 @@ namespace YangTools
         /// <remarks>如果要获取的游戏框架模块不存在，则自动创建该游戏框架模块。</remarks>
         public static T GetModule<T>() where T : class
         {
-            Type interfaceType = typeof(T);
-            if (!interfaceType.IsInterface)
-            {
-                throw new Exception(String.Format("You must get module by interface, but '{0}' is not.", interfaceType.FullName));
-            }
-
-            string moduleName = String.Format("{0}.{1}", interfaceType.Namespace, interfaceType.Name.Substring(1));
+            Type typeInfo = typeof(T);
+            string moduleName = String.Format("{0}.{1}", typeInfo.Namespace, typeInfo.Name);
             Type moduleType = Type.GetType(moduleName);
             if (moduleType == null)
             {

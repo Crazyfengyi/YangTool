@@ -54,7 +54,7 @@ namespace YangTools.UGUI
             recycleQueue = new Queue<IUIPanel>();
             //TODO:对象池优化
             instancePool = null;
-            instancePool = new ObjectPool<UIPanelInstanceObject>();
+            //instancePool = new ObjectPool<UIPanelInstanceObject>();
             uiPanelHelper = null;
             serial = 0;
             isShutdown = false;
@@ -432,9 +432,9 @@ namespace YangTools.UGUI
                 throw new Exception(string.Format("UI group '{0}' is not exist.", uiGroupName));
             }
             int serialId = ++serial;
-            UIPanelInstanceObject uiPanelInstanceObject = instancePool.Get();
             //TODO:对象池
-            uiPanelInstanceObject.OnGet(uiPanelInstanceObject);//uiPanelAssetName
+            UIPanelInstanceObject uiPanelInstanceObject = instancePool?.Get();
+            //uiPanelInstanceObject.OnGet(uiPanelInstanceObject);//uiPanelAssetName
 
             if (uiPanelInstanceObject == null)
             {

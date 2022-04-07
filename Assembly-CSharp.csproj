@@ -256,6 +256,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\RescalingPanels\ResizePanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\TurbochargedVerticalScrollList.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\UIVerticalScrollerDemo\Scripts\ScrollingCalendar.cs" />
+    <Compile Include="Assets\UserTest\ScriptTest\DialoguePanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\LookAtController.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\TileSizeFitter.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Warning.cs" />
@@ -520,11 +521,12 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\YangTools\ScriptTest\DialoguePanel.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangSettingSO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\YangTools\CommonArt\Shader\SceneChangeAni.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\YangTools\Resources\SoundMusic\说明.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.xml" />

@@ -14,7 +14,7 @@ namespace YangTools
     /// <summary>
     /// 简单的线程安全单例模板
     /// </summary>
-    public sealed class SimpleSingleton<T> where T : class, new()
+    public abstract class SimpleSingleton<T> where T : class, new()
     {
         private static T instance = default(T);
         //线程锁
@@ -39,7 +39,7 @@ namespace YangTools
     /// <summary>
     /// 饿汉模式-单例模板
     /// </summary>
-    public sealed class Singleton<T> where T : class, new()
+    public abstract class Singleton<T> where T : class, new()
     {
         private static readonly T instance = new T();
         public static T Instance
@@ -53,7 +53,7 @@ namespace YangTools
     /// <summary>
     /// Mono单例模板
     /// </summary>
-    public sealed class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T instance = null;
         private static readonly object locker = new object();

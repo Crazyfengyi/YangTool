@@ -12,6 +12,8 @@ using TreeEditor;
 
 public class Test : MonoBehaviour
 {
+    public Material material;
+    public float value;
     void Start()
     {
         //Create();
@@ -23,9 +25,16 @@ public class Test : MonoBehaviour
         {
             //var textScript = GetComponentInChildren<CustomText>();
             //textScript.ShowTextByTyping(textScript.text);
-            UIMonoInstance.Instance.OpenUIPanel("DialoguePanel","One");
+            UIMonoInstance.Instance.OpenUIPanel("DialoguePanel", "One");
         }
     }
+
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+        material.SetFloat("_Value", value);
+        Graphics.Blit(source, destination, material);
+    }
+
     IEnumerator Tets2()
     {
         yield return new WaitWhile(() => { return true; });

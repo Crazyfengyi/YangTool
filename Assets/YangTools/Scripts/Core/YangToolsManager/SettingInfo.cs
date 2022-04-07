@@ -31,5 +31,14 @@ namespace YangTools
         /// 辅助功能路径
         /// </summary>
         public const string YongToolsFunctionPath = menuName + "/" + functionName + "/";
+        /// <summary>
+        /// 获得ScriptableObject
+        /// </summary>
+        public static T GetSO<T>() where T : ScriptableObject
+        {
+            string typeName = typeof(T).Name;
+            Object res = Resources.Load<Object>($"SO/{typeName}");
+            return (T)res;
+        }
     }
 }

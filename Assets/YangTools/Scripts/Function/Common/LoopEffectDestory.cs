@@ -7,60 +7,62 @@
 */
 using UnityEngine;
 using System.Collections;
-
-/// <summary>
-/// 循环特效删除--先停止,等播完再删除
-/// </summary>
-public class LoopEffectDestory : MonoBehaviour
+namespace YangTools
 {
     /// <summary>
-    /// 最大生命周期
+    /// 循环特效删除--先停止,等播完再删除
     /// </summary>
-    private float maxLifeTime;
-    ParticleSystem[] list;
-    public void Awake()
+    public class LoopEffectDestory : MonoBehaviour
     {
-        list = transform.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < list.Length; i++)
+        /// <summary>
+        /// 最大生命周期
+        /// </summary>
+        private float maxLifeTime;
+        ParticleSystem[] list;
+        public void Awake()
         {
-            float startLifetime = 0;
-            switch (list[i].main.startLifetime.mode)
+            list = transform.GetComponentsInChildren<ParticleSystem>(true);
+            for (int i = 0; i < list.Length; i++)
             {
-                case ParticleSystemCurveMode.Constant:
-                    startLifetime = list[i].main.startLifetime.constant;
-                    break;
-                case ParticleSystemCurveMode.Curve:
-                    startLifetime = list[i].main.startLifetime.curve.length;
-                    break;
-                case ParticleSystemCurveMode.TwoCurves:
-                    startLifetime = list[i].main.startLifetime.curveMax.length;
-                    break;
-                case ParticleSystemCurveMode.TwoConstants:
-                    startLifetime = list[i].main.startLifetime.constantMax;
-                    break;
-                default:
-                    break;
-            }
-            float thisTime = list[i].main.duration + startLifetime;
-            if (maxLifeTime < thisTime)
-            {
-                maxLifeTime = thisTime;
+                float startLifetime = 0;
+                switch (list[i].main.startLifetime.mode)
+                {
+                    case ParticleSystemCurveMode.Constant:
+                        startLifetime = list[i].main.startLifetime.constant;
+                        break;
+                    case ParticleSystemCurveMode.Curve:
+                        startLifetime = list[i].main.startLifetime.curve.length;
+                        break;
+                    case ParticleSystemCurveMode.TwoCurves:
+                        startLifetime = list[i].main.startLifetime.curveMax.length;
+                        break;
+                    case ParticleSystemCurveMode.TwoConstants:
+                        startLifetime = list[i].main.startLifetime.constantMax;
+                        break;
+                    default:
+                        break;
+                }
+                float thisTime = list[i].main.duration + startLifetime;
+                if (maxLifeTime < thisTime)
+                {
+                    maxLifeTime = thisTime;
+                }
             }
         }
-    }
-    /// <summary>
-    /// 删除循环特效--先停止,等播完再删除
-    /// </summary>
-    public void DestoryLoopEffect()
-    {
-        for (int i = 0; i < list.Length; i++)
+        /// <summary>
+        /// 删除循环特效--先停止,等播完再删除
+        /// </summary>
+        public void DestoryLoopEffect()
         {
-            if (list[i] != null)
+            for (int i = 0; i < list.Length; i++)
             {
-                list[i].Stop();
+                if (list[i] != null)
+                {
+                    list[i].Stop();
+                }
             }
-        }
 
-        Destroy(gameObject, maxLifeTime);
+            Destroy(gameObject, maxLifeTime);
+        }
     }
 }

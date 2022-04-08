@@ -32,6 +32,15 @@ namespace YangTools
         /// </summary>
         public const string YongToolsFunctionPath = menuName + "/" + functionName + "/";
         /// <summary>
+        /// UI创建扩展路径
+        /// </summary>
+        public const string YangToolUIPath = "GameObject/UI/YangTool/";
+        /// <summary>
+        /// Asset编辑器文件路径
+        /// </summary>
+        public const string YangToolAssetPath = "Assets/YangTools/EditorStudio/Editor/";
+
+        /// <summary>
         /// 获得ScriptableObject
         /// </summary>
         public static T GetSO<T>() where T : ScriptableObject

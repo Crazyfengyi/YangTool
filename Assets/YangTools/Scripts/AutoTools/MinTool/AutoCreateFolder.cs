@@ -39,23 +39,6 @@ namespace YangTools
             AssetDatabase.Refresh();
             Debug.Log("生成工具类文件夹完成");
         }
-
-        //[MenuItem("YangTools/生成常用文件夹")]
-        public static void CreateCommonFolder()
-        {
-            //Directory.CreateDirectory(resPath + "Audios");
-            //Directory.CreateDirectory(resPath + "Materials");
-            //Directory.CreateDirectory(resPath + "Prefabs");
-            //Directory.CreateDirectory(resPath + "Shaders");
-            //Directory.CreateDirectory(resPath + "Textures");
-            //Directory.CreateDirectory(path + "Scenes");
-            //Directory.CreateDirectory(path + "Editor");
-            //Directory.CreateDirectory(path + "StreamingAssets");
-            //Directory.CreateDirectory(path + "Scripts");
-            AssetDatabase.Refresh();
-
-            Debug.Log("生成常用文件夹完成");
-        }
         /// <summary>
         /// 创建说明文本
         /// </summary>

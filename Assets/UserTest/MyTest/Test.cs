@@ -9,11 +9,13 @@ using UnityEditor;
 using System.Linq;
 using YangTools;
 using TreeEditor;
+using YangTools.UGUI;
 
 public class Test : MonoBehaviour
 {
     public Material material;
     public float value;
+    public string testStr;
     void Start()
     {
         //Create();

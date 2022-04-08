@@ -8,7 +8,7 @@ using System.Net;
 using System.IO;
 using LitJson;
 
-namespace Translate
+namespace YangTools.Translate
 {
     /// <summary>
     /// ∞Ÿ∂»∑≠“Î

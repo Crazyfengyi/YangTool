@@ -11,29 +11,32 @@ using UnityEditor;
 using System.Linq;
 using System.Collections.Generic;
 
-public static class AnimatorFactoryTool
+namespace YangTools
 {
-    public static AnimationClip LoadAnimClip(string path)
+    public static class AnimatorFactoryTool
     {
-        return (AnimationClip)AssetDatabase.LoadAssetAtPath(path, typeof(AnimationClip));
-    }
-    public static AnimationClip[] LoadAllAnimClip(string path)
-    {
-        List<AnimationClip> result = new List<AnimationClip>();
-        //拿文件的数据
-        UnityEngine.Object[] datas = AssetDatabase.LoadAllAssetsAtPath(path);
-        //动画文件
-        for (int i = 0; i < datas.Length; i++)
+        public static AnimationClip LoadAnimClip(string path)
         {
-            if (!(datas[i] is AnimationClip)) continue;//只关注AnimationClip
-            AnimationClip temp = datas[i] as AnimationClip;
-            result.Add(temp);
+            return (AnimationClip)AssetDatabase.LoadAssetAtPath(path, typeof(AnimationClip));
         }
-        return result.ToArray();
-    }
-    public static AnimationClip LoadAnimClip(string fbxPath, string animPath)
-    {
-        Object[] objs = AssetDatabase.LoadAllAssetsAtPath(fbxPath);
-        return objs.Where(item => item is AnimationClip && item.name.Equals(animPath)).Select(o => o as AnimationClip).FirstOrDefault();
+        public static AnimationClip[] LoadAllAnimClip(string path)
+        {
+            List<AnimationClip> result = new List<AnimationClip>();
+            //拿文件的数据
+            UnityEngine.Object[] datas = AssetDatabase.LoadAllAssetsAtPath(path);
+            //动画文件
+            for (int i = 0; i < datas.Length; i++)
+            {
+                if (!(datas[i] is AnimationClip)) continue;//只关注AnimationClip
+                AnimationClip temp = datas[i] as AnimationClip;
+                result.Add(temp);
+            }
+            return result.ToArray();
+        }
+        public static AnimationClip LoadAnimClip(string fbxPath, string animPath)
+        {
+            Object[] objs = AssetDatabase.LoadAllAssetsAtPath(fbxPath);
+            return objs.Where(item => item is AnimationClip && item.name.Equals(animPath)).Select(o => o as AnimationClip).FirstOrDefault();
+        }
     }
 }

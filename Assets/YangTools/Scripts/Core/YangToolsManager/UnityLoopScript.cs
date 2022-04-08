@@ -8,43 +8,46 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Unity生命周期脚本
-/// </summary>
-public class UnityLoopScript : MonoBehaviour
+namespace YangTools
 {
-    #region 变量
-    #endregion
-
-    #region 生命周期
     /// <summary>
-    /// 游戏组件初始化。
+    /// Unity生命周期脚本
     /// </summary>
-    private void Awake()
+    public class UnityLoopScript : MonoBehaviour
     {
-        //Application.targetFrameRate = m_FrameRate;
-        //Time.timeScale = m_GameSpeed;
-        //Application.runInBackground = m_RunInBackground;
-        //Screen.sleepTimeout = m_NeverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
-    }
+        #region 变量
+        #endregion
 
-    private void Start()
-    {
-    }
-    private void Update()
-    {
-        YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
-    }
-    private void OnApplicationQuit()
-    {
-        YangTools.YangToolsManager.OnApplicationQuit();
-    }
+        #region 生命周期
+        /// <summary>
+        /// 游戏组件初始化。
+        /// </summary>
+        private void Awake()
+        {
+            //Application.targetFrameRate = m_FrameRate;
+            //Time.timeScale = m_GameSpeed;
+            //Application.runInBackground = m_RunInBackground;
+            //Screen.sleepTimeout = m_NeverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
+        }
 
-    private void OnDestroy()
-    {
-    }
-    #endregion
+        private void Start()
+        {
+        }
+        private void Update()
+        {
+            YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+        }
+        private void OnApplicationQuit()
+        {
+            YangTools.YangToolsManager.OnApplicationQuit();
+        }
 
-    #region 方法
-    #endregion
+        private void OnDestroy()
+        {
+        }
+        #endregion
+
+        #region 方法
+        #endregion
+    }
 }

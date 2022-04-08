@@ -18,11 +18,11 @@ namespace YangTools
     {
         static string[] text;
 
-        [MenuItem("YangTools/辅助功能/显示Unity编辑器资源")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "显示Unity编辑器资源")]
         public static void ShowWindow()
         {
             EditorWindow.GetWindow(typeof(ShowAllEditorIcon));
-            string fullPath = Path.GetFullPath("Assets/YangTools/Editor/ShowEditorIcon/AllIcon.txt");
+            string fullPath = Path.GetFullPath(SettingInfo.YangToolAssetPath + "ShowEditorIcon/AllIcon.txt");
             string str = File.ReadAllText(fullPath);
             text = str.Split("\n"[0]);
         }

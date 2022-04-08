@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,9 +53,6 @@
     <UnityVersion>2022.1.0b14</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverFullBodyInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitHingeInspector.cs" />
@@ -64,30 +61,29 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\ArmIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\FingerRigInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\ShowTransform\ShowTransformPos.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\MinTool\ShowTransformPos.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\HumanoidBakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTargetInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLimbInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Demo Scripts\CameraControllerInspector.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\Camera\Editor\vThirdPersonCameraEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\uGUITools.cs" />
-    <Compile Include="Assets\YangTools\Editor\MutilSelectEnumDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\LargeHeaderDrawer.cs" />
-    <Compile Include="Assets\YangTools\Editor\ShowEditorIcon\ShowAllEditorIcon.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\ShowEditorIcon\ShowAllEditorIcon.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLookAtInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\NoRenderImageEditor.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\UIExtend\NoRenderImageEditor.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterCreator\Script\Editor\vCreateBasicCharacterEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverArmInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\BipedReferencesInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\InspectorCommentDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\AccordionElementEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\CommentsInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\TemplateScriptCreate\TemplateScript.cs" />
-    <Compile Include="Assets\YangTools\Editor\PropertyDrawerExtend\PropertyDrawerExtend.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\TemplateScriptCreate\TemplateScript.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\DrawerExtend\PropertyDrawerExtend.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIBezierCurveEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\ConstraintsInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenPreviewManager.cs" />
-    <Compile Include="Assets\YangTools\Editor\Autohook\CreateScript.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\CreateScript.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LookAtIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverHeuristicInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLegInspector.cs" />
@@ -95,8 +91,8 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimPoserInspector.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vInvectorStartup.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\FABRIKRootInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\SOEditorShow.cs" />
-    <Compile Include="Assets\YangTools\Editor\PolygonImageEditor.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\DrawerExtend\SOEditorShow.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\UIExtend\PolygonImageEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUITextEditor.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\Generic\Utils\Editor\vCommentEditor.cs" />
@@ -114,14 +110,14 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\SerializedContent.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverFullBodyBipedInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BoxSliderEditor.cs" />
-    <Compile Include="Assets\YangTools\Editor\Autohook\AutohookPropertyDrawer.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\AutohookPropertyDrawer.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vThirdPersonInputEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIGraphicEditor.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\Resources\vEditorStartupPrefs.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\VRIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BezierLineRendererEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenAnimationInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\AniEditor\AniEditorPlay\AniEditor.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\AniEditor\AniEditorPlay\AniEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitSplineInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\Helpers\AnimationUtilityExtended.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverAimInspector.cs" />
@@ -135,25 +131,25 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKExecutionOrderInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\TextPicEditor.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vCharacterEditor.cs" />
-    <Compile Include="Assets\YangTools\Editor\CopyToPasteEditor.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\MinTool\CopyToPasteEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\ReadOnlyDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIImageEditor.cs" />
-    <Compile Include="Assets\YangTools\Editor\Factory\AnimatorFactoryWindow.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\Factory\AnimatorFactoryWindow.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\HierarchyExtend\HierarchyShow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
     <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vInvectorWelcomeWindow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
-    <Compile Include="Assets\YangTools\Editor\EditorHierarchyShow\HierarchyShow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Editor\DOTweenEditor.dll" />
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenProEditor.dll" />
-    <None Include="Assets\YangTools\Editor\TemplateScriptCreate\81-C# Script-NewBehaviourScript.cs.txt" />
-    <None Include="Assets\YangTools\Editor\ShowEditorIcon\AllIcon.txt" />
-    <None Include="Assets\YangTools\Editor\SaveData\AniText.txt" />
-    <None Include="Assets\YangTools\Editor\SaveData\Text.txt" />
+    <None Include="Assets\YangTools\EditorStudio\Editor\TemplateScriptCreate\81-C# Script-NewBehaviourScript.cs.txt" />
+    <None Include="Assets\YangTools\EditorStudio\Editor\ShowEditorIcon\AllIcon.txt" />
+    <None Include="Assets\YangTools\EditorStudio\Editor\SaveData\AniText.txt" />
+    <None Include="Assets\YangTools\EditorStudio\Editor\SaveData\Text.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

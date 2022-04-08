@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-namespace Yang
+namespace YangTools
 {
     /// <summary>
     /// 进度更新接口

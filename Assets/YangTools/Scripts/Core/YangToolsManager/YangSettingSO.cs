@@ -9,12 +9,15 @@ using UnityEngine;
 using System.Collections;
 using Sirenix.OdinInspector;
 
-[CreateAssetMenu(fileName = "YangSettingSO", menuName = "YangTool/YangSettingSO")]
-/// <summary>
-/// 工具设置开关
-/// </summary>
-public class YangSettingSO : ScriptableObject
+namespace YangTools
 {
-    [LabelText("开关Hierarchy面板设置")]
-    public bool isOpenHierarchyShowSetting = false;
+    [CreateAssetMenu(fileName = "YangSettingSO", menuName = "YangTool/YangSettingSO")]
+    /// <summary>
+    /// 工具设置开关
+    /// </summary>
+    public class YangSettingSO : ScriptableObject
+    {
+        [LabelText("开关Hierarchy面板设置")]
+        public bool isOpenHierarchyShowSetting = false;
+    }
 }

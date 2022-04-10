@@ -66,13 +66,11 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTargetInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLimbInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Demo Scripts\CameraControllerInspector.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\Camera\Editor\vThirdPersonCameraEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\uGUITools.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\LargeHeaderDrawer.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\ShowEditorIcon\ShowAllEditorIcon.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLookAtInspector.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\UIExtend\NoRenderImageEditor.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterCreator\Script\Editor\vCreateBasicCharacterEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverArmInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\BipedReferencesInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\InspectorCommentDrawer.cs" />
@@ -89,13 +87,11 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLegInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTriggerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimPoserInspector.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vInvectorStartup.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\FABRIKRootInspector.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\DrawerExtend\SOEditorShow.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\UIExtend\PolygonImageEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUITextEditor.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\Generic\Utils\Editor\vCommentEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\_DEMOS\BendGoalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\UIExtensionsMenuOptions.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\Helpers\SaveClipFolderPanel.cs" />
@@ -103,7 +99,6 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CanvasGroupActivator.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\Inspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LimbIKInspector.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterCreator\Script\Editor\vHelperEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\GenericBakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\CCDIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverFABRIKRootInspector.cs" />
@@ -111,9 +106,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverFullBodyBipedInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BoxSliderEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\AutohookPropertyDrawer.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vThirdPersonInputEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIGraphicEditor.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\Resources\vEditorStartupPrefs.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\VRIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BezierLineRendererEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenAnimationInspector.cs" />
@@ -130,16 +123,15 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LegIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKExecutionOrderInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\TextPicEditor.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vCharacterEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\MinTool\CopyToPasteEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\ReadOnlyDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIImageEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Factory\AnimatorFactoryWindow.cs" />
+    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Editor\MoverInspector.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\HierarchyExtend\HierarchyShow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
-    <Compile Include="Assets\PlugIn\Invector-3rdPersonController_LITE\Scripts\CharacterController\Editor\vInvectorWelcomeWindow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
   </ItemGroup>
   <ItemGroup>

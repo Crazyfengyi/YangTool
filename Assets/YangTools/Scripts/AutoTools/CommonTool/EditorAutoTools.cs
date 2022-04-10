@@ -447,7 +447,7 @@ namespace YangTools
     #region 编辑器创建物体扩展
     public static partial class EditorAutoTools
     {
-        [MenuItem("GameObject/UI/YangImage")]
+        [MenuItem(SettingInfo.YangToolUIPath + "YangImage")]
         static void CreatImage()
         {
             if (Selection.activeTransform)
@@ -461,7 +461,7 @@ namespace YangTools
                 }
             }
         }
-        [MenuItem("GameObject/UI/YangText")]
+        [MenuItem(SettingInfo.YangToolUIPath + "YangText")]
         static void CreatText()
         {
             if (Selection.activeTransform)

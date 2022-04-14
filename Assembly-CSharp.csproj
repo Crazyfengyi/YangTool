@@ -549,6 +549,21 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\Orbiter.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankWeaponController.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankProjectile.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\PitchShifter.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\SmokePlume.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\CircularBuffer.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankController.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSWeaponTrigger.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\TrailRenderer_Base.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\SmokeTrail.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSController.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\GizmosExtra.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\Range.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Trail.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\DestroyAfterTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />
@@ -559,10 +574,12 @@
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle Add.shader" />
     <None Include="Assets\YangTools\Scripts\记录.txt" />
+    <None Include="Assets\PlugIn\PigeonCoopToolkit\__SharedDemoAssets\_Shaders\Unlit Transparent Color.shader" />
     <None Include="Assets\YangTools\Res\CommonArt\Shader\ImageGreyShader.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIScreen.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle Multiply.shader" />
+    <None Include="Assets\PlugIn\PigeonCoopToolkit\__SharedDemoAssets\_Shaders\DiffuseColorMask.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIMultiply.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Editor.xml" />
@@ -578,6 +595,7 @@
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll.backup.txt" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\SoftMaskShader.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Editor.dll" />
+    <None Include="Assets\PlugIn\PigeonCoopToolkit\__SharedDemoAssets\Sword\sword License.txt" />
     <None Include="Assets\PlugIn\Character Movement Fundamentals\Source\Misc\Shaders\OneSidedTextShader.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle Premultiply Blend.shader" />
     <None Include="Assets\YangTools\Plugins\YangDebuger\YangToolDebuger.dll" />
@@ -623,6 +641,7 @@
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\PlugIn\PigeonCoopToolkit\__SharedDemoAssets\a-104 Rifle\a-104 Rifle License.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll.backup.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.dll" />

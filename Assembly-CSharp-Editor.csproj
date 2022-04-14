@@ -133,6 +133,12 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\Editor\RangePropertyDrawer.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\SmokePlumeEditor.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor_Base.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailPreviewUtillity.cs" />
+    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\SmokeTrailEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />

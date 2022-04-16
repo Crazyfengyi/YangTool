@@ -25,11 +25,11 @@ namespace YangTools.UGUI
         private IUIPanelHelper uiPanelHelper;//UI界面辅助类
 
         #region 事件
-        public event EventHandler<OpenuiPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
-        public event EventHandler<OpenuiPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
-        public event EventHandler<OpenuiPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;//打开界面时
-        public event EventHandler<OpenuiPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
-        public event EventHandler<CloseuiPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
+        public event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
+        public event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
+        public event EventHandler<OpenUIPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;//打开界面时
+        public event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
+        public event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
         #endregion
 
         #region 对外属性
@@ -548,7 +548,7 @@ namespace YangTools.UGUI
 
             if (CloseUIPanelComplete != null)
             {
-                CloseuiPanelCompleteEventArgs closeuiPanelCompleteEventArgs = CloseuiPanelCompleteEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
+                CloseUIPanelCompleteEventArgs closeuiPanelCompleteEventArgs = CloseUIPanelCompleteEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
                 CloseUIPanelComplete(this, closeuiPanelCompleteEventArgs);
             }
 
@@ -600,7 +600,7 @@ namespace YangTools.UGUI
 
                 if (OpenUIPanelSuccess != null)
                 {
-                    OpenuiPanelSuccessEventArgs openuiPanelSuccessEventArgs = OpenuiPanelSuccessEventArgs.Create(uiPanel, duration, userData);
+                    OpenUIPanelSuccessEventArgs openuiPanelSuccessEventArgs = OpenUIPanelSuccessEventArgs.Create(uiPanel, duration, userData);
                     OpenUIPanelSuccess(this, openuiPanelSuccessEventArgs);
                 }
             }
@@ -608,7 +608,7 @@ namespace YangTools.UGUI
             {
                 if (OpenUIPanelFailure != null)
                 {
-                    OpenuiPanelFailureEventArgs openuiPanelFailureEventArgs = OpenuiPanelFailureEventArgs.Create(serialId, uiPanelAssetName, uiGroup.Name, pauseCovereduiPanel, exception.ToString(), userData);
+                    OpenUIPanelFailureEventArgs openuiPanelFailureEventArgs = OpenUIPanelFailureEventArgs.Create(serialId, uiPanelAssetName, uiGroup.Name, pauseCovereduiPanel, exception.ToString(), userData);
                     OpenUIPanelFailure(this, openuiPanelFailureEventArgs);
                     return;
                 }

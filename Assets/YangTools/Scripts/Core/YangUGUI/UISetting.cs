@@ -65,23 +65,23 @@ namespace YangTools.UGUI
         /// <summary>
         /// 打开界面成功事件
         /// </summary>
-        event EventHandler<OpenuiPanelSuccessEventArgs> OpenUIPanelSuccess;
+        event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;
         /// <summary>
         /// 打开界面失败事件
         /// </summary>
-        event EventHandler<OpenuiPanelFailureEventArgs> OpenUIPanelFailure;
+        event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;
         /// <summary>
         /// 打开界面更新事件
         /// </summary>
-        event EventHandler<OpenuiPanelUpdateEventArgs> OpenUIPanelUpdate;
+        event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;
         /// <summary>
         /// 打开界面时加载依赖资源事件
         /// </summary>
-        event EventHandler<OpenuiPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;
+        event EventHandler<OpenUIPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;
         /// <summary>
         /// 关闭界面完成事件
         /// </summary>
-        event EventHandler<CloseuiPanelCompleteEventArgs> CloseUIPanelComplete;
+        event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;
         #endregion
 
         #region 辅助接口
@@ -535,14 +535,14 @@ namespace YangTools.UGUI
     /// <summary>
     /// 打开界面成功事件
     /// </summary>
-    public sealed class OpenuiPanelSuccessEventArgs : EventArgs
+    public sealed class OpenUIPanelSuccessEventArgs : EventArgs
     {
         /// <summary>
         /// 初始化打开界面成功事件的新实例
         /// </summary>
-        public OpenuiPanelSuccessEventArgs()
+        public OpenUIPanelSuccessEventArgs()
         {
-            uiPanel = null;
+            UIPanel = null;
             Duration = 0f;
             UserData = null;
         }
@@ -550,7 +550,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取打开成功的界面
         /// </summary>
-        public IUIPanel uiPanel
+        public IUIPanel UIPanel
         {
             get;
             private set;
@@ -579,10 +579,10 @@ namespace YangTools.UGUI
         /// <param name="duration">加载持续时间</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>创建的打开界面成功事件</returns>
-        public static OpenuiPanelSuccessEventArgs Create(IUIPanel uiPanel, float duration, object userData)
+        public static OpenUIPanelSuccessEventArgs Create(IUIPanel uiPanel, float duration, object userData)
         {
-            OpenuiPanelSuccessEventArgs openuiPanelSuccessEventArgs = new OpenuiPanelSuccessEventArgs();
-            openuiPanelSuccessEventArgs.uiPanel = uiPanel;
+            OpenUIPanelSuccessEventArgs openuiPanelSuccessEventArgs = new OpenUIPanelSuccessEventArgs();
+            openuiPanelSuccessEventArgs.UIPanel = uiPanel;
             openuiPanelSuccessEventArgs.Duration = duration;
             openuiPanelSuccessEventArgs.UserData = userData;
             return openuiPanelSuccessEventArgs;
@@ -592,7 +592,7 @@ namespace YangTools.UGUI
         /// </summary>
         public void Clear()
         {
-            uiPanel = null;
+            UIPanel = null;
             Duration = 0f;
             UserData = null;
         }
@@ -600,15 +600,15 @@ namespace YangTools.UGUI
     /// <summary>
     /// 打开界面失败事件
     /// </summary>
-    public sealed class OpenuiPanelFailureEventArgs : EventArgs
+    public sealed class OpenUIPanelFailureEventArgs : EventArgs
     {
         /// <summary>
         /// 初始化打开界面失败事件的新实例
         /// </summary>
-        public OpenuiPanelFailureEventArgs()
+        public OpenUIPanelFailureEventArgs()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             ErrorMessage = null;
@@ -626,7 +626,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        public string uiPanelAssetName
+        public string UIPanelAssetName
         {
             get;
             private set;
@@ -674,11 +674,11 @@ namespace YangTools.UGUI
         /// <param name="errorMessage">错误信息</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>创建的打开界面失败事件</returns>
-        public static OpenuiPanelFailureEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, string errorMessage, object userData)
+        public static OpenUIPanelFailureEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, string errorMessage, object userData)
         {
-            OpenuiPanelFailureEventArgs openuiPanelFailureEventArgs = new OpenuiPanelFailureEventArgs();
+            OpenUIPanelFailureEventArgs openuiPanelFailureEventArgs = new OpenUIPanelFailureEventArgs();
             openuiPanelFailureEventArgs.SerialId = serialId;
-            openuiPanelFailureEventArgs.uiPanelAssetName = uiPanelAssetName;
+            openuiPanelFailureEventArgs.UIPanelAssetName = uiPanelAssetName;
             openuiPanelFailureEventArgs.UIGroupName = uiGroupName;
             openuiPanelFailureEventArgs.PauseCovereduiPanel = pauseCovereduiPanel;
             openuiPanelFailureEventArgs.ErrorMessage = errorMessage;
@@ -691,7 +691,7 @@ namespace YangTools.UGUI
         public void Clear()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             ErrorMessage = null;
@@ -701,15 +701,15 @@ namespace YangTools.UGUI
     /// <summary>
     /// 打开界面更新事件
     /// </summary>
-    public sealed class OpenuiPanelUpdateEventArgs : EventArgs
+    public sealed class OpenUIPanelUpdateEventArgs : EventArgs
     {
         /// <summary>
         /// 初始化打开界面更新事件的新实例
         /// </summary>
-        public OpenuiPanelUpdateEventArgs()
+        public OpenUIPanelUpdateEventArgs()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             Progress = 0f;
@@ -727,7 +727,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        public string uiPanelAssetName
+        public string UIPanelAssetName
         {
             get;
             private set;
@@ -775,11 +775,11 @@ namespace YangTools.UGUI
         /// <param name="progress">打开界面进度</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>创建的打开界面更新事件</returns>
-        public static OpenuiPanelUpdateEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, float progress, object userData)
+        public static OpenUIPanelUpdateEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, float progress, object userData)
         {
-            OpenuiPanelUpdateEventArgs openuiPanelUpdateEventArgs = new OpenuiPanelUpdateEventArgs();
+            OpenUIPanelUpdateEventArgs openuiPanelUpdateEventArgs = new OpenUIPanelUpdateEventArgs();
             openuiPanelUpdateEventArgs.SerialId = serialId;
-            openuiPanelUpdateEventArgs.uiPanelAssetName = uiPanelAssetName;
+            openuiPanelUpdateEventArgs.UIPanelAssetName = uiPanelAssetName;
             openuiPanelUpdateEventArgs.UIGroupName = uiGroupName;
             openuiPanelUpdateEventArgs.PauseCovereduiPanel = pauseCovereduiPanel;
             openuiPanelUpdateEventArgs.Progress = progress;
@@ -792,7 +792,7 @@ namespace YangTools.UGUI
         public void Clear()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             Progress = 0f;
@@ -802,15 +802,15 @@ namespace YangTools.UGUI
     /// <summary>
     /// 打开界面时加载依赖资源事件
     /// </summary>
-    public sealed class OpenuiPanelDependencyAssetEventArgs : EventArgs
+    public sealed class OpenUIPanelDependencyAssetEventArgs : EventArgs
     {
         /// <summary>
         /// 初始化打开界面时加载依赖资源事件的新实例
         /// </summary>
-        public OpenuiPanelDependencyAssetEventArgs()
+        public OpenUIPanelDependencyAssetEventArgs()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             DependencyAssetName = null;
@@ -830,7 +830,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        public string uiPanelAssetName
+        public string UIPanelAssetName
         {
             get;
             private set;
@@ -896,11 +896,11 @@ namespace YangTools.UGUI
         /// <param name="totalCount">总共加载依赖资源数量</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>创建的打开界面时加载依赖资源事件</returns>
-        public static OpenuiPanelDependencyAssetEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, string dependencyAssetName, int loadedCount, int totalCount, object userData)
+        public static OpenUIPanelDependencyAssetEventArgs Create(int serialId, string uiPanelAssetName, string uiGroupName, bool pauseCovereduiPanel, string dependencyAssetName, int loadedCount, int totalCount, object userData)
         {
-            OpenuiPanelDependencyAssetEventArgs openuiPanelDependencyAssetEventArgs = new OpenuiPanelDependencyAssetEventArgs();
+            OpenUIPanelDependencyAssetEventArgs openuiPanelDependencyAssetEventArgs = new OpenUIPanelDependencyAssetEventArgs();
             openuiPanelDependencyAssetEventArgs.SerialId = serialId;
-            openuiPanelDependencyAssetEventArgs.uiPanelAssetName = uiPanelAssetName;
+            openuiPanelDependencyAssetEventArgs.UIPanelAssetName = uiPanelAssetName;
             openuiPanelDependencyAssetEventArgs.UIGroupName = uiGroupName;
             openuiPanelDependencyAssetEventArgs.PauseCovereduiPanel = pauseCovereduiPanel;
             openuiPanelDependencyAssetEventArgs.DependencyAssetName = dependencyAssetName;
@@ -915,7 +915,7 @@ namespace YangTools.UGUI
         public void Clear()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroupName = null;
             PauseCovereduiPanel = false;
             DependencyAssetName = null;
@@ -927,15 +927,15 @@ namespace YangTools.UGUI
     /// <summary>
     /// 关闭界面完成事件
     /// </summary>
-    public sealed class CloseuiPanelCompleteEventArgs : EventArgs
+    public sealed class CloseUIPanelCompleteEventArgs : EventArgs
     {
         /// <summary>
         /// 初始化关闭界面完成事件的新实例
         /// </summary>
-        public CloseuiPanelCompleteEventArgs()
+        public CloseUIPanelCompleteEventArgs()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroup = null;
             UserData = null;
         }
@@ -951,7 +951,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        public string uiPanelAssetName
+        public string UIPanelAssetName
         {
             get;
             private set;
@@ -981,11 +981,11 @@ namespace YangTools.UGUI
         /// <param name="uiGroup">界面所属的界面组</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>创建的关闭界面完成事件</returns>
-        public static CloseuiPanelCompleteEventArgs Create(int serialId, string uiPanelAssetName, IUIGroup uiGroup, object userData)
+        public static CloseUIPanelCompleteEventArgs Create(int serialId, string uiPanelAssetName, IUIGroup uiGroup, object userData)
         {
-            CloseuiPanelCompleteEventArgs closeuiPanelCompleteEventArgs = new CloseuiPanelCompleteEventArgs();
+            CloseUIPanelCompleteEventArgs closeuiPanelCompleteEventArgs = new CloseUIPanelCompleteEventArgs();
             closeuiPanelCompleteEventArgs.SerialId = serialId;
-            closeuiPanelCompleteEventArgs.uiPanelAssetName = uiPanelAssetName;
+            closeuiPanelCompleteEventArgs.UIPanelAssetName = uiPanelAssetName;
             closeuiPanelCompleteEventArgs.UIGroup = uiGroup;
             closeuiPanelCompleteEventArgs.UserData = userData;
             return closeuiPanelCompleteEventArgs;
@@ -996,7 +996,7 @@ namespace YangTools.UGUI
         public void Clear()
         {
             SerialId = 0;
-            uiPanelAssetName = null;
+            UIPanelAssetName = null;
             UIGroup = null;
             UserData = null;
         }

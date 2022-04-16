@@ -67,8 +67,8 @@
     <Compile Include="Assets\PlugIn\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankWeaponController.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ReorderableList\ReorderableListContent.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\CurvedText.cs" />
-    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterController3rdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\ScrollRectEx.cs" />
+    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterController3rdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRBodyPart.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\Helpers\BakerUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ComboBox\DropDownList.cs" />
@@ -196,9 +196,9 @@
     <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\CircularBuffer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\IKExecutionOrder.cs" />
     <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\TurnTowardCameraDirection.cs" />
-    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Input\Camera\CameraMouseInput.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModulePhysics2D.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenAnimation.cs" />
+    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Input\Camera\CameraMouseInput.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\FragmentPool.cs" />
     <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Camera\ThirdPersonCameraController.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\MeshCutter.cs" />
@@ -329,8 +329,8 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\FancyScrollView\02_CellEventHandling\Example02CellDto.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\FABRIKRoot.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\MenuExample\Scripts\Menus\AwesomeMenu.cs" />
-    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Showcase\PlayerData.cs" />
     <Compile Include="Assets\YangTools\Scripts\AutoTools\AniSplitTool\SplitAniTool.cs" />
+    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Showcase\PlayerData.cs" />
     <Compile Include="Assets\UserTest\Scripts\TestV.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\Amplifier.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Rotation Limits\RotationLimitAngle.cs" />
@@ -404,12 +404,13 @@
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\Contour.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMappingBone.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\Core.cs" />
+    <Compile Include="Assets\PlugIn\AZURE Nature\Scripts\MouseLook.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionSystem.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\SimpleLocomotion.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\Polygon.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Rotation Limits\RotationLimit.cs" />
-    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpider.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBIKBoxing.cs" />
+    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpider.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangTask\ConditionalTask.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Hierarchy.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\CrackedObject.cs" />
@@ -518,8 +519,8 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\BodyTilt.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorValues.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Common\GhostTrail.cs" />
-    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\ArmIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Limb IK\Scripts\BendGoal.cs" />
+    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\ArmIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\CylinderText.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverAim.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangCoroutine\YangCoroutineManager.cs" />
@@ -531,10 +532,10 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\FABRIKChain.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Core\MeshObject.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\BipedReferences.cs" />
-    <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\VR Extensions\VRCursor.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModulePhysics.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\FancyScrollView\03_InfiniteScroll\Example03ScrollView.cs" />
     <Compile Include="Assets\PlugIn\Exploder\Exploder\Fragment.cs" />
+    <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\VR Extensions\VRCursor.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\ShineEffect.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Aim IK\Scripts\AimBoxing.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMappingLimb.cs" />
@@ -586,6 +587,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\RadialSlider.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\InputModules\GamePadInputModule.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\ScrollConflictManager.cs" />
+    <Compile Include="Assets\PlugIn\AZURE Nature\Scripts\MoveController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\FullBodyBipedIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\CurlyUI\CUIText.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\Cooldown\CooldownEffect_Image.cs" />
@@ -616,6 +618,7 @@
     <None Include="Assets\YangTools\Resources\SoundMusic\说明.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle Add.shader" />
+    <None Include="Assets\PlugIn\AZURE Nature\Shaders\AN_Vegetation.shader" />
     <None Include="Assets\YangTools\Scripts\记录.txt" />
     <None Include="Assets\PlugIn\PigeonCoopToolkit\__SharedDemoAssets\_Shaders\Unlit Transparent Color.shader" />
     <None Include="Assets\YangTools\Res\CommonArt\Shader\ImageGreyShader.shader" />
@@ -648,9 +651,11 @@
     <None Include="Assets\PlugIn\Exploder\Exploder\3rd\P2T.dll" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.xml" />
+    <None Include="Assets\PlugIn\AZURE Nature\Shaders\AN_Surface.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle MultiplyDouble.shader" />
     <None Include="Assets\YangTools\Res\CommonArt\Shader\TextOutlineShader.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
+    <None Include="Assets\PlugIn\AZURE Nature\Readme.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle AddMultiply.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Serialization.dll.backup.txt" />
@@ -671,6 +676,7 @@
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenPro.dll" />
     <None Include="Assets\YangTools\ReadMe.txt" />
     <None Include="Assets\UserTest\MyTest\Axe_动作表.txt" />
+    <None Include="Assets\PlugIn\AZURE Nature\Shaders\AN_Water.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\PlugIn\Character Movement Fundamentals\Source\Misc\Fonts\Attribution.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll.backup.txt" />

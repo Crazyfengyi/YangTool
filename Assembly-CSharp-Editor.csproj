@@ -66,7 +66,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTargetInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLimbInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Demo Scripts\CameraControllerInspector.cs" />
-    <Compile Include="Assets\PlugIn\Exploder\Exploder\Editor\EditorExploderObject.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\uGUITools.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\LargeHeaderDrawer.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\ShowEditorIcon\ShowAllEditorIcon.cs" />
@@ -80,7 +79,6 @@
     <Compile Include="Assets\YangTools\EditorStudio\Editor\TemplateScriptCreate\TemplateScript.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\DrawerExtend\PropertyDrawerExtend.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIBezierCurveEditor.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\SmokeTrailEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\ConstraintsInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenPreviewManager.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\CreateScript.cs" />
@@ -90,9 +88,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTriggerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimPoserInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\FABRIKRootInspector.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailPreviewUtillity.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\SmokePlumeEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\DrawerExtend\SOEditorShow.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\UIExtend\PolygonImageEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimIKInspector.cs" />
@@ -101,7 +96,6 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\UIExtensionsMenuOptions.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\Helpers\SaveClipFolderPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\GroundingInspector.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Utillities\Editor\RangePropertyDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CanvasGroupActivator.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\Inspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LimbIKInspector.cs" />
@@ -113,8 +107,6 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BoxSliderEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\AutohookPropertyDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIGraphicEditor.cs" />
-    <Compile Include="Assets\PlugIn\Exploder\Exploder\Editor\EditorExploderUtils.cs" />
-    <Compile Include="Assets\PlugIn\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor_Base.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\VRIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\BezierLineRendererEditor.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\Editor\DOTweenAnimationInspector.cs" />
@@ -136,7 +128,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CUIImageEditor.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Factory\AnimatorFactoryWindow.cs" />
-    <Compile Include="Assets\PlugIn\Character Movement Fundamentals\Source\Scripts\Editor\MoverInspector.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\Editor\HierarchyExtend\HierarchyShow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
@@ -419,9 +410,6 @@
     <Reference Include="Unity.VisualScripting.IonicZip">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.2\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
     </Reference>
-    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
-      <HintPath>Assets\PlugIn\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
@@ -497,8 +485,11 @@
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="P2T">
-      <HintPath>Assets\PlugIn\Exploder\Exploder\3rd\P2T.dll</HintPath>
+      <HintPath>Assets\Plugins\Exploder\Exploder\3rd\P2T.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
@@ -1231,21 +1222,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{C157C147-0077-718D-DA28-129BB65AB44E}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{3AF63BCE-E542-06C2-5819-5E66A45AB407}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
+      <Project>{1BFA746F-8CFA-DD16-0637-2AE7AEFBA779}</Project>
+      <Name>Assembly-CSharp-Editor-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Sirenix.OdinInspector.CompatibilityLayer.Editor.csproj">
       <Project>{F1C49B2B-6EDC-8E4F-D6C5-3B1EED4D203B}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="PackageToolsEditor.csproj">
-      <Project>{2EACC277-124E-A0E7-9A8D-9B980F2EB1F4}</Project>
-      <Name>PackageToolsEditor</Name>
-    </ProjectReference>
     <ProjectReference Include="AstarPathfindingProject.csproj">
       <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
       <Name>AstarPathfindingProject</Name>
+    </ProjectReference>
+    <ProjectReference Include="PackageToolsEditor.csproj">
+      <Project>{2EACC277-124E-A0E7-9A8D-9B980F2EB1F4}</Project>
+      <Name>PackageToolsEditor</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
       <Project>{13C30237-0C02-8625-E701-E974EE7A5850}</Project>

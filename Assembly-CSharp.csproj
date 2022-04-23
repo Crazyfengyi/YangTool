@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,6 +53,9 @@
     <UnityVersion>2022.1.0b14</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Primitives\UILineTextureRenderer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBBIKSettings.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenProShortcuts.cs" />
@@ -83,8 +86,8 @@
     <Compile Include="Assets\UserTest\EndlessWorlds\Script\Tools\FollowTarget.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\YangObjectPoolManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\IScrollSnap.cs" />
-    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\GenericPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\MonoSpacing.cs" />
+    <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\GenericPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\FBBIKArmBending.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ReorderableList\ReorderableListElement.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderFBBIK.cs" />
@@ -323,9 +326,9 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\ShoulderRotator.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\Recoil.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\ShaderEffects\UIScreenEffect.cs" />
-    <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\SVBoxSlider.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Examples\MenuExample\Scripts\Menus\GameMenu.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForValue.cs" />
+    <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\SVBoxSlider.cs" />
     <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\AttributeBuff.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\FancyScrollView.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\RagdollUtilityDemo.cs" />
@@ -839,6 +842,9 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>D:\Unity\UnityHub\2022.1.0b14\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
@@ -892,9 +898,6 @@
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
-      <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="P2T">
       <HintPath>Assets\Plugins\Exploder\Exploder\3rd\P2T.dll</HintPath>
@@ -1395,13 +1398,13 @@
       <Project>{F1C49B2B-6EDC-8E4F-D6C5-3B1EED4D203B}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="AstarPathfindingProject.csproj">
-      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
-      <Name>AstarPathfindingProject</Name>
-    </ProjectReference>
     <ProjectReference Include="PackageToolsEditor.csproj">
       <Project>{2EACC277-124E-A0E7-9A8D-9B980F2EB1F4}</Project>
       <Name>PackageToolsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="AstarPathfindingProject.csproj">
+      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
+      <Name>AstarPathfindingProject</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
       <Project>{13C30237-0C02-8625-E701-E974EE7A5850}</Project>

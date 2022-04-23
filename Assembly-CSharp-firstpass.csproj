@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,30 +53,78 @@
     <UnityVersion>2022.1.0b14</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\SmokePlume.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_CollisionModule.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\SmokeTrail.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LimitVelocityOverLifetimeModule.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankWeaponController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3XMLReader.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SkinnedMeshRenderer.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_NoiseModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_ParticleSystem.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Text.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\ExploderTask.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3FileStream.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Font.cs" />
     <Compile Include="Assets\Plugins\Exploder\Examples\HowToGetActiveFragments.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_CapsuleCollider.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ColorOverLifetimeModule.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\Trail.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\LSHash.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3CacheWriter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3PlayerPrefsStream.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3StackType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GameObject.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3IO.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\ArrayDictionary.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Texture2D.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Crypto.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3HashSetType.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\FPSCounter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_char.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3Binary.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MinMaxGradient.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3Property.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Camera\CameraController.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Camera\CameraDistanceRaycaster.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ES3Ref.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3XMLWriter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Image.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MainModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3CollectionType.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Controllers\AdvancedWalkerController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3BinaryReader.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3JSONReader.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Helper\VectorMath.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\MouseCursorLock.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\AnimationControl.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_AudioClip.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ComponentType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ColorBySpeedModule.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\AudioControl.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Controllers\Controller.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankProjectile.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3Stream.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Matrix4x4.cs" />
     <Compile Include="Assets\Plugins\Exploder\Examples\QuickStart.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Texture.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ulong.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_byte.cs" />
     <Compile Include="Assets\Plugins\Exploder\Examples\TweenFragment.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_bool.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedComponentType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\NET Types\ES3Type_Random.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Auto Save\ES3AutoSaveMgr.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\PostprocessExplode.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\TurnTowardTransformDirection.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\AlignRigidbodyToTarget.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedObjectType.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Mesh.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_double.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Utillities\CircularBuffer.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\TurnTowardCameraDirection.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Camera\CameraMouseInput.cs" />
@@ -84,22 +132,62 @@
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Camera\ThirdPersonCameraController.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\MeshCutter.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Camera\CameraJoystickInput.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Material.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3QueueType.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\CutterWorker.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\Orbiter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES32DArrayType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Auto Save\ES3AutoSave.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\DemoMenu.cs" />
     <Compile Include="Assets\Plugins\Exploder\Examples\ExplodeAllObjects.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Attributes\ES3Attributes.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\HUDFPS.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\SingletonTemplate.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Color.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3BinaryWriter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector2.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Core scripts\Sensor.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_sbyte.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3Writer.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\ExploderProfiler.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_decimal.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\PitchShifter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SizeOverLifetimeModule.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\TrailRenderer_Base.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Environment\MovingPlatform.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LightsModule.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Utillities\Range.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3DefaultSettings.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\CutterMT.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Core scripts\CeilingDetector.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_BoneWeight.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3SerializableDictionary.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ScriptableObjectType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3ResourcesStream.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector2Int.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GradientAlphaKey.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TrailModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ShapeModule.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\DisableShadows.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector3.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector4.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_uint.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\PlayMaker\ES3PlayMaker.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_byteArray.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Transform.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Character\CharacterKeyboardInput.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Sprite.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_AnimationCurve.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedUnityObjectType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Web\ES3WebClass.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_BoxCollider2D.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_UIntPtr.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshFilter.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ExternalForcesModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Flare.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_short.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Mesh.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\PartialSeparator.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Character\CharacterInput.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Environment\TriggerArea.cs" />
@@ -107,198 +195,113 @@
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Smoothing\SmoothRotation.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Core scripts\Mover.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\Compatibility.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedScriptableObjectType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RotationBySpeedModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicMaterial.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\PlayerData.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3Defaults.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3InspectorInfo.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_BoxCollider.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Plane.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\ExploderSingleton.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\ExploderOption.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Array.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3Reader.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3File.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Smoothing\SmoothPosition.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_SphereCollider.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_enum.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_RawImage.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\IsolateMeshIslands.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\PostprocessCrack.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshRenderer.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Contour.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Core.cs" />
     <Compile Include="Assets\Plugins\AZURE Nature\Scripts\MouseLook.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Reflection.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_int.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Polygon.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ushort.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\CrackedObject.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RectTransform.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\CrackManager.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3Settings.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SpriteRenderer.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3ListType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3UnityObjectType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3TypeMgr.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RotationOverLifetimeModule.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\ExploderTransform.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\ExploderQueue.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_float.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SizeBySpeedModule.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\CutterST.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Web\ES3Cloud.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Keyframe.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Referencing\ES3GlobalReferences.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\Postprocess.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GradientColorKey.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSWeaponTrigger.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\MeshUtils.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicsMaterial2D.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Camera.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3DictionaryType.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Shader.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_InheritVelocityModule.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Camera\CameraInput.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshCollider.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Controllers\SidescrollerController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_VelocityOverLifetimeModule.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Controllers\SimpleWalkerController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Prefab.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Character\CharacterJoystickInput.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Animation &amp; Audio\TurnTowardControllerVelocity.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_PolygonCollider2D.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Utillities\GizmosExtra.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\ExploderUtils.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\DestroyAfterTime.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector3Int.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TextureSheetAnimationModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ForceOverLifetimeModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Rect.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SubEmittersModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_long.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3Type.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3ReferenceMgr.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Debugging\ES3Debug.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_DateTime.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\ExploderSlowMotion.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3JSONWriter.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\MeshObject.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Fragment.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Controllers\ClickToMoveController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Color32.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Quaternion.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES33DArrayType.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\RotateObject.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\Hull2D.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Environment\FlipAtRightAngle.cs" />
-    <Compile Include="Assets\Plugins\Exploder\Exploder\Explodable.cs" />
-    <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSController.cs" />
-    <Compile Include="Assets\Plugins\Exploder\Exploder\ExploderObject.cs" />
-    <Compile Include="Assets\Plugins\AZURE Nature\Scripts\MoveController.cs" />
-    <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Environment\GravityTunnel.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_SphereCollider.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3PlayerPrefsStream.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Color32.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ExternalForcesModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3StackType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_decimal.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Flare.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_intptr.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_double.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TrailModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_enum.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_RawImage.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MinMaxCurve.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3Defaults.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SizeOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_VelocityOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GradientColorKey.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ShapeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3InspectorInfo.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Quaternion.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_short.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_CollisionModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES33DArrayType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector3.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LimitVelocityOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Mesh.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_BoxCollider.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LightsModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TriggerModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3Stream.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Matrix4x4.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3Property.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3Settings.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GameObject.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SpriteRenderer.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Bounds.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3ReferenceMgr.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector4.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ES3Ref.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3ListType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Debugging\ES3Debug.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Prefab.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3IO.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3XMLReader.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_uint.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LayerMask.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Material.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SkinnedMeshRenderer.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_PolygonCollider2D.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Texture2D.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3XMLWriter.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\PlayMaker\ES3PlayMaker.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_byteArray.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_DateTime.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3UnityObjectType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_NoiseModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshRenderer.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3TypeMgr.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Image.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Texture.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MainModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ulong.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_byte.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3QueueType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_ParticleSystem.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_bool.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Transform.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3CollectionType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedComponentType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_EmissionModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3DefaultSettings.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3BinaryReader.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3ReferenceMgrBase.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3JSONReader.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RotationOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES32DArrayType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_BoneWeight.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Auto Save\ES3AutoSave.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3JSONWriter.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Crypto.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Reflection.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3SerializableDictionary.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Gradient.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Text.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_int.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3FileStream.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Font.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Sprite.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedScriptableObjectType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_AnimationCurve.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicsMaterial2D.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector3Int.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ScriptableObjectType.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_string.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Streams\ES3ResourcesStream.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_CapsuleCollider.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\NET Types\ES3Type_Random.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_float.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TextureSheetAnimationModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Camera.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Shader.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_AudioClip.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3DictionaryType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SizeBySpeedModule.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Light.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Attributes\ES3Attributes.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3HashSetType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RotationBySpeedModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ColorOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ForceOverLifetimeModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector2Int.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicMaterial.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Auto Save\ES3AutoSaveMgr.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedUnityObjectType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Rect.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_InheritVelocityModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ushort.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_char.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Color.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3BinaryWriter.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ComponentType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedValueType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Vector2.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SubEmittersModule.cs" />
+    <Compile Include="Assets\Plugins\Exploder\Exploder\Explodable.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Spreadsheet.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_long.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Web\ES3Cloud.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshCollider.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_ColorBySpeedModule.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3Reader.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Keyframe.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Web\ES3WebClass.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3File.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3Binary.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RectTransform.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_BoxCollider2D.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3CacheWriter.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3.cs" />
+    <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSController.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_EventSystem.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_intptr.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MinMaxCurve.cs" />
+    <Compile Include="Assets\Plugins\Exploder\Exploder\ExploderObject.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_TriggerModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Bounds.cs" />
+    <Compile Include="Assets\Plugins\AZURE Nature\Scripts\MoveController.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_LayerMask.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_EmissionModule.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3ReferenceMgrBase.cs" />
+    <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Environment\GravityTunnel.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedValueType.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ObjectType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_sbyte.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_UIntPtr.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GradientAlphaKey.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedObjectType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3Type.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Referencing\ES3GlobalReferences.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_MeshFilter.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3ArrayType.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_MinMaxGradient.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Writers\ES3Writer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Exploder\Exploder\3rd\P2T.txt" />
@@ -564,6 +567,9 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>D:\Unity\UnityHub\2022.1.0b14\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
@@ -617,9 +623,6 @@
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
-      <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="P2T">
       <HintPath>Assets\Plugins\Exploder\Exploder\3rd\P2T.dll</HintPath>
@@ -1116,13 +1119,13 @@
       <Project>{F1C49B2B-6EDC-8E4F-D6C5-3B1EED4D203B}</Project>
       <Name>Sirenix.OdinInspector.CompatibilityLayer.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="AstarPathfindingProject.csproj">
-      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
-      <Name>AstarPathfindingProject</Name>
-    </ProjectReference>
     <ProjectReference Include="PackageToolsEditor.csproj">
       <Project>{2EACC277-124E-A0E7-9A8D-9B980F2EB1F4}</Project>
       <Name>PackageToolsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="AstarPathfindingProject.csproj">
+      <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
+      <Name>AstarPathfindingProject</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
       <Project>{13C30237-0C02-8625-E701-E974EE7A5850}</Project>

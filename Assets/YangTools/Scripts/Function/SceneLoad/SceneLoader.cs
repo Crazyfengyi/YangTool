@@ -20,7 +20,6 @@ namespace YangTools
         /// <param name="progress">进度0~1</param>
         void onProgress(float progress);
     }
-
     /// <summary>
     /// 场景加载器
     /// </summary>

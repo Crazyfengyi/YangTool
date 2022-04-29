@@ -20,6 +20,12 @@ public class Test : MonoBehaviour
     {
         //Create();
         //Create2();
+
+        // Create a new ES3Settings to enable encryption.
+        var settings = new ES3Settings(ES3.EncryptionType.AES, "myPassword");
+
+        ES3.Save<int>("key1", 123, settings);
+        int test = ES3.Load<int>("key1", settings);
     }
     public void Update()
     {
@@ -33,8 +39,8 @@ public class Test : MonoBehaviour
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        material.SetFloat("_Value", value);
-        Graphics.Blit(source, destination, material);
+        //material.SetFloat("_Value", value);
+        //Graphics.Blit(source, destination, material);
     }
 
     IEnumerator Tets2()

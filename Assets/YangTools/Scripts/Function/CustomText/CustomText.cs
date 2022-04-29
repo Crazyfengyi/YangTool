@@ -154,8 +154,7 @@ namespace YangTools
         private void SetSingleCharaterAlpha(int index, byte newAlpha)
         {
             TMP_CharacterInfo charInfo = textInfo.characterInfo[index];//文字信息
-                                                                       //时可见字符(空格是不可见字符)
-                                                                       //不可见字符
+            //不可见字符(空格是不可见字符)
             if (!charInfo.isVisible)
             {
                 return;
@@ -179,7 +178,11 @@ namespace YangTools
         //间隔字典(第几个下标,间隔时间)
         public Dictionary<int, float> intervalDic = new Dictionary<int, float>();
         public List<RubyData> rubyList = new List<RubyData>();
-
+        /// <summary>
+        /// 获得注音
+        /// </summary>
+        /// <param name="index">下标</param>
+        /// <param name="data">数据</param>
         public bool TryGetRubyStartFrom(int index, out RubyData data)
         {
             data = new RubyData(0, "");
@@ -194,6 +197,10 @@ namespace YangTools
 
             return false;
         }
+        /// <summary>
+        /// 预处理文本
+        /// </summary>
+        /// <param name="text">文本</param>
         public string PreprocessText(string text)
         {
             intervalDic.Clear();

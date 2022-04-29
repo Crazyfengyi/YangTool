@@ -81,7 +81,6 @@ namespace YangTools.Timer
             targetFrame = _delayFrame;
             currentFrame = targetFrame;
         }
-
         /// <summary>
         /// 更新
         /// </summary>
@@ -131,7 +130,6 @@ namespace YangTools.Timer
             }
 
         }
-
         /// <summary>
         /// 是否计时完成
         /// </summary>
@@ -178,7 +176,6 @@ namespace YangTools.Timer
             currentSecond = delaySecond;
             isInfiniteLoop = false;
         }
-
         /// <summary>
         /// 无限循环用
         /// </summary>
@@ -192,7 +189,6 @@ namespace YangTools.Timer
             checkState = _checkState;
             overBack = _overBack;
         }
-
         /// <summary>
         /// 更新
         /// </summary>
@@ -266,7 +262,6 @@ namespace YangTools.Timer
                 }
             }
         }
-
         /// <summary>
         /// 是否计时完成
         /// </summary>
@@ -292,7 +287,6 @@ namespace YangTools.Timer
         /// 设置自动删除--告诉管理类这个计时器需要删除
         /// </summary>
         public Action<YangTimer> setAutoDestory;
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -301,7 +295,6 @@ namespace YangTools.Timer
             setAutoDestory = manager;
             timerInfo = _timerInfo;
         }
-
         /// <summary>
         /// 更新
         /// </summary>
@@ -314,7 +307,6 @@ namespace YangTools.Timer
                 Destroy();
             }
         }
-
         /// <summary>
         /// 销毁
         /// </summary>

@@ -29,7 +29,6 @@ namespace YangTools
             //Application.runInBackground = m_RunInBackground;
             //Screen.sleepTimeout = m_NeverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
         }
-
         private void Start()
         {
         }
@@ -37,13 +36,12 @@ namespace YangTools
         {
             YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
         }
+        private void OnDestroy()
+        {
+        }
         private void OnApplicationQuit()
         {
             YangTools.YangToolsManager.OnApplicationQuit();
-        }
-
-        private void OnDestroy()
-        {
         }
         #endregion
 

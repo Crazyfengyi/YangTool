@@ -39,7 +39,6 @@ namespace YangTools
         /// Asset编辑器文件路径
         /// </summary>
         public const string YangToolAssetPath = "Assets/YangTools/EditorStudio/Editor/";
-
         /// <summary>
         /// 获得ScriptableObject
         /// </summary>

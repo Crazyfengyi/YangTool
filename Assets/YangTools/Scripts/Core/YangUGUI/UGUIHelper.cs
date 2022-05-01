@@ -8,6 +8,7 @@
 using UnityEngine;
 using System.Collections;
 using YangTools.Extend;
+using YangTools.Log;
 using UnityEngine.UI;
 
 namespace YangTools.UGUI

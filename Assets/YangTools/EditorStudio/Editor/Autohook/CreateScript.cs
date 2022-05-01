@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using YangTools.Log;
 
 namespace YangTools
 {
@@ -367,7 +368,7 @@ public class #类名# : MonoBehaviour
             GameObject gameObject = Selection.activeGameObject;
             if (gameObject == null)
             {
-                YangToolDebuger.Debuger.ToError("未选中物体");
+                Debuger.ToError("未选中物体");
                 return;
             }
 
@@ -401,7 +402,7 @@ public class #类名# : MonoBehaviour
             GameObject gameObject = Selection.activeGameObject;
             if (gameObject == null)
             {
-                YangToolDebuger.Debuger.ToError("未选中物体");
+                Debuger.ToError("未选中物体");
                 return;
             }
 

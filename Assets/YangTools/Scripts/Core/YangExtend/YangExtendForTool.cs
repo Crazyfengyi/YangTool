@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
-using YangToolDebuger;
+using YangTools.Log;
 
 namespace YangTools.Extend
 {

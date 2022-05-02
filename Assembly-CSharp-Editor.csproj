@@ -87,6 +87,7 @@
     <Compile Include="Assets\YangTools\EditorStudio\Editor\Autohook\CreateScript.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LookAtIKInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverHeuristicInspector.cs" />
+    <Compile Include="Assets\UserTest\Temp\Editor\EditorIcons.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\IKSolverLegInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\InteractionTriggerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\AimPoserInspector.cs" />
@@ -425,11 +426,17 @@
     <Reference Include="log4netPlastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.13.5\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.2\Runtime\Newtonsoft.Json.dll</HintPath>

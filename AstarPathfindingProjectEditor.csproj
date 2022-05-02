@@ -343,6 +343,12 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>D:\Unity\UnityHub\2022.1.0b14\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="BGDatabaseEditor">
+      <HintPath>Assets\BansheeGz\BGDatabase\Editor\Scripts\BGDatabaseEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="BGDatabase">
+      <HintPath>Assets\BansheeGz\BGDatabase\Scripts\BGDatabase.dll</HintPath>
+    </Reference>
     <Reference Include="DemiEditor">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll</HintPath>
     </Reference>
@@ -361,11 +367,17 @@
     <Reference Include="log4netPlastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.13.5\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.2\Runtime\Newtonsoft.Json.dll</HintPath>

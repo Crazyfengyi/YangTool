@@ -567,6 +567,9 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>D:\Unity\UnityHub\2022.1.0b14\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
+    <Reference Include="BGDatabase">
+      <HintPath>Assets\BansheeGz\BGDatabase\Scripts\BGDatabase.dll</HintPath>
+    </Reference>
     <Reference Include="Pathfinding.Ionic.Zip.Reduced">
       <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -576,11 +579,17 @@
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.0\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.2\Runtime\Newtonsoft.Json.dll</HintPath>

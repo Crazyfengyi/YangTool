@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,6 +52,9 @@
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2022.1.0b14</UnityVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Primitives\UILineTextureRenderer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBBIKSettings.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="Assets\YangTools\Scripts\AutoTools\MinTool\CopyAllComponent.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Finger Rig\FingerRig.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\SolverManager.cs" />
+    <Compile Include="Assets\UserTest\DataExport\Scripts\ExcelUtility.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderVRIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\CharacterBase.cs" />
@@ -378,6 +382,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverArm.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFABRIK.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIPanel.cs" />
+    <Compile Include="Assets\UserTest\DataExport\Scripts\DataExportTool.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Common\TextWalkingLantern.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorPickerPresets.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\MenuSystem\SimpleMenu.cs" />
@@ -551,6 +556,7 @@
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle MultiplyDouble.shader" />
     <None Include="Assets\YangTools\Res\CommonArt\Shader\TextOutlineShader.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
+    <None Include="Assets\UserTest\DataExport\Plugins\Excel.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle AddMultiply.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Serialization.dll.backup.txt" />
@@ -567,6 +573,7 @@
     <None Include="Assets\YangTools\Res\CommonArt\Shader\BloodShader.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Readme.txt" />
+    <None Include="Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll" />
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenPro.dll" />
     <None Include="Assets\YangTools\ReadMe.txt" />
     <None Include="Assets\UserTest\MyTest\Axe_动作表.txt" />
@@ -848,11 +855,17 @@
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.0\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.2\Runtime\Newtonsoft.Json.dll</HintPath>

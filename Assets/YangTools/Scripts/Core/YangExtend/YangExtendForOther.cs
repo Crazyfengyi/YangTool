@@ -341,6 +341,26 @@ namespace YangTools.Extend
 
             return false;
         }
+        /// <summary>
+        /// 获得颜色
+        /// </summary>
+        /// <param name="htmlStr">16进制颜色值</param>
+        /// <returns>颜色结果</returns>
+        public static Color GetColor(string htmlStr)
+        {
+            htmlStr = "#" + htmlStr;
+            ColorUtility.TryParseHtmlString(htmlStr, out Color nowColor);
+            return nowColor;
+        }
+        /// <summary>
+        /// 获得颜色的string
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static string GetHtmlColor(Color color)
+        {
+            return ColorUtility.ToHtmlStringRGB(color);
+        }
     }
     //跟资源有关---张艺洪那边移过来
     public partial class YangExtend

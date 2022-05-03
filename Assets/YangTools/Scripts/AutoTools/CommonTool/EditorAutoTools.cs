@@ -32,7 +32,7 @@ namespace YangTools
         }
         #endregion
 
-        #region 复制文件-移除脚本
+        #region 复制文件
         [MenuItem(SettingInfo.YongToolsFunctionPath + "CopyToFolder")]
         public static void CopyToTargetFolder()
         {
@@ -42,7 +42,6 @@ namespace YangTools
             string[] tempList = idListStr.Split('\n', '\r');
 
             List<string> newList = new List<string>();
-
             for (int i = 0; i < tempList.Length; i++)
             {
                 if (!string.IsNullOrEmpty(tempList[i]))
@@ -50,24 +49,17 @@ namespace YangTools
                     newList.Add(tempList[i]);
                 }
             }
-
             for (int i = 0; i < newList.Count; i++)
             {
-
                 try
                 {
                     string name = newList[i];
-
                     var ss = $"{currentFloder}/Monster_{name}";
                     // 加载资源
                     GameObject obj = AssetDatabase.LoadAssetAtPath($"{currentFloder}/Monster_{name}.prefab", typeof(GameObject)) as GameObject;
                     // 以模板创建
-                    //Object obj2 = Object.Instantiate(obj);
-
                     UnityEngine.Object obj2 = PrefabUtility.InstantiatePrefab(obj);
-
                     // 创建资源
-                    //AssetDatabase.CreateAsset(obj2, $"{targetFloder}/{name}.prefab");
                     PrefabUtility.SaveAsPrefabAsset((GameObject)obj2, $"{targetFloder}/{name}.prefab", out bool success);
 
                     if (success)
@@ -89,61 +81,9 @@ namespace YangTools
             }
 
             Resources.UnloadAsset(idList);
-
             // 刷新编辑器，使刚创建的资源立刻被导入，才能接下来立刻使用上该资源
             AssetDatabase.Refresh();
             Debug.LogError("Copy完成");
-        }
-        [MenuItem(SettingInfo.YongToolsFunctionPath + "RemoveScript")]
-        public static void RemoveScript()
-        {
-            //读id文件
-            TextAsset idList = AssetDatabase.LoadAssetAtPath<TextAsset>($"{targetFloder}/ID.txt");
-            string idListStr = idList.text;
-            string[] tempList = idListStr.Split('\n', '\r');
-
-            List<string> newList = new List<string>();
-
-            for (int i = 0; i < tempList.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(tempList[i]))
-                {
-                    newList.Add(tempList[i]);
-                }
-            }
-
-            for (int i = 0; i < newList.Count; i++)
-            {
-
-                try
-                {
-                    string name = newList[i];
-
-                    var ss = $"{currentFloder}/Monster_{name}";
-                    // 加载资源
-                    GameObject obj = AssetDatabase.LoadAssetAtPath($"{targetFloder}/{name}.prefab", typeof(GameObject)) as GameObject;
-
-                    //修改资源
-                    var script1List = obj.GetComponents<MySample>();
-                    for (int j = 0; j < script1List.Length; j++)
-                    {
-                        GameObject.DestroyImmediate(script1List[j], true);
-                    }
-                    // 通知编辑器有资源被修改了
-                    EditorUtility.SetDirty(obj);
-                    Resources.UnloadAsset(obj);
-                }
-                catch (System.Exception)
-                {
-                    Debug.LogError($"{newList[i]}:修改失败");
-                }
-            }
-            Resources.UnloadAsset(idList);
-            //保存所有修改
-            AssetDatabase.SaveAssets();
-            //// 刷新编辑器，使刚创建的资源立刻被导入，才能接下来立刻使用上该资源
-            //AssetDatabase.Refresh();
-            Debug.LogError("修改完成");
         }
         /// <summary>
         /// 占位用--工具脚本需要MonoBehaviour站位

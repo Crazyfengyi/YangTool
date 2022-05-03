@@ -302,6 +302,41 @@
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Reflected Types\ES3ReflectedValueType.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3ObjectType.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3ArrayType.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\DynamicsSetup.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\SpringManager.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\AngleLimits.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\SpringBonePivot.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Colliders\Circle3.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\CSVUtilities.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\ForceProviders\WindVolume.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringBoneExporting.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringColliderSetup.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\GizmoUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\HandlesUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\ObjectBuilding\TypedStringToValueMap.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Components\DynamicsNull.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Colliders\SpringPanelCollider.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\ForceProviders\ForceProvider.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringColliderImporting.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Components\HighLeg.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Colliders\SpringCapsuleCollider.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringSetupComponentDefiners.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\ObjectBuilding\UnityComponentStringListBuilder.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\CSVBuilder.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Colliders\SpringColliderDebug.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\PathUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\StringUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\ForceProviders\ForceVolume.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\TextRecordParsing.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringBoneSetup.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\SpringBone.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Colliders\SpringSphereCollider.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\DirectoryUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\ObjectBuilding\StringQueueObjectBuilder.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\FileUtil.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringBoneImporting.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\SpringBone\Setup\SpringColliderExporting.cs" />
+    <Compile Include="Assets\Plugins\AllSpringBone\Utility\GameObjectUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Exploder\Exploder\3rd\P2T.txt" />
@@ -566,9 +601,6 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>D:\Unity\UnityHub\2022.1.0b14\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
-    </Reference>
-    <Reference Include="BGDatabase">
-      <HintPath>Assets\BansheeGz\BGDatabase\Scripts\BGDatabase.dll</HintPath>
     </Reference>
     <Reference Include="Pathfinding.Ionic.Zip.Reduced">
       <HintPath>Assets\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>

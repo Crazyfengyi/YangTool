@@ -20,12 +20,16 @@ public class Test : MonoBehaviour
     {
         //Create();
         //Create2();
+        YangTools.Log.Debuger.IsOpenLog = true;
 
-        // Create a new ES3Settings to enable encryption.
-        var settings = new ES3Settings(ES3.EncryptionType.AES, "myPassword");
+        for (int i = 0; i < 10000; i++)
+        {
+            YangTools.Log.Debuger.ToError($"²âÊÔ{i}");
+        }
 
-        ES3.Save<int>("key1", 123, settings);
-        int test = ES3.Load<int>("key1", settings);
+        //var settings = new ES3Settings(ES3.EncryptionType.AES, "myPassword");
+        //ES3.Save<int>("key1", 123, settings);
+        //int test = ES3.Load<int>("key1", settings);
     }
     public void Update()
     {

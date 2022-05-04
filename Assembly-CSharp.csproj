@@ -141,8 +141,8 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Camera Controllers\CameraController.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\UI_TweenScale.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderQuadruped.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Function\CustomText\CustomText.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\UIParticleSystem.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Function\CustomText\CustomText.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\AxisTools.cs" />
     <Compile Include="Assets\UserTest\EndlessWorlds\Script\EndlessWord.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Utilities\PPIViewer.cs" />

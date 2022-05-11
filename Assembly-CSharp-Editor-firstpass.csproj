@@ -56,11 +56,22 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SaveSpringBoneSetupWindow.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\AngleLimitsPropertyInfo.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3GlobalReferencesEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SpringBoneWindow.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3PlayMakerEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\Utility\Editor\FindGameObjectsWindow.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringBonePivotInspector.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Editor\EditorExploderObject.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\SpringBoneEditorActions.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\GUIElements.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3EditorUtility.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\SpringBoneGUIStyles.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\Utility\Editor\SetObjectParentWindow.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\Editor\SmokeTrailEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\Utility\Inspector3DRenderer.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\AutoSpringBoneSetup.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\SettingsWindow.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\TypesWindow.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\AutoSaveWindow.cs" />
@@ -69,44 +80,33 @@
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ToolsWindow.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\Editor\SmokePlumeEditor.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3AutoSaveMgrEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringPanelColliderInspector.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\AddES3Prefab.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ReferencesWindow.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringCapsuleColliderInspector.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\HomeWindow.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Utillities\Editor\RangePropertyDrawer.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3SettingsEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\InspectorFloatSlider.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\MirrorSpringBoneWindow.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3ReferenceMgrEditor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\SpringColliderEditorActions.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Editor\EditorExploderUtils.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor_Base.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\InspectorPropertyInfo.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3Postprocessor.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringManagerInspector.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3EditorStyle.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3PrefabEditor.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3Window.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3InspectorInfoEditor.cs" />
-    <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Editor\MoverInspector.cs" />
-    <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3AutoSaveEditor.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SpringBoneSetupErrorWindow.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\SpringBoneEditorActions.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\SpringColliderEditorActions.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SpringBoneWindow.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\InspectorPropertyInfo.cs" />
+    <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Editor\MoverInspector.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringBoneInspector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringPanelColliderInspector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\SpringBoneGUIStyles.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\GUIElements.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringManagerInspector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\Utility\Inspector3DRenderer.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringCapsuleColliderInspector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\InspectorFloatSlider.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\LoadSpringBoneSetupWindow.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringColliderBoneSelector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\MirrorSpringBoneWindow.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\AutoSpringBoneSetup.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\Utility\Editor\SetObjectParentWindow.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\AngleLimitsPropertyInfo.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SaveSpringBoneSetupWindow.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\Utility\Editor\FindGameObjectsWindow.cs" />
+    <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3AutoSaveEditor.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringSphereColliderInspector.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringBonePivotInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Easy Save 3\Editor\ES3ValueTypeTemplate.txt" />
@@ -417,6 +417,9 @@
     <Reference Include="log4netPlastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.15.15\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
     </Reference>
+    <Reference Include="Excel">
+      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization.Config">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
     </Reference>
@@ -432,6 +435,9 @@
     <Reference Include="DOTween">
       <HintPath>Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\DOTween.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.dll</HintPath>
     </Reference>
@@ -443,12 +449,6 @@
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
       <HintPath>Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Excel">
-      <HintPath>Assets\UserTest\DataExport\Plugins\Excel.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Assets\UserTest\DataExport\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

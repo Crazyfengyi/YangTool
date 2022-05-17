@@ -76,11 +76,11 @@ namespace YangTools
                 AutoLoad();
                 if (value == null)
                 {
-                    DataCore.RemoveKey(Key);
+                    YangDataCode.RemoveKey(Key);
                 }
                 else
                 {
-                    DataCore.SaveValue(Key, value);
+                    YangDataCode.SaveValue(Key, value);
                 }
             }
             /// <summary>
@@ -91,7 +91,7 @@ namespace YangTools
                 if (!hasLoadArchive)
                 {
                     TValue tValue;
-                    if (DataCore.LoadValue(Key, out tValue))
+                    if (YangDataCode.LoadValue(Key, out tValue))
                     {
                         value = tValue;
                     }
@@ -169,11 +169,11 @@ namespace YangTools
                 AutoLoad();
                 if (_value == null)
                 {
-                    DataCore.RemoveKey(Key);
+                    YangDataCode.RemoveKey(Key);
                 }
                 else
                 {
-                    DataCore.SaveValue(Key, _value);
+                    YangDataCode.SaveValue(Key, _value);
                 }
             }
 
@@ -185,7 +185,7 @@ namespace YangTools
                 if (!_hasInit)
                 {
                     List<V> tValue;
-                    if (DataCore.LoadValue(Key, out tValue))
+                    if (YangDataCode.LoadValue(Key, out tValue))
                     {
                         _value = tValue;
                     }
@@ -265,11 +265,11 @@ namespace YangTools
                 AutoLoad();
                 if (_value == null)
                 {
-                    DataCore.RemoveKey(Key);
+                    YangDataCode.RemoveKey(Key);
                 }
                 else
                 {
-                    DataCore.SaveValue(Key, _value);
+                    YangDataCode.SaveValue(Key, _value);
                 }
             }
 
@@ -281,7 +281,7 @@ namespace YangTools
                 if (!_hasInit)
                 {
                     HashSet<V> tValue;
-                    if (DataCore.LoadValue(Key, out tValue))
+                    if (YangDataCode.LoadValue(Key, out tValue))
                     {
                         _value = tValue;
                     }
@@ -360,11 +360,11 @@ namespace YangTools
                 AutoLoad();
                 if (_value == null)
                 {
-                    DataCore.RemoveKey(Key);
+                    YangDataCode.RemoveKey(Key);
                 }
                 else
                 {
-                    DataCore.SaveValue(Key, _value);
+                    YangDataCode.SaveValue(Key, _value);
                 }
             }
 
@@ -376,7 +376,7 @@ namespace YangTools
                 if (!_hasInit)
                 {
                     Dictionary<K, V> tValue;
-                    if (DataCore.LoadValue(Key, out tValue))
+                    if (YangDataCode.LoadValue(Key, out tValue))
                     {
                         _value = tValue;
                     }
@@ -455,11 +455,11 @@ namespace YangTools
                 AutoLoad();
                 if (_value == null)
                 {
-                    DataCore.RemoveKey(Key);
+                    YangDataCode.RemoveKey(Key);
                 }
                 else
                 {
-                    DataCore.SaveValue(Key, _value);
+                    YangDataCode.SaveValue(Key, _value);
                 }
             }
 
@@ -471,7 +471,7 @@ namespace YangTools
                 if (!_hasInit)
                 {
                     SortedDictionary<K, V> tValue;
-                    if (DataCore.LoadValue(Key, out tValue))
+                    if (YangDataCode.LoadValue(Key, out tValue))
                     {
                         _value = tValue;
                     }

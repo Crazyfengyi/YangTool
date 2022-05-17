@@ -34,7 +34,7 @@ namespace YangTools
 
             InitDontDestoryObject();
             //TODO需要相关文件夹自动生成
-            DataCore.Init();
+            YangDataCode.Init();
         }
         /// <summary>
         /// 在Unity中创建一个不能删除的物体

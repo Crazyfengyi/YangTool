@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{3AF63BCE-E542-06C2-5819-5E66A45AB407}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -162,7 +163,6 @@
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\PolygonImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\TiltWindow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMapping.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\StaticInfo.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\SceneLoad\SceneLoader.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\UnityLoopScript.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\HSVUtil.cs" />
@@ -371,7 +371,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\Poser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterAnimationThirdPersonIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\ScrollSnapBase.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\DataCore.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\YangDataCode.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\Helpers\AvatarUtility.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\GridPos.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatform.cs" />

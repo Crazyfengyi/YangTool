@@ -21,46 +21,39 @@ using YangTools.Timer;
 namespace YangTools
 {
     /// <summary>
-    /// 单集合多集合字段排序特性
-    /// 使用方法：在字段上面加 [Ordinal(n)]，其中n可以是int任意数值，n越小，排序越靠前
+    /// 字段排序特性(使用方法:在字段上面加[Ordinal(n)],其中n可以是int任意数值,n越小,排序越靠前)
     /// </summary>
     public class OrdinalAttribute : System.Attribute
     {
         public int Ordinal { get; set; }
-
         public OrdinalAttribute(int ordinal)
         {
             Ordinal = ordinal;
         }
     }
-
     /// <summary>
-    /// 字段从表中加载的进度信息
+    /// 字段加载信息
     /// </summary>
     public class FieldLoadProgressInfo
     {
         /// <summary>
-        /// 属性：当前被操作的对象实例
+        /// 当前被操作的对象实例
         /// </summary>
         public object ObjectInstance { get; set; }
-
         /// <summary>
-        /// 属性：当前进度是否是“完成通知”
+        /// 是否完成
         /// </summary>
         public bool IsFinished { get; set; }
-
         /// <summary>
-        /// 属性：对象当前需赋值的字段信息
+        /// 对象当前需赋值的字段信息
         /// </summary>
         public FieldInfo NowFieldInfo { get; set; }
-
         /// <summary>
-        /// 属性：表中该字段的键
+        /// 表中该字段的键
         /// </summary>
         public string TableKey { get; set; }
-
         /// <summary>
-        /// 属性：表中该字段的值
+        /// 表中该字段的值
         /// </summary>
         public string TableValue { get; set; }
 
@@ -85,32 +78,29 @@ namespace YangTools
             }
             else
             {
-                object universalValue = DataCore.ConvertStringToUniversalValue(TableValue, NowFieldInfo.FieldType);
+                object universalValue = YangDataCode.ConvertStringToUniversalValue(TableValue, NowFieldInfo.FieldType);
                 NowFieldInfo.SetValue(ObjectInstance, universalValue);
             }
         }
     }
-
     /// <summary>
-    /// 具备包容性的json信息
+    /// Jsons数据桥
     /// </summary>
-    public class ToleranceJsonData
+    public class JsonDataBridge
     {
         /// <summary>
-        /// 可以直接赋值和获得的JsonData
+        /// JsonData
         /// </summary>
-        public JsonData jsonData = null;
-
+        public JsonData jsonData;
         /// <summary>
-        /// 构建空的信息，空信息调用HasError一定会返回true
+        /// 默认构造,空信息调用HasError一定会返回true
         /// </summary>
-        public ToleranceJsonData() { }
-
+        public JsonDataBridge() { }
         /// <summary>
-        /// 从JsonData构建
+        /// Json构造
         /// </summary>
-        /// <param name="json">JsonData源</param>
-        public ToleranceJsonData(JsonData json)
+        /// <param name="json">数据</param>
+        public JsonDataBridge(JsonData json)
         {
             jsonData = json;
         }
@@ -119,71 +109,51 @@ namespace YangTools
         /// 从JsonData进行隐式转化
         /// </summary>
         /// <param name="json">JsonData源</param>
-        public static implicit operator ToleranceJsonData(JsonData json)
+        public static implicit operator JsonDataBridge(JsonData json)
         {
-            return new ToleranceJsonData(json);
+            return new JsonDataBridge(json);
         }
-
         /// <summary>
-        /// 该信息是否有错误或为空
+        /// 信息是否错误或为空
         /// </summary>
         public bool HasError
         {
-            get
-            {
-                return jsonData == null;
-            }
+            get { return jsonData == null; }
         }
-
         /// <summary>
         /// 信息是否是字典类型
         /// </summary>
         public bool IsMap
         {
-            get
-            {
-                return HasError ? false : jsonData.IsObject;
-            }
+            get { return HasError ? false : jsonData.IsObject; }
         }
-
         /// <summary>
         /// 信息是否是数组类型
         /// </summary>
         public bool IsArray
         {
-            get
-            {
-                return HasError ? false : jsonData.IsArray;
-            }
+            get { return HasError ? false : jsonData.IsArray; }
         }
-
         /// <summary>
         /// 信息是否是值类型
         /// </summary>
         public bool IsValue
         {
-            get
-            {
-                return HasError ? false : (!jsonData.IsObject && !jsonData.IsArray);
-            }
+            get { return HasError ? false : (!jsonData.IsObject && !jsonData.IsArray); }
         }
-
         /// <summary>
         /// 转换到bool
         /// </summary>
         public bool AsBool()
         {
             if (!IsValue) return false;
-
             var s = jsonData.ToString();
             if (string.IsNullOrEmpty(s) || s == "0" || s == "false")
             {
                 return false;
             }
-
             return true;
         }
-
         /// <summary>
         /// 转换到int
         /// </summary>
@@ -195,7 +165,6 @@ namespace YangTools
             int.TryParse(jsonData.ToString(), out result);
             return result;
         }
-
         /// <summary>
         /// 转换到float
         /// </summary>
@@ -207,7 +176,6 @@ namespace YangTools
             float.TryParse(jsonData.ToString(), out result);
             return result;
         }
-
         /// <summary>
         /// 转换到double
         /// </summary>
@@ -219,7 +187,6 @@ namespace YangTools
             double.TryParse(jsonData.ToString(), out result);
             return result;
         }
-
         /// <summary>
         /// 转换到long
         /// </summary>
@@ -231,7 +198,6 @@ namespace YangTools
             long.TryParse(jsonData.ToString(), out result);
             return result;
         }
-
         /// <summary>
         /// 转换到string
         /// </summary>
@@ -243,17 +209,16 @@ namespace YangTools
             if (ret == null) ret = "";
             return ret;
         }
-
         /// <summary>
         /// 通过string键取Map的值，如果有错，返回有错的信息
         /// </summary>
         /// <param name="key">string键</param>
-        public ToleranceJsonData this[string key]
+        public JsonDataBridge this[string key]
         {
             get
             {
-                if (!IsMap /*|| !jsonData.ContainsKey(key)*/) return new ToleranceJsonData();
-                return new ToleranceJsonData(jsonData[key]);
+                if (!IsMap /*|| !jsonData.ContainsKey(key)*/) return new JsonDataBridge();
+                return new JsonDataBridge(jsonData[key]);
             }
         }
     }
@@ -274,7 +239,6 @@ namespace YangTools
             this.target = _target;
         }
     }
-
     /// <summary>
     /// HashSet 容器序列化处理器
     /// </summary>
@@ -298,7 +262,6 @@ namespace YangTools
             this.target = _target.ToList();
         }
     }
-
     /// <summary>
     /// Dictionary 容器序列化处理器
     /// </summary>
@@ -335,7 +298,6 @@ namespace YangTools
             }
         }
     }
-
     /// <summary>
     /// SortedDictionary 容器序列化处理器
     /// </summary>
@@ -375,10 +337,9 @@ namespace YangTools
     #endregion
 
     /// <summary>
-    /// 数据处理器
-    /// 使用Save一类的函数时，Key请不要传入特殊字符，不然无法形成文件名而导致无法保存
+    /// 数据处理器(使用Save一类的函数时,Key请不要传入特殊字符,不然无法形成文件名而导致无法保存)
     /// </summary>
-    public static class DataCore
+    public static class YangDataCode
     {
         #region 扩展方法
         /// <summary>
@@ -397,7 +358,6 @@ namespace YangTools
                 return -1;
             }
         }
-
         /// <summary>
         /// 检查字段是否包含某个特性
         /// </summary>
@@ -415,7 +375,6 @@ namespace YangTools
                 return false;
             }
         }
-
         /// <summary>
         /// 字符串转换到任意类型（转换失败抛出错误）
         /// </summary>
@@ -423,7 +382,7 @@ namespace YangTools
         /// <param name="str">需要转换的表格字符串</param>
         public static T ParseTo<T>(this string str)
         {
-            return (T)DataCore.ConvertStringToUniversalValue(str, typeof(T));
+            return (T)YangDataCode.ConvertStringToUniversalValue(str, typeof(T));
         }
         #endregion
 
@@ -472,7 +431,6 @@ namespace YangTools
             SaveInternalKeys();
             return true;
         }
-
         /// <summary>
         /// 添加内部key
         /// </summary>
@@ -482,7 +440,6 @@ namespace YangTools
             if (!allKeys.Add(key)) return;
             SaveInternalKeys();
         }
-
         /// <summary>
         /// 清空内部key
         /// </summary>
@@ -491,7 +448,6 @@ namespace YangTools
             allKeys.Clear();
             SaveInternalKeys();
         }
-
         /// <summary>
         /// 保存内部key
         /// </summary>
@@ -499,7 +455,6 @@ namespace YangTools
         {
             saveKeyDirty = true;
         }
-
         /// <summary>
         /// 检查是否保存key列表
         /// </summary>
@@ -531,7 +486,6 @@ namespace YangTools
                 }
             }
         }
-
         /// <summary>
         /// 重新读取存档链表allKeys列表
         /// </summary>
@@ -568,15 +522,14 @@ namespace YangTools
         /// <summary>
         /// 静态初始化
         /// </summary>
-        static DataCore()
+        static YangDataCode()
         {
 
 #if UNITY_IOS
-        dataEncoding = Encoding.UTF8;
+            dataEncoding = Encoding.UTF8;
 #else
             dataEncoding = Encoding.Default;
 #endif
-
             dataCoderDirPath = Application.persistentDataPath + "/DC";
             if (!Directory.Exists(dataCoderDirPath))
             {
@@ -654,7 +607,6 @@ namespace YangTools
         {
             File.Delete(dataCoderDirPath + filePath);
         }
-
         /// <summary>
         /// 将字符串写入文件（不能使用绝对路径，相对于DataCore默认储存路径）
         /// </summary>
@@ -682,7 +634,6 @@ namespace YangTools
             writer.Close();
             return true;
         }
-
         /// <summary>
         /// 从文件读入字符串（不能使用绝对路径，相对于DataCore默认储存路径）
         /// </summary>
@@ -1400,12 +1351,13 @@ namespace YangTools
 
         #region Unity文件管理
         /// <summary>
-        /// 从Resources(资源管理包)获得Json对象
+        /// 从Resources获得Json对象
         /// </summary>
         public static JsonData GetJsonFromAssetsResources(string filePathWithNoPostfix)
         {
             JsonData ret;
             TextAsset resObj;
+
             try
             {
                 resObj = Resources.Load<TextAsset>(filePathWithNoPostfix);
@@ -1433,7 +1385,6 @@ namespace YangTools
 
             return ret;
         }
-
         #endregion
 
         #region 数据读取相关
@@ -1457,8 +1408,8 @@ namespace YangTools
             var allFields = type.GetFields(flag).Where(f => f.IsPublic || f.HasAttribute<SerializeField>());
 
             var fieldLoadProgressInfo = new FieldLoadProgressInfo();
-            ToleranceJsonData avm = new ToleranceJsonData();
-            ToleranceJsonData subAvm = new ToleranceJsonData();
+            JsonDataBridge avm = new JsonDataBridge();
+            JsonDataBridge subAvm = new JsonDataBridge();
             System.TypeCode keyTypeCode = System.Type.GetTypeCode(typeof(K));
             bool isStrKey = (keyTypeCode == System.TypeCode.String || keyTypeCode == System.TypeCode.Object);
 
@@ -1489,7 +1440,6 @@ namespace YangTools
                 onLoadProgressCallback?.Invoke(new FieldLoadProgressInfo() { ObjectInstance = obj, IsFinished = true });
             }
         }
-
         /// <summary>
         /// 从json字符串对象组加载到整型键结构体字典组
         /// </summary>
@@ -1502,7 +1452,6 @@ namespace YangTools
         {
             ReloadDictFromJsonDataGroup(objDict, jsonData, onLoadProgressCallback);
         }
-
         /// <summary>
         /// 从 Resources json 文件读取到整型键结构体字典组
         /// </summary>
@@ -1523,7 +1472,6 @@ namespace YangTools
 
             return ret;
         }
-
         /// <summary>
         /// 从json字符串对象组加载到字符键结构体字典组
         /// </summary>
@@ -1536,8 +1484,6 @@ namespace YangTools
         {
             ReloadDictFromJsonDataGroup(objDict, jsonData, onLoadProgressCallback);
         }
-
-
         /// <summary>
         /// 从字符串返回相应类型值
         /// </summary>
@@ -1635,7 +1581,6 @@ namespace YangTools
                 throw e;
             }
         }
-
         /// <summary>
         /// 从单/多集合字符串转换到数组
         /// </summary>
@@ -1687,7 +1632,6 @@ namespace YangTools
 
             return arrayObj;
         }
-
         /// <summary>
         /// 获得List的子物体类型
         /// </summary>
@@ -1704,7 +1648,6 @@ namespace YangTools
             string subTypeName = underlyingTypeName.Substring(firstIndex + 1, lastIndex - firstIndex - 1);
             return System.Type.GetType(subTypeName);
         }
-
         /// <summary>
         /// 从单集合字符串转换到List
         /// </summary>
@@ -1755,7 +1698,6 @@ namespace YangTools
 
             return arrayObj;
         }
-
         /// <summary>
         /// 从单集合字符串转换到结构体
         /// </summary>

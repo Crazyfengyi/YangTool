@@ -33,30 +33,23 @@ public class ExcelUtility
     /// </summary>
     public List<T> ConvertToList<T>()
     {
-        //判断Excel文件中是否存在数据表
-        if (mResultSet.Tables.Count < 1)
-            return null;
-
+        //Excel文件中是否存在数据表
+        if (mResultSet.Tables.Count < 1) return null;
         //默认读取第一个数据表
         DataTable mSheet = mResultSet.Tables[0];
+        //数据表内是否存在数据
+        if (mSheet.Rows.Count < 1) return null;
 
-        //判断数据表内是否存在数据
-        if (mSheet.Rows.Count < 1)
-            return null;
-
-        //读取数据表行数和列数
-        int rowCount = mSheet.Rows.Count;
-        int colCount = mSheet.Columns.Count;
-
-        //准备一个列表以保存全部数据
-        List<T> list = new List<T>();
-
+        int rowCount = mSheet.Rows.Count;//行数
+        int colCount = mSheet.Columns.Count;//列数
+        List<T> dataList = new List<T>();//list列表
         //读取数据
         for (int i = 1; i < rowCount; i++)
         {
+            Type type = typeof(T);
+            //构造函数
+            ConstructorInfo ct = type.GetConstructor(System.Type.EmptyTypes);
             //创建实例
-            Type t = typeof(T);
-            ConstructorInfo ct = t.GetConstructor(System.Type.EmptyTypes);
             T target = (T)ct.Invoke(null);
             for (int j = 0; j < colCount; j++)
             {
@@ -66,12 +59,11 @@ public class ExcelUtility
                 //设置属性值
                 SetTargetProperty(target, field, value);
             }
-
             //添加至列表
-            list.Add(target);
+            dataList.Add(target);
         }
 
-        return list;
+        return dataList;
     }
 
     /// <summary>
@@ -290,6 +282,7 @@ public class ExcelUtility
             if (property.Name == propertyName)
             {
                 property.SetValue(target, Convert.ChangeType(propertyValue, property.PropertyType), null);
+                break;
             }
         }
     }

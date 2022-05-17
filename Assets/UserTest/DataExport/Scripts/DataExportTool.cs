@@ -214,12 +214,10 @@ public class DataExportTool : EditorWindow
         Repaint();
     }
 
-
     private static void Init()
     {
         //获取当前实例
         instance = (DataExportTool)GetWindow(typeof(DataExportTool));
-
         //初始化
         pathRoot = Application.dataPath;
         //注意这里需要对路径进行处理

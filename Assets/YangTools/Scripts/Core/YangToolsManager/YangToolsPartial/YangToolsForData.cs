@@ -37,7 +37,6 @@ namespace YangTools
             {
                 Key = key;
             }
-
             /// <summary>
             /// 初始化构建
             /// </summary>
@@ -48,7 +47,6 @@ namespace YangTools
                 Key = key;
                 value = defaultValue;
             }
-
             /// <summary>
             /// 获得值（首次获取默认会从存档读取一次,"="赋值将自动存档,其它更改需手动Save）
             /// </summary>
@@ -70,7 +68,6 @@ namespace YangTools
                     }
                 }
             }
-
             /// <summary>
             /// 存档
             /// </summary>
@@ -86,7 +83,6 @@ namespace YangTools
                     DataCore.SaveValue(Key, value);
                 }
             }
-
             /// <summary>
             /// 自动读档
             /// </summary>
@@ -102,7 +98,6 @@ namespace YangTools
                     hasLoadArchive = true;
                 }
             }
-
             /// <summary>
             /// 隐式转化
             /// </summary>
@@ -110,13 +105,11 @@ namespace YangTools
             {
                 return value.Value;
             }
-
             public override string ToString()
             {
                 return Value.ToString();
             }
         }
-
         /// <summary>
         /// 可以自动存档读档的列表
         /// </summary>
@@ -213,7 +206,6 @@ namespace YangTools
                 return Value.ToString();
             }
         }
-
         /// <summary>
         /// 可以自动存档读档的设定集
         /// </summary>
@@ -310,7 +302,6 @@ namespace YangTools
                 return Value.ToString();
             }
         }
-
         /// <summary>
         /// 可以自动存档读档的字典
         /// </summary>
@@ -406,7 +397,6 @@ namespace YangTools
                 return Value.ToString();
             }
         }
-
         /// <summary>
         /// 可以自动存档读档的字典
         /// </summary>

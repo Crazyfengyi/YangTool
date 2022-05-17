@@ -15,19 +15,12 @@ namespace YangTools
     /// </summary>
     public class UnityLoopScript : MonoBehaviour
     {
-        #region 变量
-        #endregion
-
         #region 生命周期
         /// <summary>
         /// 游戏组件初始化。
         /// </summary>
         private void Awake()
         {
-            //Application.targetFrameRate = m_FrameRate;
-            //Time.timeScale = m_GameSpeed;
-            //Application.runInBackground = m_RunInBackground;
-            //Screen.sleepTimeout = m_NeverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
         }
         private void Start()
         {
@@ -43,9 +36,6 @@ namespace YangTools
         {
             YangTools.YangToolsManager.OnApplicationQuit();
         }
-        #endregion
-
-        #region 方法
         #endregion
     }
 }

@@ -21,7 +21,6 @@ namespace YangTools
 
             return Convert.ToBoolean(Array.IndexOf(list, func));
         }
-
         /// <summary>
         /// 利用反射实现深拷贝---对象的相互引用，会导致方法循环调用:建议大家使用序列化的形式来进行深拷贝
         /// </summary>
@@ -64,7 +63,6 @@ namespace YangTools
 
             return (T)retval;
         }
-
         /// <summary>
         /// 利用DataContractSerializer序列化和反序列化实现
         /// </summary>
@@ -84,7 +82,6 @@ namespace YangTools
             }
             return (T)retval;
         }
-
         /// <summary>
         /// 利用二进制序列化和反序列实现
         /// </summary>
@@ -107,7 +104,6 @@ namespace YangTools
 
             return (T)retval;
         }
-
         /// <summary>
         /// 利用XML序列化和反序列化实现
         /// </summary>
@@ -130,7 +126,7 @@ namespace YangTools
         }
     }
 
-    public class BezierMath
+    public static class BezierMath
     {
         /// <summary>
         /// 二次贝塞尔

@@ -8,10 +8,7 @@ namespace YangTools
     {
         static int collectionCount = 0;
         static Stopwatch watch = null;
-        /// <summary>
-        /// 给定测试循环次数
-        /// </summary>
-        public static int testCount = 10000000;
+        public static int testCount = 1000000;//测试循环次数
 
         /// <summary>
         /// 测试开始
@@ -25,7 +22,6 @@ namespace YangTools
             watch = new Stopwatch();
             watch.Start();
         }
-
         /// <summary>
         /// 测试结束
         /// </summary>
@@ -35,13 +31,9 @@ namespace YangTools
             Console.WriteLine("耗时：{0}", watch.ElapsedMilliseconds.ToString());
             Console.WriteLine("垃圾回收次数：{0}", GC.CollectionCount(0) - collectionCount);
         }
-
-
         /// <summary>
         /// 获取引用类型的内存地址方法
         /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
         public static string getMemory(object o)
         {
             GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);

@@ -54,7 +54,7 @@ namespace YangTools
         /// <summary>
         /// 更新
         /// </summary>
-        public void Updatecorountine()
+        public void UpdateCorountine()
         {
             LinkedListNode<IEnumerator> node = coroutineList.First;
             while (node != null)

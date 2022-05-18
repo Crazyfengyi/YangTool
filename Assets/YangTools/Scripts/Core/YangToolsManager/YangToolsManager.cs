@@ -65,7 +65,8 @@ namespace YangTools
             isInit = true;
             //保证模块创建
             YangToolsManager.GetModule<YangUIManager>();
-
+            YangToolsManager.GetModule<YangAudioManager>();
+            
             InitDontDestoryObject();
         }
         /// <summary>

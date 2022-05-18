@@ -95,18 +95,20 @@ namespace YangTools
         #endregion
 
         #region 快捷工具
-        [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中Asset预制体丢失的脚本")]
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中预制体的丢失脚本")]
         public static void RemoveMissScript()
         {
             GameObject[] objs = Selection.gameObjects;
+            int count = 0;
             for (int i = 0; i < objs.Length; i++)
             {
                 GameObjectUtility.RemoveMonoBehavioursWithMissingScript(objs[i]);
+                count += GameObjectUtility.RemoveMonoBehavioursWithMissingScript(objs[i]);
                 EditorUtility.SetDirty(objs[i]);
             }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.LogError("移除丢失脚本结束");
+            EditorUtility.DisplayDialog("移除丢失脚本结束", $"移除丢失脚本数量:{count}", "OK");
         }
         /// <summary>
         /// 删除所有动画事件

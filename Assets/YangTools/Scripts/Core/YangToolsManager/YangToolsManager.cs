@@ -3,9 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools.Timer;
+using YangTools.UGUI;
 
 namespace YangTools
 {
+    /// <summary>
+    /// 游戏模块父类
+    /// </summary>
+    internal abstract class GameModuleManager
+    {
+        /// <summary>
+        /// 获取游戏模块优先级。
+        /// </summary>
+        /// <remarks>优先级较高的模块会优先轮询，并且关闭操作会后进行.</remarks>
+        internal virtual int Priority
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        internal abstract void Init();
+        /// <summary>
+        /// 游戏框架模块轮询。
+        /// </summary>
+        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位.(Time.delaTime)</param>
+        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位.(Time.unscaleDelaTime))</param>
+        internal abstract void Update(float elapseSeconds, float realElapseSeconds);
+        /// <summary>
+        /// 关闭并清理游戏框架模块。
+        /// </summary>
+        internal abstract void CloseModule();
+    }
     public static partial class YangToolsManager
     {
         #region 属性
@@ -21,7 +53,7 @@ namespace YangTools
 
         #region 初始化
         /// <summary>
-        /// 构造函数，为保证顺序必须有
+        /// 构造函数,为保证顺序必须有
         /// </summary>
         static YangToolsManager()
         {
@@ -31,6 +63,9 @@ namespace YangTools
         {
             if (isInit) return;
             isInit = true;
+            //保证模块创建
+            YangToolsManager.GetModule<YangUIManager>();
+
             InitDontDestoryObject();
         }
         /// <summary>
@@ -45,44 +80,11 @@ namespace YangTools
         }
         #endregion
 
-        #region 生命周期
-        /// <summary>
-        /// 所有游戏模块轮询。
-        /// </summary>
-        /// <param name="deltaTime">逻辑流逝时间，以秒为单位。</param>
-        /// <param name="unscaledDeltaTime">真实流逝时间，以秒为单位。</param>
-        public static void Update(float deltaTime, float unscaledDeltaTime)
-        {
-            foreach (GameModuleManager module in GameModulesList)
-            {
-                module.Update(deltaTime, unscaledDeltaTime);
-            }
-        }
-        /// <summary>
-        /// 游戏退出时
-        /// </summary>
-        public static void OnApplicationQuit()
-        {
-
-        }
-        #endregion
-
         #region 模块管理
         /// <summary>
         /// 游戏管理器链表
         /// </summary>
         private static readonly LinkedList<GameModuleManager> GameModulesList = new LinkedList<GameModuleManager>();
-        /// <summary>
-        /// 关闭并清理所有游戏框架模块。
-        /// </summary>
-        public static void CloseAllModule()
-        {
-            for (LinkedListNode<GameModuleManager> current = GameModulesList.Last; current != null; current = current.Previous)
-            {
-                current.Value.CloseModule();
-            }
-            GameModulesList.Clear();
-        }
         /// <summary>
         /// 获取游戏框架模块。
         /// </summary>
@@ -155,37 +157,39 @@ namespace YangTools
 
             return module;
         }
-        #endregion
-    }
-    /// <summary>
-    /// 游戏模块父类
-    /// </summary>
-    internal abstract class GameModuleManager
-    {
         /// <summary>
-        /// 获取游戏模块优先级。
+        /// 关闭并清理所有游戏框架模块。
         /// </summary>
-        /// <remarks>优先级较高的模块会优先轮询，并且关闭操作会后进行.</remarks>
-        internal virtual int Priority
+        private static void CloseAllModule()
         {
-            get
+            for (LinkedListNode<GameModuleManager> current = GameModulesList.Last; current != null; current = current.Previous)
             {
-                return 0;
+                current.Value.CloseModule();
+            }
+            GameModulesList.Clear();
+        }
+        #endregion
+
+        #region 生命周期
+        /// <summary>
+        /// 所有游戏模块轮询。
+        /// </summary>
+        /// <param name="deltaTime">逻辑流逝时间，以秒为单位。</param>
+        /// <param name="unscaledDeltaTime">真实流逝时间，以秒为单位。</param>
+        public static void Update(float deltaTime, float unscaledDeltaTime)
+        {
+            foreach (GameModuleManager module in GameModulesList)
+            {
+                module.Update(deltaTime, unscaledDeltaTime);
             }
         }
         /// <summary>
-        /// 初始化
+        /// 游戏退出时
         /// </summary>
-        internal abstract void Init();
-        /// <summary>
-        /// 游戏框架模块轮询。
-        /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位.(Time.delaTime)</param>
-        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位.(Time.unscaleDelaTime))</param>
-        internal abstract void Update(float elapseSeconds, float realElapseSeconds);
-        /// <summary>
-        /// 关闭并清理游戏框架模块。
-        /// </summary>
-        internal abstract void CloseModule();
+        public static void OnApplicationQuit()
+        {
+            CloseAllModule();
+        }
+        #endregion
     }
 }

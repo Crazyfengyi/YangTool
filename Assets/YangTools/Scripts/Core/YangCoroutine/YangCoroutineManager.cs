@@ -68,7 +68,6 @@ namespace YangTools
                     {
                         result = ie.MoveNext();
                     }
-
                 }
                 else
                 {

@@ -28,6 +28,7 @@ namespace YangTools
         private void Update()
         {
             YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            YangCoroutineManager.Instance.Updatecorountine();
         }
         private void OnDestroy()
         {

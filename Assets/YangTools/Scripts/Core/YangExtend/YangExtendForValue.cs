@@ -30,7 +30,6 @@ namespace YangTools.Extend
                 return false;
             }
         }
-
         /// <summary>
         /// 是否为2的N次幂
         /// </summary>

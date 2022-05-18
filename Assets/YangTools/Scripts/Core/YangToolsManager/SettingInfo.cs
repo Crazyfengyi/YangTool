@@ -18,11 +18,11 @@ namespace YangTools
         /// <summary>
         /// 菜单名称
         /// </summary>
-        public const string menuName = "YangTools";
+        private const string menuName = "YangTools";
         /// <summary>
         /// 辅助功能
         /// </summary>
-        public const string functionName = "辅助功能";
+        private const string functionName = "辅助功能";
         /// <summary>
         /// 菜单主路径
         /// </summary>

@@ -166,8 +166,7 @@ namespace YangTools.ObjectPool
     /// <summary>
     /// 对象池
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /*internal*/ public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
+    public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         internal readonly Stack<T> m_Stack;//栈
         private readonly ReflectionInfo m_CreateFunc;//创建方法
@@ -182,7 +181,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 所有对象数
         /// </summary>
-        public int CountAll
+        public int AllCount
         {
             get;
             private set;
@@ -190,11 +189,11 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 使用数量
         /// </summary>
-        public int CountActive => CountAll - CountInactive;
+        public int ActiveCount => AllCount - InactiveCount;
         /// <summary>
         /// 未使用数量
         /// </summary>
-        public int CountInactive => m_Stack.Count;
+        public int InactiveCount => m_Stack.Count;
         /// <summary>
         /// 自动回收间隔时间
         /// </summary>
@@ -272,7 +271,7 @@ namespace YangTools.ObjectPool
             if (m_Stack.Count == 0)
             {
                 item = m_CreateFunc?.Invoke<T>(true);
-                CountAll++;
+                AllCount++;
             }
             else
             {
@@ -283,6 +282,15 @@ namespace YangTools.ObjectPool
             m_ActionOnGet?.Invoke<T>(false, item);
             return item;
         }
+        public void RecycleToDefaultCount()
+        {
+            AutoRecycleTime = 0f;
+            while (m_Stack.Count > m_defaultCapacity)
+            {
+                T item = m_Stack.Peek();
+                Recycle(item);
+            }
+        }
         public void Recycle(T item)
         {
             if (m_CollectionCheck && m_Stack.Count > 0 && m_Stack.Contains(item))
@@ -291,7 +299,7 @@ namespace YangTools.ObjectPool
             }
 
             m_ActionOnRelease?.Invoke<T>(false, item);
-            if (CountInactive < m_MaxSize)
+            if (InactiveCount < m_MaxSize)
             {
                 item.IsInPool = true;
                 m_Stack.Push(item);
@@ -299,15 +307,6 @@ namespace YangTools.ObjectPool
             else
             {
                 m_ActionOnDestroy?.Invoke<T>(false, item);
-            }
-        }
-        public void RecycleToDefaultCount()
-        {
-            AutoRecycleTime = 0f;
-            while (m_Stack.Count > m_defaultCapacity)
-            {
-                T item = m_Stack.Peek();
-                Recycle(item);
             }
         }
         public void Clear()
@@ -318,7 +317,7 @@ namespace YangTools.ObjectPool
                 m_ActionOnDestroy?.Invoke<T>(false, item);
             }
             m_Stack.Clear();
-            CountAll = 0;
+            AllCount = 0;
         }
         public void Dispose()
         {
@@ -376,7 +375,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 不活跃的数量
         /// </summary>
-        int CountInactive
+        int InactiveCount
         {
             get;
         }

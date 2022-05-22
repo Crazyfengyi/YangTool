@@ -16,16 +16,17 @@ public class Test : MonoBehaviour
     public Material material;
     public float value;
     public string testStr;
+    public TestSo testSo;
     void Start()
     {
         //Create();
         //Create2();
-        YangTools.Log.Debuger.IsOpenLog = true;
+        //YangTools.Log.Debuger.IsOpenLog = true;
 
-        for (int i = 0; i < 10000; i++)
-        {
-            YangTools.Log.Debuger.ToError($"²âÊÔ{i}");
-        }
+        //for (int i = 0; i < 10000; i++)
+        //{
+        //    YangTools.Log.Debuger.ToError($"²âÊÔ{i}");
+        //}
 
         //var settings = new ES3Settings(ES3.EncryptionType.AES, "myPassword");
         //ES3.Save<int>("key1", 123, settings);

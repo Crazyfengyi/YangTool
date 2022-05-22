@@ -63,11 +63,10 @@ namespace YangTools
         {
             if (isInit) return;
             isInit = true;
+            InitDontDestoryObject();
             //保证模块创建
             YangToolsManager.GetModule<YangUIManager>();
             YangToolsManager.GetModule<YangAudioManager>();
-            
-            InitDontDestoryObject();
         }
         /// <summary>
         /// 在Unity中创建一个不能删除的物体

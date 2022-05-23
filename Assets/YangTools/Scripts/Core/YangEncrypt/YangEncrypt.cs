@@ -25,7 +25,6 @@ namespace YangTools.Encrypt
         {
             return Encrypt(input, new UTF8Encoding());
         }
-
         /// <summary>
         /// md5加密16|32位
         /// </summary>
@@ -41,7 +40,6 @@ namespace YangTools.Encrypt
             }
             return res;
         }
-
         /// <summary>
         /// MD5加密
         /// </summary>
@@ -99,8 +97,8 @@ namespace YangTools.Encrypt
     }
     /// <summary>
     /// DES AES Blowfish
-    ///  对称加密算法的优点是速度快，
-    ///  缺点是密钥管理不方便，要求共享密钥。
+    /// 对称加密算法的优点是速度快，
+    /// 缺点是密钥管理不方便，要求共享密钥。
     /// 可逆对称加密  密钥长度8
     /// </summary>
     public static class DesEncrypt
@@ -127,7 +125,6 @@ namespace YangTools.Encrypt
                 return Convert.ToBase64String(memStream.GetBuffer(), 0, (int)memStream.Length);
             }
         }
-
         /// <summary>
         /// DES解密
         /// </summary>
@@ -155,21 +152,14 @@ namespace YangTools.Encrypt
     /// </summary>
     /*
     （1）A生成一对密钥（公钥和私钥），私钥不公开，A自己保留。公钥为公开的，任何人可以获取。
-
     （2）A传递自己的公钥给B，B用A的公钥对消息进行加密。
-
     （3）A接收到B加密的消息，利用A自己的私钥对消息进行解密。
     -------在这个过程中，只有2次传递过程，第一次是A传递公钥给B，第二次是B传递加密消息给A，即使都被敌方截获，也没有危险性，因为只有A的私钥才能对消息进行解密，防止了消息内容的泄露。
-
         或者
-
     （1）A生成一对密钥（公钥和私钥），私钥不公开，A自己保留。公钥为公开的，任何人可以获取。
-
     （2）A用自己的私钥对消息加签，形成签名，并将加签的消息和消息本身一起传递给B。
-
     （3）B收到消息后，在获取A的公钥进行验签，如果验签出来的内容与消息本身一致，证明消息是A回复的
     -------在这个过程中，只有2次传递过程，第一次是A传递加签的消息和消息本身给B，第二次是B获取A的公钥，即使都被敌方截获，也没有危险性，因为只有A的私钥才能对消息进行签名，即使知道了消息内容，也无法伪造带签名的回复给B，防止了消息内容的篡改。
-
     https://www.cnblogs.com/pcheng/p/9629621.html
     */
     public static class RsaEncrypt
@@ -186,7 +176,6 @@ namespace YangTools.Encrypt
             string privateKey = RSA.ToXmlString(true);
             return new KeyValuePair<string, string>(publicKey, privateKey);
         }
-
         /// <summary>
         /// 加密：内容+加密key
         /// </summary>
@@ -202,7 +191,6 @@ namespace YangTools.Encrypt
             byte[] resultBytes = rsa.Encrypt(DataToEncrypt, false);
             return Convert.ToBase64String(resultBytes);
         }
-
         /// <summary>
         /// 解密: 内容+解密key
         /// </summary>
@@ -218,6 +206,5 @@ namespace YangTools.Encrypt
             UnicodeEncoding ByteConverter = new UnicodeEncoding();
             return ByteConverter.GetString(resultBytes);
         }
-
     }
 }

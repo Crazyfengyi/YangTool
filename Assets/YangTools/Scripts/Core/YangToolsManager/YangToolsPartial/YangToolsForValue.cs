@@ -6,7 +6,10 @@
  *创建时间:         2022-02-19 
 */
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace YangTools
 {
@@ -107,6 +110,92 @@ namespace YangTools
             {
                 s_CachedStringBuilder = new StringBuilder(StringBuilderCapacity);
             }
+        }
+        #endregion
+
+        #region 分割数
+        /// <summary>
+        /// 将一个数分割成几份
+        /// </summary>
+        /// <param name="_targetNum">目标数</param>
+        /// <param name="_splitCount">分割成几份</param>
+        /// <returns>分割符数(数组)</returns>
+        public static int[] SplitNumber(int _targetNum, int _splitCount)
+        {
+            int targetNum = _targetNum;
+            int[] arry = new int[_splitCount - 1];
+            System.Random rand = new System.Random(DateTime.Now.Millisecond);
+            for (int i = 0; i < arry.Length; i++)
+            {
+                arry[i] = rand.Next(targetNum);
+            }
+            Array.Sort(arry);
+            // split数组中存放的就是最后分成10份的数，
+            int[] split = new int[_splitCount];
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (i == 0)
+                {
+                    split[i] = arry[i] - 0;
+                }
+                else if (i == split.Length - 1)
+                {
+                    split[i] = targetNum - arry[i - 1];
+                }
+                else
+                {
+                    split[i] = arry[i] - arry[i - 1];
+                }
+            }
+            return split;
+        }
+        /// <summary>
+        /// 将一个数分割成几份
+        /// </summary>
+        /// <param name="total">总数</param>
+        /// <param name="partNum">几份</param>
+        /// <param name="maxFloatNumber">最大浮动值</param>
+        public static int[] SplitTheNumber(int total, int partNum, int maxFloatNumber)
+        {
+            int[] results = new int[partNum];
+            if (partNum == 0) return results;
+
+            System.Random rand = new System.Random(DateTime.Now.Millisecond);
+            int baseNumber = Mathf.FloorToInt((float)total / (float)partNum); //获取基数
+            int result = 0; //用来存储结果值
+            int minRandNum = baseNumber - maxFloatNumber;
+            int maxRandNum = baseNumber + maxFloatNumber;
+            for (int i = 1; i <= partNum - 1; i++)
+            {
+                result = rand.Next(minRandNum, maxRandNum); //在浮动范围内取一个随机数
+                total = total - result; //从总数中减掉结果值
+                results[i - 1] = result; //得到的结果值写入数组
+            }
+            results[results.Length - 1] = total; //最后剩下的值写入数组
+
+            return results;
+        }
+        /// <summary>
+        /// 判断是否有交集
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="list1">列表1</param>
+        /// <param name="list2">列表2</param>
+        /// <returns></returns>
+        public static bool IsArrayIntersection<T>(List<T> list1, List<T> list2)
+        {
+            List<T> t = list1.Distinct().ToList();//去重
+            List<T> exceptArr = t.Except(list2).ToList();//不包括
+
+            if (exceptArr.Count < t.Count)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
         #endregion
 

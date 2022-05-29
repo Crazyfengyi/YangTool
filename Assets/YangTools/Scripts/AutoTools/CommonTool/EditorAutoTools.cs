@@ -29,7 +29,7 @@ namespace YangTools
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
         public static void TestScrpit()
         {
-
+          
         }
         #endregion
 

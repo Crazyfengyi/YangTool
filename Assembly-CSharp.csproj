@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="D:\YANG\YangTool\Assets\UserTest\ExcelDataExport\Pluginss\EPPlus.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Primitives\UILineTextureRenderer.cs" />
@@ -529,6 +530,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
+    <Compile Include="Assets\UserTest\ExcelDataExport\DataChange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />
@@ -544,6 +546,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIScreen.shader" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle Multiply.shader" />
+    <None Include="Assets\UserTest\ExcelDataExport\Pluginss\EPPlus.XML" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIMultiply.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Editor.xml" />
@@ -592,6 +595,7 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Utilities.dll.backup.txt" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UISoftAdditive.shader" />
+    <None Include="Assets\UserTest\ExcelDataExport\Pluginss\EPPlus.dll" />
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UI Particle AddSmooth.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\link.xml.backup.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.Editor.dll" />
@@ -927,6 +931,9 @@
     </Reference>
     <Reference Include="P2T">
       <HintPath>Assets\Plugins\Exploder\Exploder\3rd\P2T.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>Assets\UserTest\ExcelDataExport\Pluginss\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Android.Types">
       <HintPath>D:\Unity\UnityHub\2022.1.0f1c1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>

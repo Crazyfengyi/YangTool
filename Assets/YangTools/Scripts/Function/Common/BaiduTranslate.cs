@@ -11,25 +11,25 @@ using LitJson;
 namespace YangTools.Translate
 {
     /// <summary>
-    /// °Ù¶È·­Òë
+    /// ç™¾åº¦ç¿»è¯‘
     /// </summary>
     public class BaiduTranslate
     {
         private string EncryptString(string str)
         {
             MD5 md5 = MD5.Create();
-            // ½«×Ö·û´®×ª»»³É×Ö½ÚÊı×é
+            // å°†å­—ç¬¦ä¸²è½¬æ¢æˆå­—èŠ‚æ•°ç»„
             byte[] byteOld = Encoding.UTF8.GetBytes(str);
-            // µ÷ÓÃ¼ÓÃÜ·½·¨
+            // è°ƒç”¨åŠ å¯†æ–¹æ³•
             byte[] byteNew = md5.ComputeHash(byteOld);
-            // ½«¼ÓÃÜ½á¹û×ª»»Îª×Ö·û´®
+            // å°†åŠ å¯†ç»“æœè½¬æ¢ä¸ºå­—ç¬¦ä¸²
             StringBuilder sb = new StringBuilder();
             foreach (byte b in byteNew)
             {
-                // ½«×Ö½Ú×ª»»³É16½øÖÆ±íÊ¾µÄ×Ö·û´®£¬
+                // å°†å­—èŠ‚è½¬æ¢æˆ16è¿›åˆ¶è¡¨ç¤ºçš„å­—ç¬¦ä¸²ï¼Œ
                 sb.Append(b.ToString("x2"));
             }
-            // ·µ»Ø¼ÓÃÜµÄ×Ö·û´®
+            // è¿”å›åŠ å¯†çš„å­—ç¬¦ä¸²
             return sb.ToString();
         }
         /// <summary>
@@ -37,11 +37,11 @@ namespace YangTools.Translate
         /// </summary>
         public string appID;
         /// <summary>
-        /// ÃÜÔ¿
+        /// å¯†é’¥
         /// </summary>
         public string secretkey;
         /// <summary>
-        /// ¹¹Ôìº¯Êı
+        /// æ„é€ å‡½æ•°
         /// </summary>
         /// <param name="appID">appID</param>
         /// <param name="secretkey">secretkey</param>
@@ -51,12 +51,12 @@ namespace YangTools.Translate
             this.secretkey = secretkey;
         }
         /// <summary>
-        /// ·­Òë
+        /// ç¿»è¯‘
         /// </summary>
-        /// <param name="q">Ô­ÎÄ</param>
-        /// <param name="from">Ô­ÓïÑÔ</param>
-        /// <param name="to">Ä¿±êÓïÑÔ</param>
-        /// <returns>·µ»Ø·­Òë½á¹û</returns>
+        /// <param name="q">åŸæ–‡</param>
+        /// <param name="from">åŸè¯­è¨€</param>
+        /// <param name="to">ç›®æ ‡è¯­è¨€</param>
+        /// <returns>è¿”å›ç¿»è¯‘ç»“æœ</returns>
         public string Translate(string q, LanguageType from, LanguageType to)
         {
             System.Random rd = new System.Random();
@@ -84,7 +84,7 @@ namespace YangTools.Translate
             TransObj obj = JsonMapper.ToObject<TransObj>(retString);
             if (obj == null || obj.trans_result == null || (obj.trans_result.Count <= 0))
             {
-                Debug.LogWarning("·­ÒëÊ§°ÜÁË:" + q);
+                Debug.LogWarning("ç¿»è¯‘å¤±è´¥äº†:" + q);
                 return q;
             }
             return obj.trans_result[0].dst;
@@ -96,154 +96,154 @@ namespace YangTools.Translate
 public class TransObj
 {
     /// <summary>
-    /// Ô­ÓïÑÔ
+    /// åŸè¯­è¨€
     /// </summary>
     public string from;
     /// <summary>
-    /// Ä¿±êÓïÑÔ
+    /// ç›®æ ‡è¯­è¨€
     /// </summary>
     public string to;
     /// <summary>
-    /// ·­Òë½á¹û
+    /// ç¿»è¯‘ç»“æœ
     /// </summary>
     public List<TransResult> trans_result;
 }
 
 /// <summary>
-/// ·­Òë½á¹û
+/// ç¿»è¯‘ç»“æœ
 /// </summary>
 [Serializable]
 public class TransResult
 {
     /// <summary>
-    /// Ô­ÎÄ
+    /// åŸæ–‡
     /// </summary>
     public string src;
     /// <summary>
-    /// ÒëÎÄ
+    /// è¯‘æ–‡
     /// </summary>
     public string dst;
 }
 
 /// <summary>
-/// ÓïÑÔÀàĞÍ
+/// è¯­è¨€ç±»å‹
 /// </summary>
 public enum LanguageType
 {
     /// <summary>
-    /// ×Ô¶¯¼ì²â
+    /// è‡ªåŠ¨æ£€æµ‹
     /// </summary>
     Auto,
     /// <summary>
-    /// ÖĞÎÄ
+    /// ä¸­æ–‡
     /// </summary>
     Zh,
     /// <summary>
-    /// Ó¢Óï
+    /// è‹±è¯­
     /// </summary>
     En,
     /// <summary>
-    /// ÔÁÓï
+    /// ç²¤è¯­
     /// </summary>
     Yue,
     /// <summary>
-    /// ÎÄÑÔÎÄ
+    /// æ–‡è¨€æ–‡
     /// </summary>
     Wyw,
     /// <summary>
-    /// ÈÕÓï
+    /// æ—¥è¯­
     /// </summary>
     Jp,
     /// <summary>
-    /// º«Óï
+    /// éŸ©è¯­
     /// </summary>
     Kor,
     /// <summary>
-    /// ·¨Óï
+    /// æ³•è¯­
     /// </summary>
     Fra,
     /// <summary>
-    /// Î÷°àÑÀÓï
+    /// è¥¿ç­ç‰™è¯­
     /// </summary>
     Spa,
     /// <summary>
-    /// Ì©Óï
+    /// æ³°è¯­
     /// </summary>
     Th,
     /// <summary>
-    /// °¢À­²®Óï
+    /// é˜¿æ‹‰ä¼¯è¯­
     /// </summary>
     Ara,
     /// <summary>
-    /// ¶íÓï
+    /// ä¿„è¯­
     /// </summary>
     Ru,
     /// <summary>
-    /// ÆÏÌÑÑÀÓï
+    /// è‘¡è„ç‰™è¯­
     /// </summary>
     Pt,
     /// <summary>
-    /// µÂÓï
+    /// å¾·è¯­
     /// </summary>
     De,
     /// <summary>
-    /// Òâ´óÀûÓï
+    /// æ„å¤§åˆ©è¯­
     /// </summary>
     It,
     /// <summary>
-    /// Ï£À°Óï
+    /// å¸Œè…Šè¯­
     /// </summary>
     El,
     /// <summary>
-    /// ºÉÀ¼Óï
+    /// è·å…°è¯­
     /// </summary>
     Nl,
     /// <summary>
-    /// ²¨À¼Óï
+    /// æ³¢å…°è¯­
     /// </summary>
     Pl,
     /// <summary>
-    /// ±£¼ÓÀûÑÇÓï
+    /// ä¿åŠ åˆ©äºšè¯­
     /// </summary>
     Bul,
     /// <summary>
-    /// °®É³ÄáÑÇÓï
+    /// çˆ±æ²™å°¼äºšè¯­
     /// </summary>
     Est,
     /// <summary>
-    /// µ¤ÂóÓï
+    /// ä¸¹éº¦è¯­
     /// </summary>
     Dan,
     /// <summary>
-    /// ·ÒÀ¼Óï
+    /// èŠ¬å…°è¯­
     /// </summary>
     Fin,
     /// <summary>
-    /// ½İ¿ËÓï
+    /// æ·å…‹è¯­
     /// </summary>
     Cs,
     /// <summary>
-    /// ÂŞÂíÄáÑÇÓï
+    /// ç½—é©¬å°¼äºšè¯­
     /// </summary>
     Rom,
     /// <summary>
-    /// Ë¹ÂåÎÄÄáÑÇÓï
+    /// æ–¯æ´›æ–‡å°¼äºšè¯­
     /// </summary>
     Slo,
     /// <summary>
-    /// ÈğµäÓï
+    /// ç‘å…¸è¯­
     /// </summary>
     Swe,
     /// <summary>
-    /// ĞÙÑÀÀûÓï
+    /// åŒˆç‰™åˆ©è¯­
     /// </summary>
     HHu,
     /// <summary>
-    /// ¼òÌåÖĞÎÄ
+    /// ç®€ä½“ä¸­æ–‡
     /// </summary>
     Cht,
     /// <summary>
-    /// Ô½ÄÏÓï
+    /// è¶Šå—è¯­
     /// </summary>
     Vie
 }

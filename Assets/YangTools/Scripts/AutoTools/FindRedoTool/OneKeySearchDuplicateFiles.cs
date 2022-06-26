@@ -20,35 +20,35 @@ namespace YangTools
         private IEnumerator<FileInfo> fileInfoIEnumerator;
 
         [PropertySpace(10)]
-        [Title("ĞèÒªËÑË÷µÄÎÄ¼ş¼Ğ", "Ä¬ÈÏÎªAssetÈ«Ä¿Â¼", titleAlignment: TitleAlignments.Split)]
+        [Title("éœ€è¦æœç´¢çš„æ–‡ä»¶å¤¹", "é»˜è®¤ä¸ºAssetå…¨ç›®å½•", titleAlignment: TitleAlignments.Split)]
         [FolderPath(ParentFolder = "Assets", RequireExistingPath = true, AbsolutePath = true)]
-        [LabelText("Ñ¡ÔñÄãÒªËÑË÷µÄÎÄ¼ş¼Ğ")]
+        [LabelText("é€‰æ‹©ä½ è¦æœç´¢çš„æ–‡ä»¶å¤¹")]
         public string targetSearchFolder;
 
         [ShowInInspector]
-        [DictionaryDrawerSettings(KeyLabel = "MD5Öµ", ValueLabel = "ÎÄ¼şÃû³ÆÁĞ±í")]
+        [DictionaryDrawerSettings(KeyLabel = "MD5å€¼", ValueLabel = "æ–‡ä»¶åç§°åˆ—è¡¨")]
         private Dictionary<string, List<string>> sameMD5Group = new Dictionary<string, List<string>>();
 
         [ShowInInspector]
-        [DictionaryDrawerSettings(KeyLabel = "ÎÄ¼şÃû³Æ", ValueLabel = "¾ø¶ÔÂ·¾¶ÁĞ±í")]
+        [DictionaryDrawerSettings(KeyLabel = "æ–‡ä»¶åç§°", ValueLabel = "ç»å¯¹è·¯å¾„åˆ—è¡¨")]
         private Dictionary<string, List<string>> sameNameGroup = new Dictionary<string, List<string>>();
 
         [ShowInInspector]
-        [TitleGroup("ÖØ¸´ÎÄ¼şÁĞ±í")]
-        [HorizontalGroup("ÖØ¸´ÎÄ¼şÁĞ±í/ÖØ¸´ÎÄ¼ş")]
-        [BoxGroup("ÖØ¸´ÎÄ¼şÁĞ±í/ÖØ¸´ÎÄ¼ş/MD5ÖµÏàÍ¬", CenterLabel = true)]
+        [TitleGroup("é‡å¤æ–‡ä»¶åˆ—è¡¨")]
+        [HorizontalGroup("é‡å¤æ–‡ä»¶åˆ—è¡¨/é‡å¤æ–‡ä»¶")]
+        [BoxGroup("é‡å¤æ–‡ä»¶åˆ—è¡¨/é‡å¤æ–‡ä»¶/MD5å€¼ç›¸åŒ", CenterLabel = true)]
         [PropertyOrder(1000)]
-        [InfoBox("·¢ÏÖÏàÍ¬MD5ÖµÎÄ¼ş.", InfoMessageType.Error, "CheckSameMD5ResultGroup")]
+        [InfoBox("å‘ç°ç›¸åŒMD5å€¼æ–‡ä»¶.", InfoMessageType.Error, "CheckSameMD5ResultGroup")]
         [ShowIf("$CheckSameMD5ResultGroup")]
-        [DictionaryDrawerSettings(KeyLabel = "MD5Öµ", ValueLabel = "ÏàÍ¬MD5ÖµÎÄ¼şÃû³Æ")]
+        [DictionaryDrawerSettings(KeyLabel = "MD5å€¼", ValueLabel = "ç›¸åŒMD5å€¼æ–‡ä»¶åç§°")]
         private Dictionary<string, List<string>> sameMD5Result5Group = new Dictionary<string, List<string>>();
 
-        [BoxGroup("ÖØ¸´ÎÄ¼şÁĞ±í/ÖØ¸´ÎÄ¼ş/Ãû³ÆÖµÏàÍ¬", CenterLabel = true)]
+        [BoxGroup("é‡å¤æ–‡ä»¶åˆ—è¡¨/é‡å¤æ–‡ä»¶/åç§°å€¼ç›¸åŒ", CenterLabel = true)]
         [ShowInInspector]
         [PropertyOrder(1000)]
-        [InfoBox("·¢ÏÖÏàÍ¬Ãû³ÆÎÄ¼ş.", InfoMessageType.Error, "CheckSameNameResultGroup")]
+        [InfoBox("å‘ç°ç›¸åŒåç§°æ–‡ä»¶.", InfoMessageType.Error, "CheckSameNameResultGroup")]
         [ShowIf("$CheckSameNameResultGroup")]
-        [DictionaryDrawerSettings(KeyLabel = "ÏàÍ¬ÎÄ¼şÃû³Æ", ValueLabel = "¶ÔÓ¦¾ø¶ÔÂ·¾¶ÁĞ±í")]
+        [DictionaryDrawerSettings(KeyLabel = "ç›¸åŒæ–‡ä»¶åç§°", ValueLabel = "å¯¹åº”ç»å¯¹è·¯å¾„åˆ—è¡¨")]
         private Dictionary<string, List<string>> sameNameResultGroup = new Dictionary<string, List<string>>();
         public bool CheckSameMD5ResultGroup()
         {
@@ -60,7 +60,7 @@ namespace YangTools
         }
         [PropertySpace(10, 20)]
         [ShowIf("@ IsToggled== false")]
-        [Button("¿ªÊ¼ËÑË÷", ButtonSizes.Large)]
+        [Button("å¼€å§‹æœç´¢", ButtonSizes.Large)]
         public void StartSearch()
         {
             if (string.IsNullOrEmpty(targetSearchFolder))
@@ -77,7 +77,7 @@ namespace YangTools
             EditorApplication.update += Updte;
         }
         /// <summary>
-        /// ÖØÖÃÊı¾İ
+        /// é‡ç½®æ•°æ®
         /// </summary>
         private void ResetData()
         {
@@ -90,7 +90,7 @@ namespace YangTools
             fileInfoIEnumerator = null;
         }
         /// <summary>
-        /// ¹ıÂËµôÃ»ÓĞÖØ¸´ÎÄ¼şµÄÊı¾İ
+        /// è¿‡æ»¤æ‰æ²¡æœ‰é‡å¤æ–‡ä»¶çš„æ•°æ®
         /// </summary>
         private void FilterDictionary()
         {
@@ -102,7 +102,7 @@ namespace YangTools
         [ShowInInspector]
         [HideLabel]
         [ShowIf("@ IsToggled== true")]
-        public int MaxCount { get; set; }//»æÖÆ½ø¶ÈÌõ
+        public int MaxCount { get; set; }//ç»˜åˆ¶è¿›åº¦æ¡
         private Color GetHealthBarColor(int value)
         {
             maxCount = maxCount == 0 ? 1 : maxCount;
@@ -114,22 +114,22 @@ namespace YangTools
             {
                 if (fileInfoIEnumerator.MoveNext())
                 {
-                    //»ñÈ¡¶ÔÓ¦HashÖµ
+                    //è·å–å¯¹åº”Hashå€¼
                     string hashValue = GetMD5HashFromFile(fileInfoIEnumerator.Current.FullName);
                     if (!sameMD5Group.ContainsKey(hashValue))
                     {
                         sameMD5Group[hashValue] = new List<string>();
                     }
-                    sameMD5Group[hashValue].Add("Ãû³ÆÎª£º" + fileInfoIEnumerator.Current.Name);
+                    sameMD5Group[hashValue].Add("åç§°ä¸ºï¼š" + fileInfoIEnumerator.Current.Name);
 
-                    //»ñÈ¡Ãû³Æ
+                    //è·å–åç§°
                     string fileName = fileInfoIEnumerator.Current.Name;
 
                     if (!sameNameGroup.ContainsKey(fileName))
                     {
                         sameNameGroup[fileName] = new List<string>();
                     }
-                    sameNameGroup[fileName].Add("Â·¾¶Îª£º" + fileInfoIEnumerator.Current.FullName);
+                    sameNameGroup[fileName].Add("è·¯å¾„ä¸ºï¼š" + fileInfoIEnumerator.Current.FullName);
 
                     ++MaxCount;
                 }
@@ -138,12 +138,12 @@ namespace YangTools
                     EditorApplication.update -= Updte;
                     IsToggled = false;
                     FilterDictionary();
-                    Debug.Log("<color=green>×¢Ïú</color>");
+                    Debug.Log("<color=green>æ³¨é”€</color>");
                 }
             }
         }
         /// <summary>
-        /// ¼ÆËãÎÄ¼şMD5Öµ
+        /// è®¡ç®—æ–‡ä»¶MD5å€¼
         /// </summary>
         public string GetMD5HashFromFile(string fileFullName)
         {

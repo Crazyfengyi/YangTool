@@ -50,21 +50,21 @@ Shader "LSQ/EffectAchievement/ProjectorAndDecal_2"
 
             fixed4 frag (v2f i) : SV_Target
             {   
-                fixed2 screenPos = i.screenPos.xy / i.screenPos.w;
-                //ÊÓÍ¼¿Õ¼äµÄÉî¶ÈÖµ
+          fixed2 screenPos = i.screenPos.xy / i.screenPos.w;
+                //è§†å›¾ç©ºé—´çš„æ·±åº¦å€¼
                 float depth = tex2D(_CameraDepthTexture, screenPos).r;
-                //¸ù¾İÉî¶ÈÖµÖØ½¨ÊÀ½ç×ø±ê£ºÖ±½ÓÄæ×ÅÁ÷Ë®ÏßÇóÊÀ½ç×ø±ê
-                //²Ã¼ô¿Õ¼ä
+                //æ ¹æ®æ·±åº¦å€¼é‡å»ºä¸–ç•Œåæ ‡ï¼šç›´æ¥é€†ç€æµæ°´çº¿æ±‚ä¸–ç•Œåæ ‡
+                //è£å‰ªç©ºé—´
                 fixed4 clipPos = fixed4(screenPos.x * 2 - 1, screenPos.y * 2 - 1, -depth * 2 + 1, 1) * LinearEyeDepth(depth);
-                //»¹Ô­»ØÏà»ú¿Õ¼ä
-				float4 viewPos = mul(unity_CameraInvProjection, clipPos);
-				//»¹Ô­»ØÊÀ½ç¿Õ¼ä unity_MatrixInvV = UNITY_MATRIX_I_V unity_CameraToWorld 
-				float4 worldPos = mul(unity_MatrixInvV, viewPos);
-                //×ªÎªÏà¶ÔÓÚ±¾ÎïÌåµÄ¾Ö²¿×ø±ê(±ä»»¾ØÕó¶¼±»µÖÏûÁË)
+                //è¿˜åŸå›ç›¸æœºç©ºé—´
+                float4 viewPos = mul(unity_CameraInvProjection, clipPos);
+                //è¿˜åŸå›ä¸–ç•Œç©ºé—´ unity_MatrixInvV = UNITY_MATRIX_I_V unity_CameraToWorld 
+                float4 worldPos = mul(unity_MatrixInvV, viewPos);
+                //è½¬ä¸ºç›¸å¯¹äºæœ¬ç‰©ä½“çš„å±€éƒ¨åæ ‡(å˜æ¢çŸ©é˜µéƒ½è¢«æŠµæ¶ˆäº†)
                 float3 objectPos = mul(unity_WorldToObject, worldPos).xyz;
-                //Á¢·½Ìå±¾µØ×ø±ê-0.5~0.5
+                //ç«‹æ–¹ä½“æœ¬åœ°åæ ‡-0.5~0.5
                 clip(0.5 - abs(objectPos));
-                //±¾µØ×ø±êÖĞĞÄµãÎª0£¬¶øUVÎª0.5
+                //æœ¬åœ°åæ ‡ä¸­å¿ƒç‚¹ä¸º0ï¼Œè€ŒUVä¸º0.5
                 objectPos += 0.5;
 
                 fixed4 col = tex2D(_MainTex, objectPos.xy);

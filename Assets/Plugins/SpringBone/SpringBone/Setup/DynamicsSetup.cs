@@ -227,7 +227,7 @@ namespace UTJ
             }
             catch (System.Exception exception)
             {
-                errorMessage = string.Format("SpringBoneSetup: Œ³‚ÌƒeƒLƒXƒgƒf[ƒ^‚ğ“Ç‚İ‚ß‚Ü‚¹‚ñ‚Å‚µ‚½I\n\n{0}", exception.ToString());
+                errorMessage = string.Format("SpringBoneSetup: ï¿½ï¿½ï¿½Ìƒeï¿½Lï¿½Xï¿½gï¿½fï¿½[ï¿½^ï¿½ï¿½Ç‚İï¿½ï¿½ß‚Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½I\n\n{0}", exception.ToString());
                 return false;
             }
 
@@ -248,7 +248,7 @@ namespace UTJ
                 if (version < MinSupportedVersion
                     || version > MaxSupportedVersion)
                 {
-                    errorMessage = string.Format("SpringBoneSetup: ƒf[ƒ^‚Ìƒo[ƒWƒ‡ƒ“‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñI\nVersion: {0}", version);
+                    errorMessage = string.Format("SpringBoneSetup: ï¿½fï¿½[ï¿½^ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Í‘Î‰ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½I\nVersion: {0}", version);
                     return false;
                 }
 
@@ -291,7 +291,7 @@ namespace UTJ
                     colliderRoot, recordText);
                 if (colliderSetup == null)
                 {
-                    errors.Add(new ParseMessage("ƒ_ƒCƒiƒ~ƒNƒXƒZƒbƒgƒAƒbƒv‚ª¸”s‚µ‚Ü‚µ‚½FŒ³ƒf[ƒ^‚ÉƒGƒ‰[‚ª‚ ‚è‚Ü‚·"));
+                    errors.Add(new ParseMessage("ï¿½_ï¿½Cï¿½iï¿½~ï¿½Nï¿½Xï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ÉƒGï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½"));
                     return ParseResults.Failure(errors);
                 }
                 else
@@ -308,7 +308,7 @@ namespace UTJ
                     springBoneRoot, colliderRoot, recordText, validColliderNames);
                 if (springBoneSetup == null)
                 {
-                    errors.Add(new ParseMessage("ƒ_ƒCƒiƒ~ƒNƒXƒZƒbƒgƒAƒbƒv‚ª¸”s‚µ‚Ü‚µ‚½FŒ³ƒf[ƒ^‚ÉƒGƒ‰[‚ª‚ ‚è‚Ü‚·"));
+                    errors.Add(new ParseMessage("ï¿½_ï¿½Cï¿½iï¿½~ï¿½Nï¿½Xï¿½Zï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ÉƒGï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½"));
                     return ParseResults.Failure(errors);
                 }
                 else

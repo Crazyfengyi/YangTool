@@ -7,19 +7,19 @@ using UnityEngine;
 namespace YangTools.Extend
 {
     /// <summary>
-    /// À©Õ¹Àà
+    /// æ‰©å±•ç±»
     /// </summary>
     public static partial class YangExtend
     {
-        //TODO ¶Á±í£¬Ê±¼ä£¬Í¨ÓÃ·¶ĞÍÀà£¬¶àÓïÑÔ£¬SDKManager,/*ÊÂ¼şÏµÍ³*/£¬/*¶¨Ê±Æ÷*/£¬¹ã¸æ£¬Ö§¸¶
+        //TODO è¯»è¡¨ï¼Œæ—¶é—´ï¼Œé€šç”¨èŒƒå‹ç±»ï¼Œå¤šè¯­è¨€ï¼ŒSDKManager,/*äº‹ä»¶ç³»ç»Ÿ*/ï¼Œ/*å®šæ—¶å™¨*/ï¼Œå¹¿å‘Šï¼Œæ”¯ä»˜
 
-        #region ÊÂ¼şÏµÍ³À©Õ¹
+        #region äº‹ä»¶ç³»ç»Ÿæ‰©å±•
         /// <summary>
-        /// Ìí¼ÓÊÂ¼ş¼àÌı
+        /// æ·»åŠ äº‹ä»¶ç›‘å¬
         /// </summary>
-        /// <param name="_object">°ó¶¨ÎïÌå</param>
-        /// <param name="_eventName">ÊÂ¼şÃû³Æ</param>
-        /// <param name="_eventCallback">ÊÂ¼ş»Øµ÷</param>
+        /// <param name="_object">ç»‘å®šç‰©ä½“</param>
+        /// <param name="_eventName">äº‹ä»¶åç§°</param>
+        /// <param name="_eventCallback">äº‹ä»¶å›è°ƒ</param>
         public static EventInspector AddEventListener(this UnityEngine.Object _object, string _eventName, EventCallback<EventInfo> _eventCallback)
         {
             var ret = new EventInspector(_object, _eventName, _eventCallback);
@@ -28,16 +28,16 @@ namespace YangTools.Extend
         }
 
         /// <summary>
-        /// ÒÆ³ıÊÂ¼ş¼àÌı
+        /// ç§»é™¤äº‹ä»¶ç›‘å¬
         /// </summary>
-        /// <param name="_listener">ÊÂ¼ş¼àÌıÆ÷ÊµÀı</param>
+        /// <param name="_listener">äº‹ä»¶ç›‘å¬å™¨å®ä¾‹</param>
         public static void RemoveEventListener(this UnityEngine.Object _object, EventInspector _listener)
         {
             YangToolEventManager.Instance.Remove(_listener);
         }
 
         /// <summary>
-        /// ÒÆ³ıÊÂ¼ş¼àÌı
+        /// ç§»é™¤äº‹ä»¶ç›‘å¬
         /// </summary>
         public static void RemoveEventListener(this UnityEngine.Object _object)
         {
@@ -45,11 +45,11 @@ namespace YangTools.Extend
         }
 
         /// <summary>
-        /// ·¢ËÍÊÂ¼ş
+        /// å‘é€äº‹ä»¶
         /// </summary>
-        /// <param name="_object">ÎïÌå</param>
-        /// <param name="_eventName">ÊÂ¼şÃû³Æ</param>
-        /// <param name="_args">ÊÂ¼ş²ÎÊı</param>
+        /// <param name="_object">ç‰©ä½“</param>
+        /// <param name="_eventName">äº‹ä»¶åç§°</param>
+        /// <param name="_args">äº‹ä»¶å‚æ•°</param>
         public static void SendEvent(this UnityEngine.Object _object, string _eventName, params object[] _args)
         {
             YangToolEventManager.Instance.Send(_eventName, _args);
@@ -58,5 +58,5 @@ namespace YangTools.Extend
 
     }
 
-    //¡ª¡ªTHE END¡ª¡ª
+    //â€”â€”THE ENDâ€”â€”
 }

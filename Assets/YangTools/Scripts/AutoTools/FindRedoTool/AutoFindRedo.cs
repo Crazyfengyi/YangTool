@@ -15,11 +15,11 @@ namespace YangTools
         protected override OdinMenuTree BuildMenuTree()
         {
             OdinMenuTree tree = new OdinMenuTree();
-            //是否支持多选择
+            //鏄惁鏀寔澶氶�夋嫨
             tree.Selection.SupportsMultiSelect = false;
             tree.Add("FindRedo", new OneKeySearchDuplicateFiles());
 
-            //加入路径下的所有继承ScriptableObject的脚本？
+            //鍔犲叆璺緞涓嬬殑鎵�鏈夌户鎵縎criptableObject鐨勮剼鏈紵
             //tree.AddAllAssetsAtPath("Odin Settings", "Assets/Plugins/Sirenix", typeof(ScriptableObject), true, true);
             return tree;
         }

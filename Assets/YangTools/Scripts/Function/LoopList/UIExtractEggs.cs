@@ -10,72 +10,72 @@
 //public class LoopList : MonoBehaviour
 //{
 //    //private EncodeLong poolID;
-//    //private GButton Back;//·µ»Ø°´Å¥
-//    //private GButton hatchEggBtn;//·õ»¯°´Å¥
-//    //private GButton commpoundBtn;//ºÏ³É°´Å¥
-//    //private GButton OpenOneBtn;//´ò¿ªÒ»¸ö°´Å¥
-//    //private GLoader OpenOneBtnIcon;//´ò¿ªÒ»¸ö°´Å¥»õ±ÒÍ¼±ê
-//    //private GTextField OpenOneBtnCount;//´ò¿ªÒ»¸ö°´Å¥»õ±ÒÊıÁ¿
-//    //private GButton OpenTenBtn;//´ò¿ª10¸ö°´Å¥
-//    //private GLoader OpenTenBtnIcon;//´ò¿ª10¸ö°´Å¥»õ±ÒÍ¼±ê
-//    //private GTextField OpenTenBtnCount;//´ò¿ª10¸ö°´Å¥»õ±ÒÊıÁ¿
+//    //private GButton Back;//è¿”å›æŒ‰é’®
+//    //private GButton hatchEggBtn;//å­µåŒ–æŒ‰é’®
+//    //private GButton commpoundBtn;//åˆæˆæŒ‰é’®
+//    //private GButton OpenOneBtn;//æ‰“å¼€ä¸€ä¸ªæŒ‰é’®
+//    //private GLoader OpenOneBtnIcon;//æ‰“å¼€ä¸€ä¸ªæŒ‰é’®è´§å¸å›¾æ ‡
+//    //private GTextField OpenOneBtnCount;//æ‰“å¼€ä¸€ä¸ªæŒ‰é’®è´§å¸æ•°é‡
+//    //private GButton OpenTenBtn;//æ‰“å¼€10ä¸ªæŒ‰é’®
+//    //private GLoader OpenTenBtnIcon;//æ‰“å¼€10ä¸ªæŒ‰é’®è´§å¸å›¾æ ‡
+//    //private GTextField OpenTenBtnCount;//æ‰“å¼€10ä¸ªæŒ‰é’®è´§å¸æ•°é‡
 
-//    //private GButton ticketBtn;//³éÈ¡È¯
-//    //private GButton masonryBtn;//×©Ê¯
+//    //private GButton ticketBtn;//æŠ½å–åˆ¸
+//    //private GButton masonryBtn;//ç –çŸ³
 
-//    //private GLabel R_ReflectCom;//ËùÓĞÖĞ¼äµÄ
-//    //private GLoader poolImage;//´ó±³¾°
-//    //private Transition arrowsAni;//¶¯»­
-//    //private GTextField BigTitle;//´ó±êÌâ
-//    //private GTextField title;//³é½±³Ø±êÌâ
-//    //private GRichTextField minTitle;//Ğ¡±êÌâ
-//    //private GTextField tipsText;//³éÒ»´Î°´Å¥Í·ÉÏµÄÌáÊ¾
-//    //private GTextField btnMinText;//°´Å¥ÏÂµÄÌáÊ¾
-//    //private GTextField btnMinText2;//°´Å¥ÏÂµÄÌáÊ¾2
-//    //private GLabel bottomAll;//ÏÂ·½UI
+//    //private GLabel R_ReflectCom;//æ‰€æœ‰ä¸­é—´çš„
+//    //private GLoader poolImage;//å¤§èƒŒæ™¯
+//    //private Transition arrowsAni;//åŠ¨ç”»
+//    //private GTextField BigTitle;//å¤§æ ‡é¢˜
+//    //private GTextField title;//æŠ½å¥–æ± æ ‡é¢˜
+//    //private GRichTextField minTitle;//å°æ ‡é¢˜
+//    //private GTextField tipsText;//æŠ½ä¸€æ¬¡æŒ‰é’®å¤´ä¸Šçš„æç¤º
+//    //private GTextField btnMinText;//æŒ‰é’®ä¸‹çš„æç¤º
+//    //private GTextField btnMinText2;//æŒ‰é’®ä¸‹çš„æç¤º2
+//    //private GLabel bottomAll;//ä¸‹æ–¹UI
 
 //    public static int openOneDiamond = 0/*20;*/;
 //    public static int openTenDiamond = 0/*200*/;
-//    private long countDownTime;//µ¹¼ÆÊ±
+//    private long countDownTime;//å€’è®¡æ—¶
 //    /// <summary>
-//    /// µ±Ç°Ñ¡ÔñµÄItem
+//    /// å½“å‰é€‰æ‹©çš„Item
 //    /// </summary>
 //    public ScrollLoopItem currentScrollLoopItem;
 
-//    #region Ñ­»·ÍÏ×§Ïà¹Ø
-//    //=======Ñ­»·ÍÏ×§Ïà¹Ø=======
+//    #region å¾ªç¯æ‹–æ‹½ç›¸å…³
+//    //=======å¾ªç¯æ‹–æ‹½ç›¸å…³=======
 //    private bool inThisPanel;
-//    public List<ScrollLoopItem> itemList = new List<ScrollLoopItem>();//Ñ­»·»¬¶¯ÁĞ±í
-//    List<Vector2> origePosList = new List<Vector2>();//ÁĞ±íÎïÌå³õÊ¼×ø±ê
-//    private float leftRightScale = 0.82f; //Á½±ßÎïÌåµÄËõ·Å
-//    public bool isMove = false;//ÊÇ·ñÒÆ¶¯
-//    private bool isBegin = false;//ÊÇÔÚÁĞ±íÉÏ°´ÏÂ
-//    private Vector2 monseStartPosition = Vector2.zero; //Êó±ê°´¼ü³õÊ¼×ø±ê
-//    private float itemWidth = 0;//»¬¶¯ÎïÌåµÄ¿í
-//    public int currentPosIndex = 0;//¸¸ÎïÌåµ±Ç°Ó¦µ½Î»ÖÃÏÂ±ê¼ÇÂ¼--Ä¬ÈÏ0ÏòÓÒÒÆ¶¯+1Ïò×ó-1--Ã¿´ÎÖ»ÒÆ¶¯Ò»¸öitem¿é
-//    private float xLeft; //×ó±ßÁÙ½çµã
-//    private float xRight;//ÓÒ±ßÁÙ½çµã
-//    private Action moveEnd;//ÍÏ¶¯½áÊø
-//    private float moveTime;//ÍÏ×§ÒÆ¶¯Ê±¼ä
-//    public bool canClick = true;//ÊÇ·ñ¿ÉÒÔµã»÷
-//    private GLabel parentNode;//¸¸½Úµã
-//    private Vector2 parentNodeStartPos;//¸¸½ÚµãÆğÊ¼µã
-//    private Vector2 parentStartPositon;//¸¸½ÚµãÊó±êµãÏÂÊ±µÄµã
-//    Vector2 origePos = Vector2.zero;  //Ô­Ê¼Î»ÖÃ
+//    public List<ScrollLoopItem> itemList = new List<ScrollLoopItem>();//å¾ªç¯æ»‘åŠ¨åˆ—è¡¨
+//    List<Vector2> origePosList = new List<Vector2>();//åˆ—è¡¨ç‰©ä½“åˆå§‹åæ ‡
+//    private float leftRightScale = 0.82f; //ä¸¤è¾¹ç‰©ä½“çš„ç¼©æ”¾
+//    public bool isMove = false;//æ˜¯å¦ç§»åŠ¨
+//    private bool isBegin = false;//æ˜¯åœ¨åˆ—è¡¨ä¸ŠæŒ‰ä¸‹
+//    private Vector2 monseStartPosition = Vector2.zero; //é¼ æ ‡æŒ‰é”®åˆå§‹åæ ‡
+//    private float itemWidth = 0;//æ»‘åŠ¨ç‰©ä½“çš„å®½
+//    public int currentPosIndex = 0;//çˆ¶ç‰©ä½“å½“å‰åº”åˆ°ä½ç½®ä¸‹æ ‡è®°å½•--é»˜è®¤0å‘å³ç§»åŠ¨+1å‘å·¦-1--æ¯æ¬¡åªç§»åŠ¨ä¸€ä¸ªitemå—
+//    private float xLeft; //å·¦è¾¹ä¸´ç•Œç‚¹
+//    private float xRight;//å³è¾¹ä¸´ç•Œç‚¹
+//    private Action moveEnd;//æ‹–åŠ¨ç»“æŸ
+//    private float moveTime;//æ‹–æ‹½ç§»åŠ¨æ—¶é—´
+//    public bool canClick = true;//æ˜¯å¦å¯ä»¥ç‚¹å‡»
+//    private GLabel parentNode;//çˆ¶èŠ‚ç‚¹
+//    private Vector2 parentNodeStartPos;//çˆ¶èŠ‚ç‚¹èµ·å§‹ç‚¹
+//    private Vector2 parentStartPositon;//çˆ¶èŠ‚ç‚¹é¼ æ ‡ç‚¹ä¸‹æ—¶çš„ç‚¹
+//    Vector2 origePos = Vector2.zero;  //åŸå§‹ä½ç½®
 
-//    private Vector2 startPos;//¿ªÊ¼¾Ö²¿Î»ÖÃ
-//    private Vector2 startWorldPos;//¿ªÊ¼ÊÀ½çÎ»ÖÃ
-//    private float intervalWorldX;//ÎïÌåÊÀ½ç¿í¶È(¼ä¸ô)
+//    private Vector2 startPos;//å¼€å§‹å±€éƒ¨ä½ç½®
+//    private Vector2 startWorldPos;//å¼€å§‹ä¸–ç•Œä½ç½®
+//    private float intervalWorldX;//ç‰©ä½“ä¸–ç•Œå®½åº¦(é—´éš”)
 
-//    private ScrollLoopItem bestLeftItem;//×î×ó±ßµÄitem
-//    private ScrollLoopItem bestRightItem;//×îÓÒ±ßµÄitem
+//    private ScrollLoopItem bestLeftItem;//æœ€å·¦è¾¹çš„item
+//    private ScrollLoopItem bestRightItem;//æœ€å³è¾¹çš„item
 //    #endregion
 
-//    public List<int> allPoolDataList = new List<int>();//ËùÓĞ³Ø×ÓÊı¾İ
+//    public List<int> allPoolDataList = new List<int>();//æ‰€æœ‰æ± å­æ•°æ®
 
 //    public void Start()
 //    {
-//        #region Ñ­»·ÍÏ×§Ïà¹Ø
+//        #region å¾ªç¯æ‹–æ‹½ç›¸å…³
 //        //parentNode = GetCom("R_ReflectCom").asLabel.GetChild("selectAll").asLabel;
 //        parentNodeStartPos = parentNode.position;
 //        for (int i = 0; i < 4; i++)
@@ -89,11 +89,11 @@
 //        for (int i = 0; i < itemList.Count; i++)
 //        {
 //            var item = itemList[i];
-//            if (i == 0)//Êı¾İÏÂ±ê
+//            if (i == 0)//æ•°æ®ä¸‹æ ‡
 //            {
 //                item.dataIndex = -1;
 //            }
-//            else//Êı¾İÏÂ±ê
+//            else//æ•°æ®ä¸‹æ ‡
 //            {
 //                item.dataIndex = i - 1;
 //            }
@@ -101,12 +101,12 @@
 
 //        bestLeftItem = itemList[0];
 //        bestRightItem = itemList[itemList.Count - 1];
-//        //ÉèÖÃÎ»ÖÃÃ¶¾Ù
+//        //è®¾ç½®ä½ç½®æšä¸¾
 //        itemList[0].loopItemPosType = LoopItemPosType.Left;
 //        itemList[1].loopItemPosType = LoopItemPosType.Middle;
 //        itemList[2].loopItemPosType = LoopItemPosType.Right;
 //        itemList[3].loopItemPosType = LoopItemPosType.RightReserve;
-//        //¸üĞÂÊı¾İ
+//        //æ›´æ–°æ•°æ®
 //        for (int i = 0; i < itemList.Count; i++)
 //        {
 //            itemList[i].UpdateData();
@@ -116,10 +116,10 @@
 //        startWorldPos = SelfLocalToWorld(itemList[1].component);
 
 //        itemWidth = itemList[0].component.width;
-//        //³õÊ¼Î»ÖÃ--ÒÔÖĞĞÄµÄÎªÆğµã(±¸ÓÃitemÊÇµÚ0¸ö)
+//        //åˆå§‹ä½ç½®--ä»¥ä¸­å¿ƒçš„ä¸ºèµ·ç‚¹(å¤‡ç”¨itemæ˜¯ç¬¬0ä¸ª)
 //        for (int i = 0; i < itemList.Count; i++)
 //        {
-//            if (i == 0) //±¸ÓÃitem
+//            if (i == 0) //å¤‡ç”¨item
 //            {
 //                itemList[i].component.position = startPos - new Vector2(itemWidth, 0);
 //            }
@@ -128,14 +128,14 @@
 //                itemList[i].component.position = startPos + new Vector2(itemWidth * (i - 1), 0);
 //            }
 //            origePosList.Add(itemList[i].component.position);
-//            //Debuger.ToError("ÎïÌåµÄ³õÊ¼¾Ö²¿×ø±ê:" + itemList[i].component.position);
+//            //Debuger.ToError("ç‰©ä½“çš„åˆå§‹å±€éƒ¨åæ ‡:" + itemList[i].component.position);
 //        }
 
 //        intervalWorldX = Mathf.Abs(SelfLocalToWorld(itemList[2].component).x - startWorldPos.x);
 
 //        var tempPos = itemList[0].component.position;
-//        xLeft = LocalToWorld(itemList[0].component, new Vector2(tempPos.x - itemWidth, tempPos.y)).x;  //×ó±ßÁÙ½çµã--ÊÀ½ç×ø±ê
-//        xRight = SelfLocalToWorld(itemList[3].component).x; //ÓÒ±ßÁÙ½çµã--ÊÀ½ç×ø±ê
+//        xLeft = LocalToWorld(itemList[0].component, new Vector2(tempPos.x - itemWidth, tempPos.y)).x;  //å·¦è¾¹ä¸´ç•Œç‚¹--ä¸–ç•Œåæ ‡
+//        xRight = SelfLocalToWorld(itemList[3].component).x; //å³è¾¹ä¸´ç•Œç‚¹--ä¸–ç•Œåæ ‡
 //        origePos = parentNode.position;
 //        PositionCorrection();
 //        #endregion
@@ -150,7 +150,7 @@
 //        inThisPanel = false;
 //    }
 //    /// <summary>
-//    /// ³õÊ¼»¯
+//    /// åˆå§‹åŒ–
 //    /// </summary>
 //    public void Init(Action _moveEnd, int dex = 0)
 //    {
@@ -173,7 +173,7 @@
 //        }
 //    }
 //    /// <summary>
-//    /// »¹Ô­
+//    /// è¿˜åŸ
 //    /// </summary>
 //    public void Restore()
 //    {
@@ -183,22 +183,22 @@
 //        {
 //            itemList[i].component.position = origePosList[i];
 //        }
-//        //ÉèÖÃÎ»ÖÃÃ¶¾Ù
+//        //è®¾ç½®ä½ç½®æšä¸¾
 //        itemList[0].loopItemPosType = LoopItemPosType.Left;
 //        itemList[1].loopItemPosType = LoopItemPosType.Middle;
 //        itemList[2].loopItemPosType = LoopItemPosType.Right;
 //        itemList[3].loopItemPosType = LoopItemPosType.RightReserve;
 
-//        //¸üĞÂÊı¾İ
+//        //æ›´æ–°æ•°æ®
 //        for (int i = 0; i < itemList.Count; i++)
 //        {
 //            var item = itemList[i];
 
-//            if (i == 0)//Êı¾İÏÂ±ê
+//            if (i == 0)//æ•°æ®ä¸‹æ ‡
 //            {
 //                item.dataIndex = -1;
 //            }
-//            else//Êı¾İÏÂ±ê
+//            else//æ•°æ®ä¸‹æ ‡
 //            {
 //                item.dataIndex = i - 1;
 //            }
@@ -206,7 +206,7 @@
 //        }
 //    }
 //    /// <summary>
-//    /// ¸üĞÂ°´Å¥×´Ì¬
+//    /// æ›´æ–°æŒ‰é’®çŠ¶æ€
 //    /// </summary>
 //    public void UpdateBtnState()
 //    {
@@ -214,7 +214,7 @@
 //        //GoCha data = GetDataFromDataIndex(temp.dataIndex);
 //        //if (data.TodayTimes >= data.NumLimit)
 //        //{
-//        //    //ÉÏÏŞ±ä»Ò
+//        //    //ä¸Šé™å˜ç°
 //        //    OpenOneBtn.ToGrayed();
 //        //    OpenTenBtn.ToGrayed();
 //        //}
@@ -232,15 +232,15 @@
 //        //if (btnMinText != null)
 //        //{
 //        //    countDownTime -= (long)Time.unscaledDeltaTime;
-//        //    countDownTime = Math.Max(0, countDownTime);//ºÁÃë
-//        //    long allSecends = countDownTime / 1000;//Ãë
+//        //    countDownTime = Math.Max(0, countDownTime);//æ¯«ç§’
+//        //    long allSecends = countDownTime / 1000;//ç§’
 //        //    long hour = allSecends / 60 / 60;
 //        //    long minute = allSecends / 60 % 60;
 //        //    long second = allSecends % 60;
-//        //    btnMinText2.text = $"´ÎÊıË¢ĞÂµ¹¼ÆÊ±{hour.ToString("D2")}:{minute.ToString("D2")}:{second.ToString("D2")}";
+//        //    btnMinText2.text = $"æ¬¡æ•°åˆ·æ–°å€’è®¡æ—¶{hour.ToString("D2")}:{minute.ToString("D2")}:{second.ToString("D2")}";
 //        //}
 
-//        //TODO:Î´ÊµÏÖ
+//        //TODO:æœªå®ç°
 //        //if (Input.GetKeyDown(KeyCode.Z))
 //        //{
 //        //    Move(1);
@@ -256,18 +256,18 @@
 //        if (!inThisPanel) return;
 //        if (Input.GetMouseButtonDown(0))
 //        {
-//            //Ô­µãÎ»ÖÃ×ª»»
+//            //åŸç‚¹ä½ç½®è½¬æ¢
 //            Vector3 mousPos = Input.mousePosition;
 //            mousPos.y = Screen.height - mousPos.y;
 //            Vector2 inputPos = R_ReflectCom.GlobalToLocal(mousPos);
 //            Vector2 parentNodesize = new Vector2(parentNode.width, parentNode.height);
-//            //°´ÏÂ 
+//            //æŒ‰ä¸‹ 
 //            if (inputPos.x > origePos.x - parentNodesize.x / 2 &&
 //                inputPos.x < origePos.x + parentNodesize.x / 2 &&
 //                inputPos.y < origePos.y + parentNodesize.y / 2 &&
 //                inputPos.y > origePos.y - parentNodesize.y / 2)
 //            {
-//                //·¶Î§ÒÔÄÚ
+//                //èŒƒå›´ä»¥å†…
 //                OnPointerDown();
 //            }
 //        }
@@ -277,11 +277,11 @@
 //        }
 //        if (Input.GetMouseButtonUp(0))
 //        {
-//            //Ì§Æğ
+//            //æŠ¬èµ·
 //            OnPointerUp();
 //        }
 //    }
-//    //µãÏÂ
+//    //ç‚¹ä¸‹
 //    void OnPointerDown()
 //    {
 //        if (!canClick) return;
@@ -291,7 +291,7 @@
 //        parentStartPositon = parentNode.position;
 //        moveTime = 0;
 //    }
-//    //³ÖĞø
+//    //æŒç»­
 //    void OnPointerStay()
 //    {
 //        if (isBegin == false) return;
@@ -309,37 +309,37 @@
 //            isMove = false;
 //        }
 //    }
-//    //Ì§Æğ
+//    //æŠ¬èµ·
 //    void OnPointerUp()
 //    {
 //        if (isBegin == false) return;
 //        isBegin = false;
 
-//        bool? isRight = null;//ÊÇÏòÓÒÒÆ¶¯
+//        bool? isRight = null;//æ˜¯å‘å³ç§»åŠ¨
 
-//        //Ã¿´ÎÍÏ×§Ö»ÄÜÒÆ¶¯Ò»¸ö¿í¶ÈÎ»ÖÃ
-//        float _x = monseStartPosition.x - Input.mousePosition.x; //xµÄ¾àÀë£¬Èç¹ûÊÇ¸ºÊıÔòÓÒÒÆ¶¯£¬ÕıÊı×óÒÆ¶¯
+//        //æ¯æ¬¡æ‹–æ‹½åªèƒ½ç§»åŠ¨ä¸€ä¸ªå®½åº¦ä½ç½®
+//        float _x = monseStartPosition.x - Input.mousePosition.x; //xçš„è·ç¦»ï¼Œå¦‚æœæ˜¯è´Ÿæ•°åˆ™å³ç§»åŠ¨ï¼Œæ­£æ•°å·¦ç§»åŠ¨
 //        if (_x < -200)
 //        {
-//            //Î»ÖÃÓ¦µ±-ÏòÓÒ
+//            //ä½ç½®åº”å½“-å‘å³
 //            currentPosIndex++;
 //            isRight = true;
 //        }
 //        else if (_x > 200)
 //        {
-//            //Î»ÖÃÓ¦µ±--Ïò×ó
+//            //ä½ç½®åº”å½“--å‘å·¦
 //            currentPosIndex--;
 //            isRight = false;
 //        }
 //        else if (_x < -20 && moveTime < 0.3f)
 //        {
-//            //Î»ÖÃÓ¦µ±--ÏòÓÒ
+//            //ä½ç½®åº”å½“--å‘å³
 //            currentPosIndex++;
 //            isRight = true;
 //        }
 //        else if (_x > 20 && moveTime < 0.3f)
 //        {
-//            //Î»ÖÃÓ¦µ±--Ïò×ó
+//            //ä½ç½®åº”å½“--å‘å·¦
 //            currentPosIndex--;
 //            isRight = false;
 //        }
@@ -355,7 +355,7 @@
 //        }
 //    }
 //    /// <summary>
-//    /// ÒÆ¶¯·½·¨
+//    /// ç§»åŠ¨æ–¹æ³•
 //    /// </summary>
 //    public void Move(int _index)
 //    {
@@ -393,7 +393,7 @@
 //        Move(currentPosIndex);
 //    }
 //    /// <summary>
-//    /// Î»ÖÃ½ÃÕı
+//    /// ä½ç½®çŸ«æ­£
 //    /// </summary>
 //    void PositionCorrection()
 //    {
@@ -402,11 +402,11 @@
 //            ScrollLoopItem item = itemList[i];
 //            if (SelfLocalToWorld(item.component).x > xRight)
 //            {
-//                //´óÓÚÓÒ±ß½ç
+//                //å¤§äºå³è¾¹ç•Œ
 //                item.component.position = new Vector2(item.component.position.x - itemWidth * itemList.Count, item.component.position.y);
-//                //¾ÉµÄ×î×ó±ßµÄÊı¾İÏÂ±ê-1
+//                //æ—§çš„æœ€å·¦è¾¹çš„æ•°æ®ä¸‹æ ‡-1
 //                item.dataIndex = bestLeftItem.dataIndex - 1;
-//                //×Ô¼ºÉèÖÃÎª×î×ó±ß
+//                //è‡ªå·±è®¾ç½®ä¸ºæœ€å·¦è¾¹
 //                bestLeftItem = item;
 //                bestLeftItem.UpdateData();
 
@@ -419,9 +419,9 @@
 //            }
 //            if (SelfLocalToWorld(item.component).x <= xLeft)
 //            {
-//                //Ğ¡ÓÚ×ó±ß½ç
+//                //å°äºå·¦è¾¹ç•Œ
 //                item.component.position = new Vector2(item.component.position.x + itemWidth * itemList.Count, item.component.position.y);
-//                //ÉÏÒ»¸ö×îÓÒ±ßµÄÊı¾İÏÂ±ê+1
+//                //ä¸Šä¸€ä¸ªæœ€å³è¾¹çš„æ•°æ®ä¸‹æ ‡+1
 //                item.dataIndex = bestRightItem.dataIndex + 1;
 //                var leftIndex = item.itemIndex + 1;
 //                if (leftIndex > itemList.Count - 1)
@@ -429,7 +429,7 @@
 //                    leftIndex = 0;
 //                }
 //                bestLeftItem = itemList[leftIndex];
-//                //×Ô¼ºÉèÖÃÎª×î×ó±ß
+//                //è‡ªå·±è®¾ç½®ä¸ºæœ€å·¦è¾¹
 //                bestRightItem = item;
 //                bestRightItem.UpdateData();
 //            }
@@ -445,35 +445,35 @@
 //        }
 //    }
 //    /// <summary>
-//    /// ×ªÊÀ½ç×ø±ê
+//    /// è½¬ä¸–ç•Œåæ ‡
 //    /// </summary>
 //    Vector3 LocalToWorld(GObject gObject, Vector2 _pos)
 //    {
-//        //ĞèÒªÏÈ½«UIÀïµÄ×ø±ê×ª»»ÎªÆÁÄ»×ø±ê
+//        //éœ€è¦å…ˆå°†UIé‡Œçš„åæ ‡è½¬æ¢ä¸ºå±å¹•åæ ‡
 //        Vector2 screenPos = gObject.LocalToGlobal(_pos);
-//        //Ô­µãÎ»ÖÃ×ª»»
+//        //åŸç‚¹ä½ç½®è½¬æ¢
 //        screenPos.y = Screen.height - screenPos.y;
-//        //Ò»°ãÇé¿öÏÂ£¬»¹ĞèÒªÌá¹©¾àÀëÉãÏñ»úÊÓÒ°ÕıÇ°·½distance³¤¶ÈµÄ²ÎÊı×÷ÎªscreenPos.z(Èç¹ûĞèÒª£¬½«screenPos¸ÄÎªVector3ÀàĞÍ£©
+//        //ä¸€èˆ¬æƒ…å†µä¸‹ï¼Œè¿˜éœ€è¦æä¾›è·ç¦»æ‘„åƒæœºè§†é‡æ­£å‰æ–¹distanceé•¿åº¦çš„å‚æ•°ä½œä¸ºscreenPos.z(å¦‚æœéœ€è¦ï¼Œå°†screenPosæ”¹ä¸ºVector3ç±»å‹ï¼‰
 //        Vector3 worldPos = FUIFW.FUIMgr.Ins.UICamera.ScreenToWorldPoint(screenPos);
 //        worldPos.z = 0;
 //        return worldPos;
 //    }
 //    /// <summary>
-//    /// ×ªÊÀ½ç×ø±ê
+//    /// è½¬ä¸–ç•Œåæ ‡
 //    /// </summary>
 //    Vector3 SelfLocalToWorld(GObject gObject)
 //    {
-//        //ĞèÒªÏÈ½«UIÀïµÄ×ø±ê×ª»»ÎªÆÁÄ»×ø±ê
+//        //éœ€è¦å…ˆå°†UIé‡Œçš„åæ ‡è½¬æ¢ä¸ºå±å¹•åæ ‡
 //        Vector2 screenPos = gObject.LocalToGlobal(Vector2.zero);
-//        //Ô­µãÎ»ÖÃ×ª»»
+//        //åŸç‚¹ä½ç½®è½¬æ¢
 //        screenPos.y = Screen.height - screenPos.y;
-//        //Ò»°ãÇé¿öÏÂ£¬»¹ĞèÒªÌá¹©¾àÀëÉãÏñ»úÊÓÒ°ÕıÇ°·½distance³¤¶ÈµÄ²ÎÊı×÷ÎªscreenPos.z(Èç¹ûĞèÒª£¬½«screenPos¸ÄÎªVector3ÀàĞÍ£©
+//        //ä¸€èˆ¬æƒ…å†µä¸‹ï¼Œè¿˜éœ€è¦æä¾›è·ç¦»æ‘„åƒæœºè§†é‡æ­£å‰æ–¹distanceé•¿åº¦çš„å‚æ•°ä½œä¸ºscreenPos.z(å¦‚æœéœ€è¦ï¼Œå°†screenPosæ”¹ä¸ºVector3ç±»å‹ï¼‰
 //        Vector3 worldPos = FUIFW.FUIMgr.Ins.UICamera.ScreenToWorldPoint(screenPos);
 //        worldPos.z = 0;
 //        return worldPos;
 //    }
 //    /// <summary>
-//    /// ¸ù¾İÊı¾İÏÂ±ê»ñÈ¡Êı¾İ
+//    /// æ ¹æ®æ•°æ®ä¸‹æ ‡è·å–æ•°æ®
 //    /// </summary>
 //    /// <returns></returns>
 //    public int GetDataFromDataIndex(int dataIndex)
@@ -493,7 +493,7 @@
 //        }
 //    }
 //    /// <summary>
-//    /// ÉèÖÃÎ»ÖÃÃ¶¾Ù
+//    /// è®¾ç½®ä½ç½®æšä¸¾
 //    /// </summary>
 //    private void SetPosType(bool isRight)
 //    {
@@ -502,7 +502,7 @@
 //            for (int i = 0; i < itemList.Count; i++)
 //            {
 //                ScrollLoopItem item = itemList[i];
-//                int temp = (((int)item.loopItemPosType + 1) % 4);//¼Ó1È¡ÓàÊı
+//                int temp = (((int)item.loopItemPosType + 1) % 4);//åŠ 1å–ä½™æ•°
 //                item.loopItemPosType = (LoopItemPosType)temp;
 //            }
 //        }
@@ -511,7 +511,7 @@
 //            for (int i = 0; i < itemList.Count; i++)
 //            {
 //                ScrollLoopItem item = itemList[i];
-//                int temp = ((int)item.loopItemPosType - 1);//¼õ1
+//                int temp = ((int)item.loopItemPosType - 1);//å‡1
 //                if (temp < 0)
 //                {
 //                    temp = 3; //left=>RightReserve
@@ -521,9 +521,9 @@
 //        }
 //    }
 //    /// <summary>
-//    /// ¸ù¾İÎ»ÖÃÃ¶¾Ù»ñµÃitem--ĞèÒªÔÚÌ§Æğºóµ÷ÓÃ--²¢ÇÒ½¨ÒéÖ»È¡×óÖĞÓÒ
+//    /// æ ¹æ®ä½ç½®æšä¸¾è·å¾—item--éœ€è¦åœ¨æŠ¬èµ·åè°ƒç”¨--å¹¶ä¸”å»ºè®®åªå–å·¦ä¸­å³
 //    /// </summary>
-//    /// <param name="_loopItemPosType">Î»ÖÃÃ¶¾Ù</param>
+//    /// <param name="_loopItemPosType">ä½ç½®æšä¸¾</param>
 //    public ScrollLoopItem GetItem(LoopItemPosType _loopItemPosType)
 //    {
 //        for (int i = 0; i < itemList.Count; i++)
@@ -538,16 +538,16 @@
 //    }
 //}
 ///// <summary>
-///// Ñ­»·ÁĞ±íÎïÌå
+///// å¾ªç¯åˆ—è¡¨ç‰©ä½“
 ///// </summary>
 //public class ScrollLoopItem
 //{
 //    //public UIExtractEggs parent;
 //    //public GComponent component;
-//    //public GLoader poolSelectBg;//±³¾°
-//    public int itemIndex;//item×Ô¼ºµÄÏÂ±ê
-//    public int dataIndex;//Êı¾İÏÂ±ê
-//    public LoopItemPosType loopItemPosType;//ÔÚÑ­»·ÁĞ±íÀïµÄÎ»ÖÃÃ¶¾Ù
+//    //public GLoader poolSelectBg;//èƒŒæ™¯
+//    public int itemIndex;//itemè‡ªå·±çš„ä¸‹æ ‡
+//    public int dataIndex;//æ•°æ®ä¸‹æ ‡
+//    public LoopItemPosType loopItemPosType;//åœ¨å¾ªç¯åˆ—è¡¨é‡Œçš„ä½ç½®æšä¸¾
 //    public ScrollLoopItem(/*GComponent com, UIExtractEggs _parent*/)
 //    {
 //        //component = com;
@@ -556,7 +556,7 @@
 //        //poolSelectBg = component.GetChild("poolSelectBg").asLoader;
 //    }
 //    /// <summary>
-//    /// ¸üĞÂÊı¾İ
+//    /// æ›´æ–°æ•°æ®
 //    /// </summary>
 //    public void UpdateData()
 //    {
@@ -567,7 +567,7 @@
 //        //component.GetChild("id").asTextField.text = $"{data.Id}";
 //    }
 //    /// <summary>
-//    /// µã»÷¿¨Æ¬
+//    /// ç‚¹å‡»å¡ç‰‡
 //    /// </summary>
 //    public void ClickThisCard()
 //    {

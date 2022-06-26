@@ -25,7 +25,7 @@ public class Test : MonoBehaviour
 
         //for (int i = 0; i < 10000; i++)
         //{
-        //    YangTools.Log.Debuger.ToError($"测试{i}");
+        //    YangTools.Log.Debuger.ToError($"{i}");
         //}
 
         //var settings = new ES3Settings(ES3.EncryptionType.AES, "myPassword");
@@ -61,10 +61,7 @@ public class Test : MonoBehaviour
         });
     }
 
-    #region 实例化测试
-    /// <summary>
-    /// 直接调用
-    /// </summary>
+    #region 
     public static void Create()
     {
         Person person = null;
@@ -75,9 +72,6 @@ public class Test : MonoBehaviour
         watch.Stop();
         Debug.LogError("new:" + watch.ElapsedMilliseconds.ToString().PadLeft(5));
     }
-    /// <summary>
-    /// 实例化反射
-    /// </summary>
     public static void Create2()
     {
         Type type = typeof(Person);

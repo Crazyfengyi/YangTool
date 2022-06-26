@@ -9,11 +9,11 @@ using System.IO;
 public class AnimatorFactoryWindow : EditorWindow
 {
     #region const
-    //¶¯»­»ú±£´æÂ·¾¶
+    //åŠ¨ç”»æœºä¿å­˜è·¯å¾„
     private const string AnimatorSavePath = "Assets/Animator/";
-    //¶¯»­Â·¾¶
+    //åŠ¨ç”»è·¯å¾„
     private const string AnimationPath = "Assets/UserTest/MyTest/Axe_anim.fbx";
-    //ºó×º
+    //åç¼€
     private const string AnimatorControllerSuffix = "_AniController.controller";
     #endregion
 
@@ -24,7 +24,7 @@ public class AnimatorFactoryWindow : EditorWindow
     #endregion
 
     #region EditorWindow
-    [MenuItem(SettingInfo.YongToolsFunctionPath + "¶¯»­»ú¹¤³§")]
+    [MenuItem(SettingInfo.YongToolsFunctionPath + "åŠ¨ç”»æœºå·¥å‚")]
     public static void OpenWindow()
     {
         EditorWindow.GetWindow(typeof(AnimatorFactoryWindow));
@@ -36,8 +36,8 @@ public class AnimatorFactoryWindow : EditorWindow
     void OnGUI()
     {
         GUILayout.Label("AnimationSettings", EditorStyles.boldLabel);
-        controllerName = EditorGUILayout.TextField("¶¯»­»úÃû³Æ:", controllerName);
-        if (GUILayout.Button("Éú³É¶¯»­»ú"))
+        controllerName = EditorGUILayout.TextField("åŠ¨ç”»æœºåç§°:", controllerName);
+        if (GUILayout.Button("ç”ŸæˆåŠ¨ç”»æœº"))
         {
             GenerateController();
         }
@@ -45,19 +45,19 @@ public class AnimatorFactoryWindow : EditorWindow
     #endregion EditorWindow
 
     /// <summary>
-    /// Éú³É¶¯»­»ú
+    /// ç”ŸæˆåŠ¨ç”»æœº
     /// </summary>
     public void GenerateController()
     {
         if (string.IsNullOrEmpty(controllerName))
         {
-            CommonEditorTool.CommonTipsPanel("´´½¨Ê§°Ü,Çë¶¯»­»úÊäÈëÃû³Æ");
+            CommonEditorTool.CommonTipsPanel("åˆ›å»ºå¤±è´¥,è¯·åŠ¨ç”»æœºè¾“å…¥åç§°");
             return;
         }
         string path = AnimatorSavePath + controllerName + AnimatorControllerSuffix;
         if (File.Exists(path))
         {
-            CommonEditorTool.CommonTipsPanel("´´½¨Ê§°Ü,ÒÑ¾­°üº¬Í¬Ãû¶¯»­»úÎÄ¼ş");
+            CommonEditorTool.CommonTipsPanel("åˆ›å»ºå¤±è´¥,å·²ç»åŒ…å«åŒååŠ¨ç”»æœºæ–‡ä»¶");
             return;
         }
         CreateController();
@@ -65,10 +65,10 @@ public class AnimatorFactoryWindow : EditorWindow
         CreateState();
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        CommonEditorTool.CommonTipsPanel("´´½¨³É¹¦");
+        CommonEditorTool.CommonTipsPanel("åˆ›å»ºæˆåŠŸ");
     }
     /// <summary>
-	/// ´´½¨¶¯»­×´Ì¬»ú
+	/// åˆ›å»ºåŠ¨ç”»çŠ¶æ€æœº
 	/// </summary>
 	private void CreateController()
     {
@@ -78,7 +78,7 @@ public class AnimatorFactoryWindow : EditorWindow
         baseLayerMachine.anyStatePosition = new Vector3(0f, 200f);
         baseLayerMachine.exitPosition = new Vector3(0f, 300f);
 
-        //´´½¨Ò»¸öNullµÄState
+        //åˆ›å»ºä¸€ä¸ªNullçš„State
         AnimatorState stateIdle = baseLayerMachine.AddState("Null", new Vector3(0, 100, 0));
         stateIdle.speedParameter = "speedControl";
         stateIdle.speedParameterActive = true;
@@ -90,7 +90,7 @@ public class AnimatorFactoryWindow : EditorWindow
         EditorUtility.SetDirty(stateIdle);
     }
     /// <summary>
-	/// ÉèÖÃ¶¯»­×´Ì¬»ú²ÎÊı
+	/// è®¾ç½®åŠ¨ç”»çŠ¶æ€æœºå‚æ•°
 	/// </summary>
 	private void AddParameters()
     {
@@ -101,14 +101,14 @@ public class AnimatorFactoryWindow : EditorWindow
         aniController.AddParameter(playSpeed);
     }
     /// <summary>
-	/// Ìí¼Ó×´Ì¬
+	/// æ·»åŠ çŠ¶æ€
 	/// </summary>
 	private void CreateState()
     {
         AnimationClip[] clips = AnimatorFactoryTool.LoadAllAnimClip(AnimationPath);
-        int rowCount = 8;//Ò»ÁĞ¼¸¸ö 
-        int currentRow = 0;//µ±Ç°ÁĞÊı
-        int currentRowCount = 0;//µ±Ç°ÁĞclip¸öÊı
+        int rowCount = 8;//ä¸€åˆ—å‡ ä¸ª 
+        int currentRow = 0;//å½“å‰åˆ—æ•°
+        int currentRowCount = 0;//å½“å‰åˆ—clipä¸ªæ•°
 
         for (int i = 0; i < clips.Length; i++)
         {

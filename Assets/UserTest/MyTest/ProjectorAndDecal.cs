@@ -5,28 +5,28 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ProjectorAndDecal : MonoBehaviour
 {
-    /// <summary> ½üÆ½Ãæ </summary>
+    /// <summary> è¿‘å¹³é¢ </summary>
     public float nearClipPlane = 0.1f;
 
-    /// <summary> Ô¶Æ½Ãæ </summary>
+    /// <summary> è¿œå¹³é¢ </summary>
     public float farClipPlane = 100;
 
-    /// <summary> ºá×İ±È </summary>
+    /// <summary> æ¨ªçºµæ¯” </summary>
     public float aspectRatio = 1;
 
-    /// <summary> Õı½»Í¶Ó°¿ò´óĞ¡ </summary>
+    /// <summary>æ­£äº¤æŠ•å½±æ¡†å¤§å° </summary>
     public float size = 10;
 
-    /// <summary> ²ÄÖÊ </summary>
+    /// <summary> æè´¨ </summary>
     public Material material;
 
-    /// <summary> ÊÓÍ¼ºĞ </summary>
+    /// <summary> è§†å›¾ç›’</summary>
     private Transform viewBox;
 
-    /// <summary> ×ÔÉíµÄÍø¸ñ´¦ÀíÆ÷ </summary>
+    /// <summary> è‡ªèº«çš„ç½‘æ ¼å¤„ç†å™¨ </summary>
     private MeshFilter meshFilter;
 
-    /// <summary> ×ÔÉíµÄäÖÈ¾Æ÷ </summary>
+    /// <summary> è‡ªèº«çš„æ¸²æŸ“å™¨ </summary>
     private MeshRenderer meshRenderer;
 
     private void OnValidate()
@@ -34,7 +34,7 @@ public class ProjectorAndDecal : MonoBehaviour
         GenerateViewBox();
     }
 
-    /// <summary> Éú³ÉÍ¶Ó°·¶Î§ </summary>
+    /// <summary> ç”ŸæˆæŠ•å½±èŒƒå›´</summary>
     private void GenerateViewBox()
     {
         viewBox = transform.Find("ViewBox");

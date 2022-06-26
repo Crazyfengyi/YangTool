@@ -24,7 +24,7 @@ public class ExcelUtility
     public ExcelUtility(string excelFile)
     {
         FileStream mStream = File.Open(excelFile, FileMode.Open, FileAccess.Read);
-        IExcelDataReader mExcelReader = ExcelReaderFactory.CreateOpenXmlReader(mStream);
+        IExcelDataReader mExcelReader = ExcelReaderFactory .CreateOpenXmlReader(mStream);
         mResultSet = mExcelReader.AsDataSet();
     }
 

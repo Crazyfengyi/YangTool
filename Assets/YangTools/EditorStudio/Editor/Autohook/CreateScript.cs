@@ -14,31 +14,31 @@ using YangTools.Log;
 namespace YangTools
 {
     [ExecuteInEditMode]
-    [CustomEditor(typeof(RectTransform), true)]//bool ×ÓÀàÊÇ·ñ¿ÉÓÃ
+    [CustomEditor(typeof(RectTransform), true)]//bool å­ç±»æ˜¯å¦å¯ç”¨
     public class CreateScript : Editor
     {
         public static string AddTemplateString =
             @"
-#region ×Ô¶¯Éú³É´úÂë
-partial class #ÀàÃû#
+#region è‡ªåŠ¨ç”Ÿæˆä»£ç 
+partial class #ç±»å#
 {
-    #region ×Ö¶Î
-    #Ìæ»»×Ö¶Î#
+    #region å­—æ®µ
+    #æ›¿æ¢å­—æ®µ#
     #endregion
 
-    #region ÉúÃüÖÜÆÚ
+    #region ç”Ÿå‘½å‘¨æœŸ
     //void Start()
     //{
     //    InitBtnLister();
     //}    
     #endregion
 
-    #region ·½·¨
+    #region æ–¹æ³•
     public void InitBtnLister()
     {
-        #³õÊ¼»¯·½·¨#
+        #åˆå§‹åŒ–æ–¹æ³•#
     }
-    #Ìæ»»·½·¨#
+    #æ›¿æ¢æ–¹æ³•#
     #endregion
 }
 #endregion";
@@ -50,31 +50,31 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public class #ÀàÃû# : MonoBehaviour
+public class #ç±»å# : MonoBehaviour
 {
-    #³ÉÔ±#
+    #æˆå‘˜#
 
     public void Start()
     {
-        #³õÊ¼»¯·½·¨#
+        #åˆå§‹åŒ–æ–¹æ³•#
     }
-    #·½·¨#
+    #æ–¹æ³•#
 }";
 
         private Editor editor;//RectTransformEditor
-        Transform tagetTranform;//×ÔÉí
-        static bool m_Foldout;//ÊÕÕÛ²Ëµ¥
-        static List<AttributeInfo> attributeList = new List<AttributeInfo>();//Òª´´½¨µÄÊôĞÔ
+        Transform tagetTranform;//è‡ªèº«
+        static bool m_Foldout;//æ”¶æŠ˜èœå•
+        static List<AttributeInfo> attributeList = new List<AttributeInfo>();//è¦åˆ›å»ºçš„å±æ€§
         /// <summary>
-        /// Æ´½Ó×Ö¶ÎÓÃ
+        /// æ‹¼æ¥å­—æ®µç”¨
         /// </summary>
         StringBuilder strBuidlerForFeild = new StringBuilder();
         /// <summary>
-        /// Æ´½Ó°´Å¥°ó¶¨·½·¨ÓÃ
+        /// æ‹¼æ¥æŒ‰é’®ç»‘å®šæ–¹æ³•ç”¨
         /// </summary>
         StringBuilder strBuidlerForBtnLister = new StringBuilder();
         /// <summary>
-        /// Æ´½Ó°´Å¥·½·¨
+        /// æ‹¼æ¥æŒ‰é’®æ–¹æ³•
         /// </summary>
         StringBuilder strBuidlerForBtnFun = new StringBuilder();
 
@@ -86,7 +86,7 @@ public class #ÀàÃû# : MonoBehaviour
         }
 
         /// <summary>
-        /// ³õÊ¼»¯
+        /// åˆå§‹åŒ–
         /// </summary>
         public void Init()
         {
@@ -99,22 +99,22 @@ public class #ÀàÃû# : MonoBehaviour
         public override void OnInspectorGUI()
         {
             editor.OnInspectorGUI();
-            tagetTranform.position = EditorGUILayout.Vector3Field("ÊÀ½ç×ø±ê£º", tagetTranform.position);
+            tagetTranform.position = EditorGUILayout.Vector3Field("ä¸–ç•Œåæ ‡:", tagetTranform.position);
             GUI.enabled = false;
-            EditorGUILayout.Vector3Field("Ïà¶Ô×ø±ê£º", tagetTranform.localPosition);
+            EditorGUILayout.Vector3Field("ç›¸å¯¹åæ ‡:", tagetTranform.localPosition);
             GUI.enabled = true;
 
-            m_Foldout = CommonEditorTool.Foldout(m_Foldout, "ÏÔÊ¾×Ô¶¯Éú³É´úÂë²Ëµ¥");
+            m_Foldout = CommonEditorTool.Foldout(m_Foldout, "æ˜¾ç¤ºè‡ªåŠ¨ç”Ÿæˆä»£ç èœå•");
             if (m_Foldout)
             {
                 Component[] allRectransform = Selection.activeGameObject.GetComponentsInChildren<RectTransform>();
 
-                EditorGUILayout.LabelField("È«²¿×é¼ş", GUILayout.Width(110));
+                EditorGUILayout.LabelField("å…¨éƒ¨ç»„ä»¶", GUILayout.Width(110));
                 for (int j = 0; j < allRectransform.Length; j++)
                 {
                     Component[] mComponents = allRectransform[j].GetComponents<Component>();
 
-                    EditorGUILayout.LabelField($"{allRectransform[j].name}µÄ×é¼ş:", GUILayout.Width(100));
+                    EditorGUILayout.LabelField($"{allRectransform[j].name}çš„ç»„ä»¶:", GUILayout.Width(100));
                     using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
                     {
                         GUI.backgroundColor = Color.white;
@@ -129,12 +129,12 @@ public class #ÀàÃû# : MonoBehaviour
 
                 GUILayout.Space(30);
 
-                if (GUILayout.Button("½«UI´úÂëÌí¼Óµ½´úÂëÖĞ"))
+                if (GUILayout.Button("å°†UIä»£ç æ·»åŠ åˆ°ä»£ç ä¸­"))
                 {
                     AddUIScript();
                 }
 
-                if (GUILayout.Button("Éú³É½Å±¾"))
+                if (GUILayout.Button("ç”Ÿæˆè„šæœ¬"))
                 {
                     CreateCsUIScript(CreateTemplateString);
                 }
@@ -142,27 +142,27 @@ public class #ÀàÃû# : MonoBehaviour
         }
 
         /// <summary>
-        /// ¸ù¾İÀàĞÍ´´½¨°´Å¥
+        /// æ ¹æ®ç±»å‹åˆ›å»ºæŒ‰é’®
         /// </summary>
         /// <param name="tCom"></param>
         void GenerateCode(Component tCom)
         {
             if (tCom == null) return;
-            string gamobjectName = tCom.gameObject.name;//¹Ò×é¼şµÄÎïÌåÃû
-            string componentName = tCom.GetType().Name;//×é¼şÃû
-            if (componentName.Equals("CanvasRenderer")) return;//ÅÅ³ı
-                                                               //Ñ¡ÖĞÑÕÉ«ÑùÊ½
+            string gamobjectName = tCom.gameObject.name;//æŒ‚ç»„ä»¶çš„ç‰©ä½“å
+            string componentName = tCom.GetType().Name;//ç»„ä»¶å
+            if (componentName.Equals("CanvasRenderer")) return;//æ’é™¤
+            //é€‰ä¸­é¢œè‰²æ ·å¼
             GUIStyle styleHas = new GUIStyle(GUI.skin.button);
             styleHas.normal.textColor = Color.red;
             styleHas.hover.textColor = Color.red;
-            //Â·¾¶
+            //è·¯å¾„
             string resultPath = CommonEditorTool.GetPath(tCom.gameObject);
 
-            //È¥µô¿ªÍ·#
+            //å»æ‰å¼€å¤´#
             var tempGamobjectName = CommonEditorTool.RemoveMark(gamobjectName);
             var tempComponetName = CommonEditorTool.RemoveMark(componentName);
 
-            string attributeName = $"{CommonEditorTool.Lowercase(tempGamobjectName)}_{CommonEditorTool.Lowercase(tempComponetName)}";//ÒªÉú³ÉµÄÊôĞÔÃû
+            string attributeName = $"{CommonEditorTool.Lowercase(tempGamobjectName)}_{CommonEditorTool.Lowercase(tempComponetName)}";//è¦ç”Ÿæˆçš„å±æ€§å
 
             string codeStr = "";
             codeStr += $"[Autohook(AutohookAttribute.HookType.Component, \"{resultPath}\", useDefault = false)]\r\n\t";
@@ -185,7 +185,7 @@ public class #ÀàÃû# : MonoBehaviour
         }
 
         /// <summary>
-        /// ÍùÏÖÓĞ½Å±¾Ìí¼Ó´úÂë
+        /// å¾€ç°æœ‰è„šæœ¬æ·»åŠ ä»£ç 
         /// </summary>
         public void AddUIScript()
         {
@@ -199,22 +199,22 @@ public class #ÀàÃû# : MonoBehaviour
             {
                 string classStr = File.ReadAllText(path);
 
-                //ÀàÃû
+                //ç±»å
                 int index1 = classStr.IndexOf("class");
                 int index2 = classStr.IndexOf(": MonoBehaviour");
                 string className = classStr.Substring(index1, index2 - index1);
                 className = className.Replace("class", "");
                 className = className.Trim();
 
-                //Ìí¼Ó¹ı×Ô¶¯Éú³É´úÂë
-                if (classStr.Contains("#region ×Ô¶¯Éú³É´úÂë"))
+                //æ·»åŠ è¿‡è‡ªåŠ¨ç”Ÿæˆä»£ç 
+                if (classStr.Contains("#region è‡ªåŠ¨ç”Ÿæˆä»£ç "))
                 {
-                    classStr = classStr.Split(new string[] { "#region ×Ô¶¯Éú³É´úÂë" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    classStr = classStr.Split(new string[] { "#region è‡ªåŠ¨ç”Ÿæˆä»£ç " }, StringSplitOptions.RemoveEmptyEntries)[0];
                     classStr = classStr.TrimEnd();
 
-                    //Ä£°å
+                    //æ¨¡æ¿
                     string templateString = AddTemplateString;
-                    //¿´Ô­ÀàÊÇ·ñ°üº¬start
+                    //çœ‹åŸç±»æ˜¯å¦åŒ…å«start
                     if (classStr.Contains($"void Start()"))
                     {
                         classStr = classStr.Replace("void Start()\r\n    {", "void Start()\r\n    {\r\n        InitBtnLister();\r\n");
@@ -229,10 +229,10 @@ public class #ÀàÃû# : MonoBehaviour
 
                     (string field, string initStr, string funStr) result = CreateCodeString();
 
-                    classStr = classStr.Replace("#ÀàÃû#", $"{className}");
-                    classStr = classStr.Replace("#Ìæ»»×Ö¶Î#", $"{result.field}");
-                    classStr = classStr.Replace("#³õÊ¼»¯·½·¨#", $"{result.initStr}");
-                    classStr = classStr.Replace("#Ìæ»»·½·¨#", $"{result.funStr}");
+                    classStr = classStr.Replace("#ç±»å#", $"{className}");
+                    classStr = classStr.Replace("#æ›¿æ¢å­—æ®µ#", $"{result.field}");
+                    classStr = classStr.Replace("#åˆå§‹åŒ–æ–¹æ³•#", $"{result.initStr}");
+                    classStr = classStr.Replace("#æ›¿æ¢æ–¹æ³•#", $"{result.funStr}");
 
                     File.WriteAllText(path, classStr);
                 }
@@ -240,7 +240,7 @@ public class #ÀàÃû# : MonoBehaviour
                 {
                     classStr = classStr.TrimEnd();
 
-                    //¿´Ô­ÀàÊÇ·ñ°üº¬partial
+                    //çœ‹åŸç±»æ˜¯å¦åŒ…å«partial
                     if (!classStr.Substring(0, index1).Contains("partial"))
                     {
                         classStr = classStr.Replace("class", "partial class");
@@ -253,9 +253,9 @@ public class #ÀàÃû# : MonoBehaviour
 
                     (string field, string initStr, string funStr) result = CreateCodeString();
 
-                    //Ä£°å
+                    //æ¨¡æ¿
                     string templateString = AddTemplateString;
-                    //¿´Ô­ÀàÊÇ·ñ°üº¬start
+                    //çœ‹åŸç±»æ˜¯å¦åŒ…å«start
                     if (classStr.Contains($"void Start()"))
                     {
                         classStr = classStr.Replace("void Start()\r\n    {", "void Start()\r\n    {\r\n        InitBtnLister();\r\n");
@@ -268,10 +268,10 @@ public class #ÀàÃû# : MonoBehaviour
                     classStr += "\n";
                     classStr += templateString;
 
-                    classStr = classStr.Replace("#ÀàÃû#", $"{className}");
-                    classStr = classStr.Replace("#Ìæ»»×Ö¶Î#", $"{result.field}");
-                    classStr = classStr.Replace("#³õÊ¼»¯·½·¨#", $"{result.initStr}");
-                    classStr = classStr.Replace("#Ìæ»»·½·¨#", $"{result.funStr}");
+                    classStr = classStr.Replace("#ç±»å#", $"{className}");
+                    classStr = classStr.Replace("#æ›¿æ¢å­—æ®µ#", $"{result.field}");
+                    classStr = classStr.Replace("#åˆå§‹åŒ–æ–¹æ³•#", $"{result.initStr}");
+                    classStr = classStr.Replace("#æ›¿æ¢æ–¹æ³•#", $"{result.funStr}");
 
                     File.WriteAllText(path, classStr);
                 }
@@ -284,38 +284,38 @@ public class #ÀàÃû# : MonoBehaviour
         }
 
         /// <summary>
-        /// Éú³ÉC#UI½Å±¾
+        /// ç”ŸæˆC#UIè„šæœ¬
         /// </summary>
         private void CreateCsUIScript(string pStr)
         {
-            //»ñµÃ±£´æÂ·¾¶ EditorPrefs==PlayerPreds
+            //è·å¾—ä¿å­˜è·¯å¾„ EditorPrefs==PlayerPreds
             string path = EditorPrefs.GetString("createScriptFolder", "");
 
             path = EditorUtility.SaveFilePanel("CreateScript", path, CommonEditorTool.RemoveMark(Selection.activeGameObject.name) + ".cs", "cs");
             if (string.IsNullOrEmpty(path)) return;
 
-            //ÎÄ¼şÃû
+            //æ–‡ä»¶å
             string fileName = Path.GetFileNameWithoutExtension(path);
 
-            //´¦ÀíÄ£°å
-            pStr = pStr.Replace("#ÀàÃû#", fileName);
+            //å¤„ç†æ¨¡æ¿
+            pStr = pStr.Replace("#ç±»å#", fileName);
 
             (string field, string initStr, string funStr) result = CreateCodeString();
 
-            pStr = pStr.Replace("#³ÉÔ±#", $"{result.field}");
-            pStr = pStr.Replace("#³õÊ¼»¯·½·¨#", $"{result.initStr}");
-            pStr = pStr.Replace("#·½·¨#", $"{result.funStr}");
+            pStr = pStr.Replace("#æˆå‘˜#", $"{result.field}");
+            pStr = pStr.Replace("#åˆå§‹åŒ–æ–¹æ³•#", $"{result.initStr}");
+            pStr = pStr.Replace("#æ–¹æ³•#", $"{result.funStr}");
 
-            //Ğ´Èë
+            //å†™å…¥
             File.WriteAllText(path, pStr, new UTF8Encoding(false));
-            //½«Õâ´ÎµÄÂ·¾¶´æ´¢ÏÂÀ´
+            //å°†è¿™æ¬¡çš„è·¯å¾„å­˜å‚¨ä¸‹æ¥
             EditorPrefs.SetString("createScriptFolder", path);
 
             AssetDatabase.Refresh();
         }
 
         /// <summary>
-        /// Éú³É´úÂëstring
+        /// ç”Ÿæˆä»£ç string
         /// </summary>
         private (string field, string initStr, string funStr) CreateCodeString()
         {
@@ -323,19 +323,19 @@ public class #ÀàÃû# : MonoBehaviour
             strBuidlerForBtnLister.Clear();
             strBuidlerForBtnFun.Clear();
 
-            //¼ì²éÓĞÎŞÖØÃûµÄ
+            //æ£€æŸ¥æœ‰æ— é‡åçš„
             Dictionary<string, List<string>> tempattributeNameDic = new Dictionary<string, List<string>>();
 
             for (int i = 0; i < attributeList.Count; i++)
             {
                 AttributeInfo info = attributeList[i];
 
-                //Èç¹ûÓĞÍ¬ÃûµÄ
+                //å¦‚æœæœ‰åŒåçš„
                 if (tempattributeNameDic.ContainsKey(info.attributeName))
                 {
                     int length = tempattributeNameDic[info.attributeName].Count;
                     tempattributeNameDic[info.attributeName].Add($"{info.attributeName}_{length}");
-                    //Ìæ»»Ãû³Æ
+                    //æ›¿æ¢åç§°
                     info.codeStr = info.codeStr.Replace(info.attributeName, $"{info.attributeName}_{length}");
                 }
                 else
@@ -361,20 +361,20 @@ public class #ÀàÃû# : MonoBehaviour
         }
 
         /// <summary>
-        /// ¸øÎïÌåÃû×Ö¼Ó#
+        /// ç»™ç‰©ä½“åå­—åŠ #
         /// </summary>
         public void SetHierarchyNameAdd()
         {
             GameObject gameObject = Selection.activeGameObject;
             if (gameObject == null)
             {
-                Debuger.ToError("Î´Ñ¡ÖĞÎïÌå");
+                Debuger.ToError("é€‰ä¸­ç‰©ä½“ä¸ºnull");
                 return;
             }
 
             RectTransform[] allRect = gameObject.GetComponentsInChildren<RectTransform>();
 
-            //È¥µôËùÓĞ¿ªÍ·#
+            //å»æ‰æ‰€æœ‰å¼€å¤´#
             for (int i = 0; i < allRect.Length; i++)
             {
                 if (allRect[i].name.StartsWith("#"))
@@ -383,7 +383,7 @@ public class #ÀàÃû# : MonoBehaviour
                 }
             }
 
-            //¸ù¾İÒªÉú³ÉµÄ×Ö¶ÎÌí¼ÓÎïÌå#¿ªÍ·
+            //æ ¹æ®è¦ç”Ÿæˆçš„å­—æ®µæ·»åŠ ç‰©ä½“#å¼€å¤´
             for (int i = 0; i < attributeList.Count; i++)
             {
                 AttributeInfo item = attributeList[i];
@@ -393,22 +393,22 @@ public class #ÀàÃû# : MonoBehaviour
                 }
             }
 
-            //TODO ÓĞÈ±µã--¶à¸ö½Å±¾Ê¹ÓÃ×Ô¶¯Éú³ÉÊ±£¬#¿ªÍ·ÒÔ×îºóÒ»´ÎÉú³ÉÎª×¼
+            //TODO æœ‰ç¼ºç‚¹--å¤šä¸ªè„šæœ¬ä½¿ç”¨è‡ªåŠ¨ç”Ÿæˆæ—¶ï¼Œ#å¼€å¤´ä»¥æœ€åä¸€æ¬¡ç”Ÿæˆä¸ºå‡†
         }
 
-        [MenuItem("YangTools/¸¨Öú¹¦ÄÜ/ÒÆ³ıÑ¡ÖĞÎïÌåÏÂËùÓĞµÄ#¿ªÍ·")]
+        [MenuItem("YangTools/è¾…åŠ©åŠŸèƒ½/ç§»é™¤é€‰ä¸­ç‰©ä½“ä¸‹æ‰€æœ‰çš„#å¼€å¤´")]
         public static void RemoveAllMark()
         {
             GameObject gameObject = Selection.activeGameObject;
             if (gameObject == null)
             {
-                Debuger.ToError("Î´Ñ¡ÖĞÎïÌå");
+                Debuger.ToError("æœªé€‰ä¸­ç‰©ä½“");
                 return;
             }
 
             RectTransform[] allRect = gameObject.GetComponentsInChildren<RectTransform>(true);
 
-            //È¥µôËùÓĞ¿ªÍ·#
+            //å»æ‰æ‰€æœ‰å¼€å¤´#
             for (int i = 0; i < allRect.Length; i++)
             {
                 if (allRect[i].name.StartsWith("#"))
@@ -420,28 +420,28 @@ public class #ÀàÃû# : MonoBehaviour
     }
 
     /// <summary>
-    /// ÊôĞÔĞÅÏ¢
+    ///  å±æ€§ä¿¡æ¯
     /// </summary>
     public struct AttributeInfo
     {
         /// <summary>
-        /// ÒıÓÃ
+        /// å¼•ç”¨
         /// </summary>
         public GameObject gameObject;
         /// <summary>
-        /// Â·¾¶
+        /// è·¯å¾„
         /// </summary>
         public string path;
         /// <summary>
-        /// ×é¼şÃû
+        /// ç»„ä»¶å
         /// </summary>
         public string componentName;
         /// <summary>
-        /// ÊôĞÔÃû³Æ
+        /// å±æ€§åç§°
         /// </summary>
         public string attributeName;
         /// <summary>
-        /// ÊôĞÔ´úÂë×Ö·û´®
+        /// å±æ€§ä»£ç å­—ç¬¦ä¸²
         /// </summary>
         public string codeStr;
 

@@ -86,6 +86,7 @@
     <Compile Include="Assets\UserTest\EndlessWorlds\Script\Tools\FollowTarget.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\YangObjectPoolManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\IScrollSnap.cs" />
+    <Compile Include="Assets\YangTools\DialogSystem\Runtime\DialogData.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\MonoSpacing.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\GenericPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\FBBIKArmBending.cs" />
@@ -457,6 +458,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Effects\CylinderText.cs" />
     <Compile Include="Assets\Joystick Pack\Scripts\Joysticks\FloatingJoystick.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverAim.cs" />
+    <Compile Include="Assets\YangTools\DialogSystem\Runtime\DialogContainer.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangCoroutine\YangCoroutineManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FPSAiming.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Layout\ScrollSnapScrollbarHelper.cs" />
@@ -530,8 +532,8 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Scripts\Controls\ColorPicker\ColorImage.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\YangTools\DialogSystem\Runtime\DialogData.cs" />
-    <Compile Include="Assets\YangTools\DialogSystem\Runtime\DialogContainer.cs" />
+    <Compile Include="Assets\UserTest\SoundSystem\SoundSO.cs" />
+    <Compile Include="Assets\UserTest\SoundSystem\MinMaxRangeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\unity-ui-extensions\Shaders\UIAdditive.shader" />

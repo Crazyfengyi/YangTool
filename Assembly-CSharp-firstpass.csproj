@@ -244,9 +244,9 @@
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Core.cs" />
     <Compile Include="Assets\Plugins\AZURE Nature\Scripts\MouseLook.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Reflection.cs" />
-    <Compile Include="Assets\Plugins\SpringBone\Utility\ObjectBuilding\UnityComponentStringListBuilder.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_int.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Polygon.cs" />
+    <Compile Include="Assets\Plugins\SpringBone\Utility\ObjectBuilding\UnityComponentStringListBuilder.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_ushort.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\CrackedObject.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_RectTransform.cs" />

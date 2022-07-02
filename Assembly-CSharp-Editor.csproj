@@ -106,6 +106,7 @@
     <Compile Include="Assets\YangTools\Plugins\unity-ui-extensions\Editor\CanvasGroupActivator.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Shared Scripts\Inspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\LimbIKInspector.cs" />
+    <Compile Include="Assets\YangTools\DialogSystem\Editor\GraphSaveUtility.cs" />
     <Compile Include="Assets\YangTools\DialogSystem\Editor\DialogGraphView.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\GenericBakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\CCDIKInspector.cs" />
@@ -144,7 +145,8 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\BipedIKSolversInspector.cs" />
-    <Compile Include="Assets\YangTools\DialogSystem\Editor\GraphSaveUtility.cs" />
+    <Compile Include="Assets\UserTest\SoundSystem\Editor\AudioEventEditor.cs" />
+    <Compile Include="Assets\UserTest\SoundSystem\Editor\RangedFloatDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />

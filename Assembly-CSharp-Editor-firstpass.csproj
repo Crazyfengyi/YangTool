@@ -56,6 +56,7 @@
     <Analyzer Include="D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Editor\VariableJoystickEditor.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Windows\SaveSpringBoneSetupWindow.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\AngleLimitsPropertyInfo.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3GlobalReferencesEditor.cs" />
@@ -83,7 +84,9 @@
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringPanelColliderInspector.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\AddES3Prefab.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ReferencesWindow.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Editor\DynamicJoystickEditor.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringCapsuleColliderInspector.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Editor\FloatingJoystickEditor.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\HomeWindow.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Utillities\Editor\RangePropertyDrawer.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3SettingsEditor.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\Effects\Trails\Editor\TrailEditor_Base.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\InspectorPropertyInfo.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3Postprocessor.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Editor\JoystickEditor.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Editor\SpringBone\GUI\Inspectors\SpringManagerInspector.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3EditorStyle.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Editor\ES3PrefabEditor.cs" />

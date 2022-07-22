@@ -83,9 +83,11 @@
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3StackType.cs" />
     <Compile Include="Assets\Plugins\SpringBone\Utility\GizmoUtil.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GameObject.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Joysticks\FixedJoystick.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3IO.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\ArrayDictionary.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_Texture2D.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Joysticks\VariableJoystick.cs" />
     <Compile Include="Assets\Plugins\SpringBone\Utility\CSVUtilities.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3Crypto.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Collection Types\ES3HashSetType.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Assets\Plugins\Easy Save 3\PlayMaker\ES3PlayMaker.cs" />
     <Compile Include="Assets\Plugins\SpringBone\Utility\TextRecordParsing.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_byteArray.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Examples\JoystickPlayerExample.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\Component Types\ES3Type_Transform.cs" />
     <Compile Include="Assets\Plugins\SpringBone\Utility\CSVBuilder.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Input\Character\CharacterKeyboardInput.cs" />
@@ -220,6 +223,7 @@
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicMaterial.cs" />
     <Compile Include="Assets\Plugins\Character Movement Fundamentals\Source\Scripts\Showcase\PlayerData.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\SpringManager.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Joysticks\DynamicJoystick.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Settings\ES3Defaults.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Setup\SpringSetupComponentDefiners.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3InspectorInfo.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="Assets\Plugins\Exploder\Exploder\Utils\ExploderSingleton.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\ExploderOption.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Setup\SpringColliderExporting.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Base\Joystick.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Array.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Readers\ES3Reader.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3File.cs" />
@@ -269,6 +274,7 @@
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\Tasks\Postprocess.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_GradientColorKey.cs" />
     <Compile Include="Assets\Plugins\SpringBone\Utility\DirectoryUtil.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Examples\JoystickSetterExample.cs" />
     <Compile Include="Assets\Plugins\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSWeaponTrigger.cs" />
     <Compile Include="Assets\Plugins\Exploder\Exploder\Core\MeshUtils.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_PhysicsMaterial2D.cs" />
@@ -299,6 +305,7 @@
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Unity Types\ES3Type_SubEmittersModule.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\Primitive Types\ES3Type_long.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Types\ES3Type.cs" />
+    <Compile Include="Assets\Plugins\Joystick Pack\Scripts\Joysticks\FloatingJoystick.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\ES3ReferenceMgr.cs" />
     <Compile Include="Assets\Plugins\Easy Save 3\Scripts\Debugging\ES3Debug.cs" />
     <Compile Include="Assets\Plugins\SpringBone\SpringBone\Setup\SpringColliderSetup.cs" />

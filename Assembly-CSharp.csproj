@@ -365,13 +365,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
-    <None Include="Assets\YangTools\Res\CommonArt\Shader\SceneChangeAni.shader" />
+    <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\SceneChangeAni.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\YangTools\Resources\SoundMusic\说明.txt" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Utilities.xml" />
     <None Include="Assets\YangTools\Scripts\记录.txt" />
     <None Include="Assets\UserTest\MyTest\ProjectorAndDecal.shader" />
-    <None Include="Assets\YangTools\Res\CommonArt\Shader\ImageGreyShader.shader" />
+    <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\ImageGreyShader.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\UserTest\ExcelDataExport\Pluginss\EPPlus.XML" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEmitAndNoEditor\Sirenix.Serialization.dll" />
@@ -391,7 +391,7 @@
     <None Include="Assets\YangTools\DialogSystem\Resources\DialogGraphSetting.uss" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Serialization.dll" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.Serialization.Config.xml" />
-    <None Include="Assets\YangTools\Res\CommonArt\Shader\TextOutlineShader.shader" />
+    <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\TextOutlineShader.shader" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\Sirenix.OdinInspector.Attributes.dll" />
     <None Include="Assets\UserTest\AllProjects\DataExport\Plugins\Excel.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
@@ -405,7 +405,7 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Utilities.dll" />
-    <None Include="Assets\YangTools\Res\CommonArt\Shader\BloodShader.shader" />
+    <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\BloodShader.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Readme.txt" />
     <None Include="Assets\UserTest\AllProjects\DataExport\Plugins\ICSharpCode.SharpZipLib.dll" />

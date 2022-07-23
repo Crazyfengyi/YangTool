@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using YangTools.Timer;
 using YangTools.UGUI;
@@ -52,12 +53,6 @@ namespace YangTools
         #endregion
 
         #region 初始化
-        /// <summary>
-        /// 构造函数,为保证顺序必须有
-        /// </summary>
-        static YangToolsManager()
-        {
-        }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {

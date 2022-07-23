@@ -69,3 +69,44 @@ public interface ICustomLife
     /// </summary>
     void IDie();
 }
+/// <summary>
+/// 交互接口
+/// </summary>
+public interface IInteractive
+{
+    /// <summary>
+    /// 距离
+    /// </summary>
+    public float Distance()
+    {
+        return float.MaxValue;
+    }
+    /// <summary>
+    /// 可以交互
+    /// </summary>
+    public bool CanInter()
+    {
+        return true;
+    }
+    /// <summary>
+    /// 进入范围
+    /// </summary>
+    public void EnterRang()
+    {
+
+    }
+    /// <summary>
+    /// 退出范围
+    /// </summary>
+    public void ExitRang()
+    {
+
+    }
+    /// <summary>
+    /// 交互 
+    /// </summary>
+    public void InterAction()
+    {
+
+    }
+}

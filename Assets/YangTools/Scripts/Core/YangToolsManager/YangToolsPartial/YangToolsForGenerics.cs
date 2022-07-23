@@ -95,11 +95,12 @@ namespace YangTools
                 }
             }
         }
-        private void Awake()
+
+        protected virtual void Awake()
         {
             appQuitting = false;
         }
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             appQuitting = true;
         }

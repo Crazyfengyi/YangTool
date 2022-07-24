@@ -57,21 +57,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\SeekerEditor.cs" />
-    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AILerpEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\GraphEditors\GridGeneratorEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AstarUpdateWindow.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\GraphUpdateSceneEditor.cs" />
-    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\Legacy\LegacyAIPathEditor2.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AnimationLinkEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\GraphEditors\NavMeshGeneratorEditor.cs" />
-    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\CustomGraphEditorAttribute.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AIBaseEditor.cs" />
+    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\ProceduralGridMoverEditor.cs" />
+    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\Legacy\LegacyEditorHelper2.cs" />
+    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AILerpEditor.cs" />
+    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\Legacy\LegacyAIPathEditor2.cs" />
+    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\CustomGraphEditorAttribute.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\GraphEditors\GraphEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\ModifierEditors\SmoothModifierEditor.cs" />
-    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\ProceduralGridMoverEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\GraphEditors\PointGeneratorEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\ModifierEditors\RaycastModifierEditor.cs" />
-    <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\Legacy\LegacyEditorHelper2.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AstarPathEditor.cs" />
     <Compile Include="Assets\Plugins\AstarPathfindingProject\Editor\AstarUpdateChecker.cs" />
   </ItemGroup>

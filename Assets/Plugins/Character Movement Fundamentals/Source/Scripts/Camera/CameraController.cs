@@ -6,40 +6,53 @@ namespace CMF
 {
 	//This script rotates a gameobject based on user input.
 	//Rotation around the x-axis (vertical) can be clamped/limited by setting 'upperVerticalLimit' and 'lowerVerticalLimit'.
+	//这个脚本根据用户输入旋转游戏物体。
+	//可以通过设置'upperVerticalLimit'和'lowerVerticalLimit'来限制x轴(垂直)的旋转。
 	public class CameraController : MonoBehaviour {
 
 		//Current rotation values (in degrees);
+		//当前旋转值(以度为单位);
 		float currentXAngle = 0f;
 		float currentYAngle = 0f;
 
 		//Upper and lower limits (in degrees) for vertical rotation (along the local x-axis of the gameobject);
+		//垂直旋转的上限和下限(游戏物体的局部x轴);
 		[Range(0f, 90f)]
 		public float upperVerticalLimit = 60f;
 		[Range(0f, 90f)]
 		public float lowerVerticalLimit = 60f;
 
 		//Variables to store old rotation values for interpolation purposes;
+		//为插值目的存储旧旋转值的变量
 		float oldHorizontalInput = 0f;
 		float oldVerticalInput = 0f;
 
 		//Camera turning speed; 
+		//相机旋转速度 
 		public float cameraSpeed = 250f;
 
 		//Whether camera rotation values will be smoothed;
+		//是否对相机旋转值进行平滑处理;
 		public bool smoothCameraRotation = false;
 
 		//This value controls how smoothly the old camera rotation angles will be interpolated toward the new camera rotation angles;
 		//Setting this value to '50f' (or above) will result in no smoothing at all;
 		//Setting this value to '1f' (or below) will result in very noticable smoothing;
 		//For most situations, a value of '25f' is recommended;
+		//这个值控制如何平稳地将旧的相机旋转角度插值到新的相机旋转角度;
+		//设置此值为'50f'(或以上)将导致根本没有平滑;
+		//设置此值为'1f'(或以下)将会产生非常明显的平滑效果;
+		//在大多数情况下，建议值为'25f';
 		[Range(1f, 50f)]
 		public float cameraSmoothingFactor = 25f;
 
 		//Variables for storing current facing direction and upwards direction;
+		//面向和向上存储电流的变量;
 		Vector3 facingDirection;
 		Vector3 upwardsDirection;
 
 		//References to transform and camera components;
+		//对transform和camera组件的引用
 		protected Transform tr;
 		protected Camera cam;
 		protected CameraInput cameraInput;

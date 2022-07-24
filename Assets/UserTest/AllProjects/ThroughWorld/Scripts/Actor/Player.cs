@@ -11,11 +11,9 @@ using UnityEngine.InputSystem;
 
 public class Player : RoleBase
 {
-    private Rigidbody rb;
-
+    public Vector3 inputVector3;
     public override void IInit()
     {
-        rb = GetComponentInChildren<Rigidbody>(true);
     }
     public override void IDie()
     {
@@ -39,7 +37,19 @@ public class Player : RoleBase
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 v2 = context.ReadValue<Vector2>();
-        v2 = v2 * 10;
-        rb.velocity = new Vector3(v2.x, 0, v2.y);
+        //前方
+        var forward = CameraManager.Instance.mainCamera.transform.forward;
+        //在xz平面的投影
+        forward = Vector3.ProjectOnPlane(forward, Vector3.up);
+        forward = forward.normalized;
+        //右方
+        var right = CameraManager.Instance.mainCamera.transform.right;
+        //在xz平面的投影
+        right = Vector3.ProjectOnPlane(right, Vector3.up);
+        right = right.normalized;
+        //方向
+        Vector3 direction = forward + right;
+
+        inputVector3 = v2;
     }
 }

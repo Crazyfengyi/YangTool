@@ -7,6 +7,9 @@ namespace CMF
 	//Advanced walker controller script;
 	//This controller is used as a basis for other controller types ('SidescrollerController');
 	//Custom movement input can be implemented by creating a new script that inherits 'AdvancedWalkerController' and overriding the 'CalculateMovementDirection' function;
+	//高级walker控制器脚本;
+	//该控制器用作其他控制器类型('SidescrollerController')的基础;
+	//自定义移动输入可以通过创建一个新脚本来实现，该脚本继承'AdvancedWalkerController'并覆盖'CalculateMovementDirection'函数;
 	public class AdvancedWalkerController : Controller {
 
 		//References to attached components;

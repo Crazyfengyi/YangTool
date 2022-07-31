@@ -23,7 +23,6 @@ public class RoleBase : GameActor, IAtker, IBeHit
     {
         throw new System.NotImplementedException();
     }
-
     public override void IUpdate()
     {
         throw new System.NotImplementedException();
@@ -32,7 +31,6 @@ public class RoleBase : GameActor, IAtker, IBeHit
     {
         throw new System.NotImplementedException();
     }
-
     public override void IFixedUpdate()
     {
         throw new System.NotImplementedException();
@@ -45,36 +43,29 @@ public class RoleBase : GameActor, IAtker, IBeHit
     {
         
     }
-
     public virtual void BeHit(ref DamageInfo damageInfo)
     {
         
     }
-
     public virtual DamageInfo GetDamageInfo()
     {
         return null;
     }
-
     public virtual DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
         return null;
     }
-
     public virtual bool IsCanAtk()
     {
         return false;
     }
-
     public virtual bool IsCanBeHit()
     {
         return false;
     }
-
     public virtual void ShowAtkEffect(EffectInfo atkEffectInfo)
     {
     }
-
     public virtual void ShowBeHitEffect(EffectInfo hitEffectInfo)
     {
     }

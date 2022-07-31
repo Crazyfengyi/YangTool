@@ -23,13 +23,17 @@ namespace YangTools
     /// <summary>
     /// 场景加载器
     /// </summary>
-    public class SceneLoader : MonoBehaviour
+    public class SceneLoader : MonoSingleton<SceneLoader>
     {
         #region 变量
         /// <summary>
         /// 场景名称
         /// </summary>
         public string sceneName;
+        /// <summary>
+        /// 场景加载类型
+        /// </summary>
+        public LoadSceneMode sceneLoadType;
         /// <summary>
         /// 进度接收者
         /// </summary>
@@ -86,33 +90,6 @@ namespace YangTools
                 progressReceiver?.onProgress(progress);
             }
         }
-
-        #endregion
-
-        #region 方法
-
-        #region 对外方法
-        /// <summary>
-        /// 加载当前配置的场景
-        /// </summary>
-        public void Load()
-        {
-            loadScene();
-        }
-        /// <summary>
-        /// 是否正在加载
-        /// </summary>
-        public bool isLoading
-        {
-            get { return async != null; }
-        }
-        /// <summary>
-        /// 加载进度
-        /// </summary>
-        public float progress
-        {
-            get { return _progress; }
-        }
         #endregion
 
         #region 对内方法
@@ -133,7 +110,7 @@ namespace YangTools
         /// </summary>
         private IEnumerator Loading()
         {
-            async = SceneManager.LoadSceneAsync(sceneName);
+            async = SceneManager.LoadSceneAsync(sceneName, sceneLoadType);
             // 设置加载完成后不能自动跳转场景
             async.allowSceneActivation = isAutoSkip;
             yield return async;
@@ -151,6 +128,30 @@ namespace YangTools
 
         #endregion
 
+        #region 对外方法
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        public void Load(string _sceneName, LoadSceneMode _sceneLoadType = LoadSceneMode.Single)
+        {
+            sceneName = _sceneName;
+            sceneLoadType = _sceneLoadType;
+            loadScene();
+        }
+        /// <summary>
+        /// 是否正在加载
+        /// </summary>
+        public bool isLoading
+        {
+            get { return async != null; }
+        }
+        /// <summary>
+        /// 加载进度
+        /// </summary>
+        public float progress
+        {
+            get { return _progress; }
+        }
         #endregion
     }
 }

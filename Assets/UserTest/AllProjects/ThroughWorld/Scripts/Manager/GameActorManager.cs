@@ -16,19 +16,31 @@ public class GameActorManager : MonoSingleton<GameActorManager>
 {
     //生命周期更新列表
     private static List<ICustomLife> customLives = new List<ICustomLife>();
+    //预制体
+    public PlayerController playerPrefab;
+    
+    private PlayerController mainPlayer;
+    public PlayerController MainPlayer
+    {
+        get { return mainPlayer; }
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void Init()
     {
         _ = Instance;
     }
-
     protected override void Awake()
     {
         base.Awake();
-        ICustomLife player = FindObjectOfType<Player>(true);
-        customLives.Add(player);
-        player.IInit();
+        ICustomLife player = Instantiate(playerPrefab);
+        if (player != null)
+        {
+            customLives.Add(player);
+            player.IInit();
+            mainPlayer = player as PlayerController;
+            DontDestroyOnLoad(mainPlayer);
+        }
     }
     public void Update()
     {

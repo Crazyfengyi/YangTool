@@ -1,5 +1,5 @@
 {
-    "name": "Player",
+    "name": "GameInputSet",
     "maps": [
         {
             "name": "Player",
@@ -11,8 +11,17 @@
                     "id": "43253d3a-9349-43e0-8ade-69afd58a7eaf",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Interactive",
+                    "type": "Button",
+                    "id": "73301e5f-7a98-480f-826d-af85fc3d22a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -70,6 +79,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "0d5a4fa3-14cb-4a8b-a2e1-76ce6b02f0d7",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interactive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

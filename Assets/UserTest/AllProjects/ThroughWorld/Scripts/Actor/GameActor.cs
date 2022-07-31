@@ -10,16 +10,39 @@ using System.Collections;
 
 public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
 {
+    #region 组件
+    private Animator animator;
+    public Animator Animator
+    {
+        get
+        {
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>(true);
+            }
+            if (animator) return animator;
+            return null;
+        }
+    }
+    #endregion
+
+    public void OnDestroy()
+    {
+        IDie();
+    }
+    #region 生命周期
     public abstract void IInit();
     public abstract void IUpdate();
     public abstract void ILateUpdate();
     public abstract void IFixedUpdate();
     public abstract void IDie();
+    #endregion
 
+    #region 交互
     /// <summary>
     /// 距离
     /// </summary>
-    public virtual float Distance()
+    public virtual float Distance(Vector3 point)
     {
         return float.MaxValue;
     }
@@ -45,10 +68,11 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
 
     }
     /// <summary>
-    /// 交互 
+    /// 交互
     /// </summary>
-    public virtual void InterAction()
+    public virtual void InterAction(RoleBase role)
     {
 
     }
+    #endregion
 }

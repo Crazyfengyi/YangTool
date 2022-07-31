@@ -9,11 +9,18 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
-public class Player : RoleBase
+public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
+    private GameInputSet GameInput;
+
     public override void IInit()
     {
+        GameInput = new GameInputSet();
+        GameInput.Player.Enable();
+        GameInput.Player.Move.performed += OnMove;
+        GameInput.Player.Move.canceled += OnMoveEnd;
+        GameInput.Player.Interactive.performed += OnInteractive;
     }
     public override void IDie()
     {
@@ -26,7 +33,7 @@ public class Player : RoleBase
     }
     public override void ILateUpdate()
     {
-
+        if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
     }
 
     public override void IFixedUpdate()
@@ -37,19 +44,14 @@ public class Player : RoleBase
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 v2 = context.ReadValue<Vector2>();
-        //前方
-        var forward = CameraManager.Instance.mainCamera.transform.forward;
-        //在xz平面的投影
-        forward = Vector3.ProjectOnPlane(forward, Vector3.up);
-        forward = forward.normalized;
-        //右方
-        var right = CameraManager.Instance.mainCamera.transform.right;
-        //在xz平面的投影
-        right = Vector3.ProjectOnPlane(right, Vector3.up);
-        right = right.normalized;
-        //方向
-        Vector3 direction = forward + right;
-
         inputVector3 = v2;
+    }
+    public void OnMoveEnd(InputAction.CallbackContext context)
+    {
+        inputVector3 = Vector3.zero;
+    }
+    public void OnInteractive(InputAction.CallbackContext context)
+    {
+        InteractorSystem.Instance.OnInter();
     }
 }

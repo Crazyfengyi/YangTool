@@ -95,7 +95,6 @@ namespace YangTools
                 }
             }
         }
-
         protected virtual void Awake()
         {
             appQuitting = false;

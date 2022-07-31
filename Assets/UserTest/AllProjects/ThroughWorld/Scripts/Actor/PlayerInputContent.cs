@@ -11,10 +11,10 @@ using CMF;
 
 public class PlayerInputContent : CharacterInput
 {
-    private Player player;
+    private PlayerController player;
     private void Awake()
     {
-        player = GetComponent<Player>();
+        player = GetComponent<PlayerController>();
     }
     public override float GetHorizontalMovementInput()
     {

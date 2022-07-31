@@ -23,3 +23,17 @@ public class EffectInfo
 {
 
 }
+/// <summary>
+/// 交互类型
+/// </summary>
+public enum InterActiveType
+{
+    /// <summary>
+    /// 默认
+    /// </summary>
+    None,
+    /// <summary>
+    /// 对话
+    /// </summary>
+    Dialogue
+}

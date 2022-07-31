@@ -40,7 +40,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     //插值存储的旧旋转值
     float oldHorizontalInput = 0f;
     float oldVerticalInput = 0f;
-    ////面向和向上方向
+    //面向和向上方向
     Vector3 facingDirection;
     Vector3 upwardsDirection;
     protected override void Awake()

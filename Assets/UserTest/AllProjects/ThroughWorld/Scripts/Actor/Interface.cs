@@ -70,16 +70,38 @@ public interface ICustomLife
     void IDie();
 }
 /// <summary>
-/// 交互接口
+/// 交互者
+/// </summary>
+public interface IInteractor
+{
+
+
+}
+/// <summary>
+/// 交互物接口
 /// </summary>
 public interface IInteractive
 {
     /// <summary>
     /// 距离
     /// </summary>
-    public float Distance()
+    public float Distance(Vector3 point)
     {
         return float.MaxValue;
+    }
+    /// <summary>
+    /// 覆盖范围
+    /// </summary>
+    public float GetOverideMaxDistance()
+    {
+        return float.MaxValue;
+    }
+    /// <summary>
+    /// 交互类型
+    /// </summary>
+    public InterActiveType GetInterActiveType()
+    {
+        return InterActiveType.None;
     }
     /// <summary>
     /// 可以交互
@@ -91,21 +113,21 @@ public interface IInteractive
     /// <summary>
     /// 进入范围
     /// </summary>
-    public void EnterRang()
+    public void EnterRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public void ExitRang()
+    public void ExitRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 交互 
     /// </summary>
-    public void InterAction()
+    public void InterAction(RoleBase role)
     {
 
     }

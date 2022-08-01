@@ -44,6 +44,13 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
     /// </summary>
     public virtual float Distance(Vector3 point)
     {
+        return Vector3.Distance(transform.position, point);
+    }
+    /// <summary>
+    /// 覆盖范围
+    /// </summary>
+    public virtual float GetOverideMaxDistance()
+    {
         return float.MaxValue;
     }
     /// <summary>
@@ -56,14 +63,14 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
     /// <summary>
     /// 进入范围
     /// </summary>
-    public virtual void EnterRang()
+    public virtual void EnterRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public virtual void ExitRang()
+    public virtual void ExitRang(RoleBase role)
     {
 
     }

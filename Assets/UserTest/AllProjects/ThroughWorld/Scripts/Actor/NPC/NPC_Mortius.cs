@@ -38,7 +38,7 @@ public class NPC_Mortius : RoleBase
     /// </summary>
     public override float Distance(Vector3 point)
     {
-        return 6f;
+        return Vector3.Distance(transform.position, point);
     }
     /// <summary>
     /// 可以交互
@@ -50,16 +50,26 @@ public class NPC_Mortius : RoleBase
     /// <summary>
     /// 进入范围
     /// </summary>
-    public override void EnterRang()
+    public override void EnterRang(RoleBase role)
     {
         Debug.LogError("进入范围");
+        GameObject gameObject = transform.Find("Sphere").gameObject;
+        if (gameObject)
+        {
+            gameObject.SetActive(true);
+        }
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public override void ExitRang()
+    public override void ExitRang(RoleBase role)
     {
         Debug.LogError("退出范围");
+        GameObject gameObject = transform.Find("Sphere").gameObject;
+        if (gameObject)
+        {
+            gameObject.SetActive(false);
+        }
     }
     /// <summary>
     /// 交互 

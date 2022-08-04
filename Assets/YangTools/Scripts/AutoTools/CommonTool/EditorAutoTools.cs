@@ -9,6 +9,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Cysharp.Threading.Tasks;
+using Progress = Cysharp.Threading.Tasks.Progress;
+using System.Threading;
 
 namespace YangTools
 {
@@ -29,8 +32,74 @@ namespace YangTools
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
         public static void TestScrpit()
         {
-          
+            TestUniTask();
         }
+
+        public static async void TestUniTask()
+        {
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //ResourceRequest loadOperation = Resources.LoadAsync<TextAsset>("test");
+            //UnityEngine.Object text = await loadOperation;
+            //Debug.LogError($"测试:{((TextAsset)text).text}");
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //await Resources.LoadAsync<TextAsset>("test").ToUniTask(
+            //    Progress.CreateOnlyValueChanged<float>((p) =>
+            //    {
+            //        Debug.LogError($"测试:{p}");
+            //    }));
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //await UniTask.Delay(100);
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //var one = UniTask.WaitUntil(() => { return true; });
+            //var two = UniTask.WaitUntil(() => { return true; });
+            //await UniTask.WhenAny(one, two);
+            //await UniTask.WhenAll(one, two);
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            Debug.LogError($"测试:{DateTime.Now}");
+            TestUni1();
+            token.Cancel();//只能使用一次
+            token.Dispose();
+            token = CancellationTokenSource.CreateLinkedTokenSource();
+
+            Debug.LogError($"测试:{DateTime.Now}");
+        }
+
+        static CancellationTokenSource token = CancellationTokenSource.CreateLinkedTokenSource();
+        public static async void TestUni1()
+        {
+            try
+            {
+                await TestUni2(token.Token);
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.LogError("取消task");
+            }
+
+            //bool cancelled = await UniTask.Delay(1000).SuppressCancellationThrow();//忽略取消task的异常抛出
+            //if (cancelled)
+            //{
+            //    Debug.LogError("取消task");
+            //}
+        }
+
+        public static async UniTask TestUni2(CancellationToken token)
+        {
+            await UniTask.Delay(1000, cancellationToken: token);
+            Debug.LogError($"测试:TestUni2");
+        }
+
         #endregion
 
         #region 复制文件

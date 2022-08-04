@@ -412,6 +412,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Assemblies\NoEditor\Sirenix.Utilities.dll" />
     <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\BloodShader.shader" />
+    <None Include="Assets\UserTest\Resources\test.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Readme.txt" />
     <None Include="Assets\UserTest\AllProjects\DataExport\Plugins\ICSharpCode.SharpZipLib.dll" />
@@ -1251,6 +1252,21 @@
     </Reference>
     <Reference Include="Unity.Recorder">
       <HintPath>Library\ScriptAssemblies\Unity.Recorder.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\UniTask.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.Addressables">
+      <HintPath>Library\ScriptAssemblies\UniTask.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.DOTween">
+      <HintPath>Library\ScriptAssemblies\UniTask.DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.Linq">
+      <HintPath>Library\ScriptAssemblies\UniTask.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask">
+      <HintPath>Library\ScriptAssemblies\UniTask.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

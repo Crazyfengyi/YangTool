@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using Progress = Cysharp.Threading.Tasks.Progress;
 using System.Threading;
+using UnityEngine.Networking;
 
 namespace YangTools
 {
@@ -66,13 +67,31 @@ namespace YangTools
             //await UniTask.WhenAll(one, two);
             //Debug.LogError($"测试:{DateTime.Now}");
 
-            Debug.LogError($"测试:{DateTime.Now}");
-            TestUni1();
-            token.Cancel();//只能使用一次
-            token.Dispose();
-            token = CancellationTokenSource.CreateLinkedTokenSource();
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //TestUni1();
+            //token.Cancel();//只能使用一次
+            //token.Dispose();
+            //token = CancellationTokenSource.CreateLinkedTokenSource();
+            //Debug.LogError($"测试:{DateTime.Now}");
 
-            Debug.LogError($"测试:{DateTime.Now}");
+            ////超时
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //TestUni3("url", 2).Forget();//异步调用
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //手动调用结束
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //UniTaskCompletionSource source = new UniTaskCompletionSource();
+            //TestUni4(() =>
+            //{
+            //    Debug.LogError("回调测试");
+            //}, source).Forget();
+            //await source.Task;
+            //Debug.LogError($"测试:{DateTime.Now}");
+
+            //Debug.LogError($"测试:{DateTime.Now}");
+            //TestUni5().Forget();
+            //Debug.LogError($"测试:{DateTime.Now}");
         }
 
         static CancellationTokenSource token = CancellationTokenSource.CreateLinkedTokenSource();
@@ -93,13 +112,49 @@ namespace YangTools
             //    Debug.LogError("取消task");
             //}
         }
-
         public static async UniTask TestUni2(CancellationToken token)
         {
             await UniTask.Delay(1000, cancellationToken: token);
             Debug.LogError($"测试:TestUni2");
         }
+        public static async UniTask<string> TestUni3(string url, float timeOut)
+        {
+            var cts = new CancellationTokenSource();
+            cts.CancelAfterSlim(TimeSpan.FromSeconds(timeOut));//超时设置
 
+            var (cancelOrFailed, result) = await UnityWebRequest.Get(url).SendWebRequest().WithCancellation(cts.Token).SuppressCancellationThrow();
+            if (!cancelOrFailed)
+            {
+                return result.downloadHandler.text.Substring(0, 10);
+            }
+            return "取消或超时";
+        }
+        public static async UniTask TestUni4(Action callBack, UniTaskCompletionSource source)
+        {
+            if (true)
+            {
+                callBack?.Invoke();
+                source.TrySetResult();
+                //失败
+                //source.TrySetException(new SystemException());
+                //取消
+                //source.TrySetCanceled();
+            }
+        }
+        public static async UniTask TestUni5()
+        {
+            //线程切换
+            //int result = 0;
+            //await UniTask.RunOnThreadPool(() => { result = 1; });
+            //await UniTask.SwitchToMainThread();
+            //Debug.LogError($"测试:{result}");
+
+            //string fileNeme = "url";
+            //await UniTask.SwitchToThreadPool();
+            //string fileContent = await File.ReadAllTextAsync(fileNeme);
+            //await UniTask.Yield(PlayerLoopTiming.Update);//只要调用yield就会回到主线程
+            //Debug.LogError($"测试:{fileContent}");
+        }
         #endregion
 
         #region 复制文件

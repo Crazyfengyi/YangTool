@@ -5,19 +5,17 @@
  *UnityVersion：2020.3.1f1c1 
  *创建时间:         2021-04-27 
 */
-using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System;
 
+/// <summary>
+/// buff基类
+/// </summary>
 public abstract class BuffBase : ScriptableObject
 {
-    #region 属性
-    /// <summary>
-    /// buff类型
-    /// </summary>
-    public BuffType buffTypeId;
     /// <summary>
     /// 技能描述
     /// </summary>
@@ -25,9 +23,43 @@ public abstract class BuffBase : ScriptableObject
     [MultiLineProperty]
     public string skillDescribe;
     /// <summary>
+    /// buffID
+    /// </summary>
+    public int id;
+    /// <summary>
     /// 图标
     /// </summary>
     public Texture2D icon;
+    /// <summary>
+    /// BUFF类型
+    /// </summary>
+    public BuffType type;
+    /// <summary>
+    /// 分组设置
+    /// </summary>
+    public BuffGroupSetting groupSetting;
+    /// <summary>
+    /// buff创建者
+    /// </summary>
+    public RoleBase creator;
+
+    /// <summary>
+    /// 生效事件
+    /// </summary>
+    public event ActiveInvokeDelegate activeEvent;
+    /// <summary>
+    /// 失效事件
+    /// </summary>
+    public event DeActiveInvokeDelegate deActiveEvent;
+
+    /// <summary>
+    /// 是否可以生效回调
+    /// </summary>
+    public Func<bool> IsCanActive;
+    /// <summary>
+    /// 结束检查
+    /// </summary>
+    public BuffEndChecker buffEndChecker;
 
     #region 运行时用
     /// <summary>
@@ -98,23 +130,72 @@ public abstract class BuffBase : ScriptableObject
     #endregion
 
     /// <summary>
-    /// 触发点和事件
+    /// 所有事件
     /// </summary>
-    public Dictionary<BuffLifeTime, List<BuffAction>> eventDic = new Dictionary<BuffLifeTime, List<BuffAction>>();
-    #endregion
-
+    public List<BuffEventListenerBase> allListeners = new List<BuffEventListenerBase>();
+    public BuffBase(RoleBase _creator, int configId)
+    {
+        creator = _creator;
+        BuffConfig data = GameResourceManager.Instance.GetBuffConfig();
+        Init();
+    }
     /// <summary>
     /// 初始化
     /// </summary>
-    public abstract void Init(object data);
+    public virtual void Init()
+    {
+
+    }
+
+    /// <summary>
+    /// buff生效事件
+    /// </summary>
+    public virtual void ActiveInvoke(RoleBase trigger, RoleBase owner)
+    {
+        //if (!isEffective || isCanAgainEffective)
+        //{
+        //    buffEndCheck.OnEffective();
+
+        //    ChangeBuffCanUseTimesEffect();
+        //    EffectiveEventHandler?.Invoke(trigger, owner, buffLayer);
+        //    isEffective = true;
+        //}
+    }
+    /// <summary>
+    /// buff失效事件
+    /// </summary>
+    public virtual void DeActiveInvoke(RoleBase trigger, RoleBase owner)
+    {
+        //if (isEffective)
+        //{
+        //    if (buffConfig.endIsRemove)
+        //        LoseEffectiveEventHandler?.Invoke();
+        //    isEffective = false;
+        //}
+    }
 
     #region 生命周期
+    /// <summary>
+    /// 更新
+    /// </summary>
+    public virtual void Update()
+    {
+
+    }
+    /// <summary>
+    /// 是否结束
+    /// </summary>
+    public virtual bool IsEnd()
+    {
+        return buffEndChecker.IsEnd();
+    }
+
     /// <summary>
     /// buff添加到玩家buff列表前
     /// </summary>
     /// <param name="isHaveSameBuff">玩家是否有同类型buff</param>
     /// <returns>是否添加buff</returns>
-    public virtual bool OnBuffAwake(BuffManager buffManager, bool isHaveSameBuff)
+    public virtual bool OnBuffAwake(BuffControl buffControl, bool isHaveSameBuff)
     {
         return false;
     }
@@ -131,7 +212,7 @@ public abstract class BuffBase : ScriptableObject
     /// 存在相同类型
     /// </summary>
     /// <returns>是否继续添加(手动处理返回false)</returns>
-    public virtual bool OnBuffRefresh(BuffManager manager, BuffBase buff)
+    public virtual bool OnBuffRefresh(BuffControl buffControl, BuffBase buff)
     {
 
         return false;

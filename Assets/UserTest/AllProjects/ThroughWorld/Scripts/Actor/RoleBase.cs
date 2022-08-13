@@ -10,42 +10,42 @@ using System.Collections;
 
 public class RoleBase : GameActor, IAtker, IBeHit
 {
-    #region 变量
-
-    #endregion
+    protected BuffControl buffControl;
 
     #region 生命周期接口实现
     public override void IInit()
     {
-        throw new System.NotImplementedException();
+        
     }
     public override void IDie()
     {
-        throw new System.NotImplementedException();
+        
     }
     public override void IUpdate()
     {
-        throw new System.NotImplementedException();
+        if (buffControl != null)
+        {
+            buffControl.IUpdate();
+        }
     }
     public override void ILateUpdate()
     {
-        throw new System.NotImplementedException();
+        
     }
     public override void IFixedUpdate()
     {
-        throw new System.NotImplementedException();
+       
     }
-   
     #endregion
 
     #region 攻击和被击接口实现
     public virtual void Atk(int index)
     {
-        
+
     }
     public virtual void BeHit(ref DamageInfo damageInfo)
     {
-        
+
     }
     public virtual DamageInfo GetDamageInfo()
     {

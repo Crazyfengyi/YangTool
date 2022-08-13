@@ -25,6 +25,10 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
         }
     }
     #endregion
+    /// <summary>
+    /// 阵营
+    /// </summary>
+    public ActorCampType campType;
 
     public void OnDestroy()
     {

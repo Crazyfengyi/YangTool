@@ -16,31 +16,33 @@ public class PlayerController : RoleBase
 
     public override void IInit()
     {
+        #region 输入
         GameInput = new GameInputSet();
         GameInput.Player.Enable();
         GameInput.Player.Move.performed += OnMove;
         GameInput.Player.Move.canceled += OnMoveEnd;
         GameInput.Player.Interactive.performed += OnInteractive;
+        #endregion
+
+        buffControl = new BuffControl();
+        buffControl.Init(this);
     }
     public override void IDie()
     {
 
     }
-
     public override void IUpdate()
     {
-
+        base.IUpdate();
     }
     public override void ILateUpdate()
     {
         if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
     }
-
     public override void IFixedUpdate()
     {
 
     }
-
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 v2 = context.ReadValue<Vector2>();

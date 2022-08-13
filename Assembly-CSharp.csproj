@@ -105,6 +105,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\TouchWalls.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangTask\TaskBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFullBody.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameResourceManager.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Parabola\Missile.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIMonoInstance.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\DemoGUIMessage.cs" />
@@ -144,7 +145,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKRootController.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtend.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRFootstep.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\AttributeBuff.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffBase\PropertyChange.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionSystem.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Rotation Limits\RotationLimit.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpider.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Assets\UserTest\MyTest\ProjectorAndDecal.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\NPC\NPC_Mortius.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\BaseScrollList.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffControl.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\Poser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterAnimationThirdPersonIK.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\YangDataCode.cs" />
@@ -206,6 +208,7 @@
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenTextMeshPro.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\HitReactionVRIKTrigger.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffConfig\BuffConfig.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterController3rdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\LayerMaskExtensions.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Adaptive\TextAdaptive.cs" />
@@ -214,7 +217,7 @@
     <Compile Include="Assets\UserTest\AllProjects\EndlessWorlds\Script\Tools\FollowTarget.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangObjectPool\YangObjectPoolManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRLeg.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffManager\BuffDataStruct.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffDataStruct.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\EditorIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LimbIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintRotation.cs" />
@@ -264,7 +267,7 @@
     <Compile Include="Assets\YangTools\Scripts\AutoTools\SceneTool\AllScenes.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\YangUIManager.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\BuffBase.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffBase\BuffBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintRotationOffset.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\KissingRig.cs" />
@@ -286,6 +289,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\DoxygenManualFinalIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Grounder\Scripts\GrounderDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\ScrollListItem.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffConfig\SaveDataWithSO.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\DrawerExtend\ForPropertyDrawer.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\PendulumExample.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForTest.cs" />
@@ -321,11 +325,9 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRLocomotion.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Misc\ApplicationQuit.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\AimIK.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffManager\BuffManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Aim IK\Scripts\SimpleAimingSystem.cs" />
     <Compile Include="Assets\YangTools\Scripts\AutoTools\MinTool\CombineMesh.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\Grounder.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\SkillManager\SkillManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionObject.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangTimer\YangTimerManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\InteractionDemo.cs" />
@@ -356,7 +358,6 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Navigator.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\RoleBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpiderLeg.cs" />
-    <Compile Include="Assets\YangTools\Scripts\SkillSystem\BuffBase\CustomBuff.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\TurbochargedGridScrollList.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverLimb.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTween\Modules\DOTweenModuleAudio.cs" />
@@ -1148,6 +1149,9 @@
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.ProBuilder">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
@@ -1187,8 +1191,17 @@
     <Reference Include="Unity.Recorder.Base">
       <HintPath>Library\ScriptAssemblies\Unity.Recorder.Base.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.RemoteConfig">
+      <HintPath>Library\ScriptAssemblies\Unity.RemoteConfig.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AddOns.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AddOns.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RemoteConfig.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RemoteConfig.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
@@ -1211,17 +1224,20 @@
     <Reference Include="UniTask.DOTween">
       <HintPath>Library\ScriptAssemblies\UniTask.DOTween.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.ProBuilder.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="UniTask.Linq">
       <HintPath>Library\ScriptAssemblies\UniTask.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.PlasticSCM.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Core">
       <HintPath>Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
@@ -1241,6 +1257,9 @@
     <Reference Include="Unity.Postprocessing.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Shared.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
     </Reference>
@@ -1249,6 +1268,9 @@
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RemoteConfig.Editor.Core">
+      <HintPath>Library\ScriptAssemblies\Unity.RemoteConfig.Editor.Core.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Common.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Common.Runtime.dll</HintPath>

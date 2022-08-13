@@ -9,11 +9,21 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
+/// 阵营
+/// </summary>
+public enum ActorCampType
+{
+    None,
+    Monster,
+    Player,
+    Npc,
+    Building
+}
+/// <summary>
 /// 伤害信息
 /// </summary>
 public class DamageInfo
 {
-
 
 }
 /// <summary>

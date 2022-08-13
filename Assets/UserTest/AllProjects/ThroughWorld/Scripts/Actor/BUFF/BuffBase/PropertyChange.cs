@@ -8,21 +8,19 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 属性更改
+/// </summary>
 [CreateAssetMenu(fileName = "AttributeBuff", menuName = "BuffSystem/AttributeBuff")]
-public class AttributeBuff : BuffBase
+public class PropertyChange : BuffBase
 {
-    #region 变量
     public int value;
-    #endregion
-
-    #region 生命周期
-
-    #endregion
-
-    #region 方法
-    #endregion
-    public override void Init(object _value)
+    public PropertyChange(RoleBase _creator, int configId) : base(_creator, configId)
     {
-        value = (int)_value;
+    }
+
+    public override void Init()
+    {
+
     }
 }

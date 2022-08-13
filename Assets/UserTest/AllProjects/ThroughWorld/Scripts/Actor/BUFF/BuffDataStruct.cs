@@ -10,30 +10,18 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// buff类型ID
-/// </summary>
-public enum BuffType
-{
-    None,
-    修改基础攻击,
-    修改基础血量
-}
-
-/// <summary>
 /// buff状态
 /// </summary>
 public enum BuffState
 {
     None,
-    不作为,
     启用,
     禁用
 }
-
 /// <summary>
 /// buff叠加类型
 /// </summary>
-public enum BufferOverlayType
+public enum BuffAppendType
 {
     None,
     /// <summary>
@@ -53,32 +41,14 @@ public enum BufferOverlayType
     /// </summary>
     Coexist,
     /// <summary>
+    /// 舍弃 
+    /// </summary>
+    Discard,
+    /// <summary>
     /// 累加--多个提升等级
     /// </summary>
     Add
 }
-
-/// <summary>
-/// BUFF生命周期触发点
-/// </summary>
-public enum BuffLifeTime
-{
-    None,
-    buff添加到玩家buff列表前,
-    buff添加到玩家buff列表后,
-    存在相同类型,
-    buff从玩家buff列表移除前,
-    buff从玩家buff列表移除后,
-    技能释放,
-    攻击前,
-    攻击后,
-    受伤前,
-    受伤后,
-    死亡前,
-    死亡后,
-    击杀目标后,
-}
-
 /// <summary>
 /// 角色状态
 /// </summary>
@@ -105,7 +75,6 @@ public enum RoleState
     飞行状态 = 1 << 17,
     禁用物品 = 1 << 18,
 }
-
 /// <summary>
 /// 条件左值枚举
 /// </summary>
@@ -114,7 +83,6 @@ public enum ConditionFunType
     None,
     当前血量
 }
-
 /// <summary>
 /// 运算符号
 /// </summary>
@@ -125,7 +93,6 @@ public enum OperatorSymbol
     大于,
     等于
 }
-
 /// <summary>
 /// 条件信息
 /// </summary>
@@ -144,33 +111,29 @@ public class Condition
         return false;
     }
 }
-
 /// <summary>
-/// buff的事件
+/// 生效事件触发委托
 /// </summary>
-public class BuffAction
+public delegate void ActiveInvokeDelegate(RoleBase tirgger, RoleBase owner);
+/// <summary>
+/// 失效事件触发委托
+/// </summary>
+public delegate void DeActiveInvokeDelegate(RoleBase tirgger, RoleBase owner);
+
+public enum BuffEndType
 {
-    /// <summary>
-    /// 条件
-    /// </summary>
-    public Condition condition;
-    /// <summary>
-    /// 事件(需要通过反射获取--显示界面可用枚举？)
-    /// </summary>
-    public Action action;
-
-    /// <summary>
-    /// 尝试使用事件
-    /// </summary>
-    /// <returns>是否使用成功</returns>
-    public bool UseAction()
-    {
-        if (condition.GetIsSuccee())
-        {
-            action?.Invoke();
-            return true;
-        }
-
-        return false;
-    }
+   None,
+}
+public enum BuffType
+{
+    None,
+    Common
+}
+/// <summary>
+/// buffID
+/// </summary>
+public enum BuffID
+{
+    None,
+    buff_10001,
 }

@@ -10,12 +10,15 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using YangTools.Log;
+using Sirenix.OdinInspector;
 
+[Serializable]
 /// <summary>
 /// BUFF控制器
 /// </summary>
 public class BuffControl : ICustomLife
 {
+    [SerializeField]
     /// <summary>
     /// 持有者
     /// </summary>
@@ -24,6 +27,8 @@ public class BuffControl : ICustomLife
     /// 事件关联器
     /// </summary>
     protected BuffEventRelation buffEventRelation = new BuffEventRelation();
+    [ShowInInspector]
+    [SerializeField]
     /// <summary>
     /// buff列表
     /// </summary>
@@ -147,9 +152,18 @@ public class BuffControl : ICustomLife
     /// <summary>
     /// 创建BUFF
     /// </summary>
-    public static BuffBase CreateBuff(RoleBase creator, BuffID configId)
+    public static BuffBase CreateBuff(RoleBase creator, BuffID buffId)
     {
         BuffBase temp = null;
+        switch (buffId)
+        {
+            case BuffID.buff_10001:
+                temp = new PropertyChange(creator, (int)buffId);
+                break;
+            default:
+                Debuger.ToError($"BUFF生成失败:{buffId}");
+                break;
+        }
         return temp;
     }
     #endregion
@@ -266,6 +280,7 @@ public class BuffControl : ICustomLife
     #endregion
 }
 
+[Serializable]
 /// <summary>
 /// buff事件关联
 /// </summary>
@@ -276,6 +291,7 @@ public class BuffEventRelation
     /// </summary>
     /// <param name="buffEventArg">触发时传递的参数</param>
     public delegate void BuffEventDelegate(BuffEventArgBase buffEventArg);
+    [HideInInspector]
     /// <summary>
     /// 全部事件点
     /// </summary>
@@ -347,6 +363,7 @@ public enum BuffEventTriggerPoint
     AddOtherBuff,
     RemoveOtherBuff,
 }
+[Serializable]
 /// <summary>
 /// BUFF分组设置(为了区分优先级和处理排异)
 /// </summary>
@@ -520,16 +537,18 @@ public abstract class BuffEventListenerBase
     //}
 
 }
+
+[Serializable]
 /// <summary>
 /// BUFF结束检测器
 /// </summary>
-public abstract class BuffEndChecker
+public class BuffEndChecker
 {
     /// <summary>
     /// 生效冷却时间
     /// </summary>
     public RefreshValue CDTimer;
-    public BuffEndChecker(BuffConfig buffConfig)
+    protected BuffEndChecker(BuffConfig buffConfig)
     {
         CDTimer = new RefreshValue(buffConfig.CD, false);
     }
@@ -548,11 +567,17 @@ public abstract class BuffEndChecker
     /// <summary>
     /// 是否生效
     /// </summary>
-    public abstract bool IsActive();
+    public virtual bool IsActive()
+    {
+        return false;
+    }
     /// <summary>
     /// 是否结束
     /// </summary>
-    public abstract bool IsEnd();
+    public virtual bool IsEnd()
+    {
+        return false;
+    }
     /// <summary>
     /// 技能生效时
     /// </summary>
@@ -569,44 +594,46 @@ public abstract class BuffEndChecker
     }
     public static BuffEndChecker Create(BuffConfig buffConfig)
     {
-        //switch (buffConfig.buffEndType)
-        //{
-        //    case BuffEndType.时间结束:
-        //        return new TimeEndCheck(buffConfig);
-        //    case BuffEndType.可使用次数结束:
-        //        return new CountEndCheck(buffConfig);
-        //    case BuffEndType.次数时间任意结束:
-        //        return new CountOrTimeEndCheck(buffConfig);
-        //    case BuffEndType.间隔时间生效_时间结束:
-        //        return new IntervalEndCheck(buffConfig);
-        //}
+        switch (buffConfig.buffEndType)
+        {
+            case BuffEndType.TimeOver:
+                return new TimeEndChecker(buffConfig);
+                //case BuffEndType.可使用次数结束:
+                //    return new CountEndCheck(buffConfig);
+                //case BuffEndType.次数时间任意结束:
+                //    return new CountOrTimeEndCheck(buffConfig);
+                //case BuffEndType.间隔时间生效_时间结束:
+                //    return new IntervalEndCheck(buffConfig);
+        }
         return null;
     }
-    /// <summary>
-    /// 刷新值(倒计时)
-    /// </summary>
-    public class RefreshValue
+}
+
+[Serializable]
+/// <summary>
+/// 刷新值(倒计时)
+/// </summary>
+public class RefreshValue
+{
+    private float maxValue;//最大值
+    public float curValue;//当前值
+    public RefreshValue(float value, bool setMax)
     {
-        private float maxValue;//最大值
-        public float curValue;//当前值
-        public RefreshValue(float value, bool setMax)
-        {
-            maxValue = value;
-            curValue = setMax ? maxValue : 0;
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        public void Update(float tickTime)
-        {
-            curValue -= tickTime;
-        }
-        /// <summary>
-        ///重置为最大值
-        /// </summary>
-        public void Refresh()
-        {
-            curValue = maxValue;
-        }
+        maxValue = value;
+        curValue = setMax ? maxValue : 0;
+    }
+    /// <summary>
+    /// 更新
+    /// </summary>
+    public void Update(float tickTime)
+    {
+        curValue -= tickTime;
+    }
+    /// <summary>
+    ///重置为最大值
+    /// </summary>
+    public void Refresh()
+    {
+        curValue = maxValue;
     }
 }

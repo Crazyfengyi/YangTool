@@ -33,6 +33,10 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     protected override void Awake()
     {
         base.Awake();
+ 
+    }
+    public void Start()
+    {
         ICustomLife player = Instantiate(playerPrefab);
         if (player != null)
         {

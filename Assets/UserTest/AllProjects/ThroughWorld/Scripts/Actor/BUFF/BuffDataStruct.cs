@@ -123,6 +123,8 @@ public delegate void DeActiveInvokeDelegate(RoleBase tirgger, RoleBase owner);
 public enum BuffEndType
 {
    None,
+   TimeOver,
+
 }
 public enum BuffType
 {

@@ -11,16 +11,14 @@ using System.Collections;
 /// <summary>
 /// 属性更改
 /// </summary>
-[CreateAssetMenu(fileName = "AttributeBuff", menuName = "BuffSystem/AttributeBuff")]
 public class PropertyChange : BuffBase
 {
     public int value;
     public PropertyChange(RoleBase _creator, int configId) : base(_creator, configId)
     {
     }
-
-    public override void Init()
+    public override void Init(BuffConfig buffConfig)
     {
-
+        base.Init(buffConfig);
     }
 }

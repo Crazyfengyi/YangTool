@@ -57,12 +57,12 @@ namespace YangTools
     {
         private static T instance = null;
         private static readonly object locker = new object();
-        private static bool appQuitting;
+        private static bool isAlive;
         public static T Instance
         {
             get
             {
-                if (appQuitting)
+                if (isAlive == false)
                 {
                     instance = null;
                     return instance;
@@ -97,11 +97,11 @@ namespace YangTools
         }
         protected virtual void Awake()
         {
-            appQuitting = false;
+            isAlive = true;
         }
         protected virtual void OnDestroy()
         {
-            appQuitting = true;
+            isAlive = false;
         }
     }
 }

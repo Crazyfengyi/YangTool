@@ -11,10 +11,11 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
+[Serializable]
 /// <summary>
 /// buff基类
 /// </summary>
-public abstract class BuffBase : ScriptableObject
+public class BuffBase
 {
     /// <summary>
     /// 技能描述
@@ -23,26 +24,30 @@ public abstract class BuffBase : ScriptableObject
     [MultiLineProperty]
     public string skillDescribe;
     /// <summary>
-    /// buffID
-    /// </summary>
-    public int id;
-    /// <summary>
-    /// 图标
-    /// </summary>
-    public Texture2D icon;
-    /// <summary>
-    /// BUFF类型
-    /// </summary>
-    public BuffType type;
-    /// <summary>
-    /// 分组设置
-    /// </summary>
-    public BuffGroupSetting groupSetting;
-    /// <summary>
     /// buff创建者
     /// </summary>
     public RoleBase creator;
 
+    [BoxGroup("基础数据")]
+    /// <summary>
+    /// buffID
+    /// </summary>
+    public int id;
+    [BoxGroup("基础数据")]
+    /// <summary>
+    /// 图标
+    /// </summary>
+    public Texture2D icon;
+    [BoxGroup("基础数据")]
+    /// <summary>
+    /// BUFF类型
+    /// </summary>
+    public BuffType type;
+    [BoxGroup("基础数据")]
+    /// <summary>
+    /// 分组设置
+    /// </summary>
+    public BuffGroupSetting groupSetting;
     /// <summary>
     /// 生效事件
     /// </summary>
@@ -51,11 +56,11 @@ public abstract class BuffBase : ScriptableObject
     /// 失效事件
     /// </summary>
     public event DeActiveInvokeDelegate deActiveEvent;
-
     /// <summary>
     /// 是否可以生效回调
     /// </summary>
     public Func<bool> IsCanActive;
+    [SerializeField]
     /// <summary>
     /// 结束检查
     /// </summary>
@@ -136,17 +141,17 @@ public abstract class BuffBase : ScriptableObject
     public BuffBase(RoleBase _creator, int configId)
     {
         creator = _creator;
-        BuffConfig data = GameResourceManager.Instance.GetBuffConfig();
-        Init();
+        BuffConfig data = GameResourceManager.Instance.GetBuffConfig(configId);
+        Init(data);
     }
     /// <summary>
     /// 初始化
     /// </summary>
-    public virtual void Init()
+    public virtual void Init(BuffConfig buffConfig)
     {
-
+        buffEndChecker = BuffEndChecker.Create(buffConfig);
+        groupSetting = buffConfig.buffGroupSetting;
     }
-
     /// <summary>
     /// buff生效事件
     /// </summary>
@@ -180,7 +185,7 @@ public abstract class BuffBase : ScriptableObject
     /// </summary>
     public virtual void Update()
     {
-
+        buffEndChecker.Update(Time.deltaTime);
     }
     /// <summary>
     /// 是否结束
@@ -234,7 +239,7 @@ public abstract class BuffBase : ScriptableObject
 
     }
 
-    //==================以下是监听===============
+    #region 事件触发
     /// <summary>
     /// 技能释放
     /// </summary>
@@ -242,7 +247,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 攻击前(TODO：子弹创建时?,或者计算伤害前)
     /// </summary>
@@ -250,7 +254,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 攻击后(子弹造成伤害后)
     /// </summary>
@@ -258,7 +261,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 受伤前
     /// </summary>
@@ -266,7 +268,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 受伤后
     /// </summary>
@@ -274,7 +275,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 死亡前
     /// </summary>
@@ -282,7 +282,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 死亡后
     /// </summary>
@@ -290,7 +289,6 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
-
     /// <summary>
     /// 击杀目标后
     /// </summary>
@@ -298,5 +296,7 @@ public abstract class BuffBase : ScriptableObject
     {
 
     }
+    #endregion
+
     #endregion
 }

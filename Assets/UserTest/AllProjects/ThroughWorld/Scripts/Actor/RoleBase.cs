@@ -5,21 +5,24 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
+using System;
 using UnityEngine;
 using System.Collections;
 
+[Serializable]
 public class RoleBase : GameActor, IAtker, IBeHit
 {
-    protected BuffControl buffControl;
+    [SerializeField]
+    public BuffControl buffControl;
 
     #region 生命周期接口实现
     public override void IInit()
     {
-        
+
     }
     public override void IDie()
     {
-        
+
     }
     public override void IUpdate()
     {
@@ -30,11 +33,11 @@ public class RoleBase : GameActor, IAtker, IBeHit
     }
     public override void ILateUpdate()
     {
-        
+
     }
     public override void IFixedUpdate()
     {
-       
+
     }
     #endregion
 

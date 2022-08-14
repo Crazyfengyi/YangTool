@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
 /// <summary>
 /// 配置数据保存
 /// </summary>
@@ -14,11 +15,12 @@ public abstract class SaveDataWithSO<T> : ScriptableObject where T : ConfigBase
     /// 字典(运行时用),字典不能序列化
     /// </summary>
     internal Dictionary<int, T> dataDic;
+    [SerializeField]
     /// <summary>
     /// 数据列表(序列化用)
     /// </summary>
     [ListDrawerSettings(/*DraggableItems = false,*/ ShowIndexLabels = true, ListElementLabelName = "ConfigName")]
-    public readonly List<T> dataList = new List<T>();
+    public List<T> dataList = new List<T>();
     /// <summary>
     /// 初始化
     /// </summary>
@@ -54,7 +56,8 @@ public abstract class SaveDataWithSO<T> : ScriptableObject where T : ConfigBase
     /// </summary>
     public virtual List<T> GetList()
     {
-        return dataList;
+        List<T> data = dataList.ToList();
+        return data;
     }
 
 #if UNITY_EDITOR

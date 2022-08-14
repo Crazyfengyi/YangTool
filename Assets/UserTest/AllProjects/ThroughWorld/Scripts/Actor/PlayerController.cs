@@ -26,6 +26,7 @@ public class PlayerController : RoleBase
 
         buffControl = new BuffControl();
         buffControl.Init(this);
+        buffControl.Add(BuffID.buff_10001);
     }
     public override void IDie()
     {
@@ -34,6 +35,10 @@ public class PlayerController : RoleBase
     public override void IUpdate()
     {
         base.IUpdate();
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            buffControl.Add(BuffID.buff_10001);
+        }
     }
     public override void ILateUpdate()
     {

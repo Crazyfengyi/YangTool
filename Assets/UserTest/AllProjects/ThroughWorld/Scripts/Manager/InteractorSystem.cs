@@ -48,6 +48,8 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     }
     private void Update()
     {
+        if (target == null) target = GameActorManager.Instance.MainPlayer;
+
         if (currentInteractive != lastInteractive || ForceUpdate)
         {
             //进入范围

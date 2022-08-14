@@ -57,12 +57,12 @@ namespace YangTools
     {
         private static T instance = null;
         private static readonly object locker = new object();
-        private static bool isAlive;
+        private static bool isInstanceDestory;
         public static T Instance
         {
             get
             {
-                if (isAlive == false)
+                if (isInstanceDestory)
                 {
                     instance = null;
                     return instance;
@@ -97,11 +97,11 @@ namespace YangTools
         }
         protected virtual void Awake()
         {
-            isAlive = true;
+            isInstanceDestory = false;
         }
         protected virtual void OnDestroy()
         {
-            isAlive = false;
+            isInstanceDestory = true;
         }
     }
 }

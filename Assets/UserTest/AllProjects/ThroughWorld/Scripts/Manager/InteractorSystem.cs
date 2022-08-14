@@ -53,11 +53,20 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
         if (currentInteractive != lastInteractive || ForceUpdate)
         {
             //进入范围
-            if (currentInteractive != null) currentInteractive.EnterRang(target);
+            if (currentInteractive != null)
+            {
+                currentInteractive.EnterRang(target);
+            }
             //退出范围
-            if (lastInteractive != null) lastInteractive.ExitRang(target);
+            if (lastInteractive != null)
+            {
+                lastInteractive.ExitRang(target);
+            }
             //更新物体交互类型
-            if (currentInteractive != null) interActiveType = currentInteractive.GetInterActiveType();
+            if (currentInteractive != null)
+            {
+                interActiveType = currentInteractive.GetInterActiveType();
+            }
 
             //更新记录
             lastInteractive = currentInteractive;

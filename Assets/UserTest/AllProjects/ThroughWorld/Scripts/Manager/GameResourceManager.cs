@@ -25,4 +25,11 @@ public class GameResourceManager : MonoSingleton<GameResourceManager>
         return data;
     }
 
+    public GameObject ResoruceLoad(string str)
+    {
+        GameObject obj;
+        obj = Resources.Load<GameObject>(str);
+
+        return obj;
+    }
 }

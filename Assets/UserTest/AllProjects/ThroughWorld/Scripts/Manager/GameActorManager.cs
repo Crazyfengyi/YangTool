@@ -18,7 +18,6 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     private static List<ICustomLife> customLives = new List<ICustomLife>();
     //预制体
     public PlayerController playerPrefab;
-    
     private PlayerController mainPlayer;
     public PlayerController MainPlayer
     {
@@ -33,7 +32,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     protected override void Awake()
     {
         base.Awake();
- 
+
     }
     public void Start()
     {
@@ -44,6 +43,14 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             player.IInit();
             mainPlayer = player as PlayerController;
             DontDestroyOnLoad(mainPlayer);
+        }
+
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{10001}");
+        if (obj)
+        {
+            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f),Quaternion.identity).GetComponent<ICustomLife>();
+            customLives.Add(monster);
+            monster.IInit();
         }
     }
     public void Update()

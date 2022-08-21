@@ -61,6 +61,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRBodyPart.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\Helpers\BakerUtilities.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\ScrollListItemModel.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Monster\Monster.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\OffsetModifier.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UGUIHelper.cs" />
     <Compile Include="Assets\YangTools\DialogSystem\Runtime\DialogData.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\DemoGUIMessage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\AimController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Aim IK\Scripts\TerrainOffset.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameUIManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\HandPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\TransferMotion.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\HoldingHands.cs" />
@@ -371,8 +373,8 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Monster\Monster.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameUIManager.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Attribute\RoleAttribute.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Attribute\ValueTotal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

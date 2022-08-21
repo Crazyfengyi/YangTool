@@ -48,6 +48,12 @@ public class BuffBase
     /// 分组设置
     /// </summary>
     public BuffGroupSetting groupSetting;
+
+    //BuffTypeId(Buff类型Id)， Caster（Buff施加者），Parent（Buff当前挂载的目标）,
+    //Ability(Buff由哪个技能创建)，BuffLayer（层数）, BuffLevel（等级）BuffDuration（时长）
+    //，BuffTag，BuffImmuneTag（免疫BuffTag）以及Context(Buff创建时的一些相关上下文数据)
+    //等等。
+
     /// <summary>
     /// 生效事件
     /// </summary>

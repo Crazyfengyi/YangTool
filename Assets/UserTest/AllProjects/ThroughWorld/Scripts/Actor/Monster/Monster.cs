@@ -15,9 +15,8 @@ public class Monster : RoleBase
 {
     public override void IInit()
     {
-        buffControl = new BuffControl();
-        buffControl.Init(this);
-        buffControl.Add(BuffID.buff_10001);
+        base.IInit();
+        roleBuffControl.Add(BuffID.buff_10001);
     }
     public override void IDie()
     {

@@ -8,17 +8,26 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using Sirenix.OdinInspector;
 
 [Serializable]
 public class RoleBase : GameActor, IAtker, IBeHit
 {
     [SerializeField]
-    public BuffControl buffControl;
+    public BuffControl roleBuffControl;
+    [ShowInInspector]
+    public RoleAttributeControl roleAttributeControl;
 
     #region 生命周期接口实现
     public override void IInit()
     {
+        roleBuffControl = new BuffControl();
+        roleBuffControl.Init(this);
 
+        roleAttributeControl = new RoleAttributeControl();
+        roleAttributeControl.Init(this);
+        roleAttributeControl.SetAttribute(RoleAttribute.HP, 100);
+        roleAttributeControl.SetAttribute(RoleAttribute.MP, 100);
     }
     public override void IDie()
     {
@@ -26,9 +35,9 @@ public class RoleBase : GameActor, IAtker, IBeHit
     }
     public override void IUpdate()
     {
-        if (buffControl != null)
+        if (roleBuffControl != null)
         {
-            buffControl.IUpdate();
+            roleBuffControl.IUpdate();
         }
     }
     public override void ILateUpdate()
@@ -72,6 +81,5 @@ public class RoleBase : GameActor, IAtker, IBeHit
     public virtual void ShowBeHitEffect(EffectInfo hitEffectInfo)
     {
     }
-
     #endregion
 }

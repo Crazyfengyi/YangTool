@@ -47,3 +47,12 @@ public enum InterActiveType
     /// </summary>
     Dialogue
 }
+/// <summary>
+/// 角色属性
+/// </summary>
+public enum RoleAttribute
+{
+    None,
+    HP,
+    MP,
+}

@@ -9,17 +9,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Sirenix.OdinInspector;
 
+[Serializable]
 /// <summary>
 /// 总值
 /// </summary>
 public class ValueTotal
 {
+    //第一层时Core（核心层）。
+    //Core层是玩家各个其他模块的属性总和
     public float Value
     {
         get => value;
         private set => this.value = value;
     }
+    [ShowInInspector]
     private float value;//当前值
     private float baseValue = 0;//基础值 
     private float addValue = 0;//增加值
@@ -28,6 +33,8 @@ public class ValueTotal
     private float finalAddPercent = 0;//最终百分比
     private float maxValue = 0;//最大值
 
+    //第二层是External(外部层),Buff修改属性的总和。
+    //两者相加既为玩家的实时属性。
     //下面是BUFF系统的数值修饰器
     private ModifierCollector AddCollector { get; } = new ModifierCollector();
     private ModifierCollector AddPrencentCollector { get; } = new ModifierCollector();
@@ -55,12 +62,13 @@ public class ValueTotal
     /// <param name="totalProVal">整体加成比例</param>
     /// <param name="_mathFun">使用的计算公式</param>
     /// <param name="_maxReset">重设最大值回调</param>
-    public ValueTotal(float baseVal = 0, float addVal = 0, float proVal = 0, float totalProVal = 0, Func<ValueTotal, float> _mathFun = null, Action<float> _maxReset = null)
+    public ValueTotal(float _baseValue = 0, float _addValue = 0, float _addPercent = 0, float _finalAdd = 0, float _finalAddPercent = 0, Func<ValueTotal, float> _mathFun = null, Action<float> _maxReset = null)
     {
-        baseValue = baseVal;
-        addValue = addVal;
-        addPercent = proVal;
-        finalAddPercent = totalProVal;
+        baseValue = _baseValue;
+        addValue = _addValue;
+        addPercent = _addPercent;
+        finalAdd = _finalAdd;
+        finalAddPercent = _finalAddPercent;
         mathFun = _mathFun;
         maxReset = _maxReset;
         ComputeTotalValue();
@@ -105,42 +113,33 @@ public class ValueTotal
         Value += value;
         Value = Mathf.Clamp(Value, 0, maxValue);
     }
-
-    #region 动态修改值
     /// <summary>
-    /// add基础值
+    /// 更改值
     /// </summary>
-    public void AddBaseValue(float value, bool isChangeCurValue = true)
+    public void AddValue(AttributeValueType valueType, float value, bool isChangeCurValue = true)
     {
-        baseValue += value;
+        switch (valueType)
+        {
+            case AttributeValueType.BaseValue:
+                baseValue += value;
+                break;
+            case AttributeValueType.AddValue:
+                addValue += value;
+                break;
+            case AttributeValueType.AddPercent:
+                addPercent += value;
+                break;
+            case AttributeValueType.FinalAdd:
+                finalAdd += value;
+                break;
+            case AttributeValueType.FinalAddPercent:
+                finalAddPercent += value;
+                break;
+            default:
+                break;
+        }
         ComputeMaxValue(isChangeCurValue);
     }
-    /// <summary>
-    /// add加成值
-    /// </summary>
-    public void AddAddValue(float value, bool isChangeCurValue = true)
-    {
-        addValue += value;
-        ComputeMaxValue(isChangeCurValue);
-    }
-    /// <summary>
-    /// add百分比
-    /// </summary>
-    public void AddPercentValue(float value, bool isChangeCurValue = true)
-    {
-        addPercent += value;
-        ComputeMaxValue(isChangeCurValue);
-    }
-    /// <summary>
-    /// 最终加成百分比
-    /// </summary>
-    public void AddFinalAddPercentValue(float value, bool isChangeCurValue = true)
-    {
-        finalAddPercent += value;
-        ComputeMaxValue(isChangeCurValue);
-    }
-    #endregion
-
     /// <summary>
     /// 克隆
     /// </summary>
@@ -195,4 +194,17 @@ public class ModifierCollector
             TotalValue += item.Value;
         }
     }
+}
+
+/// <summary>
+/// 属性值类型
+/// </summary>
+public enum AttributeValueType
+{
+    None,
+    BaseValue,
+    AddValue,
+    AddPercent,
+    FinalAdd,
+    FinalAddPercent,
 }

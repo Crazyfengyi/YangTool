@@ -15,6 +15,7 @@ public class PlayerController : RoleBase
     private GameInputSet GameInput;
     public override void IInit()
     {
+        base.IInit();
         #region 输入
         GameInput = new GameInputSet();
         GameInput.Player.Enable();
@@ -23,9 +24,7 @@ public class PlayerController : RoleBase
         GameInput.Player.Interactive.performed += OnInteractive;
         #endregion
 
-        buffControl = new BuffControl();
-        buffControl.Init(this);
-        buffControl.Add(BuffID.buff_10001);
+        roleBuffControl.Add(BuffID.buff_10001);
     }
     public override void IDie()
     {
@@ -36,7 +35,7 @@ public class PlayerController : RoleBase
         base.IUpdate();
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            buffControl.Add(BuffID.buff_10001);
+            roleBuffControl.Add(BuffID.buff_10001);
         }
     }
     public override void ILateUpdate()

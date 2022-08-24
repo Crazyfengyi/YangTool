@@ -9,14 +9,17 @@ using System;
 using UnityEngine;
 using System.Collections;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 
 [Serializable]
 public class RoleBase : GameActor, IAtker, IBeHit
 {
-    [SerializeField]
+    [ShowInInspector]
     public BuffControl roleBuffControl;
     [ShowInInspector]
     public RoleAttributeControl roleAttributeControl;
+    [ShowInInspector]
+    public Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
 
     #region 生命周期接口实现
     public override void IInit()
@@ -80,6 +83,21 @@ public class RoleBase : GameActor, IAtker, IBeHit
     }
     public virtual void ShowBeHitEffect(EffectInfo hitEffectInfo)
     {
+    }
+    #endregion
+
+    #region 获取值
+    public float GetFlag(RoleFlag roleFlag, float defaultValue = 0)
+    {
+        if (flagkeyValue.TryGetValue(roleFlag, out var flagvalue))
+        {
+            return flagvalue;
+        }
+        else
+        {
+            flagkeyValue.Add(roleFlag, defaultValue);
+            return defaultValue;
+        }
     }
     #endregion
 }

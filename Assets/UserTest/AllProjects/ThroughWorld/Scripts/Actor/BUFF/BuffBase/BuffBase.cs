@@ -24,15 +24,18 @@ public class BuffBase
     [MultiLineProperty]
     public string skillDescribe;
     /// <summary>
-    /// buff创建者
+    /// 创建者
     /// </summary>
     public RoleBase creator;
-
+    /// <summary>
+    /// 挂载的目标
+    /// </summary>
+    public RoleBase parent;
     [BoxGroup("基础数据")]
     /// <summary>
     /// buffID
     /// </summary>
-    public int id;
+    public BuffID id;
     [BoxGroup("基础数据")]
     /// <summary>
     /// 图标
@@ -48,12 +51,6 @@ public class BuffBase
     /// 分组设置
     /// </summary>
     public BuffGroupSetting groupSetting;
-
-    //BuffTypeId(Buff类型Id)， Caster（Buff施加者），Parent（Buff当前挂载的目标）,
-    //Ability(Buff由哪个技能创建)，BuffLayer（层数）, BuffLevel（等级）BuffDuration（时长）
-    //，BuffTag，BuffImmuneTag（免疫BuffTag）以及Context(Buff创建时的一些相关上下文数据)
-    //等等。
-
     /// <summary>
     /// 生效事件
     /// </summary>
@@ -73,14 +70,6 @@ public class BuffBase
     public BuffEndChecker buffEndChecker;
 
     #region 运行时用
-    /// <summary>
-    /// Buff施加者
-    /// </summary>
-    [HideInInspector] public string caster;
-    /// <summary>
-    /// Buff当前挂载的目标
-    /// </summary>
-    [HideInInspector] public string parent;
     /// <summary>
     /// Buff由哪个技能创建
     /// </summary>

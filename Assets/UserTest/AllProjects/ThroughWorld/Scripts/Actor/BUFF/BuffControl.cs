@@ -193,7 +193,7 @@ public class BuffControl : ICustomLife
         for (var i = 0; i < buffList.Count; i++)
         {
             BuffBase buffBase = buffList[i];
-            if (buffBase.id == (int)id)
+            if (buffBase.id == id)
             {
                 buffList.RemoveAt(i);
                 OnBuffRemove(buffBase);
@@ -212,7 +212,7 @@ public class BuffControl : ICustomLife
     {
         for (int i = 0; i < buffList.Count; i++)
         {
-            if (buffList[i].id == (int)id)
+            if (buffList[i].id == id)
             {
                 return true;
             }
@@ -272,7 +272,7 @@ public class BuffControl : ICustomLife
     /// <summary>
     /// 移除BUFF时call
     /// </summary>
-    private void OnRemoveOtherBuff(RoleBase trigger, int otherId)
+    private void OnRemoveOtherBuff(RoleBase trigger, BuffID otherId)
     {
         //TODO:添加参数
         buffEventRelation.EventInvoke(BuffEventTriggerPoint.RemoveOtherBuff, new BuffEventArgBase());

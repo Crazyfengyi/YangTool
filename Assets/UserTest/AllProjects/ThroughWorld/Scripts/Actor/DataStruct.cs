@@ -56,3 +56,11 @@ public enum RoleAttribute
     HP,
     MP,
 }
+/// <summary>
+/// 角色标记
+/// </summary>
+public enum RoleFlag
+{
+    None,
+    标记1,
+}

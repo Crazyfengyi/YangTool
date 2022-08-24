@@ -124,16 +124,12 @@ public enum BuffEndType
 {
    None,
    TimeOver,
-
 }
 public enum BuffType
 {
     None,
     Common
 }
-/// <summary>
-/// buffID
-/// </summary>
 public enum BuffID
 {
     None,

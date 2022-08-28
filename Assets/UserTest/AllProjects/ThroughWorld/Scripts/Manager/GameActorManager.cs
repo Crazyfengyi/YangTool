@@ -48,7 +48,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{10001}");
         if (obj)
         {
-            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f),Quaternion.identity).GetComponent<ICustomLife>();
+            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f), Quaternion.identity).GetComponent<ICustomLife>();
             customLives.Add(monster);
             monster.IInit();
         }
@@ -74,5 +74,14 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             customLives[i].IFixedUpdate();
         }
     }
-
+    public void CreateMonster(int id = 10001)
+    {
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{id}");
+        if (obj)
+        {
+            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f), Quaternion.identity).GetComponent<ICustomLife>();
+            customLives.Add(monster);
+            monster.IInit();
+        }
+    }
 }

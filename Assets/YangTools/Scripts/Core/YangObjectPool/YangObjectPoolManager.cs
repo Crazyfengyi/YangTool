@@ -28,8 +28,6 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <returns>对象</returns>
         public static T Get<T>() where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
@@ -52,8 +50,6 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 回收对象
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <param name="item">要回收的对象</param>
         /// <returns>是否回收成功</returns> 
         public static bool Recycle<T>(T item) where T : class, IPoolItem<T>, new()
         {
@@ -84,7 +80,6 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 清空对象池
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
         /// <returns>是否清空成功</returns>
         public static bool Clear<T>() where T : class, IPoolItem<T>, new()
         {
@@ -99,7 +94,6 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
         public static PooledObjectPackage<T> GetAutoRecycleItem<T>() where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
@@ -417,21 +411,32 @@ namespace YangTools.ObjectPool
     }
     // C# 8.0 可在接口中实现static方法 和 构造函数--可以改的更好--https://zhuanlan.zhihu.com/p/268278929
     /// <summary>
-    /// 要放进对象池的对象
+    /// 对象池物体接口
     /// </summary>
     public interface IPoolItem<T> where T : new()
     {
         bool IsInPool { get; set; }
-        protected static T instanceT = new T(); /* (T)Activator.CreateInstance(typeof(T))*/
+        protected static T instanceT = new T(); // (T)Activator.CreateInstance(typeof(T))
+        /// <summary>
+        /// 创建时
+        /// </summary>
         T Create();
+        /// <summary>
+        /// 获得时
+        /// </summary>
         void OnGet(T t);
+        /// <summary>
+        /// 回收时
+        /// </summary>
         void OnRecycle(T t);
+        /// <summary>
+        /// 删除时间
+        /// </summary>
         void OnDestroy(T t);
     }
     /// <summary>
     /// 值类型-对象池物体包裹-值类型回收时(销毁时)自动回收对象到对象池--需要二次测试
     /// </summary>
-    /// <typeparam name="T">对象</typeparam>
     public struct PooledObjectPackage<T> : IDisposable where T : class
     {
         private readonly T m_ToReturn;

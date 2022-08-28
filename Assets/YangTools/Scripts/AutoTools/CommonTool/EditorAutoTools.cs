@@ -93,7 +93,7 @@ namespace YangTools
             //Debug.LogError($"测试:{DateTime.Now}");
         }
 
-        static CancellationTokenSource token = CancellationTokenSource.CreateLinkedTokenSource();
+        static CancellationTokenSource token = null/*CancellationTokenSource.CreateLinkedTokenSource()*/;
         public static async void TestUni1()
         {
             try

@@ -86,7 +86,7 @@ public class RoleBase : GameActor, IAtker, IBeHit
     }
     #endregion
 
-    #region 获取值
+    #region 标记值操作
     public float GetFlag(RoleFlag roleFlag, float defaultValue = 0)
     {
         if (flagkeyValue.TryGetValue(roleFlag, out var flagvalue))
@@ -97,6 +97,17 @@ public class RoleBase : GameActor, IAtker, IBeHit
         {
             flagkeyValue.Add(roleFlag, defaultValue);
             return defaultValue;
+        }
+    }
+    public void SetFlag(RoleFlag roleFlag, float value)
+    {
+        if (flagkeyValue.ContainsKey(roleFlag))
+        {
+            flagkeyValue[roleFlag] = value;
+        }
+        else
+        {
+            flagkeyValue.Add(roleFlag, value);
         }
     }
     #endregion

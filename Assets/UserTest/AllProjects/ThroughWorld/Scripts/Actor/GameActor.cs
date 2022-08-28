@@ -34,6 +34,7 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
     {
         IDie();
     }
+
     #region 生命周期
     public abstract void IInit();
     public abstract void IUpdate();

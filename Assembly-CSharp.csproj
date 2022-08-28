@@ -169,6 +169,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatform.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\Constraint.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Attribute\RoleAttributeControl.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Move\RoleMove.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFABRIK.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangUGUI\UIPanel.cs" />
     <Compile Include="Assets\UserTest\AllProjects\DataExport\Scripts\DataExportTool.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\PolygonImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMapping.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\UnityLoopScript.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameLevelManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderBipedIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\IKExecutionOrder.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenAnimation.cs" />
@@ -375,7 +377,8 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Move\RoleMove.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameProjectileManager.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameEffectManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

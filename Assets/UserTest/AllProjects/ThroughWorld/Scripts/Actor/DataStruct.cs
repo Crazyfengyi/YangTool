@@ -45,7 +45,11 @@ public enum InterActiveType
     /// <summary>
     /// 对话
     /// </summary>
-    Dialogue
+    Dialogue,
+    /// <summary>
+    /// 触发
+    /// </summary>
+    Trigger,
 }
 /// <summary>
 /// 角色属性

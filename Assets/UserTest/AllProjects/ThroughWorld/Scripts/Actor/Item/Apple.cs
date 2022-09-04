@@ -3,42 +3,50 @@
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-07-31 
-*/
-using UnityEngine;
+ *创建时间:         2022-09-04 
+*/  
+using UnityEngine;  
 using System.Collections;
-using YangTools;
 
-/// <summary>
-/// NPC莫提乌斯
-/// </summary>
-public class NPC_Mortius : RoleBase
+public class Apple : GameActor
 {
-    #region 生命周期
     public override void IInit()
-    {
-    }
-    public override void IDie()
-    {
-    }
-    public override void IUpdate()
-    {
-    }
-    public override void ILateUpdate()
     {
     }
     public override void IFixedUpdate()
     {
     }
-    #endregion
+    public override void ILateUpdate()
+    {
+    }
+    public override void IUpdate()
+    {
+    }
+    public override void IDie()
+    {
+    }
 
-    #region 交互接口
+    #region 交互物
     /// <summary>
     /// 距离
     /// </summary>
     public override float Distance(Vector3 point)
     {
-        return Vector3.Distance(transform.position, point);
+        return base.Distance(point);
+    }
+    /// <summary>
+    /// 覆盖范围(物体需要的范围)
+    /// </summary>
+    public override float GetOverideMaxDistance()
+    {
+        return float.MaxValue;
+    }
+    /// <summary>
+    /// 交互类型
+    /// </summary>
+    public InterActiveType GetInterActiveType()
+    {
+        return InterActiveType.Trigger;
     }
     /// <summary>
     /// 可以交互
@@ -52,22 +60,21 @@ public class NPC_Mortius : RoleBase
     /// </summary>
     public override void EnterRang(RoleBase role)
     {
-   
+
     }
     /// <summary>
     /// 退出范围
     /// </summary>
     public override void ExitRang(RoleBase role)
     {
-      
+
     }
     /// <summary>
     /// 交互 
     /// </summary>
     public override void InterAction(RoleBase role)
     {
-        SceneLoader.Instance.IsAutoSkip = true;
-        SceneLoader.Instance.Load("GameLevel1", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        Destroy(gameObject);
     }
     #endregion
 }

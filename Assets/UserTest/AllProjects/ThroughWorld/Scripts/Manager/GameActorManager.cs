@@ -84,4 +84,26 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             monster.IInit();
         }
     }
+
+    public void CreateTree(Vector3 pos)
+    {
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Tree");
+        if (obj)
+        {
+            ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
+            customLives.Add(temp);
+            temp.IInit();
+        }
+    }
+
+    public void CreateItem(string itemName, Vector3 pos)
+    {
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"{itemName}");
+        if (obj)
+        {
+            ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
+            customLives.Add(temp);
+            temp.IInit();
+        }
+    }
 }

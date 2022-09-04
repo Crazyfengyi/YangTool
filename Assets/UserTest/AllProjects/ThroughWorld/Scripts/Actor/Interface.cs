@@ -84,6 +84,13 @@ public interface IInteractor
 public interface IInteractive
 {
     /// <summary>
+    /// 获得位置
+    /// </summary>
+    public Vector3 GetPos()
+    {
+        return Vector3.zero;
+    }
+    /// <summary>
     /// 距离
     /// </summary>
     public float Distance(Vector3 point)

@@ -229,6 +229,14 @@ namespace YangTools.Extend
             return new Vector3(vector2.x, y, vector2.y);
         }
         /// <summary>
+        /// 设置Y值
+        /// </summary>
+        public static Vector3 SetYValue(this Vector3 vector3, float y = 0)
+        {
+            vector3.y = y;
+            return vector3;
+        }
+        /// <summary>
         /// 设置绝对位置的x坐标。
         /// </summary>
         /// <param name="newValue">x坐标值</param>

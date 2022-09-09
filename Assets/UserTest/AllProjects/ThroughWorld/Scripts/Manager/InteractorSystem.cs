@@ -55,13 +55,13 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
         if (currentInteractive != lastInteractive || ForceUpdate)
         {
             //进入范围
-            if (currentInteractive != null)
+            if (currentInteractive != null /*&& currentInteractive.IsValid()*/)
             {
                 currentInteractive.EnterRang(target);
                 ShowCircle.transform.position = currentInteractive.GetPos();
             }
             //退出范围
-            if (lastInteractive != null)
+            if (lastInteractive != null /*&& lastInteractive.IsValid()*/)
             {
                 lastInteractive.ExitRang(target);
             }

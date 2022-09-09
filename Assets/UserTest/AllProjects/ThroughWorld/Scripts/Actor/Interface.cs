@@ -84,6 +84,13 @@ public interface IInteractor
 public interface IInteractive
 {
     /// <summary>
+    /// 是有效的
+    /// </summary>
+    public bool IsValid()
+    {
+        return true;
+    }
+    /// <summary>
     /// 获得位置
     /// </summary>
     public Vector3 GetPos()

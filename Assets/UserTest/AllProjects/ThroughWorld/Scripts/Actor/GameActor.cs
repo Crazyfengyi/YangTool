@@ -45,6 +45,13 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
 
     #region 交互
     /// <summary>
+    /// 是有效的
+    /// </summary>
+    public bool IsValid()
+    {
+        return gameObject != null;
+    }
+    /// <summary>
     /// 获得位置
     /// </summary>
     public virtual Vector3 GetPos()

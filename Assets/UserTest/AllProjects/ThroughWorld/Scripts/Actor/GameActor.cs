@@ -45,6 +45,13 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
 
     #region 交互
     /// <summary>
+    /// 获得位置
+    /// </summary>
+    public virtual Vector3 GetPos()
+    {
+        return transform.position;
+    }
+    /// <summary>
     /// 距离
     /// </summary>
     public virtual float Distance(Vector3 point)

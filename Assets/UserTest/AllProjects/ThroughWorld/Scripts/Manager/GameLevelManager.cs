@@ -19,6 +19,7 @@ public class GameLevelManager : MonoBehaviour
     public void Start()
     {
         GameActorManager.Instance.CreateMonster();
-
+        GameActorManager.Instance.CreateTree(Random.insideUnitSphere * 10);
+        GameActorManager.Instance.CreateTree(Random.insideUnitSphere * 10);
     }
 }

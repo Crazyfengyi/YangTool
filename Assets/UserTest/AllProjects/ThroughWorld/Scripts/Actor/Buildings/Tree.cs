@@ -1,0 +1,116 @@
+/** 
+ *Copyright(C) 2020 by DefaultCompany 
+ *All rights reserved. 
+ *Author:       DESKTOP-AJS8G4U 
+ *UnityVersion：2022.1.0f1c1 
+ *创建时间:         2022-09-04 
+*/
+using UnityEngine;
+using System.Collections;
+using YangTools;
+using YangTools.Extend;
+
+/// <summary>
+/// 树
+/// </summary>
+public class Tree : GameActor, IAtker, IBeHit
+{
+    public override void IInit()
+    {
+    }
+    public override void IUpdate()
+    {
+    }
+    public override void ILateUpdate()
+    {
+    }
+    public override void IFixedUpdate()
+    {
+    }
+    public override void IDie()
+    {
+    }
+
+    public bool IsCanAtk()
+    {
+        return false;
+    }
+    public bool IsCanBeHit()
+    {
+        return true;
+    }
+    public void Atk(int index)
+    {
+        throw new System.NotImplementedException();
+    }
+    public void BeHit(ref DamageInfo damageInfo)
+    {
+        throw new System.NotImplementedException();
+    }
+    public DamageInfo GetDamageInfo()
+    {
+        throw new System.NotImplementedException();
+    }
+    public DamageInfo GetHitCompute(DamageInfo damageInfo)
+    {
+        throw new System.NotImplementedException();
+    }
+    public void ShowAtkEffect(EffectInfo atkEffectInfo)
+    {
+    }
+    public void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    {
+    }
+
+    #region 交互物
+    /// <summary>
+    /// 距离
+    /// </summary>
+    public override float Distance(Vector3 point)
+    {
+        return base.Distance(point);
+    }
+    /// <summary>
+    /// 覆盖范围(物体需要的范围)
+    /// </summary>
+    public override float GetOverideMaxDistance()
+    {
+        return float.MaxValue;
+    }
+    /// <summary>
+    /// 交互类型
+    /// </summary>
+    public InterActiveType GetInterActiveType()
+    {
+        return InterActiveType.Trigger;
+    }
+    /// <summary>
+    /// 可以交互
+    /// </summary>
+    public override bool CanInter()
+    {
+        return true;
+    }
+    /// <summary>
+    /// 进入范围
+    /// </summary>
+    public override void EnterRang(RoleBase role)
+    {
+
+    }
+    /// <summary>
+    /// 退出范围
+    /// </summary>
+    public override void ExitRang(RoleBase role)
+    {
+
+    }
+    /// <summary>
+    /// 交互 
+    /// </summary>
+    public override void InterAction(RoleBase role)
+    {
+        GameActorManager.Instance.CreateItem("Apple",transform.position + (Random.insideUnitSphere * 5).SetYValue());
+    }
+    #endregion
+}

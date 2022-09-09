@@ -17,6 +17,8 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     private WaitForSeconds interactorTimerInterval = new WaitForSeconds(0.2f);//交互物检测间隔
     //交互者
     private RoleBase target;
+    public GameObject ShowCircle;//显示的圆
+
     //最近的可交互物
     private IInteractive currentInteractive;
     //上一个交互物
@@ -56,6 +58,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             if (currentInteractive != null)
             {
                 currentInteractive.EnterRang(target);
+                ShowCircle.transform.position = currentInteractive.GetPos();
             }
             //退出范围
             if (lastInteractive != null)
@@ -67,6 +70,8 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             {
                 interActiveType = currentInteractive.GetInterActiveType();
             }
+
+            ShowCircle.SetActive(currentInteractive != null);
 
             //更新记录
             lastInteractive = currentInteractive;

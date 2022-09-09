@@ -72,8 +72,8 @@
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Messaging\Serializer.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\ProjectGeneration\ProjectProperties.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\ProjectGeneration\FileIOProvider.cs" />
-    <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestRunnerCallbacks.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestAdaptor.cs" />
+    <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestRunnerCallbacks.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\UnityInstallation.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Messaging\Deserializer.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestResultAdaptor.cs" />
@@ -90,8 +90,8 @@
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Messaging\TcpClient.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Image.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Solution.cs" />
-    <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestStatusAdaptor.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\ProjectGeneration\GUIDProvider.cs" />
+    <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Testing\TestStatusAdaptor.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Messaging\Message.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\AsyncOperation.cs" />
     <Compile Include="Library\PackageCache\com.unity.ide.visualstudio@2.0.14\Editor\Discovery.cs" />

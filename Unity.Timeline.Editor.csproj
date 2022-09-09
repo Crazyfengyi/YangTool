@@ -104,9 +104,9 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\inspectors\TimelinePreferences.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Window\TimelinePlaybackControls.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Manipulators\EditModeInputHandler.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\inspectors\ClipInspector\ClipInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\treeview\TrackGui\TrackResizeHandle.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Manipulators\Move\IMoveItemMode.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\inspectors\ClipInspector\ClipInspector.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Window\TimelineWindowAnalytics.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Animation\AnimationClipActions.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\inspectors\BuiltInCurvePresets.cs" />
@@ -231,8 +231,8 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Animation\AnimationTrackActions.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Utilities\Graphics.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Recording\TimelineRecording_PlayableAsset.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\treeview\TrackGui\InlineCurveEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Utilities\SpacePartitioner.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\treeview\TrackGui\InlineCurveEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\inspectors\TimelineProjectSettings.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Trackhead.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Animation\CurveTreeViewNode.cs" />
@@ -262,8 +262,8 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Manipulators\Utils\ManipulatorsUtils.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Extensions\AnimationTrackExtensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Window\WindowConstants.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Manipulators\EditMode.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\treeview\Snapping\ISnappable.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Manipulators\EditMode.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\treeview\TimelineDataSource.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\Animation\AnimationOffsetMenu.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@1.7.1\Editor\CustomEditors\MarkerEditor.cs" />

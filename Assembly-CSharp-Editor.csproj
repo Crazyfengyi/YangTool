@@ -1160,17 +1160,29 @@
       <Project>{EFDB9417-9A0C-B411-4C6A-A36B5A39ABB5}</Project>
       <Name>Unity.VisualScripting.SettingsProvider.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.VisualScripting.Flow.csproj">
-      <Project>{08F156E4-25A7-1C2A-8B72-DDF7604E76DD}</Project>
-      <Name>Unity.VisualScripting.Flow</Name>
+    <ProjectReference Include="UniTask.DOTween.csproj">
+      <Project>{E106F274-BFE3-EE66-735F-ED6234220913}</Project>
+      <Name>UniTask.DOTween</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.InputSystem.csproj">
+      <Project>{43E52BBB-0ED0-4620-C50C-ECC1E72A23C8}</Project>
+      <Name>Unity.InputSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Rider.Editor.csproj">
+      <Project>{D2AC6EF2-F163-8347-4E53-478CE00A1CE7}</Project>
+      <Name>Unity.Rider.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.PlasticSCM.Editor.csproj">
       <Project>{02370E58-8B2F-ECA2-3B5F-F7C829E1478F}</Project>
       <Name>Unity.PlasticSCM.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Rider.Editor.csproj">
-      <Project>{D2AC6EF2-F163-8347-4E53-478CE00A1CE7}</Project>
-      <Name>Unity.Rider.Editor</Name>
+    <ProjectReference Include="Unity.VisualScripting.Flow.csproj">
+      <Project>{08F156E4-25A7-1C2A-8B72-DDF7604E76DD}</Project>
+      <Name>Unity.VisualScripting.Flow</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniTask.Linq.csproj">
+      <Project>{C45E2A5D-BF44-DBDF-1272-5DF702CC2B71}</Project>
+      <Name>UniTask.Linq</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Services.Core.csproj">
       <Project>{A3B2718D-5078-B8F8-4FE2-F175110B1EE4}</Project>
@@ -1180,9 +1192,21 @@
       <Project>{13A5FB34-4374-C2DA-D407-D962DAA534D8}</Project>
       <Name>Unity.VisualScripting.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="UniTask.TextMeshPro.csproj">
+      <Project>{B9448669-4382-1383-8162-21C6150DF1EC}</Project>
+      <Name>UniTask.TextMeshPro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Cinemachine.csproj">
+      <Project>{E4AF8F67-7664-6EE3-B122-C84949C9133E}</Project>
+      <Name>Cinemachine</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Services.Core.Analytics.csproj">
       <Project>{F2B62506-8976-9B13-0F66-D61A6F7EB52E}</Project>
       <Name>Unity.Services.Core.Analytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="com.unity.cinemachine.editor.csproj">
+      <Project>{DC481733-E405-9ADB-91DD-A3374D71D1B3}</Project>
+      <Name>com.unity.cinemachine.editor</Name>
     </ProjectReference>
     <ProjectReference Include="AstarPathfindingProject.csproj">
       <Project>{38214129-237C-99C3-CB75-C537FDE1945E}</Project>
@@ -1204,41 +1228,17 @@
       <Project>{13C30237-0C02-8625-E701-E974EE7A5850}</Project>
       <Name>AstarPathfindingProjectEditor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.VisualScripting.State.csproj">
-      <Project>{39881098-D81E-4438-A1C9-A6A50C24F180}</Project>
-      <Name>Unity.VisualScripting.State</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.InputSystem.csproj">
-      <Project>{43E52BBB-0ED0-4620-C50C-ECC1E72A23C8}</Project>
-      <Name>Unity.InputSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniTask.TextMeshPro.csproj">
-      <Project>{B9448669-4382-1383-8162-21C6150DF1EC}</Project>
-      <Name>UniTask.TextMeshPro</Name>
+    <ProjectReference Include="UniTask.csproj">
+      <Project>{32168DAC-D88C-C9F2-405A-ADA31BA3D1DD}</Project>
+      <Name>UniTask</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.Addressables.csproj">
       <Project>{FE07918F-22F6-574D-DC64-F428C153F130}</Project>
       <Name>UniTask.Addressables</Name>
     </ProjectReference>
-    <ProjectReference Include="UniTask.DOTween.csproj">
-      <Project>{E106F274-BFE3-EE66-735F-ED6234220913}</Project>
-      <Name>UniTask.DOTween</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniTask.Linq.csproj">
-      <Project>{C45E2A5D-BF44-DBDF-1272-5DF702CC2B71}</Project>
-      <Name>UniTask.Linq</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniTask.csproj">
-      <Project>{32168DAC-D88C-C9F2-405A-ADA31BA3D1DD}</Project>
-      <Name>UniTask</Name>
-    </ProjectReference>
-    <ProjectReference Include="com.unity.cinemachine.editor.csproj">
-      <Project>{DC481733-E405-9ADB-91DD-A3374D71D1B3}</Project>
-      <Name>com.unity.cinemachine.editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Cinemachine.csproj">
-      <Project>{E4AF8F67-7664-6EE3-B122-C84949C9133E}</Project>
-      <Name>Cinemachine</Name>
+    <ProjectReference Include="Unity.VisualScripting.State.csproj">
+      <Project>{39881098-D81E-4438-A1C9-A6A50C24F180}</Project>
+      <Name>Unity.VisualScripting.State</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

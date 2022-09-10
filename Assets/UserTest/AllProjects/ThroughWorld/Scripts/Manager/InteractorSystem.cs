@@ -48,35 +48,38 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
         target = GameActorManager.Instance.MainPlayer;
         StartCoroutine("UpdateNearestInteractive");
     }
-    private void Update()
+
+    private void LateUpdate()
     {
         if (target == null) target = GameActorManager.Instance.MainPlayer;
 
         if (currentInteractive != lastInteractive || ForceUpdate)
         {
             //进入范围
-            if (currentInteractive != null /*&& currentInteractive.IsValid()*/)
+            if (currentInteractive != null && !currentInteractive.Equals(null) && currentInteractive.IsValid())
             {
                 currentInteractive.EnterRang(target);
                 ShowCircle.transform.position = currentInteractive.GetPos();
             }
             //退出范围
-            if (lastInteractive != null /*&& lastInteractive.IsValid()*/)
+            if (lastInteractive != null && !lastInteractive.Equals(null) && lastInteractive.IsValid())
             {
                 lastInteractive.ExitRang(target);
             }
-            //更新物体交互类型
-            if (currentInteractive != null)
-            {
-                interActiveType = currentInteractive.GetInterActiveType();
-            }
-
-            ShowCircle.SetActive(currentInteractive != null);
 
             //更新记录
             lastInteractive = currentInteractive;
             ForceUpdate = false;
         }
+
+        //更新物体交互类型
+        if (currentInteractive != null && !currentInteractive.Equals(null) && currentInteractive.IsValid())
+        {
+            interActiveType = currentInteractive.GetInterActiveType();
+            ShowCircle.transform.position = currentInteractive.GetPos();
+        }
+
+        ShowCircle.SetActive(currentInteractive != null);
     }
 
     /// <summary>

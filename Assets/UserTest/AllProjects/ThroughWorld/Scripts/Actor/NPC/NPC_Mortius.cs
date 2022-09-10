@@ -52,18 +52,12 @@ public class NPC_Mortius : RoleBase
     /// </summary>
     public override void EnterRang(RoleBase role)
     {
-        Debug.LogError("进入范围");
-        GameObject gameObject = transform.Find("Cube").gameObject;
-        gameObject.SetActive(true);
     }
     /// <summary>
     /// 退出范围
     /// </summary>
     public override void ExitRang(RoleBase role)
     {
-        Debug.LogError("退出范围");
-        GameObject gameObject = transform.Find("Cube").gameObject;
-        gameObject.SetActive(false);
     }
     /// <summary>
     /// 交互 

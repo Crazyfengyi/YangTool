@@ -52,6 +52,15 @@ public enum InterActiveType
     Trigger,
 }
 /// <summary>
+/// 角色大小类型
+/// </summary>
+public enum RoleSizeType
+{
+    None,
+    ColliderSize,
+    MeshSize,
+}
+/// <summary>
 /// 角色属性
 /// </summary>
 public enum RoleAttribute

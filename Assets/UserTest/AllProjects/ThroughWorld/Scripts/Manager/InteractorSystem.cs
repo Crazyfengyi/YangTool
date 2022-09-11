@@ -77,8 +77,8 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
         {
             interActiveType = currentInteractive.GetInterActiveType();
             ShowCircle.transform.position = currentInteractive.GetPos();
+            ShowCircle.transform.localScale = Vector3.one * currentInteractive.GetSize(RoleSizeType.ColliderSize);
         }
-
         ShowCircle.SetActive(currentInteractive != null);
     }
 
@@ -109,7 +109,9 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             float currentMinDistance = float.MaxValue;
             foreach (var item in recordCollider)
             {
-                if (item == null || !item.TryGetComponent<IInteractive>(out var interactive) || !interactive.CanInter()) continue;
+                if (item == null || !item.TryGetComponent<IInteractive>(out var interactive) || !interactive.CanInter() || !interactive.IsValid()) continue;
+                if (interactive == null || interactive.Equals(null)) continue;
+
                 float overideDistance = interactive.GetOverideMaxDistance();//覆盖范围
                 float distance = interactive.Distance(recordPos);//距离
                 if (distance < overideDistance && distance < currentMinDistance)

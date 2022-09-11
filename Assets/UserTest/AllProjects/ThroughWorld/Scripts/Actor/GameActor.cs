@@ -7,6 +7,7 @@
 */
 using UnityEngine;
 using System.Collections;
+using YangTools.Extend;
 
 public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
 {
@@ -43,11 +44,50 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
     public abstract void IDie();
     #endregion
 
+    #region 方法
+    public Vector3 GetMeshSize()
+    {
+        MeshFilter temp = gameObject.GetComponentInChildren<MeshFilter>();
+        Vector3 result = default;
+        result.x = temp.mesh.bounds.size.x * temp.transform.localScale.x;
+        result.y = temp.mesh.bounds.size.y * temp.transform.localScale.y;
+        result.z = temp.mesh.bounds.size.z * temp.transform.localScale.z;
+        return result;
+    }
+
+    public Vector3 GetColliderSize()
+    {
+        Collider temp = GetComponent<Collider>();
+        Vector3 result = default;
+        result.x = temp.bounds.size.x;
+        result.y = temp.bounds.size.y;
+        result.z = temp.bounds.size.z;
+        return result;
+    }
+    #endregion
+
     #region 交互
+    /// <summary>
+    /// 获得大小(半径)
+    /// </summary>
+    public virtual float GetSize(RoleSizeType roleSizeType)
+    {
+        switch (roleSizeType)
+        {
+            case RoleSizeType.ColliderSize:
+                return GetColliderSize().SetYValue().magnitude / 2;
+            case RoleSizeType.MeshSize:
+                return GetMeshSize().SetYValue().magnitude / 2;
+            default:
+                break;
+        }
+
+        return 0;
+    }
     /// <summary>
     /// 是有效的
     /// </summary>
-    public bool IsValid()
+    public virtual bool IsValid()
     {
         return gameObject != null;
     }

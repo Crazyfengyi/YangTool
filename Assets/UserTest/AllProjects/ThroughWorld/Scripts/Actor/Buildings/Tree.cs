@@ -15,8 +15,6 @@ using YangTools.Extend;
 /// </summary>
 public class Tree : GameActor, IAtker, IBeHit
 {
-    public Transform creaatePoint;
-    public float createRang;
     public override void IInit()
     {
     }
@@ -112,7 +110,11 @@ public class Tree : GameActor, IAtker, IBeHit
     /// </summary>
     public override void InterAction(RoleBase role)
     {
-        GameActorManager.Instance.CreateItem("Apple", creaatePoint.position + (Random.insideUnitSphere * createRang));
+        float size = GetSize(RoleSizeType.ColliderSize);
+        Vector3 temp = Random.onUnitSphere;
+        temp = temp.SetYValue();
+        temp = temp.normalized;
+        GameObject obj = GameActorManager.Instance.CreateItem("Apple", transform.position + temp * size);
     }
     #endregion
 }

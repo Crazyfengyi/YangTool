@@ -91,7 +91,6 @@ namespace YangTools.Extend
             //extendName.Lengh效率最高，但必须判断有初始化---string str; 或者 string str = null 会报错;
             return str == null || str?.Length == 0 || string.IsNullOrEmpty(str) || str == string.Empty;
         }
-
         /// <summary>
         /// 随机返回bool值
         /// </summary>
@@ -101,7 +100,15 @@ namespace YangTools.Extend
         {
             return random.NextDouble() > 0.5d;
         }
-
+        /// <summary>
+        /// 随机返回+-1
+        /// </summary>
+        /// <param name="random"></param>
+        /// <returns></returns>
+        public static int Random1(this System.Random random)
+        {
+            return random.NextDouble() > 0.5d ? 1 : -1;
+        }
         /// <summary>
         /// 随机返回枚举--不知道手动枚举值是否有效，需验证
         /// </summary>

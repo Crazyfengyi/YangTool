@@ -96,7 +96,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         }
     }
 
-    public void CreateItem(string itemName, Vector3 pos)
+    public GameObject CreateItem(string itemName, Vector3 pos)
     {
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"{itemName}");
         if (obj)
@@ -104,6 +104,9 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
             customLives.Add(temp);
             temp.IInit();
+            return obj;
         }
+
+        return null;
     }
 }

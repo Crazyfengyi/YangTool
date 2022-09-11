@@ -77,12 +77,18 @@ public interface IInteractor
 
 
 }
-
 /// <summary>
 /// 交互物接口
 /// </summary>
 public interface IInteractive
 {
+    /// <summary>
+    /// 获得大小
+    /// </summary>
+    public float GetSize(RoleSizeType roleSizeType)
+    {
+        return 0;
+    }
     /// <summary>
     /// 是有效的
     /// </summary>

@@ -132,25 +132,13 @@ namespace YangTools.ObjectPool
             return (ObjectPool<T>)(object)objectPool;
         }
         /// <summary>
-        /// 绑定轮询方法
+        /// 绑定对象池的轮询方法 
         /// </summary>
         public void Binding<T>()
         {
-            Type type = typeof(T);
-            FieldInfo inter = null;
-            Type[] interNames = type.GetInterfaces();
-            for (int i = 0; i < interNames.Length; i++)
-            {
-                Type item = interNames[i];
-                if (item.Name.Contains("IPoolItem"))
-                {
-                    inter = item.GetField("objectPool", BindingFlags.Static | BindingFlags.NonPublic);
-                    break;
-                }
-            }
-            object instance = inter.GetValue(type);
+            Type type = Pool_type;
             System.Reflection.MethodInfo createFunc = type.GetMethod("Update");
-            updateAction = new ReflectionInfo(instance, createFunc);
+            updateAction = new ReflectionInfo(objectPool, createFunc);
         }
         public void Update(float elapseSeconds, float realElapseSeconds)
         {
@@ -165,7 +153,7 @@ namespace YangTools.ObjectPool
         internal readonly Stack<T> m_Stack;//栈
         private readonly ReflectionInfo m_CreateFunc;//创建方法
         private readonly ReflectionInfo m_ActionOnGet;//方法时调用
-        private readonly ReflectionInfo m_ActionOnRelease;//回收时调用
+        private readonly ReflectionInfo m_ActionOnRecycle;//回收时调用
         private readonly ReflectionInfo m_ActionOnDestroy;//删除时调用
 
         private readonly int m_MaxSize;//最大数量
@@ -230,19 +218,19 @@ namespace YangTools.ObjectPool
                 Type item = interNames[i];
                 if (item.Name.Contains("IPoolItem"))
                 {
-                    inter = item.GetField("instanceT", BindingFlags.Static | BindingFlags.NonPublic);
+                    inter = item.GetField("instanceT", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
                     break;
                 }
             }
             object instance = inter.GetValue(type);
             System.Reflection.MethodInfo createFunc = type.GetMethod("Create");
             System.Reflection.MethodInfo getAction = type.GetMethod("OnGet");
-            System.Reflection.MethodInfo releaseAction = type.GetMethod("OnRelease");
+            System.Reflection.MethodInfo releaseAction = type.GetMethod("OnRecycle");
             System.Reflection.MethodInfo destroyAction = type.GetMethod("OnDestroy");
 
             m_CreateFunc = new ReflectionInfo(instance, createFunc);
             m_ActionOnGet = new ReflectionInfo(instance, getAction);
-            m_ActionOnRelease = new ReflectionInfo(instance, releaseAction);
+            m_ActionOnRecycle = new ReflectionInfo(instance, releaseAction);
             m_ActionOnDestroy = new ReflectionInfo(instance, destroyAction);
             #endregion
         }
@@ -292,7 +280,7 @@ namespace YangTools.ObjectPool
                 throw new InvalidOperationException("Trying to release an object that has already been released to the pool.");
             }
 
-            m_ActionOnRelease?.Invoke<T>(false, item);
+            m_ActionOnRecycle?.Invoke<T>(false, item);
             if (InactiveCount < m_MaxSize)
             {
                 item.IsInPool = true;
@@ -334,12 +322,12 @@ namespace YangTools.ObjectPool
         {
             if (isNull)
             {
-                return (T)Func.Invoke(instanceT, null);
+                return (T)Func?.Invoke(instanceT, null);
             }
             else
             {
                 //反射调用
-                return (T)Func.Invoke(instanceT, new object[] { paramlist[0] });
+                return (T)Func?.Invoke(instanceT, new object[] { paramlist[0] });
             }
         }
         /// <summary>
@@ -430,7 +418,7 @@ namespace YangTools.ObjectPool
         /// </summary>
         void OnRecycle(T t);
         /// <summary>
-        /// 删除时间
+        /// 删除时
         /// </summary>
         void OnDestroy(T t);
     }

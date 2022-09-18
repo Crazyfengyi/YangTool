@@ -12,6 +12,8 @@ using DG.Tweening;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using YangTools.ObjectPool;
+using YangTools.Extend;
 /// <summary>
 /// UI管理器
 /// </summary>
@@ -22,8 +24,9 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     private List<GameObject> tipsList = new List<GameObject>();
     private List<TipData> tipDatas = new List<TipData>();
+    public int maxTipsShowCount = 10;
 
-    private float interval = 0.1f;
+    private float interval = 0f;
     private float timer = 0;
     private int currentCount = 0;
 
@@ -32,7 +35,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private const float ANI_TIME_POST = 0.3f;
     private const float ANI_TIME_MOVE = 1f;
 
-    public void Update()
+    public void LateUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -40,7 +43,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         }
 
         timer += Time.deltaTime;
-        if (timer >= interval && tipDatas.Count > 0)
+        if (timer >= interval && tipDatas.Count > 0 && currentCount <= maxTipsShowCount)
         {
             timer = 0;
             TipShow(tipDatas[0]);
@@ -57,7 +60,13 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     public void TipShow(TipData data)
     {
         currentCount++;
-        GameObject obj = GameObject.Instantiate(tipNodePrefab, tipsParent);
+
+        TipObjectPoolItem poolItem = YangObjectPool.Get<TipObjectPoolItem>();
+        GameObject obj = poolItem.obj;
+        obj.transform.SetParent(tipsParent);
+        obj.transform.SetAsLastSibling();
+        tipsParent.gameObject.RefreshAllContentSizeFitter();
+
         GameObject tip = obj.transform.GetChild(0).gameObject;
         tip.GetComponentInChildren<TMP_Text>(true).text = data.tipStr;
 
@@ -79,7 +88,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                 tip.SetActive(false);
                 tip.transform.localPosition = defaultPos;
                 tip.GetComponent<CanvasGroup>().alpha = 1;
-                Destroy(obj);
+                YangObjectPool.Recycle(poolItem);
+                obj.GetComponent<LayoutElement>().preferredHeight = 100;
             })
             .SetTarget(tip);
     }
@@ -88,6 +98,34 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     }
 }
+/// <summary>
+/// 对象池提示对象
+/// </summary>
+public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
+{
+    public bool IsInPool { get; set; }
+    public GameObject obj;
+    public TipObjectPoolItem Create()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("TipsNode"));
+        TipObjectPoolItem temp = new TipObjectPoolItem();
+        temp.obj = tempObj;
+        return temp;
+    }
+    public void OnGet(TipObjectPoolItem t)
+    {
+        t.obj.SetActive(true);
+    }
+    public void OnRecycle(TipObjectPoolItem t)
+    {
+        t.obj.SetActive(false);
+    }
+    public void OnDestroy(TipObjectPoolItem t)
+    {
+
+    }
+}
+
 /// <summary>
 /// 提示信息
 /// </summary>

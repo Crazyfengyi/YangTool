@@ -33,7 +33,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private const float ANI_TIME_PRE = 0.2f;
     private const float ANI_TIME_WAIT = 0.5f;
     private const float ANI_TIME_POST = 0.3f;
-    private const float ANI_TIME_MOVE = 1f;
+    private const float ANI_TIME_MOVE = 0.2f;
 
     public void LateUpdate()
     {
@@ -114,11 +114,11 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     }
     public void OnGet(TipObjectPoolItem t)
     {
-        t.obj.SetActive(true);
+        t.obj.DefualtGameObjectOnGet();
     }
     public void OnRecycle(TipObjectPoolItem t)
     {
-        t.obj.SetActive(false);
+        t.obj.DefualtGameObjectRecycle();
     }
     public void OnDestroy(TipObjectPoolItem t)
     {

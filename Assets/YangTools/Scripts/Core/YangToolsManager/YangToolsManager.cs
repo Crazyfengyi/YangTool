@@ -50,6 +50,10 @@ namespace YangTools
         /// 获得工具类的Unity物体(不可删除)
         /// </summary>
         public static GameObject DontDestoryObject { get; private set; }
+        /// <summary>
+        /// 对象池父节点
+        /// </summary>
+        public static GameObject GamePoolObject { get; private set; }
         #endregion
 
         #region 初始化
@@ -72,6 +76,8 @@ namespace YangTools
             DontDestoryObject.AddComponent<UnityLoopScript>();
             //DontDestoryObject.hideFlags = HideFlags.HideInHierarchy; //在层级面板隐藏
             UnityEngine.Object.DontDestroyOnLoad(DontDestoryObject);
+            GamePoolObject = new GameObject("GamePoolsObject");
+            GamePoolObject.transform.SetParent(DontDestoryObject.transform);
         }
         #endregion
 

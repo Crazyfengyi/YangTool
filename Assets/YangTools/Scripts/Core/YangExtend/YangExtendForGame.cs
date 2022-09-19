@@ -85,8 +85,8 @@ namespace YangTools.Extend
         /// <summary>
         /// 递归设置游戏对象的层次。
         /// </summary>
-        /// <param name="gameObject"><see cref="GameObject" /> 对象。</param>
-        /// <param name="layer">目标层次的编号。</param>
+        /// <param name="gameObject">对象</param>
+        /// <param name="layer">目标层次的编号</param>
         public static void SetLayerRecursively(this GameObject gameObject, int layer)
         {
             gameObject.GetComponentsInChildren(true, cachedTransforms);
@@ -96,6 +96,26 @@ namespace YangTools.Extend
             }
             cachedTransforms.Clear();
         }
+
+        #region 对象池扩展
+        /// <summary>
+        /// 对象池默认Get
+        /// </summary>
+        public static void DefualtGameObjectOnGet(this GameObject gameObject)
+        {
+            gameObject.SetActive(true);
+            gameObject.transform.SetParent(null);
+        }
+        /// <summary>
+        /// 对象池默认Recycle
+        /// </summary>
+        public static void DefualtGameObjectRecycle(this GameObject gameObject)
+        {
+            gameObject.SetActive(false);
+            gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
+        }
+        #endregion
+
         #region 射线和网格合并
         /// <summary>
         /// 合并蒙皮网格，刷新骨骼

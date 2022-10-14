@@ -19,10 +19,10 @@ using YangTools.Extend;
 /// </summary>
 public class GameUIManager : MonoSingleton<GameUIManager>
 {
+    #region 提示
     public GameObject tipNodePrefab;
     public Transform tipsParent;
 
-    private List<GameObject> tipsList = new List<GameObject>();
     private List<TipData> tipDatas = new List<TipData>();
     public int maxTipsShowCount = 10;
 
@@ -34,12 +34,19 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private const float ANI_TIME_WAIT = 0.5f;
     private const float ANI_TIME_POST = 0.3f;
     private const float ANI_TIME_MOVE = 0.2f;
+    #endregion
+
+    #region 飘分
+    public GameObject scorePrefab;//飘字
+    public Transform scoreParent;
+    #endregion
 
     public void LateUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddTipsShow("测试提示！");
+            //AddTipsShow("测试提示！");
+            StartScoreUIShow(Vector3.zero, "-100");
         }
 
         timer += Time.deltaTime;
@@ -50,9 +57,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             tipDatas.RemoveAt(0);
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
+    #region 提示
     public void AddTipsShow(string str)
     {
         tipDatas.Add(new TipData(str));
@@ -93,10 +99,55 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             })
             .SetTarget(tip);
     }
-    public void UpdatePlayerBar()
-    {
+    #endregion
 
+    #region 飘分
+    public void StartScoreUIShow(Vector3 _worldPos, string _text)
+    {
+        ScoreData scoreData = new ScoreData();
+        scoreData.worldPos = _worldPos;
+        scoreData.worldText = _text;
+
+        Vector3 pos = ScreenPositionToUILocalPosition(CameraManager.Instance.mainCamera, null, _worldPos, scoreParent);
+        ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
+        GameObject score = poolItem.obj;
+        score.transform.SetParent(scoreParent);
+        score.transform.SetAsLastSibling();
+        score.transform.localPosition = pos;
+
+        GameObject scoreText = score.transform.GetChild(0).gameObject;
+        scoreText.GetComponentInChildren<TMP_Text>(true).text = _text;
+
+        DOTween.Kill(score, true);
+        var defaultPos = score.transform.localPosition;
+        var startPos = defaultPos;
+        score.transform.localPosition = startPos;
+
+        DOTween.Sequence()
+            .Append(score.transform.DOLocalMoveY(defaultPos.y + 200, 0.5f).SetEase(Ease.InCubic))
+            .OnComplete(() =>
+            {
+                YangObjectPool.Recycle(poolItem);
+            })
+            .SetTarget(score);
     }
+    /// <summary>
+    /// 世界坐标转UI的局部坐标
+    /// </summary>
+    /// <param name="WorldCamara">场景相机</param>
+    /// <param name="UICamara">UI相机</param>
+    /// <param name="worldPos">世界坐标</param>
+    /// <param name="targetParent">目标节点</param>
+    public Vector3 ScreenPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(), screenPoint, UICamara, out Vector2 localPoint))
+        {
+            return localPoint;
+        }
+        return default;
+    }
+    #endregion
 }
 /// <summary>
 /// 对象池提示对象
@@ -122,10 +173,9 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     }
     public void OnDestroy(TipObjectPoolItem t)
     {
-
+        t.obj.DefualtGameObjectDestory();
     }
 }
-
 /// <summary>
 /// 提示信息
 /// </summary>
@@ -136,4 +186,41 @@ public class TipData
     {
         tipStr = str;
     }
+}
+
+
+/// <summary>
+/// 对象池飘分对象
+/// </summary>
+public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
+{
+    public bool IsInPool { get; set; }
+    public GameObject obj;
+    public ScoreObjectPoolItem Create()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("WordUI"));
+        ScoreObjectPoolItem temp = new ScoreObjectPoolItem();
+        temp.obj = tempObj;
+        return temp;
+    }
+    public void OnGet(ScoreObjectPoolItem t)
+    {
+        t.obj.DefualtGameObjectOnGet();
+    }
+    public void OnRecycle(ScoreObjectPoolItem t)
+    {
+        t.obj.DefualtGameObjectRecycle();
+    }
+    public void OnDestroy(ScoreObjectPoolItem t)
+    {
+        t.obj.DefualtGameObjectDestory();
+    }
+}
+/// <summary>
+/// 飘分数据
+/// </summary>
+public class ScoreData
+{
+    public Vector3 worldPos;
+    public string worldText;
 }

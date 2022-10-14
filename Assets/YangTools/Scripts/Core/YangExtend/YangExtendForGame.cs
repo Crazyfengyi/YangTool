@@ -114,6 +114,13 @@ namespace YangTools.Extend
             gameObject.SetActive(false);
             gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
         }
+        /// <summary>
+        /// 对象池默认Destory
+        /// </summary>
+        public static void DefualtGameObjectDestory(this GameObject gameObject)
+        {
+            GameObject.Destroy(gameObject);
+        }
         #endregion
 
         #region 射线和网格合并

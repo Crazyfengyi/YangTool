@@ -110,6 +110,7 @@ public class #类名# : MonoBehaviour
                 Component[] allRectransform = Selection.activeGameObject.GetComponentsInChildren<RectTransform>();
 
                 EditorGUILayout.LabelField("全部组件", GUILayout.Width(110));
+
                 for (int j = 0; j < allRectransform.Length; j++)
                 {
                     Component[] mComponents = allRectransform[j].GetComponents<Component>();
@@ -127,8 +128,8 @@ public class #类名# : MonoBehaviour
                     }
                 }
 
-                GUILayout.Space(30);
-
+                GUILayout.Space(20);
+                EditorGUILayout.LabelField("==============================================================");
                 if (GUILayout.Button("将UI代码添加到代码中"))
                 {
                     AddUIScript();

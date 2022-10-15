@@ -16,7 +16,7 @@ public interface IAtker
     /// <summary>
     /// 攻击
     /// </summary>
-    void Atk(int index);
+    void Atk(AtkInfo atkInfo);
     /// <summary>
     /// 是否可以攻击
     /// </summary>
@@ -57,16 +57,10 @@ public interface IBeHit
 /// </summary>
 public interface ICustomLife
 {
-    /// <summary>
-    /// 初始化
-    /// </summary>
     void IInit();
     void IUpdate();
     void ILateUpdate();
     void IFixedUpdate();
-    /// <summary>
-    /// 死亡
-    /// </summary>
     void IDie();
 }
 /// <summary>

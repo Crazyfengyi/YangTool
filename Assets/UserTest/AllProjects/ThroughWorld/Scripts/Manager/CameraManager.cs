@@ -12,6 +12,13 @@ using Cinemachine;
 
 public class CameraManager : MonoSingleton<CameraManager>
 {
+    public Camera PlayerCamera
+    {
+        get
+        {
+            return GameActorManager.Instance.MainPlayer.GetComponentInChildren<Camera>(true);
+        }
+    }
     public Camera mainCamera;
     public CinemachineVirtualCameraBase mainCM;
     //相机旋转速度

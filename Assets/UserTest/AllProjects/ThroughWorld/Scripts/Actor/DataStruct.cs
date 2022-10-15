@@ -20,11 +20,18 @@ public enum ActorCampType
     Building
 }
 /// <summary>
+/// 攻击信息
+/// </summary>
+public class AtkInfo
+{
+    public GameActor targetActor;
+}
+/// <summary>
 /// 伤害信息
 /// </summary>
 public class DamageInfo
 {
-
+    public float damage;
 }
 /// <summary>
 /// 特效信息

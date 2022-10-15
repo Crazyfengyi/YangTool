@@ -228,6 +228,7 @@
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\BuffDataStruct.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\EditorIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LimbIK.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameBattleManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintRotation.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Interface.cs" />
     <Compile Include="Assets\UserTest\MyTest\TestSo.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Finger Rig\FingerRig.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\SolverManager.cs" />
     <Compile Include="Assets\UserTest\AllProjects\DataExport\Scripts\ExcelUtility.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Attribute\Health\HealthControl.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderVRIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\CharacterBase.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Aim IK\Scripts\SecondHandOnGun.cs" />

@@ -13,6 +13,9 @@ public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
     private GameInputSet GameInput;
+
+    public GameObject model;//模型
+
     public override void IInit()
     {
         base.IInit();
@@ -37,6 +40,24 @@ public class PlayerController : RoleBase
         {
             roleBuffControl.Add(BuffID.buff_10001);
         }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Collider[] temp = Physics.OverlapSphere(transform.position, 10);
+            if (temp.Length > 0)
+            {
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
+                    if (target)
+                    {
+                        AtkInfo atkInfo = new AtkInfo();
+                        atkInfo.targetActor = target;
+                        Atk(atkInfo);
+                    }
+                }
+            }
+        }
     }
     public override void ILateUpdate()
     {
@@ -59,4 +80,42 @@ public class PlayerController : RoleBase
     {
         InteractorSystem.Instance.OnInter();
     }
+
+    #region 攻击和被击接口实现
+    public override void Atk(AtkInfo atkInfo)
+    {
+        if (atkInfo.targetActor.IsCanBeHit())
+        {
+            GameBattleManager.Instance.AtkProcess(this, atkInfo.targetActor);
+        }
+    }
+    public override void BeHit(ref DamageInfo damageInfo)
+    {
+
+    }
+    public override DamageInfo GetDamageInfo()
+    {
+        return null;
+    }
+    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
+    {
+        return null;
+    }
+    public override bool IsCanAtk()
+    {
+        return false;
+    }
+    public override bool IsCanBeHit()
+    {
+        return false;
+    }
+    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
+    {
+    }
+    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    {
+    }
+    #endregion
+
+
 }

@@ -41,12 +41,17 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     public Transform scoreParent;
     #endregion
 
+    public void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    }
     public void LateUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //AddTipsShow("测试提示！");
-            StartScoreUIShow(Vector3.zero, "-100");
+            AddScoreShow(Vector3.zero, "-100");
         }
 
         timer += Time.deltaTime;
@@ -102,31 +107,43 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     #endregion
 
     #region 飘分
-    public void StartScoreUIShow(Vector3 _worldPos, string _text)
+    public void AddScoreShow(Vector3 worldPos, string text, Color color = default)
     {
         ScoreData scoreData = new ScoreData();
-        scoreData.worldPos = _worldPos;
-        scoreData.worldText = _text;
-
-        Vector3 pos = ScreenPositionToUILocalPosition(CameraManager.Instance.mainCamera, null, _worldPos, scoreParent);
+        scoreData.worldPos = worldPos;
+        scoreData.worldText = text;
+        scoreData.textColor = color;
+        StartScoreUIShow(scoreData);
+    }
+    public void StartScoreUIShow(ScoreData scoreData)
+    {
+        //飘分对象
+        Vector3 pos = WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
         ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
         GameObject score = poolItem.obj;
         score.transform.SetParent(scoreParent);
         score.transform.SetAsLastSibling();
         score.transform.localPosition = pos;
-
-        GameObject scoreText = score.transform.GetChild(0).gameObject;
-        scoreText.GetComponentInChildren<TMP_Text>(true).text = _text;
+        //文字设置
+        TMP_Text scoreText = score.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
+        scoreText.text = scoreData.worldText;
+        scoreText.color = scoreData.textColor;
 
         DOTween.Kill(score, true);
-        var defaultPos = score.transform.localPosition;
+        var defaultPos = scoreText.transform.localPosition;
         var startPos = defaultPos;
-        score.transform.localPosition = startPos;
+        scoreText.transform.localPosition = startPos;
 
         DOTween.Sequence()
-            .Append(score.transform.DOLocalMoveY(defaultPos.y + 200, 0.5f).SetEase(Ease.InCubic))
+            .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 120, 0.6f).SetEase(Ease.InCubic))
+            .OnUpdate(() =>
+            {
+                Vector3 pos = WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                score.transform.localPosition = pos;
+            })
             .OnComplete(() =>
             {
+                scoreText.transform.localPosition = defaultPos;
                 YangObjectPool.Recycle(poolItem);
             })
             .SetTarget(score);
@@ -138,7 +155,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <param name="UICamara">UI相机</param>
     /// <param name="worldPos">世界坐标</param>
     /// <param name="targetParent">目标节点</param>
-    public Vector3 ScreenPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
+    public Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
     {
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(), screenPoint, UICamara, out Vector2 localPoint))
@@ -223,4 +240,5 @@ public class ScoreData
 {
     public Vector3 worldPos;
     public string worldText;
+    public Color textColor;
 }

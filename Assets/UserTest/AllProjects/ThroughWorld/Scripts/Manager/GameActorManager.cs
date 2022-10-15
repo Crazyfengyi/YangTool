@@ -84,7 +84,6 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             monster.IInit();
         }
     }
-
     public void CreateTree(Vector3 pos)
     {
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Tree");
@@ -95,7 +94,6 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             temp.IInit();
         }
     }
-
     public GameObject CreateItem(string itemName, Vector3 pos)
     {
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"{itemName}");
@@ -108,5 +106,9 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         }
 
         return null;
+    }
+    public void ActorDie(GameActor gameActor)
+    {
+        gameActor.IDie();
     }
 }

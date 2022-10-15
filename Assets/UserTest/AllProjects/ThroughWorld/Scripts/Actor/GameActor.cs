@@ -9,7 +9,7 @@ using UnityEngine;
 using System.Collections;
 using YangTools.Extend;
 
-public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
+public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtker, IBeHit
 {
     #region 组件
     private Animator animator;
@@ -26,15 +26,11 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
         }
     }
     #endregion
+
     /// <summary>
     /// 阵营
     /// </summary>
     public ActorCampType campType;
-
-    public void OnDestroy()
-    {
-        IDie();
-    }
 
     #region 生命周期
     public abstract void IInit();
@@ -42,6 +38,39 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive
     public abstract void ILateUpdate();
     public abstract void IFixedUpdate();
     public abstract void IDie();
+    #endregion
+
+    #region 攻击和被击接口实现
+    public virtual void Atk(AtkInfo atkInfo)
+    {
+
+    }
+    public virtual void BeHit(ref DamageInfo damageInfo)
+    {
+
+    }
+    public virtual DamageInfo GetDamageInfo()
+    {
+        return null;
+    }
+    public virtual DamageInfo GetHitCompute(DamageInfo damageInfo)
+    {
+        return null;
+    }
+    public virtual bool IsCanAtk()
+    {
+        return false;
+    }
+    public virtual bool IsCanBeHit()
+    {
+        return false;
+    }
+    public virtual void ShowAtkEffect(EffectInfo atkEffectInfo)
+    {
+    }
+    public virtual void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    {
+    }
     #endregion
 
     #region 方法

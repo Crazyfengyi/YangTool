@@ -50,4 +50,37 @@ public class Monster : RoleBase
     {
 
     }
+
+    #region 攻击和被击接口实现
+    public override void Atk(AtkInfo atkInfo)
+    {
+
+    }
+    public override void BeHit(ref DamageInfo damageInfo)
+    {
+        healthControl.MinusHp(damageInfo);
+    }
+    public override DamageInfo GetDamageInfo()
+    {
+        return null;
+    }
+    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
+    {
+        return null;
+    }
+    public override bool IsCanAtk()
+    {
+        return false;
+    }
+    public override bool IsCanBeHit()
+    {
+        return false;
+    }
+    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
+    {
+    }
+    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    {
+    }
+    #endregion
 }

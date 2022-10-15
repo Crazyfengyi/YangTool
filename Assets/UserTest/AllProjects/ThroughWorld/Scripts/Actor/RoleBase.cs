@@ -12,12 +12,14 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
 [Serializable]
-public class RoleBase : GameActor, IAtker, IBeHit
+public class RoleBase : GameActor
 {
     [ShowInInspector]
     public BuffControl roleBuffControl;
     [ShowInInspector]
     public RoleAttributeControl roleAttributeControl;
+    [ShowInInspector]
+    public HealthControl healthControl;
     [ShowInInspector]
     public Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
 
@@ -31,6 +33,10 @@ public class RoleBase : GameActor, IAtker, IBeHit
         roleAttributeControl.Init(this);
         roleAttributeControl.SetAttribute(RoleAttribute.HP, 100);
         roleAttributeControl.SetAttribute(RoleAttribute.MP, 100);
+        healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
+        {
+            GameActorManager.Instance.ActorDie(this);
+        });
     }
     public override void IDie()
     {
@@ -50,39 +56,6 @@ public class RoleBase : GameActor, IAtker, IBeHit
     public override void IFixedUpdate()
     {
 
-    }
-    #endregion
-
-    #region 攻击和被击接口实现
-    public virtual void Atk(int index)
-    {
-
-    }
-    public virtual void BeHit(ref DamageInfo damageInfo)
-    {
-
-    }
-    public virtual DamageInfo GetDamageInfo()
-    {
-        return null;
-    }
-    public virtual DamageInfo GetHitCompute(DamageInfo damageInfo)
-    {
-        return null;
-    }
-    public virtual bool IsCanAtk()
-    {
-        return false;
-    }
-    public virtual bool IsCanBeHit()
-    {
-        return false;
-    }
-    public virtual void ShowAtkEffect(EffectInfo atkEffectInfo)
-    {
-    }
-    public virtual void ShowBeHitEffect(EffectInfo hitEffectInfo)
-    {
     }
     #endregion
 

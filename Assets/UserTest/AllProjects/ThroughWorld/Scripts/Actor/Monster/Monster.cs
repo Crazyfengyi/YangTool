@@ -18,6 +18,7 @@ public class Monster : RoleBase
     public override void IInit()
     {
         base.IInit();
+        campType = ActorCampType.Monster;
         roleBuffControl.Add(BuffID.buff_10001);
         aiPath = GetComponent<AIPath>();
     }
@@ -66,7 +67,7 @@ public class Monster : RoleBase
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
-        return null;
+        return damageInfo;
     }
     public override bool IsCanAtk()
     {
@@ -74,7 +75,7 @@ public class Monster : RoleBase
     }
     public override bool IsCanBeHit()
     {
-        return false;
+        return true;
     }
     public override void ShowAtkEffect(EffectInfo atkEffectInfo)
     {

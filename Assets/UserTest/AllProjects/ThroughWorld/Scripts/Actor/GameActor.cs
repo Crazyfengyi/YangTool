@@ -55,7 +55,7 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     }
     public virtual DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
-        return null;
+        return damageInfo;
     }
     public virtual bool IsCanAtk()
     {

@@ -19,6 +19,7 @@ public class PlayerController : RoleBase
     public override void IInit()
     {
         base.IInit();
+        campType = ActorCampType.Player;
         #region 输入
         GameInput = new GameInputSet();
         GameInput.Player.Enable();
@@ -41,7 +42,7 @@ public class PlayerController : RoleBase
             roleBuffControl.Add(BuffID.buff_10001);
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Collider[] temp = Physics.OverlapSphere(transform.position, 10);
             if (temp.Length > 0)
@@ -49,7 +50,7 @@ public class PlayerController : RoleBase
                 for (int i = 0; i < temp.Length; i++)
                 {
                     GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
-                    if (target)
+                    if (target && target.campType == ActorCampType.Monster)
                     {
                         AtkInfo atkInfo = new AtkInfo();
                         atkInfo.targetActor = target;
@@ -95,11 +96,13 @@ public class PlayerController : RoleBase
     }
     public override DamageInfo GetDamageInfo()
     {
-        return null;
+        var result = new DamageInfo();
+        result.damage = 200;
+        return result;
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
-        return null;
+        return damageInfo;
     }
     public override bool IsCanAtk()
     {

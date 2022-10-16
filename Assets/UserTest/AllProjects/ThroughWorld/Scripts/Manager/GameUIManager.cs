@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using YangTools.ObjectPool;
 using YangTools.Extend;
+using YangTools.Log;
 /// <summary>
 /// UI管理器
 /// </summary>
@@ -45,13 +46,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
+        Debuger.IsForceLog = true;
     }
     public void LateUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //AddTipsShow("测试提示！");
-            AddScoreShow(Vector3.zero, "-100");
+            //AddScoreShow(Vector3.zero, "-100");
         }
 
         timer += Time.deltaTime;
@@ -112,7 +114,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         ScoreData scoreData = new ScoreData();
         scoreData.worldPos = worldPos;
         scoreData.worldText = text;
-        scoreData.textColor = color;
+        scoreData.textColor = color == default ? Color.white : color;
         StartScoreUIShow(scoreData);
     }
     public void StartScoreUIShow(ScoreData scoreData)

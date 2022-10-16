@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: fx_rj_yanwu_01
+  m_Shader: {fileID: 4800000, guid: 1033611f7b30bec44a0679ee1c1262bf, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 1cf4eab5b182c514dac5b41b1e46154f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 3.28, y: 1}
+        m_Offset: {x: 1, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 8986323a2a011de4da5b61a8a1a6d9b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 2800000, guid: 8986323a2a011de4da5b61a8a1a6d9b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Cutoff: 0.5
+    - _EmissionPower: 1
+    - _Smooth: 0
+    - _Thresold: 0.15
+    - _Translucent: 0.5683761
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}

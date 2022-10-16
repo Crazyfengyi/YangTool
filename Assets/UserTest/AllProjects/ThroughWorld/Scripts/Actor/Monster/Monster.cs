@@ -24,7 +24,8 @@ public class Monster : RoleBase
     }
     public override void IDie()
     {
-
+        GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
+        Destroy(gameObject);
     }
     public override void IUpdate()
     {
@@ -60,6 +61,7 @@ public class Monster : RoleBase
     public override void BeHit(ref DamageInfo damageInfo)
     {
         healthControl.MinusHp(damageInfo);
+
     }
     public override DamageInfo GetDamageInfo()
     {
@@ -67,6 +69,8 @@ public class Monster : RoleBase
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
+        damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
+        damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
         return damageInfo;
     }
     public override bool IsCanAtk()

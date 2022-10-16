@@ -80,7 +80,10 @@ public class #类名# : MonoBehaviour
 
         private void OnEnable()
         {
-            editor = Editor.CreateEditor(target, Assembly.GetAssembly(typeof(Editor)).GetType("UnityEditor.RectTransformEditor", true));
+            Type temp = Assembly.GetAssembly(typeof(Editor)).GetType("UnityEditor.RectTransformEditor", true);
+            if (temp == null) return;
+
+            editor = Editor.CreateEditor(target, temp);
             tagetTranform = target as RectTransform;
             Init();
         }

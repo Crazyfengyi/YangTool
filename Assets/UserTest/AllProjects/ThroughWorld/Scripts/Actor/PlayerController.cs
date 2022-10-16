@@ -37,12 +37,12 @@ public class PlayerController : RoleBase
     public override void IUpdate()
     {
         base.IUpdate();
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             roleBuffControl.Add(BuffID.buff_10001);
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             Collider[] temp = Physics.OverlapSphere(transform.position, 10);
             if (temp.Length > 0)
@@ -85,9 +85,12 @@ public class PlayerController : RoleBase
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)
     {
+        if (!IsCanAtk()) return;
+
         if (atkInfo.targetActor.IsCanBeHit())
         {
             GameBattleManager.Instance.AtkProcess(this, atkInfo.targetActor);
+            ShowAtkEffect(atkInfo.atkEffectInfo);
         }
     }
     public override void BeHit(ref DamageInfo damageInfo)
@@ -97,7 +100,7 @@ public class PlayerController : RoleBase
     public override DamageInfo GetDamageInfo()
     {
         var result = new DamageInfo();
-        result.damage = 200;
+        result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
         return result;
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
@@ -106,7 +109,7 @@ public class PlayerController : RoleBase
     }
     public override bool IsCanAtk()
     {
-        return false;
+        return true;
     }
     public override bool IsCanBeHit()
     {

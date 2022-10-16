@@ -49,7 +49,7 @@ public class RoleAttributeControl
     /// <summary>
     /// 更改属性值
     /// </summary>
-    public void SetAttribute(RoleAttribute roleAttribute, float value, AttributeValueType valueType = AttributeValueType.BaseValue)
+    public void ChangeAttribute(RoleAttribute roleAttribute, float value, AttributeValueType valueType = AttributeValueType.BaseValue)
     {
         if (attributesDic.TryGetValue(roleAttribute, out ValueTotal attribute))
         {

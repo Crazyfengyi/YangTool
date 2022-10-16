@@ -31,8 +31,11 @@ public class RoleBase : GameActor
 
         roleAttributeControl = new RoleAttributeControl();
         roleAttributeControl.Init(this);
-        roleAttributeControl.SetAttribute(RoleAttribute.HP, 100);
-        roleAttributeControl.SetAttribute(RoleAttribute.MP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 50);
+
         healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
         {
             GameActorManager.Instance.ActorDie(this);

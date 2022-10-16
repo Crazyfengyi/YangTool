@@ -19,7 +19,13 @@ public class GameLevelManager : MonoBehaviour
     public void Start()
     {
         GameActorManager.Instance.CreateMonster();
-        GameActorManager.Instance.CreateTree(Random.insideUnitSphere * 10);
-        GameActorManager.Instance.CreateTree(Random.insideUnitSphere * 10);
+        GameActorManager.Instance.CreateTree(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameActorManager.Instance.CreateMonster();
+        }
     }
 }

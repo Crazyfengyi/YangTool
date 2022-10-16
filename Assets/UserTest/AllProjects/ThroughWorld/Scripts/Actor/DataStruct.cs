@@ -25,6 +25,7 @@ public enum ActorCampType
 public class AtkInfo
 {
     public GameActor targetActor;
+    public EffectInfo atkEffectInfo;
 }
 /// <summary>
 /// 伤害信息
@@ -75,6 +76,8 @@ public enum RoleAttribute
     None,
     HP,
     MP,
+    Atk,
+    Def,
 }
 /// <summary>
 /// 角色标记

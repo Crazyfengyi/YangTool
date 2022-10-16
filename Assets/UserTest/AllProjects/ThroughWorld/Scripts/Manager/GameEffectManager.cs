@@ -23,5 +23,12 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
        Attach_Point: 特效基于目标挂点(attachName)位置创建，但不跟随目标。
        Attach_Point_Follow: 特效基于目标挂点(attachName)位置创建，跟随目标。
      * */
+    public GameObject PlayEffect(string name, Vector3 worldPos)
+    {
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{name}");
+        if (obj == null) return null;
 
+        GameObject effect = GameObject.Instantiate(obj, worldPos, Quaternion.identity);
+        return effect;
+    }
 }

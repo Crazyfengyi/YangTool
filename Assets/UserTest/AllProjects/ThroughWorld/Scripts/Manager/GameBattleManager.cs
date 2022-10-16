@@ -22,5 +22,9 @@ public class GameBattleManager : MonoSingleton<GameBattleManager>
         }
         damageInfo = beAtker.GetHitCompute(damageInfo);
         beAtker.BeHit(ref damageInfo);
+
+        //damageInfo 免疫伤害需要处理
+
+        //beAtker.ShowBeHitEffect();
     }
 }

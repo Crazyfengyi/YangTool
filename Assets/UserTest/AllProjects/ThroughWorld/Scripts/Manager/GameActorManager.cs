@@ -79,7 +79,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{id}");
         if (obj)
         {
-            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f), Quaternion.identity).GetComponent<ICustomLife>();
+            ICustomLife monster = Instantiate(obj, new Vector3(Random.Range(-10, 10), 0f, Random.Range(-10, 10)), Quaternion.identity).GetComponent<ICustomLife>();
             customLives.Add(monster);
             monster.IInit();
         }
@@ -110,5 +110,17 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     public void ActorDie(GameActor gameActor)
     {
         gameActor.IDie();
+        switch (gameActor)
+        {
+            case Monster monster:
+                {
+                    //怪物死亡掉落物品
+                    GameActorManager.Instance.CreateItem("Apple", monster.transform.position);
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 }

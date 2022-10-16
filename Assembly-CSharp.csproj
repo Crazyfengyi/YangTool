@@ -383,8 +383,10 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\ToolScript\LookCamera.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\YangTools\ArtRes\CommonArt\Shader\SceneChangeAni.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />

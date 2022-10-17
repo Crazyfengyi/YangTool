@@ -368,6 +368,7 @@
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\ScrollListAdapter.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFABRIKRoot.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\TrigonometricIK.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\ToolScript\LookCamera.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKLODController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Navigator.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\RoleBase.cs" />
@@ -383,7 +384,7 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\ToolScript\LookCamera.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameSoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />

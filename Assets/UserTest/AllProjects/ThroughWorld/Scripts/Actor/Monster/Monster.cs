@@ -24,6 +24,7 @@ public class Monster : RoleBase
     }
     public override void IDie()
     {
+        GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
     }

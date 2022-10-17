@@ -10,11 +10,19 @@ using YangTools;
 namespace YangTools
 {
     /// <summary>
-    /// 声音管理者
+    /// 声音管理器
     /// </summary>
     internal class YangAudioManager : GameModuleManager
     {
-        public static YangAudioManager Instance { get; private set; }
+        private static YangAudioManager instance;
+        public static YangAudioManager Instance
+        {
+            get
+            {
+                return instance;
+            }
+            private set { }
+        }
 
         #region 属性
         //设备一般最多允许32个音源同时播放,优先级参数决定了在超出音源数目时，需要暂时关闭一些不重要的音源，优先播放更重要的音源
@@ -194,6 +202,7 @@ namespace YangTools
         /// </summary>
         internal override void Init()
         {
+            instance = new YangAudioManager();
             audioObject = new GameObject("AudioManagerObject");
             audioObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
 
@@ -214,8 +223,8 @@ namespace YangTools
         {
             audioClipDictionary.Clear();
             //本地加载 
-            AudioClip[] BGAudioArray = Resources.LoadAll<AudioClip>("/BGMusic");
-            AudioClip[] SoundAudioArray = Resources.LoadAll<AudioClip>("/SoundMusic");
+            AudioClip[] BGAudioArray = Resources.LoadAll<AudioClip>("AudioBG");
+            AudioClip[] SoundAudioArray = Resources.LoadAll<AudioClip>("AudioSound");
 
             IEnumerable<AudioClip> tempArray = BGAudioArray.Concat(SoundAudioArray);
 

@@ -13,8 +13,8 @@ public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
     private GameInputSet GameInput;
-
     public GameObject model;//模型
+    public GameObject shootrPoint;//发射点
 
     public override void IInit()
     {
@@ -42,8 +42,32 @@ public class PlayerController : RoleBase
             roleBuffControl.Add(BuffID.buff_10001);
         }
 
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    Collider[] temp = Physics.OverlapSphere(transform.position, 10);
+        //    if (temp.Length > 0)
+        //    {
+        //        for (int i = 0; i < temp.Length; i++)
+        //        {
+        //            GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
+        //            if (target && target.campType == ActorCampType.Monster)
+        //            {
+        //                AtkInfo atkInfo = new AtkInfo();
+        //                atkInfo.targetActor = target;
+        //                Atk(atkInfo);
+        //            }
+        //        }
+        //    }
+        //}
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            BulletData data = new BulletData();
+            data.owner = this;
+            data.speed = 10;
+            data.FromPostion = shootrPoint.transform.position;
+            data.direction = model.transform.forward;
+
             Collider[] temp = Physics.OverlapSphere(transform.position, 10);
             if (temp.Length > 0)
             {
@@ -52,12 +76,13 @@ public class PlayerController : RoleBase
                     GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
                     if (target && target.campType == ActorCampType.Monster)
                     {
-                        AtkInfo atkInfo = new AtkInfo();
-                        atkInfo.targetActor = target;
-                        Atk(atkInfo);
+                        data.target = target.gameObject;
+                        break;
                     }
                 }
             }
+
+            GameProjectileManager.Instance.CreateBullet(data);
         }
     }
     public override void ILateUpdate()

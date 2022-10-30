@@ -14,7 +14,12 @@ public class LookCamera : MonoBehaviour
     {
         if (CameraManager.Instance.mainCamera != null)
         {
-            transform.localRotation = CameraManager.Instance.mainCamera.transform.parent.localRotation;
+            //竖
+            var v = CameraManager.Instance.mainCamera.transform.parent.eulerAngles.x;
+            //横
+            var h = CameraManager.Instance.mainCamera.transform.parent.parent.eulerAngles.y;
+
+            transform.localRotation = Quaternion.Euler(new Vector3(v, h, 0));
         }
     }
 }

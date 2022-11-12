@@ -13,66 +13,9 @@ using System.Collections.Generic;
 /// <summary>
 /// 抛射体管理器(子弹)
 /// </summary>
+/// <remarks>Shooter射手---->emitter发射器--(发射信息--子弹id)-->生成子弹bullet</remarks>
 public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 {
-    //Shooter 射手
-    //emitter
-    //发射器，发射体
-
-    //子弹生成器主要是创建子弹，所以需要包含子弹类的所有参数
-    /*
-	 *   publicbool bAuto = false;
-		 public GameObject bulletPrefab;
-		//子弹目标 5public GameObject target;
-		//初速度 7publicfloat velocity = 0f;
-		//加速度 9publicfloat acceleration = 30f;
-		//总生命周期11publicfloat lifeTime = 3f;
-		//初始方向13public Vector2 direction = Vector2.zero;
-		//最大速度15publicfloat maxVelocity = 600;
-		//角速度17publicfloat palstance = 120;
-		//角度波动范围19publicfloat angelRange = 0f;
-		//延迟21publicfloat delay = 1f;
-		//是否循环23publicbool bLoop = false;
-		//时间间隔25publicfloat timeCell = .1f;
-		//生成数量27publicint count = 1;
-		//伤害29publicfloat damage;
-		//碰撞类型31public CollisionType collisionType;
-		//是否有子系统33publicbool bChildShooter = false;
-		//子系统是谁35public GameObject childShooter;
-	 * 
-	 * 
-	 * */
-
-    /*
-	 *  //目标 2public GameObject Target { get; set; }
-		//瞬时速度 4publicfloat Velocity { get; set; }
-		//剩余生命周期 6publicfloat LifeTime { get; set; }
-		//角速度 8publicfloat Palstance { get; set; }
-		//线性加速度10publicfloat Acceleration { get; set; }
-		//最大速度12publicfloat MaxVelocity { get; set; }
-	 * */
-
-    /*
-	 * 创建追踪子弹需要的参数主要有：
-		Owner：表示子弹的创建者
-		Ability：表示子弹关联的技能
-		FromPosition：子弹的出发地点
-		Target：子弹追踪的目标
-		Speed：子弹的飞行速率
-		创建线性子弹需要的参数主要有：
-
-		Owner：表示子弹的创建者
-		Ability：表示子弹关联的技能
-		FromPosition：子弹的出发地点
-		Velocity：子弹的飞行速度和方向
-		StartWidth，EndWith，Distance：（等腰梯形检测盒）起点宽度，终点宽度，飞行距离
-		FilterTargetInfo：子弹筛选目标信息
-
-		由于子弹在创建时传入了Ability参数，那么当子弹检测到命中目标后便可以通过调用GetAbility().OnProjectileHit(projHandle, hitTarget, hitPosition)在Ability Class中执行命中逻辑，
-		这样它就可以在技能模块中通过执行策划配置来实现各种效果了。子弹本身是没有任何特殊逻辑的，它只有位置更新，
-		检查命中目标和是否结束并销毁这几个简单的功能。
-	*/
-
     //所有子弹
     private static List<BulletBase> allBullet = new List<BulletBase>();
     public void Update()
@@ -94,13 +37,55 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         allBullet.Add(bulletBase);
         return bulletBase;
     }
-
     public void RemoveBullet(BulletBase bulletBase)
     {
         allBullet.Remove(bulletBase);
     }
 }
+/// <summary>
+/// 发射器基类
+/// </summary>
+public class EmitterBase
+{
+    /// <summary>
+    /// 发射信息
+    /// </summary>
+    public EmitData emitData;
 
+    private int shootCount;//发射次数
+    private float timer;
+    public void OnUpdate()
+    {
+        if (emitData == null) return;
+        if (shootCount > emitData.loopCount) return;
+        timer += Time.deltaTime;
+        if (timer > emitData.timeInterval)
+        {
+            timer = 0;
+            Shoot();
+            shootCount++;
+        }
+    }
+    /// <summary>
+    /// 发射
+    /// </summary>
+    public void Shoot()
+    {
+        BulletData bulletData = null;// GetBulletData(emitData.bulletID);
+        switch (emitData.bulletShootType)
+        {
+            case BulletShootType.Circle:
+                {
+
+
+                }
+                break;
+            default:
+                GameProjectileManager.Instance.CreateBullet(bulletData);
+                break;
+        }
+    }
+}
 /// <summary>
 /// 子弹基类
 /// </summary>
@@ -109,7 +94,8 @@ public class BulletBase
     /// <summary>
     /// 子弹数据
     /// </summary>
-    public BulletData bulletData;
+    private BulletData bulletData;
+    public BulletData BulletData => bulletData;
     /// <summary>
     /// 子弹物体
     /// </summary>
@@ -122,6 +108,8 @@ public class BulletBase
     }
     public void OnUpdate()
     {
+        if (bulletData == null) return;
+
         if (bulletData.target != null)
         {
             //追踪子弹--直接转向目标
@@ -139,7 +127,36 @@ public class BulletBase
         bulletObj.transform.Translate(bulletObj.transform.forward * bulletData.speed * Time.deltaTime, Space.World);
     }
 }
-
+/// <summary>
+/// 发射信息
+/// </summary>
+public class EmitData
+{
+    /// <summary>
+    /// 子弹ID
+    /// </summary>
+    public int bulletID;
+    /// <summary>
+    /// 是否循环
+    /// </summary>
+    public bool isLoop = false;
+    /// <summary>
+    /// 发射次数
+    /// </summary>
+    public int loopCount = 1;
+    /// <summary>
+    /// 时间间隔
+    /// </summary>
+    public float timeInterval = 0.1f;
+    /// <summary>
+    /// 生成子弹数量
+    /// </summary>
+    public float bulletCount;
+    /// <summary>
+    /// 子弹发射
+    /// </summary>
+    public BulletShootType bulletShootType;
+}
 /// <summary>
 /// 子弹数据
 /// </summary>
@@ -151,6 +168,10 @@ public class BulletData
     public GameActor owner;
     //创建它的技能
     //public SkillBase skill;  //命中后 调用技能的OnBulletHit(hitPos,hitTarget)
+    /// <summary>
+    /// 攻击信息
+    /// </summary>
+    public DamageInfo damageInfo;
     /// <summary>
     /// 出发点
     /// </summary>
@@ -164,7 +185,23 @@ public class BulletData
     /// </summary>
     public float speed;
     /// <summary>
+    /// 加速度
+    /// </summary>
+    public float acceleration;
+    /// <summary>
+    /// 最大速度
+    /// </summary>
+    public float maxSpeed = 600;
+    /// <summary>
+    /// 转向速度
+    /// </summary>
+    public float angleSpeed = 10;
+    /// <summary>
     /// 方向
     /// </summary>
     public Vector3 direction;
+    /// <summary>
+    /// 最大存活时间
+    /// </summary>
+    public float survivalMaxTime = 100f;
 }

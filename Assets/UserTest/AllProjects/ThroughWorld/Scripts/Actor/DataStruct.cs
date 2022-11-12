@@ -42,6 +42,14 @@ public class EffectInfo
 
 }
 /// <summary>
+/// 子弹发射类型
+/// </summary>
+public enum BulletShootType
+{
+    None,
+    Circle
+}
+/// <summary>
 /// 交互类型
 /// </summary>
 public enum InterActiveType

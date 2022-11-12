@@ -19,8 +19,16 @@ namespace YangTools
     {
         private bool isLoad;
         private string saveKey;
-        public string SaveKey { get { return saveKey; } }
-        private T _value;
+        /// <summary>
+        /// 自动保存用的Key
+        /// </summary>
+        public string SaveKey => saveKey;
+        private bool isOpenAutoSave;
+        /// <summary>
+        /// 是否开启自动保存--重复连续更改Value请暂时关闭
+        /// </summary>
+        public bool IsOpenAutoSave => isOpenAutoSave;
+        private T value;
         public T Value
         {
             get
@@ -29,34 +37,37 @@ namespace YangTools
                 {
                     Load();
                 }
-                return _value;
+                return value;
             }
             set
             {
-                _value = value;
-                Save();
+                this.value = value;
+                if (IsOpenAutoSave)
+                {
+                    Save();
+                }
             }
-        }
-        /// <summary>
-        /// 自定义key
-        /// </summary>
-        /// <param name="yourKey">你的key</param>
-        public AutoSave(string yourKey)
-        {
-            saveKey = yourKey;
         }
         /// <summary>
         /// 默认使用的key:调用方的方法名+文件路径
         /// </summary>
         /// <param name="callName">key1:默认为调用方的方法名/字段名</param>
         /// <param name="path">key2:默认为调用方文件路径名</param>
-        public AutoSave([CallerMemberName] string callName = "", [CallerFilePath] string path = "")
+        public AutoSave(string _saveKey, [CallerMemberName] string callName = "", [CallerFilePath] string path = "")
         {
-            saveKey = callName + "_" + path.GetHashCode();
+            if (string.IsNullOrEmpty(_saveKey))
+            {
+                saveKey = callName + "_" + path.GetHashCode();
+            }
+            else
+            {
+                saveKey = _saveKey;
+            }
+            isOpenAutoSave = true;
         }
         public void Save()
         {
-            ES3.Save<T>(saveKey, _value);
+            ES3.Save<T>(saveKey, value);
         }
         public void Load()
         {
@@ -64,7 +75,7 @@ namespace YangTools
             if (ES3.KeyExists(saveKey))
             {
                 T loadValue = ES3.Load<T>(saveKey);
-                _value = loadValue;
+                value = loadValue;
             }
         }
     }

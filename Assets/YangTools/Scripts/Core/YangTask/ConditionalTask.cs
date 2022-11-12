@@ -83,10 +83,10 @@ namespace YangTools.Task
         /// 任务轮询时调用。
         /// </summary>
         /// <param name="delaTimeSeconds">逻辑流逝时间，以秒为单位。</param>
-        /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
-        protected internal override void OnUpdate(float delaTimeSeconds, float realElapseSeconds)
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间，以秒为单位。</param>
+        protected internal override void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            base.OnUpdate(delaTimeSeconds, realElapseSeconds);
+            base.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
             if (!m_Condition(this))
             {
                 return;

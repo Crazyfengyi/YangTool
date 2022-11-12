@@ -288,7 +288,7 @@ namespace YangTools
         /// <summary>
         /// 播放背景音乐
         /// </summary>
-        /// <param name="clip">音乐剪辑</param>
+        /// <param name="audioName">音乐名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
         public void PlayBackgroundMusic(string audioName, bool isLoop = true, float speed = 1f)

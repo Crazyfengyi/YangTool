@@ -278,9 +278,9 @@ namespace YangTools.UGUI
         /// <summary>
         /// 界面轮询
         /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位</param>
-        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位</param>
-        protected internal virtual void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
+        protected internal virtual void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
         }
         /// <summary>

@@ -21,6 +21,8 @@ namespace YangTools
 
             return Convert.ToBoolean(Array.IndexOf(list, func));
         }
+
+        #region 序列化
         /// <summary>
         /// 利用反射实现深拷贝---对象的相互引用，会导致方法循环调用:建议使用序列化的形式来进行深拷贝
         /// </summary>
@@ -112,10 +114,9 @@ namespace YangTools
 
             return (T)retval;
         }
-    }
+        #endregion
 
-    public static class BezierMath
-    {
+        #region 曲线方法
         /// <summary>
         /// 二次贝塞尔
         /// </summary>
@@ -157,5 +158,6 @@ namespace YangTools
             Vector3 curvePoint = c3 * t * t * t + c2 * t * t + c1 * t + c0;
             return curvePoint;
         }
+        #endregion
     }
 }

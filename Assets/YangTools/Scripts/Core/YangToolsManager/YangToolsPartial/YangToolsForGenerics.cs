@@ -12,6 +12,20 @@ using System;
 namespace YangTools
 {
     /// <summary>
+    /// 饿汉模式-单例模板
+    /// </summary>
+    public abstract class Singleton<T> where T : class, new()
+    {
+        private static readonly T instance = new T();
+        public static T Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+    }
+    /// <summary>
     /// 简单的线程安全单例模板
     /// </summary>
     public abstract class SimpleSingleton<T> where T : class, new()
@@ -33,20 +47,6 @@ namespace YangTools
                     }
                     return instance;
                 }
-            }
-        }
-    }
-    /// <summary>
-    /// 饿汉模式-单例模板
-    /// </summary>
-    public abstract class Singleton<T> where T : class, new()
-    {
-        private static readonly T instance = new T();
-        public static T Instance
-        {
-            get
-            {
-                return instance;
             }
         }
     }

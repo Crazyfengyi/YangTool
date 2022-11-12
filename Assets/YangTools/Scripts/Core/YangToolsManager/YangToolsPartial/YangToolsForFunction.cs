@@ -22,11 +22,8 @@ namespace YangTools
             return Convert.ToBoolean(Array.IndexOf(list, func));
         }
         /// <summary>
-        /// 利用反射实现深拷贝---对象的相互引用，会导致方法循环调用:建议大家使用序列化的形式来进行深拷贝
+        /// 利用反射实现深拷贝---对象的相互引用，会导致方法循环调用:建议使用序列化的形式来进行深拷贝
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public static T DeepCopyWithReflection<T>(T obj)
         {
             Type type = obj.GetType();
@@ -66,9 +63,6 @@ namespace YangTools
         /// <summary>
         /// 利用DataContractSerializer序列化和反序列化实现
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public static T DeepCopy<T>(T obj)
         {
             object retval;
@@ -85,9 +79,6 @@ namespace YangTools
         /// <summary>
         /// 利用二进制序列化和反序列实现
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public static T DeepCopyWithBinarySerialize<T>(T obj)
         {
             object retval;
@@ -107,9 +98,6 @@ namespace YangTools
         /// <summary>
         /// 利用XML序列化和反序列化实现
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public static T DeepCopyWithXmlSerializer<T>(T obj)
         {
             object retval;

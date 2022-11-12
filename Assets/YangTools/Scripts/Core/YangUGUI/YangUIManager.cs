@@ -14,7 +14,7 @@ using YangTools.ObjectPool;
 
 namespace YangTools.UGUI
 {
-    internal class YangUIManager : GameModuleManager, IUIManager
+    internal class YangUIManager : GameModuleBase, IUIManager
     {
         private readonly Dictionary<string, UIGroup> uiGroups;//UI组
         private readonly Queue<IUIPanel> recycleQueue;//回收队列
@@ -66,15 +66,15 @@ namespace YangTools.UGUI
         }
 
         #region 生命周期
-        internal override void Init()
+        internal override void InitModule()
         {
         }
         /// <summary>
         /// UI界面管理器轮询
         /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位</param>
-        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位</param>
-        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             while (recycleQueue.Count > 0)
             {
@@ -84,7 +84,7 @@ namespace YangTools.UGUI
             }
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
-                uiGroup.Value.Update(elapseSeconds, realElapseSeconds);
+                uiGroup.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
         }
         internal override void CloseModule()
@@ -742,9 +742,9 @@ namespace YangTools.UGUI
         /// <summary>
         /// UI界面组轮询
         /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间,以秒为单位</param>
-        /// <param name="realElapseSeconds">真实流逝时间,以秒为单位</param>
-        public void Update(float elapseSeconds, float realElapseSeconds)
+        /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
+        public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             LinkedListNode<UIPanelInfo> current = uiPanelInfos.First;
             while (current != null)
@@ -754,7 +754,7 @@ namespace YangTools.UGUI
                     break;
                 }
                 cachedNode = current.Next;
-                current.Value.UIPanel.OnUpdate(elapseSeconds, realElapseSeconds);
+                current.Value.UIPanel.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
                 current = cachedNode;
                 cachedNode = null;
             }

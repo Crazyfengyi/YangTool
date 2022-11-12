@@ -17,7 +17,7 @@ namespace YangTools.ObjectPool
     /// <summary>
     /// 通用对象池
     /// </summary>
-    internal class YangObjectPool : GameModuleManager
+    internal class YangObjectPool : GameModuleBase
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
@@ -103,14 +103,14 @@ namespace YangTools.ObjectPool
             }
             return default;
         }
-        internal override void Init()
+        internal override void InitModule()
         {
         }
-        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             foreach (KeyValuePair<string, PoolPackage> item in m_allPools)
             {
-                item.Value.Update(elapseSeconds, realElapseSeconds);
+                item.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
         }
         internal override void CloseModule()
@@ -140,9 +140,9 @@ namespace YangTools.ObjectPool
             System.Reflection.MethodInfo createFunc = type.GetMethod("Update");
             updateAction = new ReflectionInfo(objectPool, createFunc);
         }
-        public void Update(float elapseSeconds, float realElapseSeconds)
+        public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            updateAction?.Invoke(elapseSeconds, realElapseSeconds);
+            updateAction?.Invoke(delaTimeSeconds, unscaledDeltaTimeSeconds);
         }
     }
     /// <summary>
@@ -234,9 +234,9 @@ namespace YangTools.ObjectPool
             m_ActionOnDestroy = new ReflectionInfo(instance, destroyAction);
             #endregion
         }
-        public void Update(float elapseSeconds, float realElapseSeconds)
+        public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            AutoRecycleTime += realElapseSeconds;
+            AutoRecycleTime += unscaledDeltaTimeSeconds;
             if (AutoRecycleTime < AutoRecycleInterval)
             {
                 return;
@@ -373,7 +373,7 @@ namespace YangTools.ObjectPool
         /// 优先级
         /// </summary>
         float Priority { get; set; }
-        void Update(float elapseSeconds, float realElapseSeconds);
+        void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds);
         /// <summary>
         /// 获得对象
         /// </summary>

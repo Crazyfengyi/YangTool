@@ -15,7 +15,7 @@ namespace YangTools.Task
     /// <summary>
     /// 任务管理器。
     /// </summary>
-    internal sealed class YangTaskManager : GameModuleManager, ITaskManager
+    internal sealed class YangTaskManager : GameModuleBase, ITaskManager
     {
         #region 属性
         private readonly LinkedList<TaskBase> allTasksList;//所有任务列表
@@ -41,15 +41,15 @@ namespace YangTools.Task
         #endregion
 
         #region  生命周期
-        internal override void Init()
+        internal override void InitModule()
         {
         }
         /// <summary>
         /// 任务管理器轮询。
         /// </summary>
-        /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
-        /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
-        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        /// <param name="delaTimeSeconds">逻辑流逝时间，以秒为单位。</param>
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间，以秒为单位。</param>
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             LinkedListNode<TaskBase> current = allTasksList.First;
             while (current != null)
@@ -65,7 +65,7 @@ namespace YangTools.Task
                 }
                 if (task.Status == TaskStatus.Running)
                 {
-                    task.OnUpdate(elapseSeconds, realElapseSeconds);
+                    task.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
                     current = current.Next;
                 }
                 else

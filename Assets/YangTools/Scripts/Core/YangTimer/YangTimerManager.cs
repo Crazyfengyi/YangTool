@@ -8,7 +8,7 @@ namespace YangTools.Timer
     /// <summary>
     /// 计时器管理者
     /// </summary>
-    internal class YangTimerManager : GameModuleManager
+    internal class YangTimerManager : GameModuleBase
     {
         #region 内部调用
         ///// 单例
@@ -54,11 +54,11 @@ namespace YangTools.Timer
         /// <summary>
         /// 初始化
         /// </summary>
-        internal override void Init()
+        internal override void InitModule()
         {
             //throw new NotImplementedException();
         }
-        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             //移除主动删除的计时器
             for (int i = CallDestoryList.Count - 1; i >= 0; i--)

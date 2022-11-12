@@ -12,7 +12,7 @@ namespace YangTools
     /// <summary>
     /// 声音管理器
     /// </summary>
-    internal class YangAudioManager : GameModuleManager
+    internal class YangAudioManager : GameModuleBase
     {
         private static YangAudioManager instance;
         public static YangAudioManager Instance
@@ -200,7 +200,7 @@ namespace YangTools
         /// <summary>
         /// 初始化，会生成一个物体挂载在工具类不可删除物体下
         /// </summary>
-        internal override void Init()
+        internal override void InitModule()
         {
             instance = new YangAudioManager();
             audioObject = new GameObject("AudioManagerObject");
@@ -262,7 +262,7 @@ namespace YangTools
         #endregion
 
         #region 生命周期
-        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             if (_singleSoundPlayDetector)
             {

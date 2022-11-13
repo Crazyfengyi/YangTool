@@ -56,7 +56,8 @@ public class HealthControl
     public void MinusHp(DamageInfo damageInfo)
     {
         valueTotal.ChangeCurrentValue(-Mathf.Abs(damageInfo.damage));
-        GameUIManager.Instance.AddScoreShow(gameActor.transform.position, $"-{damageInfo.damage}", Color.red);
+        Vector3 atkPos = damageInfo.atkPos == default ? gameActor.transform.position : damageInfo.atkPos;
+        GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
 
         //if (heroHealthBar != null)
         //{

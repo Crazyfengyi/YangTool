@@ -133,11 +133,17 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
         DOTween.Kill(score, true);
         var defaultPos = scoreText.transform.localPosition;
-        var startPos = defaultPos;
-        scoreText.transform.localPosition = startPos;
+        scoreText.transform.localPosition = defaultPos + new Vector3(Random.Range(-12f, 12f), Random.Range(-6f, 6f), 0);
 
+        CanvasGroup canvasGroup = scoreText.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 1f;
+        scoreText.transform.localScale = Vector3.one;
         DOTween.Sequence()
-            .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 120, 0.6f).SetEase(Ease.InCubic))
+            .Append(scoreText.transform.DOScale(0.8f, 0.2f))
+            .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 6, 0.2f))
+            .Join(scoreText.transform.DOScale(1f, 0.2f))
+            .Append(scoreText.transform.DOScale(0.6f, 0.2f).SetEase(Ease.InCubic))
+            .Append(canvasGroup.DOFade(0, 0.2f))
             .OnUpdate(() =>
             {
                 Vector3 pos = WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
@@ -146,6 +152,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             .OnComplete(() =>
             {
                 scoreText.transform.localPosition = defaultPos;
+                scoreText.transform.localScale = Vector3.one;
                 YangObjectPool.Recycle(poolItem);
             })
             .SetTarget(score);
@@ -177,7 +184,7 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     public GameObject obj;
     public TipObjectPoolItem Create()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("TipsNode"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
         TipObjectPoolItem temp = new TipObjectPoolItem();
         temp.obj = tempObj;
         return temp;
@@ -217,7 +224,7 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem Create()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("WordUI"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/WordUI"));
         ScoreObjectPoolItem temp = new ScoreObjectPoolItem();
         temp.obj = tempObj;
         return temp;

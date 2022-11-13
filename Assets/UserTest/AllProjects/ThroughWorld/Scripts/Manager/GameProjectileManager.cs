@@ -26,10 +26,21 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         }
     }
     /// <summary>
+    /// 场景切换
+    /// </summary>
+    public void OnSceneChange()
+    {
+        for (int i = 0; i < allBullet.Count; i++)
+        {
+            allBullet[i].OnDie(BulletDieType.SceneChange);
+        }
+    }
+    /// <summary>
     /// 创建子弹
     /// </summary>
     public BulletBase CreateBullet(BulletData bulletData)
     {
+        //TODO:需要换成对象池
         GameObject Obj = GameResourceManager.Instance.ResoruceLoad($"Bullets/BulletTest");
         GameObject bulletObj = GameObject.Instantiate(Obj, bulletData.FromPostion, Quaternion.identity);
 
@@ -37,9 +48,14 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         allBullet.Add(bulletBase);
         return bulletBase;
     }
+    /// <summary>
+    /// 移除子弹
+    /// </summary>
     public void RemoveBullet(BulletBase bulletBase)
     {
         allBullet.Remove(bulletBase);
+        //TODO:需要换成对象池
+        Destroy(bulletBase.bulletObj);
     }
 }
 /// <summary>
@@ -48,28 +64,48 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 public class EmitterBase
 {
     /// <summary>
+    /// 发射者
+    /// </summary>
+    public GameActor actor;
+    /// <summary>
     /// 发射信息
     /// </summary>
     public EmitData emitData;
 
-    private int shootCount;//发射次数
-    private float timer;
-    public void OnUpdate()
+    protected int shootCount;//发射次数
+    protected float timer;
+    protected bool startShoot;//开始发射
+    public EmitterBase(GameActor _actor)
     {
+        actor = _actor;
+    }
+    /// <summary>
+    /// 开始发射
+    /// </summary>
+    public virtual void StartShoot()
+    {
+        startShoot = true;
+    }
+    public virtual void OnUpdate()
+    {
+        if (!startShoot) return;
         if (emitData == null) return;
-        if (shootCount > emitData.loopCount) return;
         timer += Time.deltaTime;
         if (timer > emitData.timeInterval)
         {
             timer = 0;
             Shoot();
             shootCount++;
+            if (shootCount > emitData.loopCount)
+            {
+                startShoot = false;
+            }
         }
     }
     /// <summary>
     /// 发射
     /// </summary>
-    public void Shoot()
+    public virtual void Shoot()
     {
         BulletData bulletData = null;// GetBulletData(emitData.bulletID);
         switch (emitData.bulletShootType)
@@ -77,13 +113,19 @@ public class EmitterBase
             case BulletShootType.Circle:
                 {
 
-
                 }
                 break;
             default:
                 GameProjectileManager.Instance.CreateBullet(bulletData);
                 break;
         }
+    }
+    /// <summary>
+    /// 设置发射信息
+    /// </summary>
+    public virtual void SetEmitData(EmitData _emitData)
+    {
+        emitData = _emitData;
     }
 }
 /// <summary>
@@ -100,6 +142,8 @@ public class BulletBase
     /// 子弹物体
     /// </summary>
     public GameObject bulletObj;
+
+    private float timer;
     public BulletBase(BulletData data, GameObject Obj)
     {
         bulletData = data;
@@ -108,8 +152,7 @@ public class BulletBase
     }
     public void OnUpdate()
     {
-        if (bulletData == null) return;
-
+        if (bulletData == null || bulletObj == null) return;
         if (bulletData.target != null)
         {
             //追踪子弹--直接转向目标
@@ -125,6 +168,56 @@ public class BulletBase
         }
 
         bulletObj.transform.Translate(bulletObj.transform.forward * bulletData.speed * Time.deltaTime, Space.World);
+        CheckAtk();
+
+        timer += Time.deltaTime;
+        if (timer >= bulletData.survivalMaxTime)
+        {
+            OnDie(BulletDieType.TimeOut);
+        }
+    }
+    /// <summary>
+    /// 检查攻击
+    /// </summary>
+    public void CheckAtk()
+    {
+        Collider[] temp = Physics.OverlapSphere(bulletObj.transform.position, 0.5f);
+        if (temp.Length > 0)
+        {
+            bool needDie = false;
+            for (int i = 0; i < temp.Length; i++)
+            {
+                GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
+                if (target && target.campType == ActorCampType.Monster)//TODO:根据目标类型造成伤害
+                {
+                    bulletData.collisionPos = target.ClosestColliderPos(bulletObj.transform.position);
+                    GameBattleManager.Instance.AtkProcess(bulletData.owner, target);
+                    needDie = true;
+                }
+            }
+
+            if (needDie) OnDie(BulletDieType.Atk);
+        }
+    }
+    /// <summary>
+    /// 死亡
+    /// </summary>
+    public virtual void OnDie(BulletDieType bulletDieType)
+    {
+        switch (bulletDieType)
+        {
+            case BulletDieType.Atk:
+                {
+                    Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
+                    GameSoundManager.Instance.PlaySound("Audio_BulletAtk");
+                    GameEffectManager.Instance.PlayEffect("BulletAtkEffect", effectPos);
+                }
+                break;
+            default:
+                break;
+        }
+
+        GameProjectileManager.Instance.RemoveBullet(this);
     }
 }
 /// <summary>
@@ -152,6 +245,10 @@ public class EmitData
     /// 生成子弹数量
     /// </summary>
     public float bulletCount;
+    /// <summary>
+    /// 角度
+    /// </summary>
+    public float angle;
     /// <summary>
     /// 子弹发射
     /// </summary>
@@ -203,5 +300,9 @@ public class BulletData
     /// <summary>
     /// 最大存活时间
     /// </summary>
-    public float survivalMaxTime = 100f;
+    public float survivalMaxTime = 10f;
+    /// <summary>
+    /// 碰撞点
+    /// </summary>
+    public Vector3 collisionPos;
 }

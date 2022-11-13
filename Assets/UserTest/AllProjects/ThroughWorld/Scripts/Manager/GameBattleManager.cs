@@ -15,6 +15,9 @@ public class GameBattleManager : MonoSingleton<GameBattleManager>
     public void AtkProcess(GameActor atker, GameActor beAtker)
     {
         DamageInfo damageInfo = atker.GetDamageInfo();
+        //攻击点
+        Vector3 atkPos = beAtker.ClosestColliderPos(atker.transform.position);
+        damageInfo.atkPos = atkPos;
         if (damageInfo == null)
         {
             Debuger.ToError($"攻击信息为空,攻击流程退出");

@@ -62,7 +62,6 @@ public class Monster : RoleBase
     public override void BeHit(ref DamageInfo damageInfo)
     {
         healthControl.MinusHp(damageInfo);
-
     }
     public override DamageInfo GetDamageInfo()
     {

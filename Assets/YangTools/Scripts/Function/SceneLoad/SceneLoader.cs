@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace YangTools
 {
@@ -69,6 +70,10 @@ namespace YangTools
         /// 异步加载信息
         /// </summary>
         private AsyncOperation async;
+        /// <summary>
+        /// 场景加载前
+        /// </summary>
+        public Action OnSceneLoadPre;
         #endregion
 
         #region 生命周期
@@ -136,6 +141,8 @@ namespace YangTools
         {
             sceneName = _sceneName;
             sceneLoadType = _sceneLoadType;
+
+            OnSceneLoadPre?.Invoke();
             loadScene();
         }
         /// <summary>

@@ -129,6 +129,7 @@
     <Compile Include="Assets\YangTools\EditorStudio\Editor\HierarchyExtend\HierarchyShow.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\Baker\BakerInspector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Editor\FinalIK\RotationLimitPolygonalInspector.cs" />
+    <Compile Include="Assets\YangTools\EditorStudio\Editor\MinTool\BuildTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DemiLib\Core\Editor\DemiEditor.dll" />

@@ -5,10 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEditor;
-using System.Linq;
-using YangTools;
-using TreeEditor;
 using YangTools.UGUI;
 
 public class Test : MonoBehaviour

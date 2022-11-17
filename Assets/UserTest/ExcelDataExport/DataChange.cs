@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Excel;
 using System;
 using System.Collections;
@@ -416,3 +417,4 @@ public class DataChange : EditorWindow
         }
     }
 }
+#endif

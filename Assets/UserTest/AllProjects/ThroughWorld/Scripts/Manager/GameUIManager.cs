@@ -42,7 +42,12 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     public Transform scoreParent;
     #endregion
 
-    public void Awake()
+    #region 血条
+    public Transform hpBarParent;
+    #endregion
+
+    //private static ;
+    protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
@@ -120,7 +125,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     public void StartScoreUIShow(ScoreData scoreData)
     {
         //飘分对象
-        Vector3 pos = WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
         ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
         GameObject score = poolItem.obj;
         score.transform.SetParent(scoreParent);
@@ -146,7 +151,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             .Append(canvasGroup.DOFade(0, 0.2f))
             .OnUpdate(() =>
             {
-                Vector3 pos = WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
                 score.transform.localPosition = pos;
             })
             .OnComplete(() =>
@@ -157,24 +162,28 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             })
             .SetTarget(score);
     }
+    #endregion
+
+    #region 血条
     /// <summary>
-    /// 世界坐标转UI的局部坐标
+    /// 创建血条
     /// </summary>
-    /// <param name="WorldCamara">场景相机</param>
-    /// <param name="UICamara">UI相机</param>
-    /// <param name="worldPos">世界坐标</param>
-    /// <param name="targetParent">目标节点</param>
-    public Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
+    public HPBarObjectPoolItem CreateHPBar(HPBarData hpBarData)
     {
-        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(), screenPoint, UICamara, out Vector2 localPoint))
-        {
-            return localPoint;
-        }
-        return default;
+        //飘分对象
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.worldPos, hpBarParent);
+        HPBarObjectPoolItem poolItem = YangObjectPool.Get<HPBarObjectPoolItem>();
+        GameObject hpBar = poolItem.obj;
+        hpBar.transform.SetParent(scoreParent);
+        hpBar.transform.SetAsLastSibling();
+        hpBar.transform.localPosition = pos;
+
+        return poolItem;
     }
     #endregion
 }
+
+#region 提示
 /// <summary>
 /// 对象池提示对象
 /// </summary>
@@ -182,24 +191,22 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
 {
     public bool IsInPool { get; set; }
     public GameObject obj;
-    public TipObjectPoolItem Create()
+    public TipObjectPoolItem()
     {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
-        TipObjectPoolItem temp = new TipObjectPoolItem();
-        temp.obj = tempObj;
-        return temp;
+        obj = tempObj;
     }
-    public void OnGet(TipObjectPoolItem t)
+    public void OnGet()
     {
-        t.obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet();
     }
-    public void OnRecycle(TipObjectPoolItem t)
+    public void OnRecycle()
     {
-        t.obj.DefualtGameObjectRecycle();
+        obj.DefualtGameObjectRecycle();
     }
-    public void OnDestroy(TipObjectPoolItem t)
+    public void OnDestroy()
     {
-        t.obj.DefualtGameObjectDestory();
+        obj.DefualtGameObjectDestory();
     }
 }
 /// <summary>
@@ -213,8 +220,9 @@ public class TipData
         tipStr = str;
     }
 }
+#endregion
 
-
+#region 飘分 
 /// <summary>
 /// 对象池飘分对象
 /// </summary>
@@ -222,24 +230,22 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
 {
     public bool IsInPool { get; set; }
     public GameObject obj;
-    public ScoreObjectPoolItem Create()
+    public ScoreObjectPoolItem()
     {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/WordUI"));
-        ScoreObjectPoolItem temp = new ScoreObjectPoolItem();
-        temp.obj = tempObj;
-        return temp;
+        obj = tempObj;
     }
-    public void OnGet(ScoreObjectPoolItem t)
+    public void OnGet()
     {
-        t.obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet();
     }
-    public void OnRecycle(ScoreObjectPoolItem t)
+    public void OnRecycle()
     {
-        t.obj.DefualtGameObjectRecycle();
+        obj.DefualtGameObjectRecycle();
     }
-    public void OnDestroy(ScoreObjectPoolItem t)
+    public void OnDestroy()
     {
-        t.obj.DefualtGameObjectDestory();
+        obj.DefualtGameObjectDestory();
     }
 }
 /// <summary>
@@ -251,3 +257,46 @@ public class ScoreData
     public string worldText;
     public Color textColor;
 }
+#endregion
+
+#region 血条
+/// <summary>
+/// 对象池血条对象
+/// </summary>
+public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
+{
+    public bool IsInPool { get; set; }
+    public GameObject obj;
+    public HPBarObjectPoolItem()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/HPBarUI"));
+        obj = tempObj;
+    }
+    public void OnGet()
+    {
+        obj.DefualtGameObjectOnGet();
+
+        //设置显示
+        TMP_Text scoreText = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
+        Slider hpSlider = obj.transform.GetChild(1).gameObject.GetComponentInChildren<Slider>(true);
+        Slider mpSlider = obj.transform.GetChild(2).gameObject.GetComponentInChildren<Slider>(true);
+    }
+    public void OnRecycle()
+    {
+        obj.DefualtGameObjectRecycle();
+    }
+    public void OnDestroy()
+    {
+        obj.DefualtGameObjectDestory();
+    }
+}
+/// <summary>
+/// 血条数据
+/// </summary>
+public class HPBarData
+{
+    public Vector3 worldPos;
+    public string worldText;
+    public Color textColor;
+}
+#endregion

@@ -489,6 +489,87 @@ namespace YangTools.Extend
             return angle;
         }
         #endregion
+
+        #region 坐标转换
+        /// <summary>
+        /// 获取自身的世界坐标(父节点不能为空-通过父节点坐标系转)
+        /// </summary>
+        /// <param name="tran">自身</param>
+        public static Vector3 LocalPostionToWordPostion(Transform tran)
+        {
+            return tran.parent.TransformPoint(tran.localPosition);
+        }
+        /// <summary>
+        /// 世界坐标转局部坐标
+        /// </summary>
+        /// <param name="tran">转换的坐标系原点</param>
+        /// <param name="wordSpace">世界坐标</param>
+        public static Vector3 WordPostionToLocalPostion(Transform tran, Vector3 wordSpace)
+        {
+            return tran.InverseTransformPoint(wordSpace);
+        }
+        /// <summary>
+        /// 局部坐标转局部坐标(父节点不能为空-通过父节点坐标系转)
+        /// </summary>
+        /// <param name="localTran">被转换的节点(它的局部坐标)</param>
+        /// <param name="targetTran">目标父节点(目标局部原点)</param>
+        public static Vector3 LocalPositonToLocalPosition(Transform localTran, Transform targetTran)
+        {
+            Transform _parent = localTran.parent;
+            if (_parent != null)
+            {
+                Vector3 _wordSpace = _parent.TransformPoint(localTran.localPosition);
+                return targetTran.InverseTransformPoint(_wordSpace);
+            }
+            return default;
+        }
+        /// <summary>
+        /// 世界坐标转UI的局部坐标
+        /// </summary>
+        /// <param name="WorldCamara">场景相机</param>
+        /// <param name="UICamara">UI相机</param>
+        /// <param name="worldPos">世界坐标</param>
+        /// <param name="targetParent">目标节点</param>
+        public static Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
+        {
+            //世界坐标转屏幕坐标
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
+            //屏幕坐标转局部坐标
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(), screenPoint, UICamara, out Vector2 localPoint))
+            {
+                return localPoint;
+            }
+            return default;
+        }
+        /// <summary>
+        /// 屏幕坐标转成UI坐标
+        /// </summary>
+        /// <param name="parent">目标父节点(坐标系原点)</param>
+        /// <param name="screenPos">屏幕点位置</param>
+        /// <param name="uiCamera">UI相机</param>
+        public static Vector3 ScreenPostionToUIPostion(RectTransform parent, Vector2 screenPos, Camera uiCamera)
+        {
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, uiCamera, out Vector2 localPoint))
+            {
+                return localPoint;
+            }
+            return Vector3.zero;
+        }
+        /// <summary>
+        /// 屏幕点是否在矩形中
+        /// </summary>
+        public static bool ScreenPosIsInRect(RectTransform rect, Vector2 screenPoint, Camera cam = null)
+        {
+            if (cam)
+            {
+                return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint, cam);
+            }
+            else
+            {
+                return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint);
+            }
+        }
+        #endregion
     }
     /// <summary>
     /// 范围检测类

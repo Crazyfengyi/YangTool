@@ -151,10 +151,7 @@ namespace YangTools.ObjectPool
     public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         internal readonly Stack<T> m_Stack;//栈
-        private readonly ReflectionInfo m_CreateFunc;//创建方法
-        private readonly ReflectionInfo m_ActionOnGet;//方法时调用
-        private readonly ReflectionInfo m_ActionOnRecycle;//回收时调用
-        private readonly ReflectionInfo m_ActionOnDestroy;//删除时调用
+        private readonly MethodInfo createFunc;//创建方法
 
         private readonly int m_MaxSize;//最大数量
         internal bool m_CollectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
@@ -211,27 +208,19 @@ namespace YangTools.ObjectPool
             #region 反射获取方法
             Type type = typeof(T);
 
-            FieldInfo inter = null;
+            //反射拿到静态方法PoolCreate
+            MethodInfo methodInfoCreate = null;
             Type[] interNames = type.GetInterfaces();
             for (int i = 0; i < interNames.Length; i++)
             {
                 Type item = interNames[i];
                 if (item.Name.Contains("IPoolItem"))
                 {
-                    inter = item.GetField("instanceT", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                    methodInfoCreate = item.GetMethod("PoolCreate", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
                     break;
                 }
             }
-            object instance = inter.GetValue(type);
-            System.Reflection.MethodInfo createFunc = type.GetMethod("Create");
-            System.Reflection.MethodInfo getAction = type.GetMethod("OnGet");
-            System.Reflection.MethodInfo releaseAction = type.GetMethod("OnRecycle");
-            System.Reflection.MethodInfo destroyAction = type.GetMethod("OnDestroy");
-
-            m_CreateFunc = new ReflectionInfo(instance, createFunc);
-            m_ActionOnGet = new ReflectionInfo(instance, getAction);
-            m_ActionOnRecycle = new ReflectionInfo(instance, releaseAction);
-            m_ActionOnDestroy = new ReflectionInfo(instance, destroyAction);
+            createFunc = methodInfoCreate;
             #endregion
         }
         public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
@@ -252,7 +241,7 @@ namespace YangTools.ObjectPool
             T item;
             if (m_Stack.Count == 0)
             {
-                item = m_CreateFunc?.Invoke<T>(true);
+                item = (T)createFunc?.Invoke(null, null);
                 AllCount++;
             }
             else
@@ -261,7 +250,7 @@ namespace YangTools.ObjectPool
             }
 
             item.IsInPool = false;
-            m_ActionOnGet?.Invoke<T>(false, item);
+            item.OnGet();
             return item;
         }
         public void RecycleToDefaultCount()
@@ -280,7 +269,7 @@ namespace YangTools.ObjectPool
                 throw new InvalidOperationException("Trying to release an object that has already been released to the pool.");
             }
 
-            m_ActionOnRecycle?.Invoke<T>(false, item);
+            item.OnRecycle();
             if (InactiveCount < m_MaxSize)
             {
                 item.IsInPool = true;
@@ -288,7 +277,7 @@ namespace YangTools.ObjectPool
             }
             else
             {
-                m_ActionOnDestroy?.Invoke<T>(false, item);
+                item.OnDestroy();
             }
         }
         public void Clear()
@@ -296,7 +285,7 @@ namespace YangTools.ObjectPool
             foreach (T item in m_Stack)
             {
                 item.IsInPool = false;
-                m_ActionOnDestroy?.Invoke<T>(false, item);
+                item.OnDestroy();
             }
             m_Stack.Clear();
             AllCount = 0;
@@ -397,30 +386,29 @@ namespace YangTools.ObjectPool
         /// </summary>
         void Clear();
     }
-    // C# 8.0 可在接口中实现static方法 和 构造函数--可以改的更好--https://zhuanlan.zhihu.com/p/268278929
     /// <summary>
     /// 对象池物体接口
     /// </summary>
     public interface IPoolItem<T> where T : new()
     {
         bool IsInPool { get; set; }
-        protected static T instanceT = new T(); // (T)Activator.CreateInstance(typeof(T))
-        /// <summary>
-        /// 创建时
-        /// </summary>
-        T Create();
+        public static T PoolCreate()
+        {
+            T result = new T();//在构造函数里初始化
+            return result;
+        }
         /// <summary>
         /// 获得时
         /// </summary>
-        void OnGet(T t);
+        void OnGet();
         /// <summary>
         /// 回收时
         /// </summary>
-        void OnRecycle(T t);
+        void OnRecycle();
         /// <summary>
         /// 删除时
         /// </summary>
-        void OnDestroy(T t);
+        void OnDestroy();
     }
     /// <summary>
     /// 值类型-对象池物体包裹-值类型回收时(销毁时)自动回收对象到对象池--需要二次测试
@@ -449,17 +437,17 @@ namespace YangTools.ObjectPool
     public class DefaultObjectPoolItem : IPoolItem<DefaultObjectPoolItem>
     {
         public bool IsInPool { get; set; }
-        public DefaultObjectPoolItem Create()
+        public DefaultObjectPoolItem PoolCreate()
         {
             return new DefaultObjectPoolItem();
         }
-        public void OnGet(DefaultObjectPoolItem t)
+        public void OnGet()
         {
         }
-        public void OnRecycle(DefaultObjectPoolItem t)
+        public void OnRecycle()
         {
         }
-        public void OnDestroy(DefaultObjectPoolItem t)
+        public void OnDestroy()
         {
         }
     }

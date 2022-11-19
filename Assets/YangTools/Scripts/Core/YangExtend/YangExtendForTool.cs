@@ -95,6 +95,5 @@ namespace YangTools.Extend
                 })
                 .SetTarget(rectTrans);
         }
-
     }
 }

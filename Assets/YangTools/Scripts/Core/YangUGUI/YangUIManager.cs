@@ -1243,19 +1243,15 @@ namespace YangTools.UGUI
         {
             uiPanelHelper.ReleaseUIPanel(uiPanelAsset, target);
         }
-        public UIPanelInstanceObject Create()
+        public void OnGet()
         {
             throw new NotImplementedException();
         }
-        public void OnGet(UIPanelInstanceObject t)
+        public void OnRecycle()
         {
             throw new NotImplementedException();
         }
-        public void OnRecycle(UIPanelInstanceObject t)
-        {
-            throw new NotImplementedException();
-        }
-        public void OnDestroy(UIPanelInstanceObject t)
+        public void OnDestroy()
         {
             throw new NotImplementedException();
         }

@@ -44,6 +44,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     #region 血条
     public Transform hpBarParent;
+
+    private static List<HPBarObjectPoolItem> allHPBar = new List<HPBarObjectPoolItem>();
     #endregion
 
     //private static ;
@@ -68,14 +70,27 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             TipShow(tipDatas[0]);
             tipDatas.RemoveAt(0);
         }
+        for (int i = 0; i < allHPBar.Count; i++)
+        {
+            allHPBar[i].Update();
+        }
     }
-
+    /// <summary>
+    /// 场景切换
+    /// </summary>
+    public void OnSceneChange()
+    {
+ 
+    }
     #region 提示
+    /// <summary>
+    /// 添加提示
+    /// </summary>
     public void AddTipsShow(string str)
     {
         tipDatas.Add(new TipData(str));
     }
-    public void TipShow(TipData data)
+    private void TipShow(TipData data)
     {
         currentCount++;
 
@@ -114,6 +129,12 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     #endregion
 
     #region 飘分
+    /// <summary>
+    /// 添加飘分
+    /// </summary>
+    /// <param name="worldPos">世界坐标</param>
+    /// <param name="text">文字</param>
+    /// <param name="color">颜色</param>
     public void AddScoreShow(Vector3 worldPos, string text, Color color = default)
     {
         ScoreData scoreData = new ScoreData();
@@ -122,7 +143,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         scoreData.textColor = color == default ? Color.white : color;
         StartScoreUIShow(scoreData);
     }
-    public void StartScoreUIShow(ScoreData scoreData)
+    private void StartScoreUIShow(ScoreData scoreData)
     {
         //飘分对象
         Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
@@ -166,19 +187,46 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     #region 血条
     /// <summary>
+    /// 添加血条
+    /// </summary>
+    /// <param name="_target">跟随目标</param>
+    /// <param name="text">文字</param>
+    /// <param name="color">颜色</param>
+    public HPBarObjectPoolItem GetHPBar(Transform _target, string text, Color color = default)
+    {
+        HPBarData data = new HPBarData();
+        data.target = _target;
+        data.text = text;
+        data.textColor = color == default ? Color.white : color;
+        data.hpValue = 1f;
+        data.mpValue = 1f;
+
+        return CreateHPBar(data);
+    }
+    /// <summary>
     /// 创建血条
     /// </summary>
-    public HPBarObjectPoolItem CreateHPBar(HPBarData hpBarData)
+    private HPBarObjectPoolItem CreateHPBar(HPBarData hpBarData)
     {
         //飘分对象
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.worldPos, hpBarParent);
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, hpBarParent);
         HPBarObjectPoolItem poolItem = YangObjectPool.Get<HPBarObjectPoolItem>();
+        poolItem.InitData(hpBarData);
         GameObject hpBar = poolItem.obj;
         hpBar.transform.SetParent(scoreParent);
         hpBar.transform.SetAsLastSibling();
         hpBar.transform.localPosition = pos;
+        allHPBar.Add(poolItem);
 
         return poolItem;
+    }
+    /// <summary>
+    /// 回收血条
+    /// </summary>
+    public void RecycleHPBar(HPBarObjectPoolItem poolItem)
+    {
+        allHPBar.Remove(poolItem);
+        YangObjectPool.Recycle(poolItem);
     }
     #endregion
 }
@@ -267,19 +315,51 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
 {
     public bool IsInPool { get; set; }
     public GameObject obj;
+    public TMP_Text text;
+    public Slider hpSlider;
+    public Slider mpSlider;
+
+    private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/HPBarUI"));
         obj = tempObj;
+        //设置显示
+        text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
+        hpSlider = obj.transform.GetChild(1).gameObject.GetComponentInChildren<Slider>(true);
+        mpSlider = obj.transform.GetChild(2).gameObject.GetComponentInChildren<Slider>(true);
+    }
+    public void InitData(HPBarData _hpBarData)
+    {
+        hpBarData = _hpBarData;
+        text.text = hpBarData.text;
+        hpSlider.value = hpBarData.hpValue;
+        mpSlider.value = hpBarData.mpValue;
+    }
+    public void Update()
+    {
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, obj.transform.parent);
+        obj.transform.localPosition = pos;
+    }
+    /// <summary>
+    /// 控制显隐
+    /// </summary>
+    public void ToogleHPBar(bool isShow)
+    {
+        obj.SetActive(isShow);
+    }
+    /// <summary>
+    /// 造成攻击
+    /// </summary>
+    public void UpdateData(float percent)
+    {
+        hpBarData.hpValue = percent;
+        hpSlider.value = hpBarData.hpValue;
+        mpSlider.value = hpBarData.mpValue;
     }
     public void OnGet()
     {
         obj.DefualtGameObjectOnGet();
-
-        //设置显示
-        TMP_Text scoreText = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
-        Slider hpSlider = obj.transform.GetChild(1).gameObject.GetComponentInChildren<Slider>(true);
-        Slider mpSlider = obj.transform.GetChild(2).gameObject.GetComponentInChildren<Slider>(true);
     }
     public void OnRecycle()
     {
@@ -295,8 +375,10 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
 /// </summary>
 public class HPBarData
 {
-    public Vector3 worldPos;
-    public string worldText;
+    public Transform target;
+    public string text;
     public Color textColor;
+    public float hpValue;
+    public float mpValue;
 }
 #endregion

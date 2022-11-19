@@ -25,7 +25,9 @@ public class Apple : GameActor
     public override void IDie()
     {
     }
-
+    public override void IDestroy()
+    {
+    }
     #region 交互物
     /// <summary>
     /// 距离

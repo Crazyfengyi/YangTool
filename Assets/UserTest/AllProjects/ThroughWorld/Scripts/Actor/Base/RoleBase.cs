@@ -38,12 +38,8 @@ public class RoleBase : GameActor
 
         healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
         {
-            GameActorManager.Instance.ActorDie(this);
+            GameActorManager.Instance.RemoveActor(this);
         });
-    }
-    public override void IDie()
-    {
-
     }
     public override void IUpdate()
     {
@@ -59,6 +55,15 @@ public class RoleBase : GameActor
     public override void IFixedUpdate()
     {
 
+    }
+    public override void IDie()
+    {
+
+    }
+    public override void IDestroy()
+    {
+        healthControl?.IDestroy();
+        GameActorManager.Instance.RemoveActor(this, false);
     }
     #endregion
 

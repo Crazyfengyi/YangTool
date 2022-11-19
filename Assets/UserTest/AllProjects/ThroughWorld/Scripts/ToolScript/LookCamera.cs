@@ -12,12 +12,12 @@ public class LookCamera : MonoBehaviour
 {
     public void LateUpdate()
     {
-        if (CameraManager.Instance.mainCamera != null)
+        if (CameraManager.Instance.MainCamera != null)
         {
             //竖
-            var v = CameraManager.Instance.mainCamera.transform.parent.eulerAngles.x;
+            var v = CameraManager.Instance.MainCamera.transform.parent.eulerAngles.x;
             //横
-            var h = CameraManager.Instance.mainCamera.transform.parent.parent.eulerAngles.y;
+            var h = CameraManager.Instance.MainCamera.transform.parent.parent.eulerAngles.y;
 
             transform.localRotation = Quaternion.Euler(new Vector3(v, h, 0));
         }

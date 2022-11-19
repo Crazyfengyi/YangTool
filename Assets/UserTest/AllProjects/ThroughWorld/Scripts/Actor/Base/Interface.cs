@@ -62,6 +62,7 @@ public interface ICustomLife
     void ILateUpdate();
     void IFixedUpdate();
     void IDie();
+    void IDestroy();
 }
 /// <summary>
 /// 交互者

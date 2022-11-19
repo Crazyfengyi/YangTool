@@ -19,8 +19,12 @@ public class CameraManager : MonoSingleton<CameraManager>
             return GameActorManager.Instance.MainPlayer.GetComponentInChildren<Camera>(true);
         }
     }
-    public Camera mainCamera;
-    public CinemachineVirtualCameraBase mainCM;
+    private Camera mainCamera;
+    public Camera MainCamera => mainCamera;
+
+    private CinemachineVirtualCameraBase mainCM;
+    public GameObject cameraPrefab;
+
     //相机旋转速度
     public float cameraSpeed = 250f;
     //是否对相机旋转值进行平滑处理;
@@ -54,17 +58,26 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         base.Awake();
         tr = transform;
+        GameObject obj = GameObject.Instantiate(cameraPrefab);
+        obj.transform.SetParent(transform);
+
         cam = mainCamera;
         if (cam == null)
         {
-            cam = GetComponentInChildren<Camera>();
+            cam = obj.GetComponentInChildren<Camera>();
         }
+        mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
         //设置角度变量为当前变换的旋转角度
         currentXAngle = tr.localRotation.eulerAngles.x;
         currentYAngle = tr.localRotation.eulerAngles.y;
         //执行一次相机旋转代码来计算面向和向上的方向
         RotateCamera(0f, 0f);
         Setup();
+    }
+    public void Start()
+    {
+        mainCM.Follow = GameActorManager.Instance.MainPlayer.transform;
+        mainCM.LookAt = GameActorManager.Instance.MainPlayer.transform;
     }
     /// <summary>
     /// 这个函数在Awake()之后被调用;它可以通过继承脚本来重写
@@ -73,9 +86,9 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
 
     }
-    void Update()
+    void LateUpdate()
     {
-        HandleCameraRotation();
+        //HandleCameraRotation();
     }
     /// <summary>
     /// 获取用户输入并处理相机旋转,这个方法可以重写从这个基类派生的类来修改相机的行为

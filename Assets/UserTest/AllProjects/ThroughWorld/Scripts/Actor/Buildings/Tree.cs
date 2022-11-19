@@ -30,35 +30,37 @@ public class Tree : GameActor, IAtker, IBeHit
     public override void IDie()
     {
     }
-
-    public bool IsCanAtk()
+    public override void IDestroy()
+    {
+    }
+    public override bool IsCanAtk()
     {
         return false;
     }
-    public bool IsCanBeHit()
+    public override bool IsCanBeHit()
     {
         return true;
     }
-    public void Atk(int index)
+    public override void Atk(AtkInfo atkInfo)
     {
         throw new System.NotImplementedException();
     }
-    public void BeHit(ref DamageInfo damageInfo)
+    public override void BeHit(ref DamageInfo damageInfo)
     {
         throw new System.NotImplementedException();
     }
-    public DamageInfo GetDamageInfo()
+    public override DamageInfo GetDamageInfo()
     {
         throw new System.NotImplementedException();
     }
-    public DamageInfo GetHitCompute(DamageInfo damageInfo)
+    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
         throw new System.NotImplementedException();
     }
-    public void ShowAtkEffect(EffectInfo atkEffectInfo)
+    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
     {
     }
-    public void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
     {
     }
 

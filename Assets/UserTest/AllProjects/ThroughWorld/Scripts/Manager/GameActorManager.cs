@@ -23,6 +23,8 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     {
         get { return mainPlayer; }
     }
+    private static List<Monster> allMonster = new List<Monster>();
+    public List<Monster> AllMonster => allMonster;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void Init()
@@ -39,19 +41,13 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         ICustomLife player = Instantiate(playerPrefab);
         if (player != null)
         {
+            mainPlayer = player as PlayerController;
             customLives.Add(player);
             player.IInit();
-            mainPlayer = player as PlayerController;
             DontDestroyOnLoad(mainPlayer);
         }
 
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{10001}");
-        if (obj)
-        {
-            ICustomLife monster = Instantiate(obj, new Vector3(10f, 0f, 0f), Quaternion.identity).GetComponent<ICustomLife>();
-            customLives.Add(monster);
-            monster.IInit();
-        }
+        GameActorManager.Instance.CreateMonster();
     }
     public void Update()
     {
@@ -74,19 +70,30 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             customLives[i].IFixedUpdate();
         }
     }
+    /// <summary>
+    /// 场景切换
+    /// </summary>
+    public void OnSceneChange()
+    {
+        for (int i = 0; i < allMonster.Count; i++)
+        {
+            allMonster[i].IDestroy();
+        }
+    }
     public void CreateMonster(int id = 10001)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster_{id}");
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster/Monster_{id}");
         if (obj)
         {
             ICustomLife monster = Instantiate(obj, new Vector3(Random.Range(-10, 10), 0f, Random.Range(-10, 10)), Quaternion.identity).GetComponent<ICustomLife>();
             customLives.Add(monster);
+            allMonster.Add(monster as Monster);
             monster.IInit();
         }
     }
     public void CreateTree(Vector3 pos)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Tree");
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Build/Tree");
         if (obj)
         {
             ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
@@ -96,7 +103,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     }
     public GameObject CreateItem(string itemName, Vector3 pos)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"{itemName}");
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Item/{itemName}");
         if (obj)
         {
             ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
@@ -107,20 +114,26 @@ public class GameActorManager : MonoSingleton<GameActorManager>
 
         return null;
     }
-    public void ActorDie(GameActor gameActor)
+    public void RemoveActor(GameActor gameActor, bool isDie = true)
     {
-        gameActor.IDie();
+        if (isDie)
+        {
+            gameActor.IDie();
+        }
         switch (gameActor)
         {
             case Monster monster:
                 {
-                    //怪物死亡掉落物品
-                    GameActorManager.Instance.CreateItem("Apple", monster.transform.position);
+                    if (isDie)
+                    {
+                        //怪物死亡掉落物品
+                        GameActorManager.Instance.CreateItem("Apple", monster.transform.position);
+                    }
+                    allMonster.Remove(monster);
                 }
                 break;
             default:
                 break;
         }
-
     }
 }

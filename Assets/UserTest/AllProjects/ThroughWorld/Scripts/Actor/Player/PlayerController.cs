@@ -78,10 +78,10 @@ public class PlayerController : RoleBase
         }
 
         emitter?.OnUpdate();
+        if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
     }
     public override void ILateUpdate()
     {
-        if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
     }
     public override void IFixedUpdate()
     {

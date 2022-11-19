@@ -73,7 +73,9 @@ public class BuffControl : ICustomLife
     }
     public void IDie()
     {
-        throw new NotImplementedException();
+    }
+    public void IDestroy()
+    {
     }
     #endregion
 

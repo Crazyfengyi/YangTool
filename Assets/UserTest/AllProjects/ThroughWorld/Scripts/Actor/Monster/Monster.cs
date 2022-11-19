@@ -22,12 +22,6 @@ public class Monster : RoleBase
         roleBuffControl.Add(BuffID.buff_10001);
         aiPath = GetComponent<AIPath>();
     }
-    public override void IDie()
-    {
-        GameSoundManager.Instance.PlaySound("Audio_Click");
-        GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
-        Destroy(gameObject);
-    }
     public override void IUpdate()
     {
         base.IUpdate();
@@ -53,7 +47,16 @@ public class Monster : RoleBase
     {
 
     }
-
+    public override void IDie()
+    {
+        GameSoundManager.Instance.PlaySound("Audio_Click");
+        GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
+        Destroy(gameObject);
+    }
+    public override void IDestroy()
+    {
+        base.IDestroy();
+    }
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)
     {

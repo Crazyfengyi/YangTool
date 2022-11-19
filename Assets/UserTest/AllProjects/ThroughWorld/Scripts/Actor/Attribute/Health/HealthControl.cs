@@ -21,10 +21,10 @@ public class HealthControl
     /// </summary>
     [SerializeField]
     private ValueTotal valueTotal;
-    /// <summary>
-    /// 血条UI
-    /// </summary>
-    //public HpBarBase heroHealthBar;
+    // <summary>
+    // 血条UI
+    // </summary>
+    public HPBarObjectPoolItem heroHealthBar;
     /// <summary>
     /// 死亡回调
     /// </summary>
@@ -35,6 +35,8 @@ public class HealthControl
         gameActor = _gameActor;
         valueTotal = _value;
         dieCallBack = _dieCallBack;
+        Transform hpPoint = _gameActor.transform.Find("HPBarPoint");
+        heroHealthBar = GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
     }
 
     #region 方法
@@ -45,10 +47,7 @@ public class HealthControl
     {
         valueTotal.ChangeCurrentValue(Mathf.Abs(damageInfo.damage));
         GameUIManager.Instance.AddScoreShow(gameActor.transform.position, $"{damageInfo.damage}", Color.green);
-        //if (heroHealthBar != null)
-        //{
-        //    heroHealthBar.TakeDamage(GetPercentHp(), Mathf.Abs(damageInfo.damage));
-        //}
+        heroHealthBar.UpdateData(GetPercentHp());
     }
     /// <summary>
     /// 减血
@@ -57,12 +56,9 @@ public class HealthControl
     {
         valueTotal.ChangeCurrentValue(-Mathf.Abs(damageInfo.damage));
         Vector3 atkPos = damageInfo.atkPos == default ? gameActor.transform.position : damageInfo.atkPos;
-        GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
 
-        //if (heroHealthBar != null)
-        //{
-        //    heroHealthBar.TakeDamage(GetPercentHp(), -Mathf.Abs(damageInfo.damage));
-        //}
+        GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
+        heroHealthBar.UpdateData(GetPercentHp());
 
         if ((int)valueTotal.Value < 1)
         {
@@ -80,16 +76,21 @@ public class HealthControl
     public void DieEvent()
     {
         dieCallBack?.Invoke();
+        GameUIManager.Instance.RecycleHPBar(heroHealthBar);
+    }
+    /// <summary>
+    /// 场景切换删除  
+    /// </summary>
+    public void IDestroy()
+    {
+        GameUIManager.Instance.RecycleHPBar(heroHealthBar);
     }
     /// <summary>
     /// 设置血条显隐
     /// </summary>
     public void ToogleHpBarShow(bool isShow)
     {
-        //if (heroHealthBar != null)
-        //{
-        //    heroHealthBar.SetActive(isShow);
-        //}
+        heroHealthBar?.ToogleHPBar(isShow);
     }
     #endregion
 

@@ -16,5 +16,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
         SceneLoader.Instance.OnSceneLoadPre += GameProjectileManager.Instance.OnSceneChange;
+        SceneLoader.Instance.OnSceneLoadPre += GameUIManager.Instance.OnSceneChange;
+        SceneLoader.Instance.OnSceneLoadPre += GameActorManager.Instance.OnSceneChange;
     }
 }

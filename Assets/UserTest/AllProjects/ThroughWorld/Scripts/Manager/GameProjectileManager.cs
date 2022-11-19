@@ -34,6 +34,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         {
             allBullet[i].OnDie(BulletDieType.SceneChange);
         }
+        allBullet.Clear();
     }
     /// <summary>
     /// 创建子弹

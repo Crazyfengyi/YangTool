@@ -44,6 +44,7 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     public abstract void ILateUpdate();
     public abstract void IFixedUpdate();
     public abstract void IDie();
+    public abstract void IDestroy();
     #endregion
 
     #region 攻击和被击接口实现

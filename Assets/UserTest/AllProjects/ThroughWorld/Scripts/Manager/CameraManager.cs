@@ -16,7 +16,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         get
         {
-            return GameActorManager.Instance.MainPlayer.GetComponentInChildren<Camera>(true);
+            return mainCamera;
         }
     }
     private Camera mainCamera;
@@ -61,12 +61,13 @@ public class CameraManager : MonoSingleton<CameraManager>
         GameObject obj = GameObject.Instantiate(cameraPrefab);
         obj.transform.SetParent(transform);
 
-        cam = mainCamera;
         if (cam == null)
         {
             cam = obj.GetComponentInChildren<Camera>();
         }
+        mainCamera = cam;
         mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
+
         //设置角度变量为当前变换的旋转角度
         currentXAngle = tr.localRotation.eulerAngles.x;
         currentYAngle = tr.localRotation.eulerAngles.y;

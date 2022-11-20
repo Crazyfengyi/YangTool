@@ -104,6 +104,7 @@ Material:
     m_Floats:
     - LOD_FADE_CROSSFADE1: 0
     - LOD_FADE_CROSSFADE2: 0
+    - _AlphaCutoff: 0.5
     - _BumpScale: 1
     - _COLOR2: 1
     - _Color2: 0
@@ -140,12 +141,21 @@ Material:
     - _Snow__________: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _TessEdgeLength: 16
+    - _TessMax: 25
+    - _TessMaxDisp: 25
+    - _TessMin: 10
+    - _TessPhongStrength: 0.5
+    - _TessValue: 16
     - _TransAmbient: 0.3
     - _TransDirect: 1
+    - _TransNormal: 0
     - _TransNormalDistortion: 0
     - _TransScattering: 1
     - _TransShadow: 1
+    - _TransStrength: 2
     - _Translucency: 2
+    - _TransmissionShadow: 0.5
     - _TreeType: 0
     - _UVSec: 0
     - _WIND: 1

@@ -4,8 +4,8 @@
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-09-04 
-*/  
-using UnityEngine;  
+*/
+using UnityEngine;
 using System.Collections;
 
 public class Apple : GameActor
@@ -76,6 +76,7 @@ public class Apple : GameActor
     /// </summary>
     public override void InterAction(RoleBase role)
     {
+        GameUIManager.Instance.AddTipsShow("获得苹果");
         Destroy(gameObject);
     }
     #endregion

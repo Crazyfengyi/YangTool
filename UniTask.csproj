@@ -80,8 +80,8 @@
     <Compile Include="Assets\Plugins\UniTask\Runtime\AsyncLazy.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\UniTask.WhenAny.Generated.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\CompilerServices\StateMachineRunner.cs" />
-    <Compile Include="Assets\Plugins\UniTask\Runtime\UnityAsyncExtensions.MonoBehaviour.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Progress.cs" />
+    <Compile Include="Assets\Plugins\UniTask\Runtime\UnityAsyncExtensions.MonoBehaviour.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Internal\ArrayPool.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\UnityAsyncExtensions.Jobs.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Internal\ArrayPoolUtil.cs" />

@@ -57,6 +57,7 @@ public class Monster : RoleBase
     {
         base.IDestroy();
     }
+
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)
     {
@@ -91,4 +92,15 @@ public class Monster : RoleBase
     {
     }
     #endregion
+
+    #region 交互
+    /// <summary>
+    /// 可以交互
+    /// </summary>
+    public override bool CanInter()
+    {
+        return false;
+    }
+    #endregion
+
 }

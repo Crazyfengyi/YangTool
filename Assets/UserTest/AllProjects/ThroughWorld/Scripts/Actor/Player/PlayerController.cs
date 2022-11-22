@@ -37,10 +37,6 @@ public class PlayerController : RoleBase
 
         roleBuffControl.Add(BuffID.buff_10001);
     }
-    public override void IDie()
-    {
-
-    }
     public override void IUpdate()
     {
         base.IUpdate();

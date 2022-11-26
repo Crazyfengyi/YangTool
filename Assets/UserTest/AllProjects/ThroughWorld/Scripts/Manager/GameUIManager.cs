@@ -80,7 +80,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     public void OnSceneChange()
     {
- 
+
     }
     #region 提示
     /// <summary>
@@ -351,11 +351,15 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     /// <summary>
     /// 造成攻击
     /// </summary>
-    public void UpdateData(float percent)
+    public void UpdateData(GameActor gameActor)
     {
-        hpBarData.hpValue = percent;
-        hpSlider.value = hpBarData.hpValue;
-        mpSlider.value = hpBarData.mpValue;
+        if (gameActor is RoleBase role)
+        {
+            hpBarData.hpValue = role.HealthControl.GetPercentHp();
+            text.text = hpBarData.text + $"  血量:{role.HealthControl.GetCurrentHp()}";
+            hpSlider.value = hpBarData.hpValue;
+            mpSlider.value = hpBarData.mpValue;
+        }
     }
     public void OnGet()
     {

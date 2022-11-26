@@ -147,7 +147,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKRootController.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtend.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRFootstep.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\Buff\PropertyChange.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\Buff\AttributeChange.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionSystem.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Rotation Limits\RotationLimit.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpider.cs" />

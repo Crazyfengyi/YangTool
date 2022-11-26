@@ -15,7 +15,7 @@ using System.Collections.Generic;
 /// <summary>
 /// buff基类
 /// </summary>
-public class BuffBase
+public abstract class BuffBase
 {
     /// <summary>
     /// 技能描述
@@ -26,11 +26,11 @@ public class BuffBase
     /// <summary>
     /// 创建者
     /// </summary>
-    public RoleBase creator;
+    public GameActor creator;
     /// <summary>
     /// 挂载的目标
     /// </summary>
-    public RoleBase parent;
+    public GameActor target;
     [BoxGroup("基础数据")]
     /// <summary>
     /// buffID
@@ -45,7 +45,7 @@ public class BuffBase
     /// <summary>
     /// BUFF类型
     /// </summary>
-    public BuffType type;
+    public BuffFlagType buffFlagType;
     [BoxGroup("基础数据")]
     /// <summary>
     /// 分组设置
@@ -133,9 +133,10 @@ public class BuffBase
     /// 所有事件
     /// </summary>
     public List<BuffEventListenerBase> allListeners = new List<BuffEventListenerBase>();
-    public BuffBase(RoleBase _creator, int configId)
+    public BuffBase(GameActor _creator, GameActor _target, int configId)
     {
         creator = _creator;
+        target = _target;
         BuffConfig data = GameResourceManager.Instance.GetBuffConfig(configId);
         Init(data);
     }
@@ -147,6 +148,93 @@ public class BuffBase
         buffEndChecker = BuffEndChecker.Create(buffConfig);
         groupSetting = buffConfig.buffGroupSetting;
     }
+
+    #region 生命周期
+    /// <summary>
+    /// 更新
+    /// </summary>
+    public virtual void Update()
+    {
+        buffEndChecker.Update(Time.deltaTime);
+    }
+    /// <summary>
+    /// 是否结束
+    /// </summary>
+    public virtual bool IsEnd()
+    {
+        return buffEndChecker.IsEnd();
+    }
+
+    /// <summary>
+    /// buff添加到玩家buff列表前
+    /// </summary>
+    public virtual void OnBuffAwake(BuffControl buffControl)
+    {
+        OnAwake();
+    }
+    protected abstract void OnAwake();
+    /// <summary>
+    /// buff添加到玩家buff列表后
+    /// </summary>
+    public virtual void OnBuffStart(BuffControl buffControl)
+    {
+        OnStart();
+    }
+    protected abstract void OnStart();
+    /// <summary>
+    /// 存在相同类型--刷新时
+    /// </summary>
+    public virtual void OnBuffRefresh(BuffControl buffControl)
+    {
+        OnRefresh();
+    }
+    protected abstract void OnRefresh();
+    /// <summary>
+    /// 存在相同类型--叠加时
+    /// </summary>
+    public virtual void OnBuffOverlay(BuffControl buffControl)
+    {
+        OnOverlay();
+    }
+    protected abstract void OnOverlay();
+    /// <summary>
+    /// 存在相同类型--替换时
+    /// </summary>
+    public virtual void OnBuffReplace(BuffControl buffControl)
+    {
+        OnReplace();
+    }
+    protected abstract void OnReplace();
+    /// <summary>
+    /// buff从玩家buff列表移除前
+    /// </summary>
+    public virtual void OnBuffRemove(BuffControl buffControl)
+    {
+        OnRemove();
+    }
+    protected abstract void OnRemove();
+    /// <summary>
+    /// buff从玩家buff列表移除后
+    /// </summary>
+    public virtual void OnBuffDestroy(BuffControl buffControl)
+    {
+        OnDestroy();
+    }
+    protected abstract void OnDestroy();
+    #endregion
+
+    #region 生效失效固定函数
+    /// <summary>
+    /// 生效
+    /// </summary>
+    public abstract void TakeEffect();
+    /// <summary>
+    /// 失效
+    /// </summary>
+    public abstract void LoseEffect();
+    #endregion
+
+    #region 事件触发
     /// <summary>
     /// buff生效事件
     /// </summary>
@@ -173,68 +261,6 @@ public class BuffBase
         //    isEffective = false;
         //}
     }
-
-    #region 生命周期
-    /// <summary>
-    /// 更新
-    /// </summary>
-    public virtual void Update()
-    {
-        buffEndChecker.Update(Time.deltaTime);
-    }
-    /// <summary>
-    /// 是否结束
-    /// </summary>
-    public virtual bool IsEnd()
-    {
-        return buffEndChecker.IsEnd();
-    }
-
-    /// <summary>
-    /// buff添加到玩家buff列表前
-    /// </summary>
-    /// <param name="isHaveSameBuff">玩家是否有同类型buff</param>
-    /// <returns>是否添加buff</returns>
-    public virtual bool OnBuffAwake(BuffControl buffControl, bool isHaveSameBuff)
-    {
-        return false;
-    }
-
-    /// <summary>
-    /// buff添加到玩家buff列表后
-    /// </summary>
-    public virtual void OnBuffStart()
-    {
-        //遍历eventDic字典下对应点的方法执行
-    }
-
-    /// <summary>
-    /// 存在相同类型
-    /// </summary>
-    /// <returns>是否继续添加(手动处理返回false)</returns>
-    public virtual bool OnBuffRefresh(BuffControl buffControl, BuffBase buff)
-    {
-
-        return false;
-    }
-
-    /// <summary>
-    /// buff从玩家buff列表移除前
-    /// </summary>
-    public virtual void OnBuffRemove()
-    {
-
-    }
-
-    /// <summary>
-    /// buff从玩家buff列表移除后
-    /// </summary>
-    public virtual void OnBuffDestroy()
-    {
-
-    }
-
-    #region 事件触发
     /// <summary>
     /// 技能释放
     /// </summary>
@@ -291,7 +317,5 @@ public class BuffBase
     {
 
     }
-    #endregion
-
     #endregion
 }

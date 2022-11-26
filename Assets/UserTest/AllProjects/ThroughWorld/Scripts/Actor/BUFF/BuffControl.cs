@@ -56,8 +56,10 @@ public class BuffControl : ICustomLife
                 buffBase.Update();
                 if (buffBase.IsEnd())
                 {
+                    buffBase.OnBuffRemove(this);
                     buffList.RemoveAt(i);
                     OnBuffRemove(buffBase);
+                    buffBase.OnBuffDestroy(this);
                     i--;
                 }
             }
@@ -83,20 +85,20 @@ public class BuffControl : ICustomLife
     /// <summary>
     /// 添加buff
     /// </summary>
-    /// <param name="buffId">添加buff</param>
-    public BuffBase Add(BuffID buffId)
+    public BuffBase Add(BuffID buffId, GameActor creator = null)
     {
         Debuger.ToError($"获得Buff:{buffId}");
         //创建BUFF
-        BuffBase buffBase = CreateBuff(handle, buffId);
-        buffBase = OnBuffAdd(buffBase);
+        BuffBase buffBase = CreateBuff(creator == null ? handle : creator, handle, buffId);
+        buffBase = AddBuff(buffBase);
         return buffBase;
     }
     /// <summary>
     /// Buff添加时
     /// </summary>
-    private BuffBase OnBuffAdd(BuffBase newBuff)
+    private BuffBase AddBuff(BuffBase newBuff)
     {
+        newBuff.OnBuffAwake(this);
         for (var i = 0; i < buffList.Count; i++)
         {
             BuffBase skillBase = buffList[i];
@@ -109,25 +111,24 @@ public class BuffControl : ICustomLife
                 case BuffAppendType.Discard:
                     return null;
                 case BuffAppendType.Refresh:
-                    //skillBase.Overlay(true, newBuff.buffLayer);
+                    skillBase.OnBuffRefresh(this);
                     newBuff = skillBase;
                     goto end;
                 case BuffAppendType.Overlay:
-                    //skillBase.Overlay(false, newBuff.buffLayer);
+                    skillBase.OnBuffOverlay(this);
                     newBuff = skillBase;
                     goto end;
                 case BuffAppendType.Replace:
+                    skillBase.OnBuffReplace(this);
                     buffList.RemoveAt(i);
-                    //OnBuffRemove(skillBase);
                     i--;
                     break;
             }
         }
 
         buffList.Add(newBuff);
+        newBuff.OnBuffStart(this);
         AddBuffListener(newBuff);
-        //newBuff.OnBuffAdd(true);
-
         //发送事件
         if (handle.campType == ActorCampType.Player)
         {
@@ -144,7 +145,6 @@ public class BuffControl : ICustomLife
     /// </summary>
     private void OnBuffRemove(BuffBase buffBase, bool isCallOnRemove = true)
     {
-        buffBase.OnBuffRemove();
         RemoveBuffListener(buffBase);
         if (isCallOnRemove)
         {
@@ -154,13 +154,13 @@ public class BuffControl : ICustomLife
     /// <summary>
     /// 创建BUFF
     /// </summary>
-    public static BuffBase CreateBuff(RoleBase creator, BuffID buffId)
+    public static BuffBase CreateBuff(GameActor creator, GameActor target, BuffID buffId)
     {
         BuffBase temp = null;
         switch (buffId)
         {
             case BuffID.buff_10001:
-                temp = new PropertyChange(creator, (int)buffId);
+                temp = new AttributeChange(creator, target, (int)buffId);
                 break;
             default:
                 Debuger.ToError($"BUFF生成失败:{buffId}");
@@ -179,7 +179,7 @@ public class BuffControl : ICustomLife
         for (var i = 0; i < buffList.Count; i++)
         {
             BuffBase buffBase = buffList[i];
-            if (buffBase.type == BuffType.Common)
+            if (buffBase.buffFlagType == BuffFlagType.Common)
             {
                 buffList.RemoveAt(i);
                 OnBuffRemove(buffBase, false);
@@ -197,8 +197,10 @@ public class BuffControl : ICustomLife
             BuffBase buffBase = buffList[i];
             if (buffBase.id == id)
             {
+                buffBase.OnBuffRemove(this);
                 buffList.RemoveAt(i);
                 OnBuffRemove(buffBase);
+                buffBase.OnBuffDestroy(this);
                 i--;
             }
         }
@@ -238,25 +240,36 @@ public class BuffControl : ICustomLife
             buffEventListener.deActiveEvent += buffBase.DeActiveInvoke;
             buffEventListener.IsCanActive = buffBase.buffEndChecker.IsCanEffective;
         }
+        //触发添加事件
+        foreach (BuffEventListenerBase buffListener in buffBase.allListeners)
+        {
+            if (buffListener.triggerPoint == BuffEventTriggerPoint.Add)
+            {
+                //事件参数初始化
+                BuffEventArgBase buffEventArgBase = null;
+                buffListener.EventInvoke(buffEventArgBase);
+            }
+        }
     }
     /// <summary>
     /// 从管理组里移除BUFF事件
     /// </summary>
     public void RemoveBuffListener(BuffBase buffBase)
     {
-        foreach (BuffEventListenerBase buffListener in buffBase.allListeners)
+        foreach (BuffEventListenerBase buffEventListener in buffBase.allListeners)
         {
-            if (buffListener.triggerPoint == BuffEventTriggerPoint.Remove)
+            //触发移除事件
+            if (buffEventListener.triggerPoint == BuffEventTriggerPoint.Remove)
             {
                 //事件参数初始化
                 BuffEventArgBase buffEventArgBase = null;
-                buffListener.EventInvoke(buffEventArgBase);
+                buffEventListener.EventInvoke(buffEventArgBase);
             }
 
-            buffEventRelation.RemoveEvent(buffListener.triggerPoint, buffListener.EventInvoke);
-            buffListener.activeEvent -= buffBase.ActiveInvoke;
-            buffListener.deActiveEvent -= buffBase.DeActiveInvoke;
-            buffListener.IsCanActive = null;
+            buffEventRelation.RemoveEvent(buffEventListener.triggerPoint, buffEventListener.EventInvoke);
+            buffEventListener.activeEvent -= buffBase.ActiveInvoke;
+            buffEventListener.deActiveEvent -= buffBase.DeActiveInvoke;
+            buffEventListener.IsCanActive = null;
         }
     }
 
@@ -351,7 +364,6 @@ public class BuffEventArgBase
     public bool deActive;//失效是否触发
     public RoleBase trigger;//触发者
     public RoleBase owner;//属于谁
-
 }
 /// <summary>
 /// buff事件触发点

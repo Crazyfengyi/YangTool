@@ -15,13 +15,17 @@ using System.Collections.Generic;
 public class RoleBase : GameActor
 {
     [ShowInInspector]
-    public BuffControl roleBuffControl;
+    protected BuffControl roleBuffControl;
     [ShowInInspector]
-    public RoleAttributeControl roleAttributeControl;
+    protected RoleAttributeControl roleAttributeControl;
     [ShowInInspector]
-    public HealthControl healthControl;
+    protected HealthControl healthControl;
+    /// <summary>
+    /// 血量脚本
+    /// </summary>
+    public HealthControl HealthControl => healthControl;
     [ShowInInspector]
-    public Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
+    protected Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
 
     #region 生命周期接口实现
     public override void IInit()
@@ -31,10 +35,10 @@ public class RoleBase : GameActor
 
         roleAttributeControl = new RoleAttributeControl();
         roleAttributeControl.Init(this);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 100);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 50);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
 
         healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
         {
@@ -64,6 +68,16 @@ public class RoleBase : GameActor
     {
         healthControl?.IDestroy();
         GameActorManager.Instance.RemoveActor(this, false);
+    }
+    #endregion
+
+    #region
+    /// <summary>
+    /// 角色属性更改
+    /// </summary>
+    public void RoleAttributeChange(RoleAttribute roleAttribute, AttributeValueType attributeValueType, float value)
+    {
+        roleAttributeControl.ChangeAttribute(roleAttribute, value, attributeValueType);
     }
     #endregion
 

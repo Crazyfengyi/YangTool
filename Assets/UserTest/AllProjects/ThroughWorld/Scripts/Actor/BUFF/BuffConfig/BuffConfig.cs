@@ -29,6 +29,8 @@ public class BuffConfig : ConfigBase
     public Texture2D icon;
     [BoxGroup("基本信息"), LabelText("类型")]
     public BuffType buffType;
+    [BoxGroup("基本信息"), LabelText("Flag类型")]
+    public BuffFlagType buffFlagType;
     [BoxGroup("基本信息"), LabelText("CD")]
     public int CD;
     [BoxGroup("基本信息"), LabelText("结束时机")]
@@ -37,6 +39,9 @@ public class BuffConfig : ConfigBase
     public float time;
     [BoxGroup("分组信息"), LabelText("分组")]
     public BuffGroupSetting buffGroupSetting;
+    [BoxGroup("效果"), LabelText("角色属性更改列表")]
+    public List<BuffAttributeChangeInfo> buffAttributeChangeInfo;
+
 
     [BoxGroup("特效信息"), LabelText("特效")]
     public EffectInfo effect;

@@ -47,7 +47,7 @@ public class HealthControl
     {
         valueTotal.ChangeCurrentValue(Mathf.Abs(damageInfo.damage));
         GameUIManager.Instance.AddScoreShow(gameActor.transform.position, $"{damageInfo.damage}", Color.green);
-        heroHealthBar.UpdateData(GetPercentHp());
+        heroHealthBar.UpdateData(gameActor);
     }
     /// <summary>
     /// 减血
@@ -58,7 +58,7 @@ public class HealthControl
         Vector3 atkPos = damageInfo.atkPos == default ? gameActor.transform.position : damageInfo.atkPos;
 
         GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
-        heroHealthBar.UpdateData(GetPercentHp());
+        heroHealthBar.UpdateData(gameActor);
 
         if ((int)valueTotal.Value < 1)
         {

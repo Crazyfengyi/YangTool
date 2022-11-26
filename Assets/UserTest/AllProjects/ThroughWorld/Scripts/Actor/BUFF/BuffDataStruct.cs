@@ -8,6 +8,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// buff状态
@@ -120,18 +121,36 @@ public delegate void ActiveInvokeDelegate(RoleBase tirgger, RoleBase owner);
 /// </summary>
 public delegate void DeActiveInvokeDelegate(RoleBase tirgger, RoleBase owner);
 
-public enum BuffEndType
-{
-   None,
-   TimeOver,
-}
 public enum BuffType
 {
     None,
-    Common
+    PropertyChange,
+}
+public enum BuffEndType
+{
+    None,
+    TimeOver,
+}
+public enum BuffFlagType
+{
+    None,
+    Common,
 }
 public enum BuffID
 {
     None,
     buff_10001,
+}
+[Serializable]
+/// <summary>
+/// buff属性改变信息
+/// </summary>
+public struct BuffAttributeChangeInfo
+{
+    [LabelText("角色属性")]
+    public RoleAttribute roleAttribute;
+    [LabelText("属性值类型")]
+    public AttributeValueType attributeValueType;
+    [LabelText("属性值")]
+    public float value;
 }

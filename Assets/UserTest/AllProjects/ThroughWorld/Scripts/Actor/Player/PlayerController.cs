@@ -14,7 +14,7 @@ public class PlayerController : RoleBase
     public Vector3 inputVector3;
     private GameInputSet GameInput;
     public GameObject model;//模型
-    public GameObject shootrPoint;//发射点
+    public GameObject shootPoint;//发射点
 
     private EmitterBase emitter;//发射器
 
@@ -110,7 +110,7 @@ public class PlayerController : RoleBase
     }
     public override void BeHit(ref DamageInfo damageInfo)
     {
-
+        healthControl.MinusHp(damageInfo);
     }
     public override DamageInfo GetDamageInfo()
     {
@@ -120,6 +120,8 @@ public class PlayerController : RoleBase
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
+        damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
+        damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
         return damageInfo;
     }
     public override bool IsCanAtk()
@@ -128,7 +130,7 @@ public class PlayerController : RoleBase
     }
     public override bool IsCanBeHit()
     {
-        return false;
+        return true;
     }
     public override void ShowAtkEffect(EffectInfo atkEffectInfo)
     {
@@ -137,5 +139,4 @@ public class PlayerController : RoleBase
     {
     }
     #endregion
-
 }

@@ -73,7 +73,7 @@ namespace YangTools
         /// <summary>
         /// 场景加载前
         /// </summary>
-        public Action OnSceneLoadPre;
+        public Action<string> OnSceneLoadPre;
         #endregion
 
         #region 生命周期
@@ -142,7 +142,7 @@ namespace YangTools
             sceneName = _sceneName;
             sceneLoadType = _sceneLoadType;
 
-            OnSceneLoadPre?.Invoke();
+            OnSceneLoadPre?.Invoke(sceneName);
             loadScene();
         }
         /// <summary>

@@ -23,10 +23,10 @@ public class PlayerEmitter : EmitterBase
     {
         // GetBulletData(emitData.bulletID); 通过ID火气子弹
         BulletData data = new BulletData();
-        data.owner = actor;
+        data.owner = handle;
         data.speed = 10;
-        data.FromPostion = ((PlayerController)actor).shootrPoint.transform.position;
-        data.direction = ((PlayerController)actor).model.transform.forward;
+        data.FromPostion = ((PlayerController)handle).shootPoint.transform.position;
+        data.direction = ((PlayerController)handle).model.transform.forward;
 
         //Collider[] temp = Physics.OverlapSphere(transform.position, 10);
         //if (temp.Length > 0)
@@ -47,17 +47,17 @@ public class PlayerEmitter : EmitterBase
             case BulletShootType.Circle:
                 {
                     float angle = 360 / emitData.bulletCount;
-                    Vector3 startDirection = ((PlayerController)actor).model.transform.forward;
+                    Vector3 startDirection = ((PlayerController)handle).model.transform.forward;
                     for (int i = 0; i < emitData.bulletCount; i++)
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data);
+                        GameProjectileManager.Instance.CreateBullet(data, ActorCampType.MonsterAndBuilding);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data);
+                GameProjectileManager.Instance.CreateBullet(data, ActorCampType.MonsterAndBuilding);
                 break;
         }
     }

@@ -55,7 +55,7 @@ public class AttributeChange : BuffBase
     {
         if (target is RoleBase role)
         {
-            GameUIManager.Instance.AddScoreShow(role.transform.position, $"BUFF添加", Color.green);
+            GameUIManager.Instance.AddScoreShow(role.transform.position, $"{skillDescribe}", Color.green);
             for (int i = 0; i < buffAttributeChangeInfo.Count; i++)
             {
                 BuffAttributeChangeInfo item = buffAttributeChangeInfo[i];
@@ -70,6 +70,7 @@ public class AttributeChange : BuffBase
     {
         if (target is RoleBase role)
         {
+            //失效时移除的BUFF
             //for (int i = 0; i < buffAttributeChangeInfo.Count; i++)
             //{
             //    BuffAttributeChangeInfo item = buffAttributeChangeInfo[i];

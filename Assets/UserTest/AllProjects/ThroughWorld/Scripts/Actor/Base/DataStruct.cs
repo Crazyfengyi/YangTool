@@ -7,17 +7,22 @@
 */
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// 阵营
 /// </summary>
+[Flags]
 public enum ActorCampType
 {
-    None,
-    Monster,
-    Player,
-    Npc,
-    Building
+    None = 0,
+    Player = 1 << 1,
+    Monster = 1 << 2,
+    Npc = 1 << 3,
+    Building = 1 << 4,
+
+    MonsterAndBuilding = Monster + Building,
+    PlayerAndBuilding = Player + Building,
 }
 /// <summary>
 /// 攻击信息
@@ -87,6 +92,8 @@ public enum RoleAttribute
     MP,
     Atk,
     Def,
+    AtkRang,
+
 }
 /// <summary>
 /// 角色标记

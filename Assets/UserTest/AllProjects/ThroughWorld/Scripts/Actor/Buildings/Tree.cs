@@ -39,23 +39,23 @@ public class Tree : GameActor, IAtker, IBeHit
     }
     public override bool IsCanBeHit()
     {
-        return true;
+        return false;
     }
     public override void Atk(AtkInfo atkInfo)
     {
-        throw new System.NotImplementedException();
+        
     }
     public override void BeHit(ref DamageInfo damageInfo)
     {
-        throw new System.NotImplementedException();
+       
     }
     public override DamageInfo GetDamageInfo()
     {
-        throw new System.NotImplementedException();
+        return null;
     }
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
-        throw new System.NotImplementedException();
+        return damageInfo;
     }
     public override void ShowAtkEffect(EffectInfo atkEffectInfo)
     {

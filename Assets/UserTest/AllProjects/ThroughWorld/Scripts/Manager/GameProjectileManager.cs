@@ -28,7 +28,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange()
+    public void OnSceneChange(string sceneName)
     {
         for (int i = 0; i < allBullet.Count; i++)
         {
@@ -39,13 +39,14 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// <summary>
     /// 创建子弹
     /// </summary>
-    public BulletBase CreateBullet(BulletData bulletData)
+    public BulletBase CreateBullet(BulletData bulletData, ActorCampType actorCampType = ActorCampType.Monster)
     {
         //TODO:需要换成对象池
         GameObject Obj = GameResourceManager.Instance.ResoruceLoad($"Bullets/BulletTest");
         GameObject bulletObj = GameObject.Instantiate(Obj, bulletData.FromPostion, Quaternion.identity);
 
         BulletBase bulletBase = new BulletBase(bulletData, bulletObj);
+        bulletBase.targetCamp = actorCampType;
         allBullet.Add(bulletBase);
         return bulletBase;
     }
@@ -65,9 +66,9 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 public class EmitterBase
 {
     /// <summary>
-    /// 发射者
+    /// 持有者
     /// </summary>
-    public GameActor actor;
+    public GameActor handle;
     /// <summary>
     /// 发射信息
     /// </summary>
@@ -78,7 +79,7 @@ public class EmitterBase
     protected bool startShoot;//开始发射
     public EmitterBase(GameActor _actor)
     {
-        actor = _actor;
+        handle = _actor;
     }
     /// <summary>
     /// 开始发射
@@ -92,12 +93,12 @@ public class EmitterBase
         if (!startShoot) return;
         if (emitData == null) return;
         timer += Time.deltaTime;
-        if (timer > emitData.timeInterval)
+        if (timer >= emitData.timeInterval)
         {
             timer = 0;
             Shoot();
             shootCount++;
-            if (shootCount > emitData.loopCount)
+            if (shootCount >= emitData.loopCount)
             {
                 startShoot = false;
             }
@@ -113,7 +114,14 @@ public class EmitterBase
         {
             case BulletShootType.Circle:
                 {
-
+                    float angle = 360 / emitData.bulletCount;
+                    Vector3 startDirection = ((PlayerController)handle).model.transform.forward;
+                    for (int i = 0; i < emitData.bulletCount; i++)
+                    {
+                        Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
+                        bulletData.direction = temp;
+                        GameProjectileManager.Instance.CreateBullet(bulletData, ActorCampType.PlayerAndBuilding);
+                    }
                 }
                 break;
             default:
@@ -143,6 +151,10 @@ public class BulletBase
     /// 子弹物体
     /// </summary>
     public GameObject bulletObj;
+    /// <summary>
+    /// 目标阵营
+    /// </summary>
+    public ActorCampType targetCamp;
 
     private float timer;
     public BulletBase(BulletData data, GameObject Obj)
@@ -189,7 +201,7 @@ public class BulletBase
             for (int i = 0; i < temp.Length; i++)
             {
                 GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
-                if (target && target.campType == ActorCampType.Monster)//TODO:根据目标类型造成伤害
+                if (target && targetCamp.HasFlag(target.campType))
                 {
                     bulletData.collisionPos = target.ClosestColliderPos(bulletObj.transform.position);
                     GameBattleManager.Instance.AtkProcess(bulletData.owner, target);

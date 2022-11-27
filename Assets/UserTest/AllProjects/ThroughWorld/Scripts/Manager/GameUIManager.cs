@@ -15,11 +15,17 @@ using UnityEngine.UI;
 using YangTools.ObjectPool;
 using YangTools.Extend;
 using YangTools.Log;
+using Sirenix.OdinInspector;
+
 /// <summary>
 /// UI管理器
 /// </summary>
 public class GameUIManager : MonoSingleton<GameUIManager>
 {
+    #region UI
+    public Button returnBtn;
+    #endregion
+
     #region 提示
     public GameObject tipNodePrefab;
     public Transform tipsParent;
@@ -44,16 +50,23 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     #region 血条
     public Transform hpBarParent;
-
+    [ShowInInspector]
     private static List<HPBarObjectPoolItem> allHPBar = new List<HPBarObjectPoolItem>();
     #endregion
 
     //private static ;
     protected override void Awake()
     {
+        allHPBar.Clear();
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Debuger.IsForceLog = true;
+
+        returnBtn.gameObject.SetActive(false);
+        returnBtn.onClick.AddListener(() =>
+        {
+            SceneLoader.Instance.Load("GameMain");
+        });
     }
     public void LateUpdate()
     {
@@ -72,16 +85,20 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         }
         for (int i = 0; i < allHPBar.Count; i++)
         {
-            allHPBar[i].Update();
+            if (allHPBar[i] != null)
+            {
+                allHPBar[i]?.Update();
+            }
         }
     }
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange()
+    public void OnSceneChange(string sceneName)
     {
-
+        returnBtn.gameObject.SetActive(sceneName != "GameMain");
     }
+
     #region 提示
     /// <summary>
     /// 添加提示
@@ -349,7 +366,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
         obj.SetActive(isShow);
     }
     /// <summary>
-    /// 造成攻击
+    /// 更新数据显示 
     /// </summary>
     public void UpdateData(GameActor gameActor)
     {

@@ -71,13 +71,26 @@ public class RoleBase : GameActor
     }
     #endregion
 
-    #region
+    #region  角色属性
+    /// <summary>
+    /// 获得角色属性
+    /// </summary>
+    /// <param name="roleAttribute">属性枚举</param>
+    public float GetRoleAttribute(RoleAttribute roleAttribute)
+    {
+        return roleAttributeControl.GetAttribute(roleAttribute).Value;
+    }
     /// <summary>
     /// 角色属性更改
     /// </summary>
     public void RoleAttributeChange(RoleAttribute roleAttribute, AttributeValueType attributeValueType, float value)
     {
         roleAttributeControl.ChangeAttribute(roleAttribute, value, attributeValueType);
+        //可以考虑去掉限制
+        if (roleAttribute == RoleAttribute.HP)
+        {
+            healthControl?.heroHealthBar?.UpdateData(this);
+        }
     }
     #endregion
 

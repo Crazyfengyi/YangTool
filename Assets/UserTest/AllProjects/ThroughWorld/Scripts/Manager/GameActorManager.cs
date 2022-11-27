@@ -9,11 +9,14 @@ using UnityEngine;
 using System.Collections;
 using YangTools;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+
 /// <summary>
 /// 游戏角色管理类
 /// </summary>
 public class GameActorManager : MonoSingleton<GameActorManager>
 {
+    [ShowInInspector]
     //生命周期更新列表
     private static List<ICustomLife> customLives = new List<ICustomLife>();
     //预制体
@@ -23,18 +26,15 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     {
         get { return mainPlayer; }
     }
+    [ShowInInspector]
     private static List<Monster> allMonster = new List<Monster>();
     public List<Monster> AllMonster => allMonster;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    public static void Init()
-    {
-        _ = Instance;
-    }
     protected override void Awake()
     {
         base.Awake();
-
+        customLives.Clear();
+        allMonster.Clear();
     }
     public void Start()
     {
@@ -46,14 +46,12 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             player.IInit();
             DontDestroyOnLoad(mainPlayer);
         }
-
-        GameActorManager.Instance.CreateMonster();
     }
     public void Update()
     {
         for (int i = 0; i < customLives.Count; i++)
         {
-            customLives[i].IUpdate();
+            customLives[i]?.IUpdate();
         }
     }
     public void LateUpdate()
@@ -73,12 +71,14 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange()
+    public void OnSceneChange(string sceneName)
     {
-        for (int i = 0; i < allMonster.Count; i++)
+        List<Monster> temp = allMonster;
+        for (int i = 0; i < temp.Count; i++)
         {
-            allMonster[i].IDestroy();
+            temp[i].IDestroy();
         }
+        allMonster.Clear();
     }
     public void CreateMonster(int id = 10001)
     {
@@ -135,5 +135,10 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             default:
                 break;
         }
+
+        ICustomLife iCustomLife = gameActor;
+        //var index = customLives.IndexOf(iCustomLife);
+        //customLives.RemoveAt(index);
+        customLives.Remove(iCustomLife);
     }
 }

@@ -73,10 +73,9 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// </summary>
     public void OnSceneChange(string sceneName)
     {
-        List<Monster> temp = allMonster;
-        for (int i = 0; i < temp.Count; i++)
+        for (int i = allMonster.Count - 1; i >= 0; i--)
         {
-            temp[i].IDestroy();
+            allMonster[i].IDestroy();
         }
         allMonster.Clear();
     }
@@ -116,12 +115,13 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     }
     public void RemoveActor(GameActor gameActor, bool isDie = true)
     {
-        if (isDie)
-        {
-            gameActor.IDie();
-        }
         switch (gameActor)
         {
+            case PlayerController player:
+                {
+                    
+                }
+                break;
             case Monster monster:
                 {
                     if (isDie)
@@ -137,8 +137,8 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         }
 
         ICustomLife iCustomLife = gameActor;
-        //var index = customLives.IndexOf(iCustomLife);
-        //customLives.RemoveAt(index);
         customLives.Remove(iCustomLife);
+
+        if (isDie) gameActor.IDie();
     }
 }

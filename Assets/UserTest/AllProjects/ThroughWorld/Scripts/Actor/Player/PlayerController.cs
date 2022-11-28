@@ -83,6 +83,14 @@ public class PlayerController : RoleBase
     {
 
     }
+    public override void IDie()
+    {
+        GameSoundManager.Instance.PlaySound("Audio_Click");
+        GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
+        Destroy(gameObject);
+    }
+
+    #region 输入
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 v2 = context.ReadValue<Vector2>();
@@ -96,6 +104,7 @@ public class PlayerController : RoleBase
     {
         InteractorSystem.Instance.OnInter();
     }
+    #endregion
 
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)

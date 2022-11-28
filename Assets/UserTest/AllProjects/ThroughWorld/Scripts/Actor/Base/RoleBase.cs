@@ -30,27 +30,21 @@ public class RoleBase : GameActor
     #region 生命周期接口实现
     public override void IInit()
     {
-        roleBuffControl = new BuffControl();
-        roleBuffControl.Init(this);
-
-        roleAttributeControl = new RoleAttributeControl();
-        roleAttributeControl.Init(this);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 100);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 100);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
-
+        roleBuffControl = new BuffControl(this);
+        roleAttributeControl = new RoleAttributeControl(this);
         healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
         {
             GameActorManager.Instance.RemoveActor(this);
         });
+
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
     }
     public override void IUpdate()
     {
-        if (roleBuffControl != null)
-        {
-            roleBuffControl.IUpdate();
-        }
+        roleBuffControl?.IUpdate();
     }
     public override void ILateUpdate()
     {
@@ -89,7 +83,7 @@ public class RoleBase : GameActor
         //可以考虑去掉限制
         if (roleAttribute == RoleAttribute.HP)
         {
-            healthControl?.heroHealthBar?.UpdateData(this);
+            healthControl?.healthBar?.UpdateData(this);
         }
     }
     #endregion

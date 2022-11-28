@@ -68,7 +68,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             SceneLoader.Instance.Load("GameMain");
         });
     }
-    public void LateUpdate()
+    public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {

@@ -26,11 +26,7 @@ public class RoleAttributeControl
     /// 所有属性
     /// </summary>
     public Dictionary<RoleAttribute, ValueTotal> attributesDic = new Dictionary<RoleAttribute, ValueTotal>();
-    public RoleAttributeControl()
-    {
-
-    }
-    public void Init(RoleBase _handle)
+    public RoleAttributeControl(RoleBase _handle)
     {
         handle = _handle;
     }

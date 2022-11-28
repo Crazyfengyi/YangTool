@@ -36,7 +36,7 @@ public class BuffControl : ICustomLife
     /// <summary>
     /// 初始化
     /// </summary>
-    public void Init(RoleBase _handle)
+    public BuffControl(RoleBase _handle)
     {
         handle = _handle;
     }

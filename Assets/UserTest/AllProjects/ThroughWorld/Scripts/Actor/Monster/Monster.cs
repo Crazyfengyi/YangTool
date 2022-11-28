@@ -26,11 +26,11 @@ public class Monster : RoleBase
     {
         base.IInit();
         campType = ActorCampType.Monster;
-        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(6, 12));
-
-        roleBuffControl.Add(BuffID.buff_10001);
         aiPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
+
+        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(6, 12));
+        roleBuffControl.Add(BuffID.buff_10001);
     }
     public override void IUpdate()
     {
@@ -54,7 +54,7 @@ public class Monster : RoleBase
             }
         }
 
-        if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true)
+        if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && GameActorManager.Instance.MainPlayer != null)
         {
             timer += Time.deltaTime;
             if (timer >= interval)

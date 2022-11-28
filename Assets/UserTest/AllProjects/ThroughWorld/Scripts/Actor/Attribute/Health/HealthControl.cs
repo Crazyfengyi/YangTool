@@ -24,7 +24,7 @@ public class HealthControl
     // <summary>
     // 血条UI
     // </summary>
-    public HPBarObjectPoolItem heroHealthBar;
+    public HPBarObjectPoolItem healthBar;
     /// <summary>
     /// 死亡回调
     /// </summary>
@@ -36,7 +36,7 @@ public class HealthControl
         valueTotal = _value;
         dieCallBack = _dieCallBack;
         Transform hpPoint = _gameActor.transform.Find("HPBarPoint");
-        heroHealthBar = GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
+        healthBar = GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
     }
 
     #region 方法
@@ -47,7 +47,7 @@ public class HealthControl
     {
         valueTotal.ChangeCurrentValue(Mathf.Abs(damageInfo.damage));
         GameUIManager.Instance.AddScoreShow(gameActor.transform.position, $"{damageInfo.damage}", Color.green);
-        heroHealthBar.UpdateData(gameActor);
+        healthBar.UpdateData(gameActor);
     }
     /// <summary>
     /// 减血
@@ -58,7 +58,7 @@ public class HealthControl
         Vector3 atkPos = damageInfo.atkPos == default ? gameActor.transform.position : damageInfo.atkPos;
 
         GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
-        heroHealthBar.UpdateData(gameActor);
+        healthBar.UpdateData(gameActor);
 
         if ((int)valueTotal.Value < 1)
         {
@@ -76,21 +76,21 @@ public class HealthControl
     public void DieEvent()
     {
         dieCallBack?.Invoke();
-        GameUIManager.Instance.RecycleHPBar(heroHealthBar);
+        GameUIManager.Instance.RecycleHPBar(healthBar);
     }
     /// <summary>
     /// 场景切换删除  
     /// </summary>
     public void IDestroy()
     {
-        GameUIManager.Instance.RecycleHPBar(heroHealthBar);
+        GameUIManager.Instance.RecycleHPBar(healthBar);
     }
     /// <summary>
     /// 设置血条显隐
     /// </summary>
     public void ToogleHpBarShow(bool isShow)
     {
-        heroHealthBar?.ToogleHPBar(isShow);
+        healthBar?.ToogleHPBar(isShow);
     }
     #endregion
 

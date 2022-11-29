@@ -433,7 +433,7 @@ namespace YangTools.UGUI
             }
             int serialId = ++serial;
             //TODO:对象池
-            UIPanelInstanceObject uiPanelInstanceObject = instancePool?.Get();
+            UIPanelInstanceObject uiPanelInstanceObject = instancePool?.Get("");
             //uiPanelInstanceObject.OnGet(uiPanelInstanceObject);//uiPanelAssetName
 
             if (uiPanelInstanceObject == null)
@@ -1186,6 +1186,7 @@ namespace YangTools.UGUI
     /// </summary>
     internal sealed class UIPanelInstanceObject : IPoolItem<UIPanelInstanceObject>
     {
+        public string PoolKey { get; set; }
         private string name;//名字
         private object target;//目标
         private int priority;//优先级

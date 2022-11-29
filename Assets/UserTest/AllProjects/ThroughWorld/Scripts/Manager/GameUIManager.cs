@@ -254,9 +254,15 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 /// </summary>
 public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
 {
+    public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;
     public TipObjectPoolItem()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
+        obj = tempObj;
+    }
+    public TipObjectPoolItem(string arg)
     {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
         obj = tempObj;
@@ -293,7 +299,9 @@ public class TipData
 /// </summary>
 public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
 {
+    public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
+
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
@@ -330,6 +338,7 @@ public class ScoreData
 /// </summary>
 public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
 {
+    public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;
     public TMP_Text text;

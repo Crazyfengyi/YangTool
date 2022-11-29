@@ -8,9 +8,16 @@
 using UnityEngine;
 using System.Collections;
 using YangTools;
+using YangTools.ObjectPool;
+using YangTools.Extend;
+using System.Collections.Generic;
 
 public class GameEffectManager : MonoSingleton<GameEffectManager>
 {
+    /// <summary>
+    /// 所有特效
+    /// </summary>
+    private static List<EffectObjectPoolItem> allEffect = new List<EffectObjectPoolItem>();
     /*
      * effectTypeId: 特效类型id，关联配置表相关项。
        controlPoints：特效相关控制点数据，后文详细讲述。
@@ -23,12 +30,93 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
        Attach_Point: 特效基于目标挂点(attachName)位置创建，但不跟随目标。
        Attach_Point_Follow: 特效基于目标挂点(attachName)位置创建，跟随目标。
      * */
-    public GameObject PlayEffect(string name, Vector3 worldPos)
+    public EffectObjectPoolItem PlayEffect(string name, Vector3 worldPos)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{name}");
-        if (obj == null) return null;
+        EffectObjectPoolItem effectObjectPoolItem = GetEffet(null, worldPos, name);
+        EffectAutoRecycle script = effectObjectPoolItem.obj.AddComponent<EffectAutoRecycle>();
+        script.effectObjectPoolItem = effectObjectPoolItem;
+        script.Init();
+        return effectObjectPoolItem;
+    }
 
-        GameObject effect = GameObject.Instantiate(obj, worldPos, Quaternion.identity);
-        return effect;
+    /// <summary>
+    /// 添加特效
+    /// </summary>
+    /// <param name="_target">跟随目标</param>
+    /// <param name="name">名字</param>
+    private EffectObjectPoolItem GetEffet(Transform _target, Vector3 worldPos, string name)
+    {
+        EffectData data = new EffectData(name);
+        data.target = _target;
+        data.worldPos = worldPos;
+        return CreateEffet(data);
+    }
+    /// <summary>
+    /// 创建特效
+    /// </summary>
+    private EffectObjectPoolItem CreateEffet(EffectData effectData)
+    {
+        //特效对象
+        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName);
+        poolItem.InitData(effectData);
+        GameObject effectObj = poolItem.obj;
+        effectObj.transform.localPosition = effectData.worldPos;
+        allEffect.Add(poolItem);
+
+        return poolItem;
+    }
+    /// <summary>
+    /// 回收特效
+    /// </summary>
+    public void RecycleEffet(EffectObjectPoolItem poolItem)
+    {
+        allEffect.Remove(poolItem);
+        YangObjectPool.Recycle(poolItem);
+    }
+}
+
+/// <summary>
+/// 对象池特效对象
+/// </summary>
+public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
+{
+    public string PoolKey { get; set; }
+    public bool IsInPool { get; set; }
+    public GameObject obj;
+    public EffectObjectPoolItem()
+    {
+    }
+    public EffectObjectPoolItem(string name)
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad($"Effects/{name}"));
+        obj = tempObj;
+    }
+    public void InitData(EffectData effectData)
+    {
+    }
+    public void OnGet()
+    {
+        obj.DefualtGameObjectOnGet();
+    }
+    public void OnRecycle()
+    {
+        obj.DefualtGameObjectRecycle();
+    }
+    public void OnDestroy()
+    {
+        obj.DefualtGameObjectDestory();
+    }
+}
+/// <summary>
+/// 特效信息
+/// </summary>
+public class EffectData
+{
+    public Transform target;
+    public Vector3 worldPos;
+    public string effectName;
+    public EffectData(string _str)
+    {
+        effectName = _str;
     }
 }

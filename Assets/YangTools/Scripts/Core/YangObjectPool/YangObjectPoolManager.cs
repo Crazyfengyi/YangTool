@@ -47,6 +47,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
+        /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
         public static T Get<T>(string poolKey = "") where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
@@ -456,9 +457,8 @@ namespace YangTools.ObjectPool
     {
         public string PoolKey { get; set; }
         public bool IsInPool { get; set; }
-        public DefaultObjectPoolItem PoolCreate()
+        public DefaultObjectPoolItem ()
         {
-            return new DefaultObjectPoolItem();
         }
         public void OnGet()
         {

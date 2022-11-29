@@ -8,7 +8,9 @@
 using UnityEngine;
 using System.Collections;
 using YangTools;
-
+using YangTools.ObjectPool;
+using YangTools.Extend;
+using System.Collections.Generic;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -18,6 +20,5 @@ public class GameManager : MonoSingleton<GameManager>
         SceneLoader.Instance.OnSceneLoadPre += GameProjectileManager.Instance.OnSceneChange;
         SceneLoader.Instance.OnSceneLoadPre += GameUIManager.Instance.OnSceneChange;
         SceneLoader.Instance.OnSceneLoadPre += GameActorManager.Instance.OnSceneChange;
-
     }
 }

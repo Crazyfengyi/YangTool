@@ -8,16 +8,20 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using CMF;
 
 public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
+    public bool isJumpPressed;//跳跃键按下 
     private GameInputSet GameInput;
     public GameObject model;//模型
     public GameObject shootPoint;//发射点
 
     private EmitterBase emitter;//发射器
+    private AdvancedWalkerController advancedWalker;//移动脚本
 
+    private bool isJumpAni;
     public override void IInit()
     {
         base.IInit();
@@ -29,11 +33,12 @@ public class PlayerController : RoleBase
         GameInput.Player.Move.performed += OnMove;
         GameInput.Player.Move.canceled += OnMoveEnd;
         GameInput.Player.Interactive.performed += OnInteractive;
+        GameInput.Player.Jump.performed += OnJump;
+        GameInput.Player.Jump.canceled += OnJump;
         #endregion
 
-        #region 发射器
         emitter = new PlayerEmitter(this);
-        #endregion
+        advancedWalker = GetComponent<AdvancedWalkerController>();
 
         roleBuffControl.Add(BuffID.buff_10001);
     }
@@ -74,7 +79,21 @@ public class PlayerController : RoleBase
         }
 
         emitter?.OnUpdate();
-        if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
+        if (Animator)
+        {
+            Animator.SetFloat("Speed", inputVector3.magnitude);
+        }
+        if (!advancedWalker.IsGrounded() && isJumpAni == false)
+        {
+            isJumpAni = true;
+            Animator.Play("Jump", 0, 0);
+        }
+
+        if (advancedWalker.IsGrounded() && isJumpAni == true)
+        {
+            Animator.Play("a_Walking");
+            isJumpAni = false;
+        }
     }
     public override void ILateUpdate()
     {
@@ -103,6 +122,11 @@ public class PlayerController : RoleBase
     public void OnInteractive(InputAction.CallbackContext context)
     {
         InteractorSystem.Instance.OnInter();
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        float value = context.ReadValue<float>();
+        isJumpPressed = value > 0;
     }
     #endregion
 

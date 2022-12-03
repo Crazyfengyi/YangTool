@@ -44,6 +44,15 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""94275c88-7242-4760-a80f-28b33c57d1fd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
                     ""action"": ""Interactive"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba9f4cc3-7f37-4ea3-af0e-e8c6f7ba968a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +142,7 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Interactive = m_Player.FindAction("Interactive", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +204,14 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Interactive;
+    private readonly InputAction m_Player_Jump;
     public struct PlayerActions
     {
         private @GameInputSet m_Wrapper;
         public PlayerActions(@GameInputSet wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Interactive => m_Wrapper.m_Player_Interactive;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +227,9 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
                 @Interactive.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
                 @Interactive.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
                 @Interactive.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteractive;
+                @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +240,9 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
                 @Interactive.started += instance.OnInteractive;
                 @Interactive.performed += instance.OnInteractive;
                 @Interactive.canceled += instance.OnInteractive;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -222,5 +251,6 @@ public partial class @GameInputSet : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnInteractive(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

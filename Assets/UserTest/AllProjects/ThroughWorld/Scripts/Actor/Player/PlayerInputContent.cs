@@ -28,6 +28,6 @@ public class PlayerInputContent : CharacterInput
 
     public override bool IsJumpKeyPressed()
     {
-        return false;
+        return player.isJumpPressed;
     }
 }

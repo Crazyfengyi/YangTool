@@ -6,6 +6,9 @@ namespace CMF
 	//This script handles all physics, collision detection and ground detection;
 	//It expects a movement velocity (via 'SetVelocity') every 'FixedUpdate' frame from an external script (like a controller script) to work;
 	//It also provides several getter methods for important information (whether the mover is grounded, the current surface normal [...]);
+	//这个脚本处理所有物理，碰撞检测和地面检测;
+	//它期望每个'FixedUpdate'帧的移动速度(通过'SetVelocity')从外部脚本(如控制器脚本)工作;
+	//它还提供了几个获取重要信息的getter方法(移动设备是否接地，当前表面法线[…]);
 	public class Mover : MonoBehaviour {
 
 		//Collider variables;

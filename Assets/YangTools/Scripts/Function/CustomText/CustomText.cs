@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Collections;
 using UnityEngine;
+using System;
 
 namespace YangTools
 {
@@ -21,6 +22,7 @@ namespace YangTools
         private List<GameObject> rubyList = new List<GameObject>();//注音列表
         private int typingIndex;//打字进度下标
         private float defaultInterval = 0.02f;//默认间隔
+        private Action endCallBack;//结束回调
         private CustomTextPreprocessor SelfPreprocessor => (CustomTextPreprocessor)textPreprocessor;
         public CustomText()
         {
@@ -85,9 +87,10 @@ namespace YangTools
         /// <summary>
         /// 打字效果显示文字
         /// </summary>
-        public void ShowTextByTyping(string content)
+        public void ShowTextByTyping(string content, Action _endCallBack = null)
         {
             ClearRuby();
+            endCallBack = _endCallBack;
             SetText(content);
             StartCoroutine(Typing());
         }
@@ -118,6 +121,8 @@ namespace YangTools
                 }
                 typingIndex++;
             }
+
+            endCallBack?.Invoke();
         }
         /// <summary>
         /// 渐显
@@ -205,6 +210,8 @@ namespace YangTools
         {
             intervalDic.Clear();
             rubyList.Clear();
+
+            if (string.IsNullOrEmpty(text)) return "";
 
             //处理字符串
             string processingText = text;

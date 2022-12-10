@@ -94,7 +94,6 @@ public class DataChange : EditorWindow
             default:
                 break;
         }
-
     }
     /// <summary>
     /// 绘制插件界面配置项

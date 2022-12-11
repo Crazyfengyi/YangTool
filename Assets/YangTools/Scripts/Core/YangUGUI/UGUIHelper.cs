@@ -14,11 +14,11 @@ using UnityEngine.UI;
 namespace YangTools.UGUI
 {
     /// <summary>
-    /// UGUI界面组辅助器
+    /// UGUI组辅助器
     /// </summary>
     public class UGUIGroupHelper : MonoBehaviour, IUIGroupHelper
     {
-        public const int DepthFactor = 1000;
+        public const int DepthFactor = 200;
         private int depth = 0;//深度
         private Canvas cachedCanvas = null;//缓存的canvas
         private void Awake()

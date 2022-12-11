@@ -70,10 +70,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             //AddTipsShow("测试提示！");
-            //AddScoreShow(Vector3.zero, "-100");
+            AddScoreShow(Vector3.zero, "-100");
         }
 
         timer += Time.deltaTime;
@@ -152,12 +152,13 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <param name="worldPos">世界坐标</param>
     /// <param name="text">文字</param>
     /// <param name="color">颜色</param>
-    public void AddScoreShow(Vector3 worldPos, string text, Color color = default)
+    public void AddScoreShow(Vector3 worldPos, string text, Color color = default, ScoreAniType scoreAniType = ScoreAniType.None)
     {
         ScoreData scoreData = new ScoreData();
         scoreData.worldPos = worldPos;
         scoreData.worldText = text;
         scoreData.textColor = color == default ? Color.white : color;
+        scoreData.scoreAniType = scoreAniType;
         StartScoreUIShow(scoreData);
     }
     private void StartScoreUIShow(ScoreData scoreData)
@@ -177,28 +178,84 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         DOTween.Kill(score, true);
         var defaultPos = scoreText.transform.localPosition;
         scoreText.transform.localPosition = defaultPos + new Vector3(Random.Range(-12f, 12f), Random.Range(-6f, 6f), 0);
-
         CanvasGroup canvasGroup = scoreText.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 1f;
         scoreText.transform.localScale = Vector3.one;
-        DOTween.Sequence()
-            .Append(scoreText.transform.DOScale(0.8f, 0.2f))
-            .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 6, 0.2f))
-            .Join(scoreText.transform.DOScale(1f, 0.2f))
-            .Append(scoreText.transform.DOScale(0.6f, 0.2f).SetEase(Ease.InCubic))
-            .Append(canvasGroup.DOFade(0, 0.2f))
-            .OnUpdate(() =>
-            {
-                Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
-                score.transform.localPosition = pos;
-            })
-            .OnComplete(() =>
-            {
-                scoreText.transform.localPosition = defaultPos;
-                scoreText.transform.localScale = Vector3.one;
-                YangObjectPool.Recycle(poolItem);
-            })
-            .SetTarget(score);
+
+        switch (scoreData.scoreAniType)
+        {
+            case ScoreAniType.Ani2:
+                {
+                    canvasGroup.alpha = 0;
+                    DOTween.Sequence()
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 150, 1f))
+                        .Join(canvasGroup.DOFade(1, 1f))
+                        .AppendInterval(0.5f)
+                        .Append(canvasGroup.DOFade(0, 0.5f))
+                        .OnUpdate(() =>
+                        {
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            score.transform.localPosition = pos;
+                        })
+                        .OnComplete(() =>
+                        {
+                            scoreText.transform.localPosition = defaultPos;
+                            scoreText.transform.localScale = Vector3.one;
+                            YangObjectPool.Recycle(poolItem);
+                        })
+                        .SetTarget(score)
+                        .SetEase(Ease.Linear);
+
+                }
+                break;
+            case ScoreAniType.Ani3:
+                {
+                    canvasGroup.alpha = 0;
+                    DOTween.Sequence()
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 150, 0.25f))
+                        .Join(canvasGroup.DOFade(1, 0.25f))
+                        .AppendInterval(0.5f)
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 200, 0.15f))
+                        .Append(canvasGroup.DOFade(0, 0.15f))
+                        .OnUpdate(() =>
+                        {
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            score.transform.localPosition = pos;
+                        })
+                        .OnComplete(() =>
+                        {
+                            scoreText.transform.localPosition = defaultPos;
+                            scoreText.transform.localScale = Vector3.one;
+                            YangObjectPool.Recycle(poolItem);
+                        })
+                        .SetTarget(score)
+                        .SetEase(Ease.Linear);
+                }
+                break;
+            case ScoreAniType.Ani1:
+            default:
+                {
+                    DOTween.Sequence()
+                        .Append(scoreText.transform.DOScale(0.8f, 0.2f))
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 6, 0.2f))
+                        .Join(scoreText.transform.DOScale(1f, 0.2f))
+                        .Append(scoreText.transform.DOScale(0.6f, 0.2f).SetEase(Ease.InCubic))
+                        .Append(canvasGroup.DOFade(0, 0.2f))
+                        .OnUpdate(() =>
+                        {
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            score.transform.localPosition = pos;
+                        })
+                        .OnComplete(() =>
+                        {
+                            scoreText.transform.localPosition = defaultPos;
+                            scoreText.transform.localScale = Vector3.one;
+                            YangObjectPool.Recycle(poolItem);
+                        })
+                        .SetTarget(score);
+                }
+                break;
+        }
     }
     #endregion
 
@@ -329,6 +386,17 @@ public class ScoreData
     public Vector3 worldPos;
     public string worldText;
     public Color textColor;
+    public ScoreAniType scoreAniType;
+}
+/// <summary>
+/// 飘分动画
+/// </summary>
+public enum ScoreAniType
+{
+    None,
+    Ani1,
+    Ani2,
+    Ani3,
 }
 #endregion
 

@@ -24,27 +24,15 @@ namespace YangTools.UGUI
         private bool isShutdown;//是否关闭
         private IUIPanelHelper uiPanelHelper;//UI界面辅助类
 
-        #region 事件
         public event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
         public event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
         public event EventHandler<OpenUIPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;//打开界面时
         public event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
         public event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
-        #endregion
-
-        #region 对外属性
         /// <summary>
         /// 获取界面组数量
         /// </summary>
-        public int UIGroupCount
-        {
-            get
-            {
-                return uiGroups.Count;
-            }
-        }
-        #endregion
-
+        public int UIGroupCount => uiGroups.Count;
         /// <summary>
         /// 初始化
         /// </summary>
@@ -439,7 +427,7 @@ namespace YangTools.UGUI
             if (uiPanelInstanceObject == null)
             {
                 //TODO 需要完整的资源加载器
-                UnityEngine.Object panelAsset = Resources.Load(uiPanelAssetName);//资源
+                UnityEngine.Object panelAsset = Resources.Load("Panel/" + uiPanelAssetName);//资源
                 if (panelAsset == null)
                 {
                     Debug.LogError($"UI页面加载失败:{uiPanelAssetName}");
@@ -487,7 +475,7 @@ namespace YangTools.UGUI
                 throw new Exception("UI group is invalid.");
             }
 
-            uiGroup.RefocusuiPanel(uiPanel, userData);
+            uiGroup.RefocusUIPanel(uiPanel, userData);
             uiGroup.Refresh();
             uiPanel.OnRefocus(userData);
         }
@@ -542,7 +530,7 @@ namespace YangTools.UGUI
                 throw new Exception("UI group is invalid.");
             }
 
-            uiGroup.RemoveuiPanel(uiPanel);
+            uiGroup.RemoveUIPanel(uiPanel);
             uiPanel.OnClose(isShutdown, userData);
             uiGroup.Refresh();
 
@@ -594,7 +582,7 @@ namespace YangTools.UGUI
                 }
 
                 uiPanel.OnInit(serialId, uiPanelAssetName, uiGroup, pauseCovereduiPanel, isNewInstance, userData);
-                uiGroup.AdduiPanel(uiPanel);
+                uiGroup.AddUIPanel(uiPanel);
                 uiPanel.OnOpen(userData);
                 uiGroup.Refresh();
 
@@ -874,7 +862,7 @@ namespace YangTools.UGUI
         /// 往UI界面组增加界面
         /// </summary>
         /// <param name="uiPanel">要增加的界面</param>
-        public void AdduiPanel(IUIPanel uiPanel)
+        public void AddUIPanel(IUIPanel uiPanel)
         {
             uiPanelInfos.AddFirst(UIPanelInfo.Create(uiPanel));
         }
@@ -882,7 +870,7 @@ namespace YangTools.UGUI
         /// 从UI界面组移除界面
         /// </summary>
         /// <param name="uiPanel">要移除的界面</param>
-        public void RemoveuiPanel(IUIPanel uiPanel)
+        public void RemoveUIPanel(IUIPanel uiPanel)
         {
             UIPanelInfo uiPanelInfo = GetUIPanelInfo(uiPanel);
             if (uiPanelInfo == null)
@@ -917,7 +905,7 @@ namespace YangTools.UGUI
         /// </summary>
         /// <param name="uiPanel">要激活的界面</param>
         /// <param name="userData">用户自定义数据</param>
-        public void RefocusuiPanel(IUIPanel uiPanel, object userData)
+        public void RefocusUIPanel(IUIPanel uiPanel, object userData)
         {
             UIPanelInfo uiPanelInfo = GetUIPanelInfo(uiPanel);
             if (uiPanelInfo == null)
@@ -935,7 +923,7 @@ namespace YangTools.UGUI
         {
             LinkedListNode<UIPanelInfo> current = uiPanelInfos.First;
             bool pause = this.pause;
-            bool cover = false;
+            bool cover = false;//覆盖
             int depth = uiPanelCount;
             while (current != null && current.Value != null)
             {
@@ -1100,14 +1088,9 @@ namespace YangTools.UGUI
         }
         public static UIPanelInfo Create(IUIPanel uiPanel)
         {
-            if (uiPanel == null)
-            {
-                throw new Exception("UI panel is invalid.");
-            }
+            if (uiPanel == null) throw new Exception("UI panel is invalid.");
             UIPanelInfo uiPanelInfo = new UIPanelInfo();
             uiPanelInfo.uiPanel = uiPanel;
-            uiPanelInfo.paused = true;
-            uiPanelInfo.covered = true;
             return uiPanelInfo;
         }
         public void Clear()

@@ -25,10 +25,10 @@ namespace YangTools.UGUI
 
         private bool available = false;//是否可用的
         private bool visible = false;//是否显示
-        private UIPanel uiPanel = null;//UI界面
-        private Transform cachedTransform = null;//缓存的Transform
-        private CanvasGroup canvasGroup = null;//缓存的CanvasGroup
-        private Canvas cachedCanvas = null;//缓存的Canvas
+        private UIPanel uiPanel;//UI界面
+        private Transform cachedTransform;//缓存的Transform
+        private CanvasGroup canvasGroup;//缓存的CanvasGroup
+        private Canvas cachedCanvas;//缓存的Canvas
         private List<Canvas> cachedCanvasList = new List<Canvas>();//缓存的Canvas列表
 
         private int originalLayer = 0;//原始层级
@@ -37,13 +37,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面
         /// </summary>
-        public UIPanel UIPanel
-        {
-            get
-            {
-                return uiPanel;
-            }
-        }
+        public UIPanel UIPanel => uiPanel;
         /// <summary>
         /// 获取或设置界面名称
         /// </summary>
@@ -61,13 +55,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面是否可用
         /// </summary>
-        public bool Available
-        {
-            get
-            {
-                return available;
-            }
-        }
+        public bool Available => available;
         /// <summary>
         /// 获取或设置界面是否可见
         /// </summary>
@@ -95,13 +83,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取已缓存的Transform
         /// </summary>
-        public Transform CachedTransform
-        {
-            get
-            {
-                return cachedTransform;
-            }
-        }
+        public Transform CachedTransform => cachedTransform;
         /// <summary>
         /// 原始深度
         /// </summary>
@@ -113,13 +95,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 深度
         /// </summary>
-        public int Depth
-        {
-            get
-            {
-                return cachedCanvas.sortingOrder;
-            }
-        }
+        public int Depth => cachedCanvas.sortingOrder;
         #endregion
 
         #region 父类设置
@@ -177,10 +153,7 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         protected internal virtual void OnInit(object userData)
         {
-            if (cachedTransform == null)
-            {
-                cachedTransform = transform;
-            }
+            if (cachedTransform == null) cachedTransform = transform;
 
             uiPanel = GetComponent<UIPanel>();
             originalLayer = gameObject.layer;
@@ -226,7 +199,6 @@ namespace YangTools.UGUI
 
             canvasGroup.alpha = 1f;
             StopAllCoroutines();
-            //StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));//动画
         }
         /// <summary>
         /// 界面关闭
@@ -252,9 +224,8 @@ namespace YangTools.UGUI
         protected internal virtual void OnResume()
         {
             Visible = true;
-            canvasGroup.alpha = 0f;
+            canvasGroup.alpha = 1f;
             StopAllCoroutines();
-            //StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));
         }
         /// <summary>
         /// 界面遮挡

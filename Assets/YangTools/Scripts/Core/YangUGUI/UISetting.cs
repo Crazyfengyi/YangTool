@@ -28,6 +28,7 @@ namespace YangTools.UGUI
     {
         [SerializeField]
         private string m_Name = null;
+        [Range(0, 160)]
         [SerializeField]
         private int m_Depth = 0;
         public string Name
@@ -571,7 +572,7 @@ namespace YangTools.UGUI
             get;
             private set;
         }
-        
+
         /// <summary>
         /// 创建打开界面成功事件
         /// </summary>

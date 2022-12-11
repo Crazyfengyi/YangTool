@@ -31,10 +31,9 @@ namespace YangTools
         /// <summary>
         /// 设置注音
         /// </summary>
-        /// <param name="data"></param>
         private void SetRubyText(RubyData data)
         {
-            GameObject obj = Resources.Load<GameObject>("RubyText");
+            GameObject obj = Resources.Load<GameObject>("Ruby/RubyText");
             GameObject ruby = Instantiate(obj, transform);
             ruby.GetComponent<TextMeshProUGUI>().SetText(data.RubyContent);
             ruby.GetComponent<TextMeshProUGUI>().color = textInfo.characterInfo[data.StartIndex].color;
@@ -89,6 +88,7 @@ namespace YangTools
         /// </summary>
         public void ShowTextByTyping(string content, Action _endCallBack = null)
         {
+            StopAllCoroutines();
             ClearRuby();
             endCallBack = _endCallBack;
             SetText(content);
@@ -182,6 +182,7 @@ namespace YangTools
     {
         //间隔字典(第几个下标,间隔时间)
         public Dictionary<int, float> intervalDic = new Dictionary<int, float>();
+        //注音列表
         public List<RubyData> rubyList = new List<RubyData>();
         /// <summary>
         /// 获得注音
@@ -226,7 +227,7 @@ namespace YangTools
                 {
                     intervalDic[match.Index - 1] = result;
                 }
-                else if (Regex.IsMatch(label, "^r=.*"))
+                else if (Regex.IsMatch(label, "^r=.*"))//注音
                 {
                     rubyList.Add(new RubyData(match.Index, label.Substring(2)));
                 }

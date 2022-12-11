@@ -11,12 +11,5 @@ using YangTools.UGUI;
 
 public class DialoguePanel : UGUIPanelBase
 {  
-	#region 变量
-	#endregion
-	
-	#region 生命周期
-	#endregion
-	
-	#region 方法
-	#endregion
+
 } 

@@ -195,7 +195,7 @@
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\ToolScript\LoopEffectDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\BipedReferences.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMappingLimb.cs" />
-    <Compile Include="Assets\UserTest\MyTest\Test.cs" />
+    <Compile Include="Assets\UserTest\MyTest\TestRuby.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Setting\GameInputSet.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\Grounding.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\CCDIK.cs" />
@@ -377,6 +377,7 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
+    <Compile Include="Assets\UserTest\MyTest\TestUIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />

@@ -23,7 +23,7 @@ namespace Jing.TurbochargedScrollList
     /// 基于UGUI中Scroll View组件的列表工具
     /// </summary>
     public abstract class BaseScrollList : IScrollList
-    {       
+    {
         public enum EKeepPaddingType
         {
             /// <summary>
@@ -189,12 +189,12 @@ namespace Jing.TurbochargedScrollList
             content.localPosition = Vector3.zero;
         }
 
-        protected void InitItem(GameObject itemPrefab,Transform itemParentTrans)
+        protected void InitItem(GameObject itemPrefab, Transform itemParentTrans)
         {
 
             GameObject item = GameObject.Instantiate(itemPrefab);
             this.itemPrefab = item;
-            
+
             itemDefaultfSize = item.GetComponent<RectTransform>().rect.size;
             item.SetActive(false);
             item.transform.SetParent(itemParentTrans);
@@ -259,7 +259,7 @@ namespace Jing.TurbochargedScrollList
             {
                 _updateData.keepPaddingType = keepPaddingType;
             }
-        }        
+        }
 
         void Update()
         {
@@ -472,7 +472,7 @@ namespace Jing.TurbochargedScrollList
 
 
             content.localPosition = new Vector3(-position.x, position.y, 0);
-            OnScroll(position);            
+            OnScroll(position);
         }
 
         /// <summary>
@@ -484,12 +484,12 @@ namespace Jing.TurbochargedScrollList
 
             var maxX = content.rect.width - viewportSize.x;
             var posX = content.localPosition.x;
-            if(posX > 0)
+            if (posX > 0)
             {
                 posX = 0;
             }
             distance.x = maxX + posX;
-            if(distance.x < 0)
+            if (distance.x < 0)
             {
                 distance.x = 0;
             }
@@ -517,9 +517,9 @@ namespace Jing.TurbochargedScrollList
         /// <returns></returns>
         public bool CheckItemShowing(int index)
         {
-            foreach(var item in _showingItems.Values)
+            foreach (var item in _showingItems.Values)
             {
-                if(item.index == index)
+                if (item.index == index)
                 {
                     return true;
                 }
@@ -530,7 +530,7 @@ namespace Jing.TurbochargedScrollList
 
         #region 数据操作
         public virtual void AddRange<T>(IEnumerable<T> collection)
-        {            
+        {
             foreach (var data in collection)
             {
                 Add(data);

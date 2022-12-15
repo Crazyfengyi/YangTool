@@ -124,7 +124,7 @@ namespace Exploder.Utils
         public static void LockCursor(bool status)
         {
 #if !(UNITY_4_0 || UNITY_4_0_1 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6)
-            Cursor.lockState = status?CursorLockMode.Locked : CursorLockMode.Confined;
+            Cursor.lockState = status ? CursorLockMode.Locked : CursorLockMode.Confined;
 #else
             Screen.lockCursor = status;
 #endif

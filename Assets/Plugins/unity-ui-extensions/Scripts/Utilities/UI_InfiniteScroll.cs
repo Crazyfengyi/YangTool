@@ -124,7 +124,7 @@ namespace UnityEngine.UI.Extensions
             }
             _hasDisabledGridComponents = true;
         }
-        
+
         public void OnScroll(Vector2 pos)
         {
             if (!_hasDisabledGridComponents)

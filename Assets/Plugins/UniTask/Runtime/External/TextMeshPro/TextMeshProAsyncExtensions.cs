@@ -3,7 +3,6 @@
 using System;
 using System.Threading;
 using TMPro;
-using UnityEngine.Events;
 
 namespace Cysharp.Threading.Tasks
 {
@@ -23,7 +22,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore(IUniTaskAsyncEnumerable<string> source, TMP_Text text, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {
@@ -84,7 +83,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore<T>(IUniTaskAsyncEnumerable<T> source, TMP_Text text, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {

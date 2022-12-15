@@ -10,21 +10,21 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace ES3Internal
 {
-	public static class ES3Hash
-	{
+    public static class ES3Hash
+    {
 #if NETFX_CORE
 		public static string SHA1Hash(string input)
 		{
 			return System.Text.Encoding.UTF8.GetString(UnityEngine.Windows.Crypto.ComputeSHA1Hash(System.Text.Encoding.UTF8.GetBytes(input)));
 		}
 #else
-		public static string SHA1Hash(string input)
-		{
-			using (SHA1Managed sha1 = new SHA1Managed())
-				return System.Text.Encoding.UTF8.GetString(sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));
-		}
+        public static string SHA1Hash(string input)
+        {
+            using (SHA1Managed sha1 = new SHA1Managed())
+                return System.Text.Encoding.UTF8.GetString(sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input)));
+        }
 #endif
-	}
+    }
 
     public abstract class EncryptionAlgorithm
     {
@@ -80,18 +80,18 @@ namespace ES3Internal
             output.Dispose();
 #else
             using (var alg = Aes.Create())
-			{
+            {
                 alg.Mode = CipherMode.CBC;
                 alg.Padding = PaddingMode.PKCS7;
                 alg.GenerateIV();
                 var key = new Rfc2898DeriveBytes(password, alg.IV, pwIterations);
-				alg.Key = key.GetBytes(keySize);
-				// Write the IV to the output stream.
-				output.Write(alg.IV, 0, ivSize);
-				using(var encryptor = alg.CreateEncryptor())
-				using(var cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write))
-					CopyStream(input, cs, bufferSize);
-			}
+                alg.Key = key.GetBytes(keySize);
+                // Write the IV to the output stream.
+                output.Write(alg.IV, 0, ivSize);
+                using (var encryptor = alg.CreateEncryptor())
+                using (var cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write))
+                    CopyStream(input, cs, bufferSize);
+            }
 #endif
         }
 
@@ -126,19 +126,19 @@ namespace ES3Internal
             output.Write(buffDecrypt.ToArray(), 0, (int)buffDecrypt.Length);
 #else
             using (var alg = Aes.Create())
-			{
+            {
                 var thisIV = new byte[ivSize];
                 input.Read(thisIV, 0, ivSize);
                 alg.IV = thisIV;
 
                 var key = new Rfc2898DeriveBytes(password, alg.IV, pwIterations);
-				alg.Key = key.GetBytes(keySize);
+                alg.Key = key.GetBytes(keySize);
 
-				using(var decryptor = alg.CreateDecryptor())
-				using(var cryptoStream = new CryptoStream(input, decryptor, CryptoStreamMode.Read))
-					CopyStream(cryptoStream, output, bufferSize);
+                using (var decryptor = alg.CreateDecryptor())
+                using (var cryptoStream = new CryptoStream(input, decryptor, CryptoStreamMode.Read))
+                    CopyStream(cryptoStream, output, bufferSize);
 
-			}
+            }
 #endif
             output.Position = 0;
         }

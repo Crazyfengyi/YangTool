@@ -4,7 +4,7 @@
 namespace UnityEngine.UI.Extensions
 {
     [RequireComponent(typeof(ScrollRect))]
-	[AddComponentMenu("UI/Extensions/ScrollRectLinker")]
+    [AddComponentMenu("UI/Extensions/ScrollRectLinker")]
     public class ScrollRectLinker : MonoBehaviour
     {
 

@@ -15,7 +15,8 @@ namespace UnityEngine.UI.Extensions
     /// - nicer anchor handling for initial child positions
     /// </summary>
     [AddComponentMenu("Layout/Extensions/Curved Layout")]
-    public class CurvedLayout : LayoutGroup {
+    public class CurvedLayout : LayoutGroup
+    {
         public Vector3 CurveOffset;
 
         // Yes these two could be combined into a single vector
@@ -29,24 +30,30 @@ namespace UnityEngine.UI.Extensions
         public float centerpoint = 0.5f;
 
         protected override void OnEnable() { base.OnEnable(); CalculateRadial(); }
-        public override void SetLayoutHorizontal() {
+        public override void SetLayoutHorizontal()
+        {
         }
-        public override void SetLayoutVertical() {
+        public override void SetLayoutVertical()
+        {
         }
-        public override void CalculateLayoutInputVertical() {
+        public override void CalculateLayoutInputVertical()
+        {
             CalculateRadial();
         }
-        public override void CalculateLayoutInputHorizontal() {
+        public override void CalculateLayoutInputHorizontal()
+        {
             CalculateRadial();
         }
 #if UNITY_EDITOR
-        protected override void OnValidate() {
+        protected override void OnValidate()
+        {
             base.OnValidate();
             CalculateRadial();
         }
 #endif
 
-        void CalculateRadial() {
+        void CalculateRadial()
+        {
             m_Tracker.Clear();
             if (transform.childCount == 0)
                 return;
@@ -69,9 +76,11 @@ namespace UnityEngine.UI.Extensions
             //normalize and create a distance between items
             var dist = itemAxis.normalized * itemSize;
 
-            for (int i = 0; i < transform.childCount; i++) {
+            for (int i = 0; i < transform.childCount; i++)
+            {
                 RectTransform child = (RectTransform)transform.GetChild(i);
-                if (child != null) {
+                if (child != null)
+                {
                     //stop the user from altering certain values in the editor
                     m_Tracker.Add(this, child,
                     DrivenTransformProperties.Anchors |

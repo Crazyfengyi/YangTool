@@ -1,6 +1,5 @@
 ﻿using PigeonCoopToolkit.Effects.Trails;
 using UnityEngine;
-using System.Collections;
 
 public class Orbiter : MonoBehaviour
 {
@@ -13,28 +12,28 @@ public class Orbiter : MonoBehaviour
 
 
     private Vector3 _pos;
-	// Use this for initialization
-	void Start ()
-	{
-	    _pos = Vector3.zero;
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	    bool tankHit = false;
+    // Use this for initialization
+    void Start()
+    {
+        _pos = Vector3.zero;
+    }
 
-	    Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
-	    RaycastHit h;
-	    TankController tc = null;
-        if(Physics.Raycast(r,out h, 1000))
+    // Update is called once per frame
+    void Update()
+    {
+        bool tankHit = false;
+
+        Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit h;
+        TankController tc = null;
+        if (Physics.Raycast(r, out h, 1000))
         {
             tc = h.collider.transform.root.GetComponent<TankController>();
 
-            if(tc == null)
+            if (tc == null)
             {
                 _pos = h.point;
-                
+
             }
             else
             {
@@ -49,7 +48,7 @@ public class Orbiter : MonoBehaviour
         }
         else
         {
-            if(_tankBeingController != tc)
+            if (_tankBeingController != tc)
             {
                 Trail.Emit = true;
 
@@ -57,9 +56,9 @@ public class Orbiter : MonoBehaviour
                 transform.Rotate(Vector3.up, TankCollisionRotationSpeed * Time.deltaTime);
                 transform.position = _pos;
             }
-            
 
-            if(Input.GetMouseButtonDown(0))
+
+            if (Input.GetMouseButtonDown(0))
             {
                 if (_tankBeingController != null)
                     _tankBeingController.InControl = false;
@@ -68,8 +67,8 @@ public class Orbiter : MonoBehaviour
                 _tankBeingController = tc;
             }
 
-           
+
         }
 
-	}
+    }
 }

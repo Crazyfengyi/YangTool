@@ -5,9 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-10-15 
 */
-using UnityEngine;
-using System.Collections;
 using System;
+using UnityEngine;
 
 [Serializable]
 public class HealthControl

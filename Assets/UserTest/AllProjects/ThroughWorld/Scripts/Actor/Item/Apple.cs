@@ -6,7 +6,6 @@
  *创建时间:         2022-09-04 
 */
 using UnityEngine;
-using System.Collections;
 
 public class Apple : GameActor
 {

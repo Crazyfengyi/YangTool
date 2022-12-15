@@ -5,8 +5,6 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-10-17 
 */
-using UnityEngine;
-using System.Collections;
 using YangTools;
 
 public class GameSoundManager : MonoSingleton<GameSoundManager>

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ES3Internal
 {
@@ -72,7 +70,7 @@ namespace ES3Internal
 
         public UnityEngine.Object Get(long id)
         {
-            foreach(var kvp in refId)
+            foreach (var kvp in refId)
                 if (kvp.Value == id)
                     return kvp.Key;
             return null;
@@ -120,7 +118,7 @@ namespace ES3Internal
 
         private static string PathToGlobalReferences()
         {
-            return ES3Settings.PathToEasySaveFolder() + "Resources/" + globalReferencesPath +".asset";
+            return ES3Settings.PathToEasySaveFolder() + "Resources/" + globalReferencesPath + ".asset";
         }
 #endif
     }

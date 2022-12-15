@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using PigeonCoopToolkit.Effects.Trails;
+﻿using PigeonCoopToolkit.Effects.Trails;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 public class TankController : MonoBehaviour
 {
@@ -22,11 +21,11 @@ public class TankController : MonoBehaviour
 
 
     // LateUpdate is called once per frame
-	void Update ()
-	{
-	    Animator.SetBool("InControl", InControl);
-        
-        if(InControl)
+    void Update()
+    {
+        Animator.SetBool("InControl", InControl);
+
+        if (InControl)
         {
             WeaponController.enabled = true;
             if (Input.GetKey(KeyCode.W))
@@ -73,7 +72,7 @@ public class TankController : MonoBehaviour
             WeaponController.enabled = false;
         }
 
-        if(Mathf.Abs(_moveSpeed) > 0)
+        if (Mathf.Abs(_moveSpeed) > 0)
         {
             TankTrackTrails.ForEach(trail => { trail.Emit = true; });
         }
@@ -92,6 +91,6 @@ public class TankController : MonoBehaviour
         _moveSpeed = Mathf.MoveTowards(_moveSpeed, 0, MoveFriction * Time.deltaTime);
         _rotateSpeed = Mathf.MoveTowards(_rotateSpeed, 0, RotateFriction * Time.deltaTime);
 
-	}
+    }
 
 }

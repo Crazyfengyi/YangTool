@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 namespace UnityEngine.UI.Extensions
 {
     [RequireComponent(typeof(ScrollRect))]
-	[AddComponentMenu("UI/Extensions/ScrollRectTweener")]
+    [AddComponentMenu("UI/Extensions/ScrollRectTweener")]
     public class ScrollRectTweener : MonoBehaviour, IDragHandler
     {
 

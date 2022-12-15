@@ -5,50 +5,50 @@ using UnityEngine.EventSystems;
 namespace UnityEngine.UI.Extensions
 {
     [AddComponentMenu("UI/Extensions/Bound Tooltip/Tooltip Trigger")]
-	public class BoundTooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
-	{
-		[TextAreaAttribute]
-		public string text;
+    public class BoundTooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
+    {
+        [TextAreaAttribute]
+        public string text;
 
-		public bool useMousePosition = false;
+        public bool useMousePosition = false;
 
-		public Vector3 offset;
+        public Vector3 offset;
 
-		public void OnPointerEnter(PointerEventData eventData)
-		{
-			if (useMousePosition)
-			{
-				StartHover(new Vector3(eventData.position.x, eventData.position.y, 0f));
-			}
-			else
-			{
-				StartHover(transform.position + offset);
-			}
-		}
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (useMousePosition)
+            {
+                StartHover(new Vector3(eventData.position.x, eventData.position.y, 0f));
+            }
+            else
+            {
+                StartHover(transform.position + offset);
+            }
+        }
 
-		public void OnSelect(BaseEventData eventData)
-		{
-			StartHover(transform.position);
-		}
+        public void OnSelect(BaseEventData eventData)
+        {
+            StartHover(transform.position);
+        }
 
-		public void OnPointerExit(PointerEventData eventData)
-		{
-			StopHover();
-		}
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            StopHover();
+        }
 
-		public void OnDeselect(BaseEventData eventData)
-		{
-			StopHover();
-		}
+        public void OnDeselect(BaseEventData eventData)
+        {
+            StopHover();
+        }
 
-		void StartHover(Vector3 position)
-		{
-			BoundTooltipItem.Instance.ShowTooltip(text, position);
-		}
+        void StartHover(Vector3 position)
+        {
+            BoundTooltipItem.Instance.ShowTooltip(text, position);
+        }
 
-		void StopHover()
-		{
-			BoundTooltipItem.Instance.HideTooltip();
-		}
-	}
+        void StopHover()
+        {
+            BoundTooltipItem.Instance.HideTooltip();
+        }
+    }
 }

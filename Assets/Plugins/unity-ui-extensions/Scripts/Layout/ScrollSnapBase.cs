@@ -141,7 +141,7 @@ namespace UnityEngine.UI.Extensions
                 vscroll.ss = this;
             }
             panelDimensions = gameObject.GetComponent<RectTransform>().rect;
-            
+
             if (StartingScreen < 0)
             {
                 StartingScreen = 0;

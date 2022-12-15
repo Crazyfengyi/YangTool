@@ -58,7 +58,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
         protected void SourceMoveNext()
         {
-            CONTINUE:
+        CONTINUE:
             sourceMoveNext = enumerator.MoveNextAsync().GetAwaiter();
             if (sourceMoveNext.IsCompleted)
             {
@@ -194,7 +194,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
         protected void SourceMoveNext()
         {
-            CONTINUE:
+        CONTINUE:
             sourceMoveNext = enumerator.MoveNextAsync().GetAwaiter();
             if (sourceMoveNext.IsCompleted)
             {

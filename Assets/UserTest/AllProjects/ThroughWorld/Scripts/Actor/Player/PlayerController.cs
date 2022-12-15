@@ -5,10 +5,9 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-07-23 
 */
-using UnityEngine;
-using System.Collections;
-using UnityEngine.InputSystem;
 using CMF;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : RoleBase
 {

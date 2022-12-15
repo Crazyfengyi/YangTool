@@ -9,7 +9,6 @@
 
 #if !DISABLE_MULTITHREADING
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;

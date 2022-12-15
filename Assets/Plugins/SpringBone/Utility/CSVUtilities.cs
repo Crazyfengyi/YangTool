@@ -72,7 +72,7 @@ namespace UTJ
                         if (nextItem == '"')
                         {
                             var peekedValue = reader.Peek();
-                            if (peekedValue != EndOfStreamValue 
+                            if (peekedValue != EndOfStreamValue
                                 && (char)peekedValue == '"')
                             {
                                 currentItem.Append('"');
@@ -90,8 +90,8 @@ namespace UTJ
                     }
                 }
 
-                var isEmptyRow = isEndOfRow 
-                    && rowItems.Count == 0 
+                var isEmptyRow = isEndOfRow
+                    && rowItems.Count == 0
                     && currentItem.Length == 0;
                 if (isEndOfItem && !isEmptyRow)
                 {

@@ -1,6 +1,5 @@
 ﻿using PigeonCoopToolkit.Effects.Trails;
 using UnityEngine;
-using System.Collections;
 
 public class FPSWeaponTrigger : MonoBehaviour
 {
@@ -25,7 +24,7 @@ public class FPSWeaponTrigger : MonoBehaviour
     {
         MuzzlePlume.Emit = _smoke > SmokeAfter;
         _smoke -= Time.deltaTime;
-        if(_smoke > SmokeMax)
+        if (_smoke > SmokeMax)
             _smoke = SmokeMax;
 
         if (_smoke < 0)
@@ -37,14 +36,14 @@ public class FPSWeaponTrigger : MonoBehaviour
     public void Fire()
     {
         MuzzleFlashObject.SetActive(true);
-        Invoke("LightsOff",0.05f);
+        Invoke("LightsOff", 0.05f);
         _smoke += SmokeIncrement;
         Rigidbody r =
             (Instantiate(Shell.gameObject, ShellEjectionTransform.position, ShellEjectionTransform.rotation) as
              GameObject).GetComponent<Rigidbody>();
 
         r.velocity = (ShellEjectionTransform.right * EjectionForce) + Random.onUnitSphere * 0.25f;
-        r.angularVelocity = Random.onUnitSphere*EjectionForce;
+        r.angularVelocity = Random.onUnitSphere * EjectionForce;
 
         Instantiate(Bullet, Muzzle.transform.position, Muzzle.rotation);
     }
@@ -53,6 +52,6 @@ public class FPSWeaponTrigger : MonoBehaviour
     {
         MuzzleFlashObject.SetActive(false);
     }
-    
+
 
 }

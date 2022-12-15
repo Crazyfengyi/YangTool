@@ -1,9 +1,7 @@
 using Sirenix.OdinInspector;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.IO;
 
 [Serializable]
 /// <summary>

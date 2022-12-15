@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
-using ES3Internal;
 
 namespace ES3Editor
 {
-	[System.Serializable]
-	public class AutoSaveWindow : SubWindow
-	{
-		public bool showAdvancedSettings = false;
+    [System.Serializable]
+    public class AutoSaveWindow : SubWindow
+    {
+        public bool showAdvancedSettings = false;
 
-		public ES3AutoSaveMgr mgr = null;
+        public ES3AutoSaveMgr mgr = null;
 
         private HierarchyItem[] hierarchy = null;
         public HierarchyItem selected = null;
@@ -22,22 +19,22 @@ namespace ES3Editor
 
         private string searchTerm = "";
 
-        public AutoSaveWindow(EditorWindow window) : base("Auto Save", window){}
+        public AutoSaveWindow(EditorWindow window) : base("Auto Save", window) { }
 
-		public override void OnGUI()
-		{
-			Init();
+        public override void OnGUI()
+        {
+            Init();
 
-			if(mgr == null)
-			{
+            if (mgr == null)
+            {
                 EditorGUILayout.Space();
                 if (GUILayout.Button("Enable Auto Save for this scene"))
                     mgr = ES3Postprocessor.AddManagerToScene().GetComponent<ES3AutoSaveMgr>();
                 else
                     return;
-			}
+            }
 
-			var style = EditorStyle.Get;
+            var style = EditorStyle.Get;
 
             using (var changeCheck = new EditorGUI.ChangeCheckScope())
             {
@@ -109,8 +106,8 @@ namespace ES3Editor
             }
         }
 
-		public void Init()
-		{
+        public void Init()
+        {
             if (mgr == null)
             {
                 var mgrs = Resources.FindObjectsOfTypeAll<ES3AutoSaveMgr>();
@@ -133,12 +130,12 @@ namespace ES3Editor
                 var prefabs = ES3ReferenceMgr.Current.prefabs;
                 parentObjects = new GameObject[prefabs.Count];
                 for (int i = 0; i < prefabs.Count; i++)
-                    if(prefabs[i] != null)
+                    if (prefabs[i] != null)
                         parentObjects[i] = prefabs[i].gameObject;
             }
             hierarchy = new HierarchyItem[parentObjects.Length];
             for (int i = 0; i < parentObjects.Length; i++)
-                if(parentObjects[i] != null)
+                if (parentObjects[i] != null)
                     hierarchy[i] = new HierarchyItem(parentObjects[i].transform, null, this);
         }
 
@@ -218,13 +215,13 @@ namespace ES3Editor
                 foreach (var child in children)
                     child.DrawHierarchy(searchTerm);
 
-                if(containsSearchTerm)
-                    EditorGUI.indentLevel-=1;
+                if (containsSearchTerm)
+                    EditorGUI.indentLevel -= 1;
             }
 
             public void DrawComponents()
             {
-                EditorGUI.indentLevel+=3;
+                EditorGUI.indentLevel += 3;
                 using (var scope = new EditorGUILayout.VerticalScope())
                 {
                     foreach (var component in components)
@@ -254,12 +251,12 @@ namespace ES3Editor
                                 else
                                     autoSave.componentsToSave.Add(component);
                             }
-                            if(GUILayout.Button(EditorGUIUtility.IconContent("_Popup"), new GUIStyle("Label")))
+                            if (GUILayout.Button(EditorGUIUtility.IconContent("_Popup"), new GUIStyle("Label")))
                                 ES3Window.InitAndShowTypes(component.GetType());
                         }
                     }
                 }
-                EditorGUI.indentLevel-=3;
+                EditorGUI.indentLevel -= 3;
             }
 
             public bool HasSelectedComponents()

@@ -23,7 +23,7 @@ namespace UnityEngine.UI.Extensions
         {
             if (Instance == null)
                 MenuManager.Instance.CreateInstance(typeof(T).Name);
-                //MenuManager.Instance.CreateInstance<T>();
+            //MenuManager.Instance.CreateInstance<T>();
             else
                 Instance.gameObject.SetActive(true);
 

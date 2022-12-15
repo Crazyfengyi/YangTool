@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks.Internal;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Linq
 {
@@ -58,7 +58,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
                 return value;
 
-                NEXT_LOOP:
+            NEXT_LOOP:
 
                 while (await e.MoveNextAsync())
                 {
@@ -97,7 +97,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
                 return value;
 
-                NEXT_LOOP:
+            NEXT_LOOP:
 
                 while (await e.MoveNextAsync())
                 {
@@ -136,7 +136,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
                 return value;
 
-                NEXT_LOOP:
+            NEXT_LOOP:
 
                 while (await e.MoveNextAsync())
                 {
@@ -175,7 +175,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
                 return value;
 
-                NEXT_LOOP:
+            NEXT_LOOP:
 
                 while (await e.MoveNextAsync())
                 {

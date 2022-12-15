@@ -13,7 +13,7 @@ namespace UnityEngine.UI.Extensions
     public class RadialSlider : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
     {
         private bool isPointerDown, isPointerReleased, lerpInProgress;
-        private Vector2 m_localPos; 
+        private Vector2 m_localPos;
         private float m_targetAngle, m_lerpTargetAngle, m_startAngle, m_currentLerpTime, m_lerpTime;
         private Camera m_eventCamera;
         private Image m_image;
@@ -215,17 +215,17 @@ namespace UnityEngine.UI.Extensions
             _onTextValueChanged.Invoke(((int)(m_targetAngle * 360f)).ToString());
         }
 
-//#if UNITY_EDITOR
+        //#if UNITY_EDITOR
 
-//        private void OnValidate()
-//        {
-//            if (LerpToTarget && LerpCurve.length < 2)
-//            {
-//                LerpToTarget = false;
-//                Debug.LogError("You need to define a Lerp Curve to enable 'Lerp To Target'");
-//            }
-//        }
-//#endif
+        //        private void OnValidate()
+        //        {
+        //            if (LerpToTarget && LerpCurve.length < 2)
+        //            {
+        //                LerpToTarget = false;
+        //                Debug.LogError("You need to define a Lerp Curve to enable 'Lerp To Target'");
+        //            }
+        //        }
+        //#endif
 
         #region Interfaces
         // Called when the pointer enters our GUI component.

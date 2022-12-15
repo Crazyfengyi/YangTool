@@ -19,11 +19,11 @@ public class TweenFragment : MonoBehaviour
     private Vector3 initPos;
     private float time;
 
-	void Start()
-	{
-	    initPos = transform.position;
-	    time = 0.0f;
-	}
+    void Start()
+    {
+        initPos = transform.position;
+        time = 0.0f;
+    }
 
     void Update()
     {

@@ -281,7 +281,7 @@ namespace UTJ
             private static Component FindComponent(System.Type type, GameObject root, string objectName)
             {
                 IEnumerable<Component> sourceComponents = (root == null)
-                    ? FindObjectsOfType(type,false)
+                    ? FindObjectsOfType(type, false)
                         .Select(item => item as Component)
                         .Where(item => item != null)
                     : root.GetComponentsInChildren(type, true);

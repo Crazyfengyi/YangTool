@@ -1,13 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ES3Internal;
-using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using System.Reflection;
-using System;
 #endif
 
 public class ES3ReferenceMgr : ES3ReferenceMgrBase
@@ -104,14 +99,14 @@ public class ES3ReferenceMgr : ES3ReferenceMgrBase
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     private void AddPrefabToManager(ES3Prefab es3Prefab)
     {
-            try
-            {
-                if (es3Prefab != null && EditorUtility.IsPersistent(es3Prefab))
-                    if(AddPrefab(es3Prefab))
-                        Undo.RecordObject(this, "Update Easy Save 3 Reference List");
-                es3Prefab.GeneratePrefabReferences();
-            }
-            catch { }
+        try
+        {
+            if (es3Prefab != null && EditorUtility.IsPersistent(es3Prefab))
+                if (AddPrefab(es3Prefab))
+                    Undo.RecordObject(this, "Update Easy Save 3 Reference List");
+            es3Prefab.GeneratePrefabReferences();
+        }
+        catch { }
     }
 #endif
 }

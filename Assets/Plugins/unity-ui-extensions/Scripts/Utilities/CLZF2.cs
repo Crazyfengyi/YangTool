@@ -166,7 +166,7 @@ namespace UnityEngine.UI.Extensions
             long off;
             int lit = 0;
 
-            for (;;)
+            for (; ; )
             {
                 if (iidx < inputLength - 2)
                 {

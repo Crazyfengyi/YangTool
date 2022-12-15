@@ -95,7 +95,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 state = -2;
                 completionSource.TrySetResult(false);
                 return;
@@ -115,7 +115,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 Volatile.Write(ref state, -2);
                 completionSource.TrySetResult(false);
             }

@@ -1,12 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Callbacks;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using ES3Internal;
+using UnityEngine;
 
 
 /*

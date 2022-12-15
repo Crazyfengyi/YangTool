@@ -1,65 +1,65 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CMF
 {
-	//This script calculates the average framerate and displays it in the upper right corner of the screen;
-	public class FPSCounter : MonoBehaviour {
+    //This script calculates the average framerate and displays it in the upper right corner of the screen;
+    public class FPSCounter : MonoBehaviour
+    {
 
-		//Framerate is calculated using this interval;
-		public float checkInterval = 1f;
+        //Framerate is calculated using this interval;
+        public float checkInterval = 1f;
 
-		//Variables to keep track of passed time and frames;
-		int currentPassedFrames = 0;
-		float currentPassedTime = 0f;
+        //Variables to keep track of passed time and frames;
+        int currentPassedFrames = 0;
+        float currentPassedTime = 0f;
 
-		//Current framerate;
-		public float currentFrameRate = 0f;
-		string currentFrameRateString = "";
-		
-		// Update;
-		void Update () {
+        //Current framerate;
+        public float currentFrameRate = 0f;
+        string currentFrameRateString = "";
 
-			//Increment passed frames;
-			currentPassedFrames ++;
+        // Update;
+        void Update()
+        {
 
-			//Increment passed time;
-			currentPassedTime += Time.deltaTime;
+            //Increment passed frames;
+            currentPassedFrames++;
 
-			//If passed time has reached 'checkInterval', recalculate framerate;
-			if(currentPassedTime >= checkInterval)
-			{
-				//Calculate frame rate;
-				currentFrameRate = (float)currentPassedFrames/currentPassedTime;
+            //Increment passed time;
+            currentPassedTime += Time.deltaTime;
 
-				//Reset counters;
-				currentPassedTime = 0f;
-				currentPassedFrames = 0;
+            //If passed time has reached 'checkInterval', recalculate framerate;
+            if (currentPassedTime >= checkInterval)
+            {
+                //Calculate frame rate;
+                currentFrameRate = (float)currentPassedFrames / currentPassedTime;
 
-				//Clamp to two digits behind comma;
-				currentFrameRate *= 100f;
-				currentFrameRate = (int)currentFrameRate;
-				currentFrameRate /= 100f;
+                //Reset counters;
+                currentPassedTime = 0f;
+                currentPassedFrames = 0;
 
-				//Calculate framerate string to display later;
-				currentFrameRateString = currentFrameRate.ToString();
-			}
-		}
+                //Clamp to two digits behind comma;
+                currentFrameRate *= 100f;
+                currentFrameRate = (int)currentFrameRate;
+                currentFrameRate /= 100f;
 
-		//Render framerate in the upper right corner of the screen;
-		void OnGUI()
-		{
-			GUI.contentColor = Color.black;
+                //Calculate framerate string to display later;
+                currentFrameRateString = currentFrameRate.ToString();
+            }
+        }
 
-			float labelSize = 40f;
-			float offset = 2f;
+        //Render framerate in the upper right corner of the screen;
+        void OnGUI()
+        {
+            GUI.contentColor = Color.black;
 
-			GUI.Label(new Rect(Screen.width - labelSize + offset, offset, labelSize, 30f), currentFrameRateString);
+            float labelSize = 40f;
+            float offset = 2f;
 
-			GUI.contentColor = Color.white;
+            GUI.Label(new Rect(Screen.width - labelSize + offset, offset, labelSize, 30f), currentFrameRateString);
 
-			GUI.Label(new Rect(Screen.width - labelSize, 0f, labelSize, 30f), currentFrameRateString);
-		}
-	}
+            GUI.contentColor = Color.white;
+
+            GUI.Label(new Rect(Screen.width - labelSize, 0f, labelSize, 30f), currentFrameRateString);
+        }
+    }
 }

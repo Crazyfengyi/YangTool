@@ -52,7 +52,7 @@ namespace UnityEngine.UI.Extensions
         private List<string> _panelItems; //items that will get shown in the dropdown
 
         private Dictionary<string, GameObject> panelObjects;
-        
+
         private GameObject itemTemplate;
 
         public string Text { get; private set; }
@@ -79,7 +79,7 @@ namespace UnityEngine.UI.Extensions
                 RedrawPanel();
             }
         }
-        
+
         public void Awake()
         {
             Initialize();

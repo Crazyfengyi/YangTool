@@ -1,16 +1,14 @@
-﻿using System;
+﻿using ES3Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using ES3Internal;
-using System.Linq;
-using System.Reflection;
 
 namespace ES3Types
 {
-	[UnityEngine.Scripting.Preserve]
-	public class ES3HashSetType : ES3CollectionType
-	{
-		public ES3HashSetType(Type type) : base(type){}
+    [UnityEngine.Scripting.Preserve]
+    public class ES3HashSetType : ES3CollectionType
+    {
+        public ES3HashSetType(Type type) : base(type) { }
 
         public override void Write(object obj, ES3Writer writer, ES3.ReferenceMode memberReferenceMode)
         {
@@ -49,7 +47,7 @@ namespace ES3Types
 
 
         public override object Read(ES3Reader reader)
-		{
+        {
             /*var method = typeof(ES3CollectionType).GetMethod("ReadICollection", BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(elementType.type);
             if(!(bool)method.Invoke(this, new object[] { reader, list, elementType }))
                 return null;*/
@@ -83,8 +81,8 @@ namespace ES3Types
         }
 
         public override void ReadInto(ES3Reader reader, object obj)
-		{
+        {
             throw new NotImplementedException("Cannot use LoadInto/ReadInto with HashSet because HashSets do not maintain the order of elements");
-		}
+        }
     }
 }

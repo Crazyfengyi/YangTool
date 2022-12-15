@@ -171,7 +171,7 @@ namespace Cysharp.Threading.Tasks.Linq
             {
                 try
                 {
-                    LOOP:
+                LOOP:
                     if (valueEnumerator != null)
                     {
                         if (valueEnumerator.MoveNext())
@@ -209,7 +209,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
                 return;
 
-                TRY_SET_RESULT_TRUE:
+            TRY_SET_RESULT_TRUE:
                 completionSource.TrySetResult(true);
             }
 
@@ -363,7 +363,7 @@ namespace Cysharp.Threading.Tasks.Linq
             {
                 try
                 {
-                    LOOP:
+                LOOP:
                     if (valueEnumerator != null)
                     {
                         if (valueEnumerator.MoveNext())
@@ -593,7 +593,7 @@ namespace Cysharp.Threading.Tasks.Linq
             {
                 try
                 {
-                    LOOP:
+                LOOP:
                     if (valueEnumerator != null)
                     {
                         if (valueEnumerator.MoveNext())

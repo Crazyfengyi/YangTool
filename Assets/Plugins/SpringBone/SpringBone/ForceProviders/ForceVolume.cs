@@ -2,7 +2,7 @@
 
 namespace UTJ
 {
-    public class ForceVolume : ForceProvider 
+    public class ForceVolume : ForceProvider
     {
         public float strength = 0.01f;
 

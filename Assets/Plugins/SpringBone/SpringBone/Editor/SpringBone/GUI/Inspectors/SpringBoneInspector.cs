@@ -88,10 +88,10 @@ namespace UTJ
 
         private void RenderAngleLimits
         (
-            Vector2 origin, 
-            float lineLength, 
-            Vector2 pivotSpaceVector, 
-            AngleLimits angleLimits, 
+            Vector2 origin,
+            float lineLength,
+            Vector2 pivotSpaceVector,
+            AngleLimits angleLimits,
             Color limitColor
         )
         {
@@ -131,7 +131,7 @@ namespace UTJ
                 || bone.yAngleLimits.max > 90f
                 || bone.zAngleLimits.min < -90f
                 || bone.zAngleLimits.max > 90f;
-            
+
             GUILayout.BeginVertical("box");
             GUILayout.BeginHorizontal();
             GUILayout.Label("Y 軸角度制限");
@@ -255,7 +255,7 @@ namespace UTJ
             };
 
             propertySets = new PropertySet[] {
-                new PropertySet("力", forceProperties), 
+                new PropertySet("力", forceProperties),
                 new PropertySet("角度制限", angleLimitProperties),
                 new PropertySet("距離制限", lengthLimitProperties),
                 new PropertySet("当たり判定", collisionProperties),

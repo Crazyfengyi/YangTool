@@ -1,48 +1,46 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace ES3Internal
 {
-	[System.Serializable]
-	public abstract class ES3SerializableDictionary<TKey,TVal> : Dictionary<TKey,TVal>, ISerializationCallbackReceiver
-	{
-		[SerializeField]
-		private List<TKey> _Keys;
-		[SerializeField]
-		private List<TVal> _Values;
+    [System.Serializable]
+    public abstract class ES3SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, ISerializationCallbackReceiver
+    {
+        [SerializeField]
+        private List<TKey> _Keys;
+        [SerializeField]
+        private List<TVal> _Values;
 
-		protected abstract bool KeysAreEqual(TKey a, TKey b);
-		protected abstract bool ValuesAreEqual(TVal a, TVal b);
+        protected abstract bool KeysAreEqual(TKey a, TKey b);
+        protected abstract bool ValuesAreEqual(TVal a, TVal b);
 
-		public void OnBeforeSerialize()
-		{
-			_Keys = new List<TKey>();
-			_Values = new List<TVal>();
-			foreach(KeyValuePair<TKey, TVal> pair in this)
-			{
+        public void OnBeforeSerialize()
+        {
+            _Keys = new List<TKey>();
+            _Values = new List<TVal>();
+            foreach (KeyValuePair<TKey, TVal> pair in this)
+            {
                 try
                 {
                     _Keys.Add(pair.Key);
                     _Values.Add(pair.Value);
                 }
                 catch { }
-			}
-		}
+            }
+        }
 
-		// load dictionary from lists
-		public void OnAfterDeserialize()
-		{
-			this.Clear();
+        // load dictionary from lists
+        public void OnAfterDeserialize()
+        {
+            this.Clear();
 
-			if(_Keys.Count != _Values.Count)
-				throw new System.Exception(string.Format("Key count is different to value count after deserialising dictionary."));
+            if (_Keys.Count != _Values.Count)
+                throw new System.Exception(string.Format("Key count is different to value count after deserialising dictionary."));
 
 
-			for(int i = 0; i < _Keys.Count; i++)
-			{
+            for (int i = 0; i < _Keys.Count; i++)
+            {
                 if (_Keys[i] != null)
                 {
                     try
@@ -51,34 +49,34 @@ namespace ES3Internal
                     }
                     catch { }
                 }
-			}
+            }
 
-			_Keys = null;
-			_Values = null;
-		}
-			
-		public int RemoveNullValues()
-		{
-			var nullKeys = this.Where(pair => pair.Value == null)
-				.Select(pair => pair.Key)
-				.ToList();
-			foreach (var nullKey in nullKeys)
-				Remove(nullKey);
-			return nullKeys.Count;
-		}
+            _Keys = null;
+            _Values = null;
+        }
 
-		// Changes the key of a value without changing it's position in the underlying Lists.
-		// Mainly used in the Editor where position might otherwise change while the user is editing it.
-		// Returns true if a change was made.
-		public bool ChangeKey(TKey oldKey, TKey newKey)
-		{
-			if(KeysAreEqual(oldKey, newKey))
-				return false;
+        public int RemoveNullValues()
+        {
+            var nullKeys = this.Where(pair => pair.Value == null)
+                .Select(pair => pair.Key)
+                .ToList();
+            foreach (var nullKey in nullKeys)
+                Remove(nullKey);
+            return nullKeys.Count;
+        }
 
-			var val = this [oldKey];
-			Remove(oldKey);
-			this [newKey] = val;
-			return true;
-		}
-	}
+        // Changes the key of a value without changing it's position in the underlying Lists.
+        // Mainly used in the Editor where position might otherwise change while the user is editing it.
+        // Returns true if a change was made.
+        public bool ChangeKey(TKey oldKey, TKey newKey)
+        {
+            if (KeysAreEqual(oldKey, newKey))
+                return false;
+
+            var val = this[oldKey];
+            Remove(oldKey);
+            this[newKey] = val;
+            return true;
+        }
+    }
 }

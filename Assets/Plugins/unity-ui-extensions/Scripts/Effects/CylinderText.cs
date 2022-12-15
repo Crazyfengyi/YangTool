@@ -34,7 +34,7 @@ namespace UnityEngine.UI.Extensions
         }
         public override void ModifyMesh(VertexHelper vh)
         {
-            if (! IsActive()) return;
+            if (!IsActive()) return;
 
             int count = vh.currentVertCount;
             if (!IsActive() || count == 0)
@@ -47,12 +47,12 @@ namespace UnityEngine.UI.Extensions
                 vh.PopulateUIVertex(ref uiVertex, index);
 
                 // get x position
-                var x = uiVertex.position.x;                
+                var x = uiVertex.position.x;
 
                 // calculate bend based on pivot and radius
                 uiVertex.position.z = -radius * Mathf.Cos(x / radius);
                 uiVertex.position.x = radius * Mathf.Sin(x / radius);
-                
+
                 vh.SetUIVertex(uiVertex, index);
             }
         }

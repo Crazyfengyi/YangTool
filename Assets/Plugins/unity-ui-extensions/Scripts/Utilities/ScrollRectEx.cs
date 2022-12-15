@@ -99,7 +99,8 @@ namespace UnityEngine.UI.Extensions
             }
 
             if (routeToParent)
-                DoForParents<IScrollHandler>((parent) => {
+                DoForParents<IScrollHandler>((parent) =>
+                {
                     parent.OnScroll(eventData);
                 });
             else

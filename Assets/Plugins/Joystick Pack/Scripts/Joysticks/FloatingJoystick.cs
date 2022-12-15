@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
 public class FloatingJoystick : Joystick
 {
@@ -20,7 +17,7 @@ public class FloatingJoystick : Joystick
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-		background.gameObject.SetActive(false);
-		base.OnPointerUp(eventData);
-	}
+        background.gameObject.SetActive(false);
+        base.OnPointerUp(eventData);
+    }
 }

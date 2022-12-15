@@ -5,12 +5,9 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-11-11 
 */
-using UnityEngine;
-using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 
 namespace YangTools.ObjectPool
 {
@@ -457,7 +454,7 @@ namespace YangTools.ObjectPool
     {
         public string PoolKey { get; set; }
         public bool IsInPool { get; set; }
-        public DefaultObjectPoolItem ()
+        public DefaultObjectPoolItem()
         {
         }
         public void OnGet()

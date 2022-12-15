@@ -23,7 +23,7 @@ namespace Exploder
 
             THREAD_MAX = Mathf.Clamp((int)Core.parameters.ThreadOptions + 2, 1, 4);
 
-            UnityEngine.Debug.LogFormat("Exploder: using {0} threads.", THREAD_MAX-1);
+            UnityEngine.Debug.LogFormat("Exploder: using {0} threads.", THREAD_MAX - 1);
 
             workers = new CutterWorker[THREAD_MAX - 1];
 
@@ -110,8 +110,8 @@ namespace Exploder
             // cut object if necessary
             //
             var cuts = THREAD_MAX - 1 - core.meshSet.Count;
-//            Debug.AssertFormat(cuts <= 2, "Invalid number of cuts: {0}", cuts);
-//            var cutsTotal = cuts;
+            //            Debug.AssertFormat(cuts <= 2, "Invalid number of cuts: {0}", cuts);
+            //            var cutsTotal = cuts;
 
             var cycleCounter = 0;
 
@@ -176,7 +176,7 @@ namespace Exploder
             //
             // assign meshes to workers
             //
-            var meshPerThread = core.meshSet.Count/(THREAD_MAX - 1);
+            var meshPerThread = core.meshSet.Count / (THREAD_MAX - 1);
             var workerId = 0;
             var meshCounter = 0;
 
@@ -203,7 +203,7 @@ namespace Exploder
             }
 
             localWatch.Stop();
-//            Debug.Log("MeshesPerThread: " + meshPerThread + " workers: " + workers.Length + " cuts: " + cutsTotal + " time: " + localWatch.ElapsedMilliseconds);
+            //            Debug.Log("MeshesPerThread: " + meshPerThread + " workers: " + workers.Length + " cuts: " + cutsTotal + " time: " + localWatch.ElapsedMilliseconds);
 
             return true;
         }
@@ -213,13 +213,13 @@ namespace Exploder
             var tar0 = core.targetFragments[id] / 2;
             var tar1 = tar0;
 
-            if (core.targetFragments[id]%2 == 1)
+            if (core.targetFragments[id] % 2 == 1)
             {
-                tar1 ++;
+                tar1++;
             }
 
-            splitIDs[0] = (id+1)*100;
-            splitIDs[1] = (id+1)*200;
+            splitIDs[0] = (id + 1) * 100;
+            splitIDs[1] = (id + 1) * 200;
 
             core.targetFragments.Add(splitIDs[0], tar0);
             core.targetFragments.Add(splitIDs[1], tar1);

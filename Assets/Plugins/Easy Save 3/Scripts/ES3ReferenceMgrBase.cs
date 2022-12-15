@@ -1,10 +1,9 @@
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using UnityEngine.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace ES3Internal
 {
@@ -408,7 +407,7 @@ namespace ES3Internal
                     return;
                 }
 
-                if(type == typeof(Mesh))
+                if (type == typeof(Mesh))
                 {
                     if (UnityEditor.AssetDatabase.Contains(obj))
                         dependencies.Add(obj);
@@ -427,7 +426,7 @@ namespace ES3Internal
                     return;
                 }
 
-                if(type == typeof(MeshCollider))
+                if (type == typeof(MeshCollider))
                 {
                     var mc = (MeshCollider)obj;
                     dependencies.Add(mc.sharedMesh);
@@ -446,7 +445,7 @@ namespace ES3Internal
                 if (type == typeof(SkinnedMeshRenderer))
                     dependencies.Add(((SkinnedMeshRenderer)obj).sharedMesh); // Don't return. Let this fall through to the if(obj is renderer) call.
                 else if (type == typeof(SpriteRenderer))
-                        dependencies.Add(((SpriteRenderer)obj).sprite); // Don't return. Let this fall through to the if(obj is renderer) call.
+                    dependencies.Add(((SpriteRenderer)obj).sprite); // Don't return. Let this fall through to the if(obj is renderer) call.
                 else if (type == typeof(ParticleSystemRenderer))
                     dependencies.Add(((ParticleSystemRenderer)obj).mesh); // Don't return. Let this fall through to the if(obj is renderer) call.
 

@@ -167,7 +167,7 @@ namespace UnityEngine.UI.Extensions
                         var p2 = input[i + 1];
                         var segmentDistance = Vector2.Distance(p1, p2) / increments;
                         var incrementTime = 1f / segmentDistance;
-                        for (int j=0; j < segmentDistance; j++)
+                        for (int j = 0; j < segmentDistance; j++)
                         {
                             outputList.Add(Vector2.Lerp(p1, (Vector2)p2, j * incrementTime));
                             incrementCount++;
@@ -290,7 +290,7 @@ namespace UnityEngine.UI.Extensions
         {
             Rect spriteRect = sprite.rect;
             //if (type == Type.Simple || type == Type.Filled)
-                return new Vector2(local.x * rect.width, local.y * rect.height);
+            return new Vector2(local.x * rect.width, local.y * rect.height);
 
             //Vector4 border = sprite.border;
             //Vector4 adjustedBorder = GetAdjustedBorders(border / pixelsPerUnit, rect);

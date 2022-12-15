@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
+using System.IO;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using YangTools;
-using System.IO;
 
 public class AnimatorFactoryWindow : EditorWindow
 {

@@ -4,13 +4,15 @@
 namespace UnityEngine.UI.Extensions.Examples
 {
     [RequireComponent(typeof(SoftMaskScript))]
-    public class CooldownEffect_SAUIM : MonoBehaviour {
+    public class CooldownEffect_SAUIM : MonoBehaviour
+    {
 
         public CooldownButton cooldown;
         private SoftMaskScript sauim;
 
         // Use this for initialization
-        void Start() {
+        void Start()
+        {
             if (cooldown == null)
             {
                 Debug.LogError("Missing Cooldown Button assignment");
@@ -19,8 +21,9 @@ namespace UnityEngine.UI.Extensions.Examples
         }
 
         // Update is called once per frame
-        void Update() {
-            sauim.CutOff = Mathf.Lerp(0,1, cooldown.CooldownTimeElapsed / cooldown.CooldownTimeout);
+        void Update()
+        {
+            sauim.CutOff = Mathf.Lerp(0, 1, cooldown.CooldownTimeElapsed / cooldown.CooldownTimeout);
         }
     }
 }

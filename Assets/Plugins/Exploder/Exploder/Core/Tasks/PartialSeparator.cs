@@ -43,18 +43,18 @@ namespace Exploder
         {
             Debug.Assert(core.meshSet.Count == 1);
 
-            Debug.DrawLine(core.parameters.HitPosition, core.parameters.HitPosition + core.parameters.ShotDir*1000, Color.red, 10000);
+            Debug.DrawLine(core.parameters.HitPosition, core.parameters.HitPosition + core.parameters.ShotDir * 1000, Color.red, 10000);
 
             var mesh = core.meshSet.ElementAt(0);
 
-            var plane = new Exploder.Plane(-core.parameters.ShotDir, core.parameters.HitPosition + core.parameters.ShotDir*0.2f);
+            var plane = new Exploder.Plane(-core.parameters.ShotDir, core.parameters.HitPosition + core.parameters.ShotDir * 0.2f);
 
             List<ExploderMesh> meshes = null;
 
             var triangulateHoles = true;
             var crossSectionVertexColour = Color.white;
             var crossSectionUV = new Vector4(0, 0, 1, 1);
-            
+
             if (mesh.option)
             {
                 triangulateHoles = !mesh.option.Plane2D;

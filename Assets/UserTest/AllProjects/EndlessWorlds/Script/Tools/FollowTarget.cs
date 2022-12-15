@@ -6,7 +6,6 @@
  *创建时间:         2022-02-13 
 */
 using UnityEngine;
-using System.Collections;
 
 public class FollowTarget : MonoBehaviour
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ES3Internal
 {
@@ -12,7 +10,7 @@ namespace ES3Internal
 
         private const char indentChar = '-';
 
-        public static void Log(string msg, Object context = null, int indent=0)
+        public static void Log(string msg, Object context = null, int indent = 0)
         {
             if (!ES3Settings.defaultSettingsScriptableObject.logDebugInfo)
                 return;
@@ -22,7 +20,7 @@ namespace ES3Internal
                 Debug.LogFormat(context, Indent(indent) + msg);
         }
 
-        public static void LogWarning(string msg, Object context=null, int indent = 0)
+        public static void LogWarning(string msg, Object context = null, int indent = 0)
         {
             if (!ES3Settings.defaultSettingsScriptableObject.logWarnings)
                 return;

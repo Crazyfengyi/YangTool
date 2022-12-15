@@ -1,7 +1,7 @@
-using UTJ.StringQueueExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UTJ.StringQueueExtensions;
 
 namespace UTJ
 {
@@ -197,7 +197,7 @@ namespace UTJ
         {
             return SerializeObjectFromStrings(typeof(T), sourceItems, firstOptionalField, ref error) as T;
         }
-        
+
         // private
 
         private const int UnknownVersion = -1;

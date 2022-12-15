@@ -43,7 +43,7 @@ namespace UnityEngine.UI.Extensions
             Instantiate(prefab, transform);
         }
 
-        public void CreateInstance(string MenuName) 
+        public void CreateInstance(string MenuName)
         {
             var prefab = GetPrefab(MenuName);
 

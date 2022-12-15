@@ -7,15 +7,15 @@ namespace UTJ
     {
         public float radius = 0.075f;
         public float height = 0.3f;
-        
+
         // If linkedRenderer is not null, the collider will be enabled 
         // based on whether the renderer is
         public Renderer linkedRenderer;
 
         public SpringBone.CollisionStatus CheckForCollisionAndReact
         (
-            Vector3 moverHeadPosition, 
-            ref Vector3 moverPosition, 
+            Vector3 moverHeadPosition,
+            ref Vector3 moverPosition,
             float moverRadius,
             ref Vector3 hitNormal
         )
@@ -55,8 +55,8 @@ namespace UTJ
                     sphereOrigin,
                     localMoverPosition,
                     moverRadius,
-                    isHeadEmbedded ? 
-                        SpringBone.CollisionStatus.HeadIsEmbedded : 
+                    isHeadEmbedded ?
+                        SpringBone.CollisionStatus.HeadIsEmbedded :
                         SpringBone.CollisionStatus.TailCollision);
 #endif
 
@@ -123,9 +123,9 @@ namespace UTJ
                     SpringBone.CollisionStatus.TailCollision;
 #if UNITY_EDITOR
                 RecordCylinderCollision(
-                    localSpherePosition, 
-                    new Vector3(normal.x, 0f, normal.y), 
-                    localMoverRadius, 
+                    localSpherePosition,
+                    new Vector3(normal.x, 0f, normal.y),
+                    localMoverRadius,
                     collisionStatus);
 #endif
             }

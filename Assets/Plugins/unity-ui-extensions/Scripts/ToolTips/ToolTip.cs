@@ -38,7 +38,7 @@ namespace UnityEngine.UI.Extensions
 
         // private int screenWidth, screenHeight;
 
-        private float YShift,xShift;
+        private float YShift, xShift;
 
         private RenderMode _guiMode;
 

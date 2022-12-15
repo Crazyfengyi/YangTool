@@ -7,7 +7,7 @@
 */
 using System;
 
-namespace YangTools.Task
+namespace YangTools.TaskExtend
 {
     /// <summary>
     /// 条件任务。

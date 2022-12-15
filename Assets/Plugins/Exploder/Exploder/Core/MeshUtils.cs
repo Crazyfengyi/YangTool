@@ -3,16 +3,13 @@
 // All rights reserved
 // Redistribution of source code without permission not allowed
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 using UnityEngine;
 
 namespace Exploder
 {
     public static class MeshUtils
-	{
+    {
         /// <summary>
         /// Compute barycentric coordinates (u, v, w) for point p with respect to triangle (a, b, c)
         /// from Real-Time Collision Detection Book by Christer Ericson
@@ -173,8 +170,8 @@ namespace Exploder
                 if (!foundIsland)
                 {
                     // create new island
-                    currIsland = new HashSet<int>{vertHash[lastInvalidIdx], vertHash[lastInvalidIdx+1], vertHash[lastInvalidIdx+2]};
-                    currIslandIdx = new List<int>(trianglesNum/2) {lastInvalidIdx, lastInvalidIdx + 1, lastInvalidIdx + 2};
+                    currIsland = new HashSet<int> { vertHash[lastInvalidIdx], vertHash[lastInvalidIdx + 1], vertHash[lastInvalidIdx + 2] };
+                    currIslandIdx = new List<int>(trianglesNum / 2) { lastInvalidIdx, lastInvalidIdx + 1, lastInvalidIdx + 2 };
 
                     islands.Add(currIsland);
                     islandsIdx.Add(currIslandIdx);
@@ -274,7 +271,7 @@ namespace Exploder
 
                 m.triangles = tt.ToArray();
 
-                cutterMesh.centroid = centroid/centroidCounter;
+                cutterMesh.centroid = centroid / centroidCounter;
 
                 result.Add(cutterMesh);
             }
@@ -303,5 +300,5 @@ namespace Exploder
                 collider.SetPath(0, hull);
             }
         }
-	}
+    }
 }

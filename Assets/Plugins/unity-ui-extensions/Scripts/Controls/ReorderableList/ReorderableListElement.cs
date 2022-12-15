@@ -198,7 +198,7 @@ namespace UnityEngine.UI.Extensions
                 //If we have a, ReorderableList that is dropable
                 //Put the dragged object into the content and at the right index
                 if (_currentReorderableListRaycasted != null && _currentReorderableListRaycasted.IsDropable
-                    && (IsTransferable || _currentReorderableListRaycasted == _reorderableList ))
+                    && (IsTransferable || _currentReorderableListRaycasted == _reorderableList))
                 {
                     var args = new ReorderableList.ReorderableListEventStruct
                     {
@@ -227,7 +227,7 @@ namespace UnityEngine.UI.Extensions
 
                     _reorderableList.OnElementAdded.Invoke(args);
 
-                    if(!isValid) throw new Exception("It's too late to cancel the Transfer! Do so in OnElementDropped!");
+                    if (!isValid) throw new Exception("It's too late to cancel the Transfer! Do so in OnElementDropped!");
 
                 }
                 //We don't have an ReorderableList

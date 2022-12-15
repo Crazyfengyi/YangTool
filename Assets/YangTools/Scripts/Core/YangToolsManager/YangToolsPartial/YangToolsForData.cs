@@ -1,10 +1,7 @@
-﻿
-using System.Collections.Generic;
-
-namespace YangTools
+﻿namespace YangTools
 {
     public static partial class YangToolsManager
     {
-       
+
     }
 }

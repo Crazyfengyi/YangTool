@@ -1,15 +1,15 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace PigeonCoopToolkit.Effects.Trails.Editor
 {
     public class TrailPreviewUtillity : EditorWindow
     {
         public TrailRenderer_Base Trail;
-    
+
         void Update()
         {
-            if (Trail == null  || Trail.TrailData == null || Selection.activeGameObject != Trail.gameObject)
+            if (Trail == null || Trail.TrailData == null || Selection.activeGameObject != Trail.gameObject)
             {
                 Close();
                 return;
@@ -25,14 +25,14 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
                 return;
             }
 
-            
+
 
             GUIStyle blackBG = new GUIStyle();
             blackBG.normal.background = EditorGUIUtility.whiteTexture;
             blackBG.normal.textColor = Color.white;
             Color revertTo = GUI.color;
 
-            
+
 
             float highPoint = 0;
 
@@ -43,7 +43,7 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
                     highPoint = s;
             }
 
-            GUI.color = new Color(0.3f,0.3f,0.3f,1);
+            GUI.color = new Color(0.3f, 0.3f, 0.3f, 1);
             GUILayout.BeginArea(new Rect(0, 0, position.width, position.height), blackBG);
 
 
@@ -59,7 +59,7 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
 
             DrawLine(Vector2.up * position.height / 2, Vector2.right * position.width + Vector2.up * position.height / 2, new Color(1, 1, 1, 0.1f), 1);
 
-            
+
             GL.PushMatrix();
             GL.LoadPixelMatrix(-0.5f, 0.5f, 0.5f, -0.5f);
             if (Trail.TrailData.TrailMaterial != null)
@@ -132,11 +132,11 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
 
         void InsertTriangle(float t, float scaler)
         {
-            if(scaler <= 0)
+            if (scaler <= 0)
                 return;
             Color c = Trail.TrailData.ColorOverLife.Evaluate(t);
             float s = Trail.TrailData.SizeOverLife.Evaluate(t) / (scaler);
-            
+
             GL.Color(c);
             GL.Vertex3(t, 0.5f + s, 0);
             GL.MultiTexCoord(0, Trail.TrailData.MaterialTileLength > 0 ? new Vector3((t * position.width) / (300 * Trail.TrailData.MaterialTileLength), 0, 0) : new Vector3(t, 0, 0));
@@ -201,7 +201,7 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
         }
 
         public static Material lineMaterial = null;
- 
+
 
     }
 }

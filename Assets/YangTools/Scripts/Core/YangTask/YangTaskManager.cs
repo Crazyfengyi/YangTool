@@ -5,12 +5,10 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-18 
 */
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
-namespace YangTools.Task
+namespace YangTools.TaskExtend
 {
     /// <summary>
     /// 任务管理器。

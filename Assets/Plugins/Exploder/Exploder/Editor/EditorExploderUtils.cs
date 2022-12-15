@@ -3,7 +3,6 @@
 // All rights reserved
 // Redistribution of source code without permission not allowed
 
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -207,7 +206,7 @@ static class EditorExploderUtils
         var oldValue = obj;
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label(new GUIContent(label, toolTip), GUILayout.MaxWidth(150));
-        obj = (T) EditorGUILayout.ObjectField(obj, typeof (T), true);
+        obj = (T)EditorGUILayout.ObjectField(obj, typeof(T), true);
         EditorGUILayout.EndHorizontal();
         return oldValue != obj;
     }

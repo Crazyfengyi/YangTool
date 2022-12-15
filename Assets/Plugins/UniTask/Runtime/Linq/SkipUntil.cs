@@ -106,7 +106,7 @@ namespace Cysharp.Threading.Tasks.Linq
             {
                 try
                 {
-                    LOOP:
+                LOOP:
                     awaiter = enumerator.MoveNextAsync().GetAwaiter();
                     if (awaiter.IsCompleted)
                     {

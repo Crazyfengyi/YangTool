@@ -37,12 +37,12 @@ namespace Exploder
         /// 3 points constructor
         /// </summary>
 	    public Plane(Vector3 a, Vector3 b, Vector3 c)
-	    {
+        {
             Normal = (Vector3.Cross(b - a, c - a)).normalized;
             Distance = Vector3.Dot(Normal, a);
 
             Pnt = a;
-	    }
+        }
 
         /// <summary>
         /// normal, point constructor
@@ -110,9 +110,9 @@ namespace Exploder
         /// <returns></returns>
         public bool GetSideFix(ref Vector3 n)
         {
-            var dot = n.x*Normal.x + n.y*Normal.y + n.z*Normal.z - Distance;
+            var dot = n.x * Normal.x + n.y * Normal.y + n.z * Normal.z - Distance;
 
-//            var dot = Vector3.Dot(n, Normal) - Distance;
+            //            var dot = Vector3.Dot(n, Normal) - Distance;
 
             var sign = 1.0f;
             var abs = dot;
@@ -124,17 +124,17 @@ namespace Exploder
 
             if (abs < epsylon + 0.001f)
             {
-//                Utils.Log("Coplanar point!");
+                //                Utils.Log("Coplanar point!");
 
-                n.x += Normal.x*0.001f*sign;
-                n.y += Normal.y*0.001f*sign;
-                n.z += Normal.z*0.001f*sign;
+                n.x += Normal.x * 0.001f * sign;
+                n.y += Normal.y * 0.001f * sign;
+                n.z += Normal.z * 0.001f * sign;
 
-                dot = n.x*Normal.x + n.y*Normal.y + n.z*Normal.z - Distance;
-//                n += Normal*0.001f*Mathf.Sign(dot);
+                dot = n.x * Normal.x + n.y * Normal.y + n.z * Normal.z - Distance;
+                //                n += Normal*0.001f*Mathf.Sign(dot);
             }
 
-//            return Vector3.Dot(n, Normal) - Distance > epsylon;
+            //            return Vector3.Dot(n, Normal) - Distance > epsylon;
             return dot > epsylon;
         }
 
@@ -164,16 +164,16 @@ namespace Exploder
             var aby = b.y - a.y;
             var abz = b.z - a.z;
 
-            var dot0 = Normal.x*a.x + Normal.y*a.y + Normal.z*a.z;
-            var dot1 = Normal.x*abx + Normal.y*aby + Normal.z*abz;
+            var dot0 = Normal.x * a.x + Normal.y * a.y + Normal.z * a.z;
+            var dot1 = Normal.x * abx + Normal.y * aby + Normal.z * abz;
 
             t = (Distance - dot0) / dot1;
 
             if (t >= 0.0f - epsylon && t <= 1.0f + epsylon)
             {
-                q.x = a.x + t*abx;
-                q.y = a.y + t*aby;
-                q.z = a.z + t*abz;
+                q.x = a.x + t * abx;
+                q.y = a.y + t * aby;
+                q.z = a.z + t * abz;
 
                 return true;
             }
@@ -206,11 +206,11 @@ namespace Exploder
 
             Quaternion rot = Quaternion.LookRotation(Normal);
 
-//            Utils.Log("Rot: " + rot.eulerAngles+" pos: " + pos);
+            //            Utils.Log("Rot: " + rot.eulerAngles+" pos: " + pos);
 
             m.SetTRS(Pnt, rot, Vector3.one);
 
             return m;
         }
-	}
+    }
 }

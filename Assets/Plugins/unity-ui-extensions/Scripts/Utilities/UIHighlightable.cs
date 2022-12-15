@@ -16,9 +16,11 @@ namespace UnityEngine.UI.Extensions
         [System.Serializable]
         public class InteractableChangedEvent : Events.UnityEvent<bool> { }
 
-        [SerializeField][Tooltip("Can this panel be interacted with or is it disabled? (does not affect child components)")]
+        [SerializeField]
+        [Tooltip("Can this panel be interacted with or is it disabled? (does not affect child components)")]
         private bool m_Interactable = true;
-        [SerializeField][Tooltip("Does the panel remain in the pressed state when clicked? (default false)")]
+        [SerializeField]
+        [Tooltip("Does the panel remain in the pressed state when clicked? (default false)")]
         private bool m_ClickToHold;
 
         public bool Interactable
@@ -87,7 +89,7 @@ namespace UnityEngine.UI.Extensions
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if(!m_Pressed) HighlightInteractable(m_Graphic);
+            if (!m_Pressed) HighlightInteractable(m_Graphic);
         }
 
         private void HighlightInteractable(Graphic graphic)

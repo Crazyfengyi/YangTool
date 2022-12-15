@@ -1,8 +1,8 @@
-﻿using UTJ.GameObjectExtensions;
-using UTJ.StringQueueExtensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UTJ.GameObjectExtensions;
+using UTJ.StringQueueExtensions;
 
 namespace UTJ
 {
@@ -153,7 +153,7 @@ namespace UTJ
                 springBoneRecords = boneRecordsToUse;
             }
         }
- 
+
         // private
 
         // todo: Add to CSV
@@ -554,5 +554,5 @@ namespace UTJ
 
             return true;
         }
-   }
+    }
 }

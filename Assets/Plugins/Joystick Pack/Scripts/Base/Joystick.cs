@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    public float Horizontal { get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; }  }
+    public float Horizontal { get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; } }
     public float Vertical { get { return (snapY) ? SnapFloat(input.y, AxisOptions.Vertical) : input.y; } }
     public Vector2 Direction { get { return new Vector2(Horizontal, Vertical); } }
 
@@ -26,21 +24,22 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public bool SnapY { get { return snapY; } set { snapY = value; } }
 
 
-	[SerializeField] private float handleRange = 1;
+    [SerializeField] private float handleRange = 1;
     [SerializeField] private float deadZone = 0;
     [SerializeField] private AxisOptions axisOptions = AxisOptions.Both;
     [SerializeField] private bool snapX = false;
     [SerializeField] private bool snapY = false;
 
-	[SerializeField] protected RectTransform background = null;
-	/// <summary>
-	/// 判断玩家此时是否有按下
-	/// </summary>
-	/// <returns></returns>
-	public bool GetInputStatus() {
-		return background.gameObject.activeSelf;
-	}
-	[SerializeField] private RectTransform handle = null;
+    [SerializeField] protected RectTransform background = null;
+    /// <summary>
+    /// 判断玩家此时是否有按下
+    /// </summary>
+    /// <returns></returns>
+    public bool GetInputStatus()
+    {
+        return background.gameObject.activeSelf;
+    }
+    [SerializeField] private RectTransform handle = null;
     public GameObject goJianTou;
     private RectTransform baseRect = null;
 
@@ -105,7 +104,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         goJianTou.transform.rotation = Quaternion.AngleAxis(-GetAngle(startPoint, endPoint), Vector3.forward);
     }
 
-    private  float GetAngle(Vector3 startPoint, Vector3 endPoint)
+    private float GetAngle(Vector3 startPoint, Vector3 endPoint)
     {
         var dir = startPoint - endPoint;
         var dirV2 = new Vector2(dir.x, dir.y);

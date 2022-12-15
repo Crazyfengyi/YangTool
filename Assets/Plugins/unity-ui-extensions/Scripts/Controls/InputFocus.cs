@@ -5,7 +5,7 @@
 namespace UnityEngine.UI.Extensions
 {
     [RequireComponent(typeof(InputField))]
-	[AddComponentMenu("UI/Extensions/InputFocus")]
+    [AddComponentMenu("UI/Extensions/InputFocus")]
     public class InputFocus : MonoBehaviour
     {
         #region Private Variables

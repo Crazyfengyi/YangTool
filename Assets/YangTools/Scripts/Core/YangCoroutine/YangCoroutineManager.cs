@@ -5,9 +5,9 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-12 
 */
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace YangTools
 {
@@ -90,9 +90,9 @@ namespace YangTools
     {
         bool Tick();
     }
-	/// <summary>
-	/// 等待秒
-	/// </summary>
+    /// <summary>
+    /// 等待秒
+    /// </summary>
     public class YangWaitSecond : IWait
     {
         float seconds = 0f;

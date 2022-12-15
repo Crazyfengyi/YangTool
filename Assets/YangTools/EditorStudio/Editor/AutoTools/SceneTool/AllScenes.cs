@@ -1,6 +1,5 @@
 // Generated file
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using YangTools;
 
 public static class ScenesMenu

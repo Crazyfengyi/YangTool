@@ -25,7 +25,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore(IUniTaskAsyncEnumerable<string> source, Text text, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {
@@ -86,7 +86,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore<T>(IUniTaskAsyncEnumerable<T> source, Text text, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {
@@ -142,7 +142,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore(IUniTaskAsyncEnumerable<bool> source, Selectable selectable, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {
@@ -201,7 +201,7 @@ namespace Cysharp.Threading.Tasks
         static async UniTaskVoid BindToCore<TSource, TObject>(IUniTaskAsyncEnumerable<TSource> source, TObject bindTarget, Action<TObject, TSource> bindAction, CancellationToken cancellationToken, bool rebindOnError)
         {
             var repeat = false;
-            BIND_AGAIN:
+        BIND_AGAIN:
             var e = source.GetAsyncEnumerator(cancellationToken);
             try
             {

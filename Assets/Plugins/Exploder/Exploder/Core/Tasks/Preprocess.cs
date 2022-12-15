@@ -3,7 +3,6 @@
 // All rights reserved
 // Redistribution of source code without permission not allowed
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -168,7 +167,7 @@ namespace Exploder
 
             if (core.parameters.UniformFragmentDistribution)
             {
-                var fragmentPerObject = core.parameters.TargetFragments/list.Count;
+                var fragmentPerObject = core.parameters.TargetFragments / list.Count;
 
                 foreach (var meshObject in list)
                 {
@@ -200,7 +199,7 @@ namespace Exploder
                         foreach (var mesh in list)
                         {
                             core.targetFragments[mesh.id] += 1;
-                            diff --;
+                            diff--;
 
                             if (diff == 0)
                                 break;

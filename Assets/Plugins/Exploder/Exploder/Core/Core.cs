@@ -46,7 +46,7 @@ namespace Exploder
             //
             // init tasks
             //
-            tasks = new ExploderTask[(int) TaskType.TaskMax];
+            tasks = new ExploderTask[(int)TaskType.TaskMax];
 
             tasks[(int)TaskType.Preprocess] = new Preprocess(this);
 
@@ -240,7 +240,7 @@ namespace Exploder
 
         private bool RunTask(TaskType taskType, float budget = 0.0f)
         {
-            return tasks[(int) taskType].Run(budget);
+            return tasks[(int)taskType].Run(budget);
         }
 
         private void InitTask(TaskType taskType)
@@ -253,43 +253,43 @@ namespace Exploder
             switch (taskType)
             {
                 case TaskType.Preprocess:
-                {
-                    if (meshSet.Count == 0)
                     {
-                        return TaskType.None;
-                    }
+                        if (meshSet.Count == 0)
+                        {
+                            return TaskType.None;
+                        }
 
-                    if (parameters.PartialExplosion)
-                        return TaskType.PartialSeparator;
-                    return TaskType.ProcessCutter;
-                }
+                        if (parameters.PartialExplosion)
+                            return TaskType.PartialSeparator;
+                        return TaskType.ProcessCutter;
+                    }
 
                 case TaskType.PartialSeparator:
                     return TaskType.ProcessCutter;
 
                 case TaskType.ProcessCutter:
-                {
-                    if (splitMeshIslands)
                     {
-                        return TaskType.IsolateMeshIslands;
-                    }
-                    if (parameters.Crack)
-                    {
-                        return TaskType.PostprocessCrack;
-                    }
+                        if (splitMeshIslands)
+                        {
+                            return TaskType.IsolateMeshIslands;
+                        }
+                        if (parameters.Crack)
+                        {
+                            return TaskType.PostprocessCrack;
+                        }
 
-                    return TaskType.PostprocessExplode;
-                }
+                        return TaskType.PostprocessExplode;
+                    }
 
                 case TaskType.IsolateMeshIslands:
-                {
-                    if (parameters.Crack)
                     {
-                        return TaskType.PostprocessCrack;
-                    }
+                        if (parameters.Crack)
+                        {
+                            return TaskType.PostprocessCrack;
+                        }
 
-                    return TaskType.PostprocessExplode;
-                }
+                        return TaskType.PostprocessExplode;
+                    }
 
                 case TaskType.PostprocessExplode:
                     return TaskType.None;

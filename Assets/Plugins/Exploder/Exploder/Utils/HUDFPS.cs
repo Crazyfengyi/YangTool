@@ -4,7 +4,6 @@
 // Redistribution of source code without permission not allowed
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 namespace Exploder
@@ -46,14 +45,14 @@ namespace Exploder
         private void Update()
         {
             timeleft -= Time.deltaTime;
-            accum += Time.timeScale/Time.deltaTime;
+            accum += Time.timeScale / Time.deltaTime;
             ++frames;
 
             // Interval ended - update GUI text and start new interval
             if (timeleft <= 0.0)
             {
                 // display two fractional digits (f2 format)
-                float fps = accum/frames;
+                float fps = accum / frames;
                 string format = System.String.Format("{0:F2} FPS", fps);
                 GetComponent<Text>().text = format;
 

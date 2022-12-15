@@ -1,4 +1,3 @@
-using Exploder;
 using UnityEngine;
 
 namespace Exploder

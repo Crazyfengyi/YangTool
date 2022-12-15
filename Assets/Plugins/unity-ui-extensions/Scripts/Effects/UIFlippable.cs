@@ -6,7 +6,7 @@ namespace UnityEngine.UI.Extensions
     [RequireComponent(typeof(RectTransform), typeof(Graphic)), DisallowMultipleComponent]
     [AddComponentMenu("UI/Effects/Extensions/Flippable")]
     public class UIFlippable : BaseMeshEffect
-    {     
+    {
         [SerializeField] private bool m_Horizontal = false;
         [SerializeField] private bool m_Veritical = false;
 
@@ -26,7 +26,7 @@ namespace UnityEngine.UI.Extensions
             get { return this.m_Horizontal; }
             set { this.m_Horizontal = value; }
         }
-     
+
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="UnityEngine.UI.UIFlippable"/> should be flipped vertically.
         /// </summary>
@@ -40,16 +40,16 @@ namespace UnityEngine.UI.Extensions
         public override void ModifyMesh(VertexHelper verts)
         {
             RectTransform rt = this.transform as RectTransform;
-         
+
             for (int i = 0; i < verts.currentVertCount; ++i)
             {
                 UIVertex uiVertex = new UIVertex();
-                verts.PopulateUIVertex(ref uiVertex,i);
+                verts.PopulateUIVertex(ref uiVertex, i);
 
                 // Modify positions
                 uiVertex.position = new Vector3(
                     (this.m_Horizontal ? (uiVertex.position.x + (rt.rect.center.x - uiVertex.position.x) * 2) : uiVertex.position.x),
-                    (this.m_Veritical ?  (uiVertex.position.y + (rt.rect.center.y - uiVertex.position.y) * 2) : uiVertex.position.y),
+                    (this.m_Veritical ? (uiVertex.position.y + (rt.rect.center.y - uiVertex.position.y) * 2) : uiVertex.position.y),
                     uiVertex.position.z
                 );
 

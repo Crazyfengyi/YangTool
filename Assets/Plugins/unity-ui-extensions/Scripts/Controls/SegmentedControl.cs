@@ -219,7 +219,7 @@ namespace UnityEngine.UI.Extensions
                     sep.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, insetX - SeparatorWidth, SeparatorWidth);
                     sep.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, transform.rect.height);
                 }
-// TODO: maybe adjust text position
+                // TODO: maybe adjust text position
             }
         }
     }

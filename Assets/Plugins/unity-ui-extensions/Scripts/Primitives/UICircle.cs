@@ -59,9 +59,9 @@ namespace UnityEngine.UI.Extensions
         {
             float outer = -rectTransform.pivot.x * rectTransform.rect.width;
             float inner = -rectTransform.pivot.x * rectTransform.rect.width + this.m_thickness;
-     
+
             vh.Clear();
-     
+
             Vector2 prevX = Vector2.zero;
             Vector2 prevY = Vector2.zero;
             Vector2 uv0 = new Vector2(0, 0);

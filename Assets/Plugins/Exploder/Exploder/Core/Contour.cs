@@ -14,7 +14,7 @@ namespace Exploder
 {
     public class Contour
     {
-        public List<Dictionary<int, int>> contour; 
+        public List<Dictionary<int, int>> contour;
         private ArrayDictionary<MidPoint> midPoints;
         private LSHash lsHash;
 
@@ -25,9 +25,9 @@ namespace Exploder
 
         public void AllocateBuffers(int trianglesNum)
         {
-            if (lsHash == null || lsHash.Capacity() < trianglesNum*2)
+            if (lsHash == null || lsHash.Capacity() < trianglesNum * 2)
             {
-//                Utils.Log("Allocating contour: " + trianglesNum);
+                //                Utils.Log("Allocating contour: " + trianglesNum);
 
                 midPoints = new ArrayDictionary<MidPoint>(trianglesNum * 2);
                 contour = new List<Dictionary<int, int>>();
@@ -42,9 +42,9 @@ namespace Exploder
                 }
                 contour.Clear();
 
-                if (midPoints.Size < trianglesNum*2)
+                if (midPoints.Size < trianglesNum * 2)
                 {
-//                    Utils.Log("Re-allocating midPoint: " + trianglesNum);
+                    //                    Utils.Log("Re-allocating midPoint: " + trianglesNum);
 
                     midPoints = new ArrayDictionary<MidPoint>(trianglesNum * 2);
                 }
@@ -105,7 +105,7 @@ namespace Exploder
             }
             else
             {
-                midPoints.Add(hash0, new MidPoint{ id = hash0, vertexId = id0, idNext = hash1, idPrev = Int32.MaxValue/*, position = v0*/});
+                midPoints.Add(hash0, new MidPoint { id = hash0, vertexId = id0, idNext = hash1, idPrev = Int32.MaxValue/*, position = v0*/});
             }
 
             if (midPoints.TryGetValue(hash1, out midPoint))
@@ -159,7 +159,7 @@ namespace Exploder
 
             var midContour = new Dictionary<int, int>(midPoints.Count);
 
-            var loopsMax = midPoints.Count*2;
+            var loopsMax = midPoints.Count * 2;
 
             // find contour
             var pStart = midPoints.GetFirstValue();
@@ -178,7 +178,7 @@ namespace Exploder
                 if (!midPoints.TryGetValue(nextP, out p))
                 {
                     contour.Clear();
-//                    throw new Exception("Contour failed");
+                    //                    throw new Exception("Contour failed");
                     return false;
                 }
 
@@ -216,9 +216,9 @@ namespace Exploder
                 loopsMax--;
                 if (loopsMax == 0)
                 {
-//                    Utils.Assert(false, "ForeverLoop!");
+                    //                    Utils.Assert(false, "ForeverLoop!");
                     ExploderUtils.Log("ForeverLoop!");
-//                   throw new Exception("Contour failed");
+                    //                   throw new Exception("Contour failed");
                     contour.Clear();
                     return false;
                 }

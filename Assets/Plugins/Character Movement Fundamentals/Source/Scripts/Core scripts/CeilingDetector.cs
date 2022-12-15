@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //This (optional) component can be added to a gameobject that also has a 'AdvancedWalkerController' attached;
 //It will continuously check all collision detected by the internal physics calculation;

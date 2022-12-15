@@ -5,11 +5,10 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
-using UnityEngine;
-using System.Collections;
-using YangTools;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
+using UnityEngine;
+using YangTools;
 
 /// <summary>
 /// 游戏角色管理类
@@ -119,7 +118,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         {
             case PlayerController player:
                 {
-                    
+
                 }
                 break;
             case Monster monster:

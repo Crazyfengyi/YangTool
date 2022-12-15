@@ -11,7 +11,7 @@ namespace UnityEngine.EventSystems
         int m_ConsecutiveMoveCount = 0;
 
         protected GamePadInputModule()
-        {}
+        { }
 
         [SerializeField]
         private string m_HorizontalAxis = "Horizontal";

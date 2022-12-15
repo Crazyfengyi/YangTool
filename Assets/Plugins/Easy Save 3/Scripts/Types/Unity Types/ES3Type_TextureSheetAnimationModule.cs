@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 namespace ES3Types
 {
-	[UnityEngine.Scripting.Preserve]
+    [UnityEngine.Scripting.Preserve]
     [ES3PropertiesAttribute("enabled", "numTilesX", "numTilesY", "animation", "useRandomRow", "frameOverTime", "frameOverTimeMultiplier", "startFrame", "startFrameMultiplier", "cycleCount", "rowIndex", "uvChannelMask", "flipU", "flipV")]
     public class ES3Type_TextureSheetAnimationModule : ES3Type
     {

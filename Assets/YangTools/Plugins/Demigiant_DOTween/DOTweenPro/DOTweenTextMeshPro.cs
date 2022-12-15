@@ -15,7 +15,7 @@ namespace DG.Tweening
     /// </summary>
     public static class ShortcutExtensionsTMPText
     {
-        #region Colors
+#region Colors
 
         /// <summary>Tweens a TextMeshPro's color to the given value.
         /// Also stores the TextMeshPro as the tween's target so it can be used for filtered operations</summary>
@@ -73,9 +73,9 @@ namespace DG.Tweening
                 .SetTarget(target);
         }
 
-        #endregion
+#endregion
 
-        #region Other
+#region Other
 
         /// <summary>Tweens a TextMeshPro's scale to the given value (using correct uniform scale as TMP requires).
         /// Also stores the TextMeshPro as the tween's target so it can be used for filtered operations</summary>
@@ -121,7 +121,7 @@ namespace DG.Tweening
                 .SetTarget(target);
         }
 
-        #endregion
+#endregion
     }
 
 //    /// <summary>

@@ -13,7 +13,7 @@ namespace UnityEngine.UI.Extensions
     // Image according to the label inside the name attribute to load, read from the Resources directory. The size of the image is controlled by the size property.
     // Use: <quad name=NAME size=25 width=1 />
     [AddComponentMenu("UI/Extensions/TextPic")]
-       
+
     [ExecuteInEditMode] // Needed for culling images that are not used //
     public class TextPic : Text, IPointerClickHandler, IPointerExitHandler, IPointerEnterHandler, ISelectHandler
     {
@@ -23,7 +23,7 @@ namespace UnityEngine.UI.Extensions
         private readonly List<Image> m_ImagesPool = new List<Image>();
         private readonly List<GameObject> culled_ImagesPool = new List<GameObject>();
         private bool clearImages = false;
-		private Object thisLock = new Object();
+        private Object thisLock = new Object();
 
 
 
@@ -104,7 +104,7 @@ namespace UnityEngine.UI.Extensions
         //private bool selected = false;
 
         private List<Vector2> positions = new List<Vector2>();
-        
+
         /**
         * Little heck to support multiple hrefs with same name
         */
@@ -131,7 +131,7 @@ namespace UnityEngine.UI.Extensions
                 highlightselectable = GetComponent<Selectable>();
             }
 
-            Reset_m_HrefInfos ();
+            Reset_m_HrefInfos();
             base.Start();
         }
 
@@ -210,7 +210,8 @@ namespace UnityEngine.UI.Extensions
                     m_ImagesPool.Remove(m_ImagesPool[i]);
                 }
             }
-            if (culled_ImagesPool.Count > 1) {
+            if (culled_ImagesPool.Count > 1)
+            {
                 clearImages = true;
             }
         }
@@ -326,7 +327,7 @@ namespace UnityEngine.UI.Extensions
         protected string GetOutputText()
         {
             s_TextBuilder.Length = 0;
-            
+
             var indexText = 0;
             fixedString = this.text;
             if (inspectorIconList != null && inspectorIconList.Length > 0)
@@ -346,7 +347,8 @@ namespace UnityEngine.UI.Extensions
                 s_TextBuilder.Append("<color=" + hyperlinkColor + ">");  // Hyperlink color
 
                 var group = match.Groups[1];
-                if(isCreating_m_HrefInfos) {
+                if (isCreating_m_HrefInfos)
+                {
                     var hrefInfo = new HrefInfo
                     {
                         startIndex = s_TextBuilder.Length * 4, // Hyperlinks in text starting vertex indices
@@ -354,8 +356,11 @@ namespace UnityEngine.UI.Extensions
                         name = group.Value
                     };
                     m_HrefInfos.Add(hrefInfo);
-                } else {
-                    if(m_HrefInfos.Count > 0) {
+                }
+                else
+                {
+                    if (m_HrefInfos.Count > 0)
+                    {
                         m_HrefInfos[count].startIndex = s_TextBuilder.Length * 4; // Hyperlinks in text starting vertex indices;
                         m_HrefInfos[count].endIndex = (s_TextBuilder.Length + match.Groups[2].Length - 1) * 4 + 3;
                         count++;
@@ -367,9 +372,9 @@ namespace UnityEngine.UI.Extensions
                 indexText = match.Index + match.Length;
             }
             // we should create array only once or if there is any change in the text
-            if(isCreating_m_HrefInfos)
+            if (isCreating_m_HrefInfos)
                 isCreating_m_HrefInfos = false;
-                
+
             s_TextBuilder.Append(fixedString.Substring(indexText, fixedString.Length - indexText));
 
             return s_TextBuilder.ToString();
@@ -466,24 +471,29 @@ namespace UnityEngine.UI.Extensions
 
             public readonly List<Rect> boxes = new List<Rect>();
         }
-    
+
         /* TEMPORARY FIX REMOVE IMAGES FROM POOL DELETE LATER SINCE CANNOT DESTROY */
-        void Update() {
-			lock (thisLock) {
-				if (clearImages) {
-					for (int i = 0; i < culled_ImagesPool.Count; i++){
-						DestroyImmediate(culled_ImagesPool[i]);
-					}
-					culled_ImagesPool.Clear();
-					clearImages = false;
-				}
-			}
-            if( previousText != text)
-                Reset_m_HrefInfos ();
+        void Update()
+        {
+            lock (thisLock)
+            {
+                if (clearImages)
+                {
+                    for (int i = 0; i < culled_ImagesPool.Count; i++)
+                    {
+                        DestroyImmediate(culled_ImagesPool[i]);
+                    }
+                    culled_ImagesPool.Clear();
+                    clearImages = false;
+                }
+            }
+            if (previousText != text)
+                Reset_m_HrefInfos();
         }
-        
+
         // Reseting m_HrefInfos array if there is any change in text
-        void Reset_m_HrefInfos () {
+        void Reset_m_HrefInfos()
+        {
             previousText = text;
             m_HrefInfos.Clear();
             isCreating_m_HrefInfos = true;

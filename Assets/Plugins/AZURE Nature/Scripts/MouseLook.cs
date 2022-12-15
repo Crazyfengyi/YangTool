@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    
+
     public float mouseSensitivity;
 
     public Transform playerBody;
@@ -16,7 +14,7 @@ public class MouseLook : MonoBehaviour
         LockCursor();
         xAxisClamp = 0.0f;
     }
-    
+
     private void LockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;

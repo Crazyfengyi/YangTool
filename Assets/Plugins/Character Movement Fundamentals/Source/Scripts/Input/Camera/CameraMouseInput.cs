@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CMF
 {
@@ -15,14 +13,14 @@ namespace CMF
         public string mouseVerticalAxis = "Mouse Y";
 
         //Invert input options;
-		public bool invertHorizontalInput = false;
-		public bool invertVerticalInput = false;
+        public bool invertHorizontalInput = false;
+        public bool invertVerticalInput = false;
 
         //Use this value to fine-tune mouse movement;
         //All mouse input will be multiplied by this value;
         public float mouseInputMultiplier = 0.01f;
 
-	    public override float GetHorizontalCameraInput()
+        public override float GetHorizontalCameraInput()
         {
             //Get raw mouse input;
             float _input = Input.GetAxisRaw(mouseHorizontalAxis);
@@ -41,7 +39,7 @@ namespace CMF
             _input *= mouseInputMultiplier;
 
             //Invert input;
-            if(invertHorizontalInput)
+            if (invertHorizontalInput)
                 _input *= -1f;
 
             return _input;
@@ -49,11 +47,11 @@ namespace CMF
 
         public override float GetVerticalCameraInput()
         {
-           //Get raw mouse input;
+            //Get raw mouse input;
             float _input = -Input.GetAxisRaw(mouseVerticalAxis);
-            
+
             //Since raw mouse input is already time-based, we need to correct for this before passing the input to the camera controller;
-            if(Time.timeScale > 0f && Time.deltaTime > 0f)
+            if (Time.timeScale > 0f && Time.deltaTime > 0f)
             {
                 _input /= Time.deltaTime;
                 _input *= Time.timeScale;
@@ -65,7 +63,7 @@ namespace CMF
             _input *= mouseInputMultiplier;
 
             //Invert input;
-            if(invertVerticalInput)
+            if (invertVerticalInput)
                 _input *= -1f;
 
             return _input;

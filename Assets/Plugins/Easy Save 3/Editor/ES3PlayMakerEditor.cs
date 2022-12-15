@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace ES3PlayMaker
 {
-    #region Base Actions
+#region Base Actions
 
     public abstract class BaseEditor : CustomActionEditor
     {
@@ -754,9 +754,9 @@ namespace ES3PlayMaker
         }
     }
 
-    #endregion
+#endregion
 
-    #region Caching
+#region Caching
 
     [CustomActionEditor(typeof(ES3PlayMaker.CacheFile))]
     public class CacheFileEditor : SettingsEditor
@@ -776,6 +776,6 @@ namespace ES3PlayMaker
         }
     }
 
-    #endregion
+#endregion
 }
 #endif

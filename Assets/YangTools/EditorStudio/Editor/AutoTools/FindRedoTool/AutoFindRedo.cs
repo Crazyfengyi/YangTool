@@ -1,7 +1,5 @@
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
-using YangTools;
 
 namespace YangTools
 {

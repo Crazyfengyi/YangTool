@@ -73,7 +73,7 @@ namespace UTJ
             {
                 spinTime = AddPeriodically(spinTime, deltaTime, spinPeriod);
                 var spinTimeFactor = spinTime * PI2 / spinPeriod;
-                offsetVector = Mathf.Cos(spinTimeFactor) * transform.right 
+                offsetVector = Mathf.Cos(spinTimeFactor) * transform.right
                     + Mathf.Sin(spinTimeFactor) * transform.up;
             }
             offsetVector = amplitude * offsetVector;

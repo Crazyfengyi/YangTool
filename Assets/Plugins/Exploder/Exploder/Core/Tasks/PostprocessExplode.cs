@@ -96,7 +96,7 @@ namespace Exploder
 
                 if (core.parameters.PartialExplosion)
                 {
-                    
+
                 }
                 else
                 {
@@ -214,7 +214,7 @@ namespace Exploder
 #if DBG
         ExploderUtils.Log("Explosion finished! " + postList.Count + postList[0].original.transform.gameObject.name);
 #endif
-//            core.exploder.OnExplosionFinished(true);
+            //            core.exploder.OnExplosionFinished(true);
 
             Watch.Stop();
 

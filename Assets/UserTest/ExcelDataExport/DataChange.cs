@@ -1,17 +1,13 @@
 #if UNITY_EDITOR
-using Excel;
+using OfficeOpenXml;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using OfficeOpenXml;
-using System.Linq;
 
 /// <summary>
 /// 转换模式
@@ -310,7 +306,7 @@ public class DataChange : EditorWindow
             FileStream fileStream = new FileStream(targetPath, FileMode.Open, FileAccess.ReadWrite);
 
             string str = sb.ToString();
-            str = str.Replace("\r\n","\n");
+            str = str.Replace("\r\n", "\n");
             str = str.Replace("\n", "\r\n");
             //将字符串转换为字节数组
             byte[] bytes = Encoding.UTF8.GetBytes(str);

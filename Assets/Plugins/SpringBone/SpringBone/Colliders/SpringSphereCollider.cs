@@ -65,7 +65,7 @@ namespace UTJ
             if (originToHead.sqrMagnitude <= sphereRadius * sphereRadius)
             {
                 // The head is inside the sphere, so just try to push the tail out
-                localTailPosition = 
+                localTailPosition =
                     sphereLocalOrigin + (localTailPosition - sphereLocalOrigin).normalized * combinedRadius;
                 return SpringBone.CollisionStatus.HeadIsEmbedded;
             }

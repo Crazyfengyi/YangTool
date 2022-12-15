@@ -6,10 +6,8 @@
  *创建时间:         2022-02-20 
 */
 using UnityEngine;
-using System.Collections;
-using YangTools.Extend;
-using YangTools.Log;
 using UnityEngine.UI;
+using YangTools.Extend;
 
 namespace YangTools.UGUI
 {

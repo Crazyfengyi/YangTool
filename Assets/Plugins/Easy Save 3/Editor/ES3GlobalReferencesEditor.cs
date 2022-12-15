@@ -1,10 +1,6 @@
 ﻿#if !ES3GLOBAL_DISABLED
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace ES3Internal
 {

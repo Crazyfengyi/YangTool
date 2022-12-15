@@ -6,8 +6,6 @@
  *创建时间:         2022-09-04 
 */
 using UnityEngine;
-using System.Collections;
-using YangTools;
 using YangTools.Extend;
 
 /// <summary>
@@ -43,11 +41,11 @@ public class Tree : GameActor, IAtker, IBeHit
     }
     public override void Atk(AtkInfo atkInfo)
     {
-        
+
     }
     public override void BeHit(ref DamageInfo damageInfo)
     {
-       
+
     }
     public override DamageInfo GetDamageInfo()
     {

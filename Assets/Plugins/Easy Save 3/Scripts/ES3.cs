@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using ES3Internal;
 #if UNITY_2018_3_OR_NEWER
@@ -9,12 +8,12 @@ using UnityEngine.Networking;
 
 public static class ES3
 {
-	public enum Location 		{ File, PlayerPrefs, InternalMS, Resources, Cache };
-	public enum Directory		{ PersistentDataPath, DataPath }
-	public enum EncryptionType 	{ None, AES };
-    public enum CompressionType { None, Gzip};
-    public enum Format 			{ JSON, Binary_Alpha };
-	public enum ReferenceMode	{ ByRef, ByValue, ByRefAndValue};
+    public enum Location { File, PlayerPrefs, InternalMS, Resources, Cache };
+    public enum Directory { PersistentDataPath, DataPath }
+    public enum EncryptionType { None, AES };
+    public enum CompressionType { None, Gzip };
+    public enum Format { JSON, Binary_Alpha };
+    public enum ReferenceMode { ByRef, ByValue, ByRefAndValue };
 
     #region ES3.Save
 
@@ -516,7 +515,7 @@ public static class ES3
     /// <param name="key">The key which identifies the value we want to load.</param>
     /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
     /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
-    public static string LoadString(string key, string defaultValue, string filePath="")
+    public static string LoadString(string key, string defaultValue, string filePath = "")
     {
         return Load<string>(key, defaultValue, new ES3Settings(filePath));
     }
@@ -737,7 +736,7 @@ public static class ES3
 
     #region Serialize/Deserialize
 
-    public static byte[] Serialize<T>(T value, ES3Settings settings=null)
+    public static byte[] Serialize<T>(T value, ES3Settings settings = null)
     {
         if (settings == null) settings = new ES3Settings();
 
@@ -750,7 +749,7 @@ public static class ES3
         }
     }
 
-    public static T Deserialize<T>(byte[] bytes, ES3Settings settings=null)
+    public static T Deserialize<T>(byte[] bytes, ES3Settings settings = null)
     {
         return (T)Deserialize(ES3TypeMgr.GetOrCreateES3Type(typeof(T)), bytes, settings);
     }
@@ -761,8 +760,8 @@ public static class ES3
             settings = new ES3Settings();
 
         using (var ms = new System.IO.MemoryStream(bytes, false))
-            using (var reader = ES3Reader.Create(ms, settings, false))
-                    return reader.Read<object>(type);
+        using (var reader = ES3Reader.Create(ms, settings, false))
+            return reader.Read<object>(type);
     }
 
     public static void DeserializeInto<T>(byte[] bytes, T obj, ES3Settings settings = null) where T : class
@@ -776,8 +775,8 @@ public static class ES3
             settings = new ES3Settings();
 
         using (var ms = new System.IO.MemoryStream(bytes, false))
-            using (var reader = ES3Reader.Create(ms, settings, false))
-                reader.ReadInto<T>(obj, type);
+        using (var reader = ES3Reader.Create(ms, settings, false))
+            reader.ReadInto<T>(obj, type);
     }
 
     #endregion

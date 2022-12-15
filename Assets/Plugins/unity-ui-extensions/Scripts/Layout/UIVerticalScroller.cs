@@ -65,7 +65,7 @@ namespace UnityEngine.UI.Extensions
                     for (int i = 0; i < childCount; i++)
                     {
                         _arrayOfElements[i] = scrollRect.content.GetChild(i).gameObject;
-                    }                    
+                    }
                 }
             }
         }

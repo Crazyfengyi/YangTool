@@ -6,7 +6,8 @@ using UnityEditor;
 namespace UnityEngine.UI.Extensions
 {
     [CustomEditor(typeof(CUIGraphic), true)]
-    public class CUIGraphicEditor : Editor {
+    public class CUIGraphicEditor : Editor
+    {
 
         protected static bool isCurveGpFold = false;
 

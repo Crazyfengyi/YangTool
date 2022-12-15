@@ -4,12 +4,11 @@
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-12-11 
-*/  
-using UnityEngine;  
-using System.Collections;
+*/
+using UnityEngine;
 using YangTools.UGUI;
 
-public class TestUIManager : MonoBehaviour 
+public class TestUIManager : MonoBehaviour
 {
     private void Update()
     {
@@ -18,4 +17,4 @@ public class TestUIManager : MonoBehaviour
             UIMonoInstance.Instance.OpenUIPanel("DialoguePanel", "One");
         }
     }
-} 
+}

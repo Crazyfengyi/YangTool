@@ -14,7 +14,7 @@ namespace UnityEngine.UI.Extensions
         void Start()
         {
             _isVertical = true;
-            _childAnchorPoint = new Vector2(0.5f,0);
+            _childAnchorPoint = new Vector2(0.5f, 0);
             _currentPage = StartingScreen;
             panelDimensions = gameObject.GetComponent<RectTransform>().rect;
             UpdateLayout();
@@ -50,7 +50,7 @@ namespace UnityEngine.UI.Extensions
             if (!_pointerDown)
             {
                 if (_scroll_rect.velocity.y > 0.01 || _scroll_rect.velocity.y < -0.01)
-            {
+                {
                     // if the pointer is released and is moving slower than the threshold, then just land on a page
                     if (IsRectMovingSlowerThanThreshold(0))
                     {
@@ -224,8 +224,8 @@ namespace UnityEngine.UI.Extensions
             DistributePages();
             if (MaskArea) UpdateVisible();
 
-            if (JumpOnEnable  || !RestartOnEnable) SetScrollContainerPosition();
-            if(RestartOnEnable) GoToScreen(StartingScreen);
+            if (JumpOnEnable || !RestartOnEnable) SetScrollContainerPosition();
+            if (RestartOnEnable) GoToScreen(StartingScreen);
         }
 
         #region Interfaces
@@ -240,7 +240,7 @@ namespace UnityEngine.UI.Extensions
             if (_scroll_rect.vertical)
             {
                 var distance = Vector3.Distance(_startPosition, _screensContainer.localPosition);
-                if (UseFastSwipe && distance < panelDimensions.height + FastSwipeThreshold && distance >=1f)
+                if (UseFastSwipe && distance < panelDimensions.height + FastSwipeThreshold && distance >= 1f)
                 {
                     _scroll_rect.velocity = Vector3.zero;
                     if (_startPosition.y - _screensContainer.localPosition.y > 0)

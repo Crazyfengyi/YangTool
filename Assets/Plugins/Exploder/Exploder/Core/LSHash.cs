@@ -12,15 +12,15 @@ namespace Exploder
     /// </summary>
     public class LSHash
     {
-//        private readonly float bucketSize;
+        //        private readonly float bucketSize;
         private readonly Vector3[] buckets;
         private readonly float bucketSize2;
         private int count;
 
         public LSHash(float bucketSize, int allocSize)
         {
-//            this.bucketSize = bucketSize;
-            this.bucketSize2 = bucketSize*bucketSize;
+            //            this.bucketSize = bucketSize;
+            this.bucketSize2 = bucketSize * bucketSize;
             buckets = new Vector3[allocSize];
             count = 0;
         }
@@ -41,14 +41,14 @@ namespace Exploder
 
         public int Hash(Vector3 p)
         {
-            for (int i=0; i<count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var item = buckets[i];
 
                 float diffX = p.x - item.x;
                 float diffY = p.y - item.y;
                 float diffZ = p.z - item.z;
-                float sqrMag = diffX*diffX + diffY*diffY + diffZ*diffZ;
+                float sqrMag = diffX * diffX + diffY * diffY + diffZ * diffZ;
 
                 if (sqrMag < bucketSize2)
                 {
@@ -58,12 +58,12 @@ namespace Exploder
 
             if (count >= buckets.Length)
             {
-                ExploderUtils.Log("Hash out of range: " + count + " "  + buckets.Length);
+                ExploderUtils.Log("Hash out of range: " + count + " " + buckets.Length);
                 return count - 1;
             }
 
             buckets[count++] = p;
-            return count-1;
+            return count - 1;
         }
 
         public void Hash(Vector3 p0, Vector3 p1, out int hash0, out int hash1)
@@ -71,7 +71,7 @@ namespace Exploder
             float diffX = p0.x - p1.x;
             float diffY = p0.y - p1.y;
             float diffZ = p0.z - p1.z;
-            float sqrMag = diffX*diffX + diffY*diffY + diffZ*diffZ;
+            float sqrMag = diffX * diffX + diffY * diffY + diffZ * diffZ;
 
             if (sqrMag < bucketSize2)
             {

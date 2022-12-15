@@ -149,7 +149,7 @@ namespace Exploder
                     {
                         ExploderUtils.Assert(!fragments.Contains(fragment), "!!!");
                         fragments.Add(fragment);
-                        counter ++;
+                        counter++;
                     }
 
                     if (counter == size)

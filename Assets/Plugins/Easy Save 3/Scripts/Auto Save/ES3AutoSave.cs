@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ES3AutoSave : MonoBehaviour
 {
-	public bool saveChildren = false;
-	private bool isQuitting = false;
+    public bool saveChildren = false;
+    private bool isQuitting = false;
 
     [HideInInspector]
     public List<Component> componentsToSave = new List<Component>();
@@ -18,15 +18,15 @@ public class ES3AutoSave : MonoBehaviour
     }
 
     public void OnApplicationQuit()
-	{
-		isQuitting = true;
-	}
+    {
+        isQuitting = true;
+    }
 
-	public void OnDestroy()
-	{
-		// If this is being destroyed, but not because the application is quitting,
-		// remove the AutoSave from the manager.
-		if(!isQuitting)
-			ES3AutoSaveMgr.RemoveAutoSave (this);
-	}
+    public void OnDestroy()
+    {
+        // If this is being destroyed, but not because the application is quitting,
+        // remove the AutoSave from the manager.
+        if (!isQuitting)
+            ES3AutoSaveMgr.RemoveAutoSave(this);
+    }
 }

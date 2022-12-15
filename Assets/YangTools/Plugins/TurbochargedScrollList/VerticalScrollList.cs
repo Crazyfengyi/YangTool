@@ -22,7 +22,7 @@ namespace Jing.TurbochargedScrollList
                 layout = layoutSettings;
             }
 
-            InitScrollView(scrollRect);                                  
+            InitScrollView(scrollRect);
 
             InitItem(itemPrefab, itemParentTrans);
         }
@@ -37,27 +37,27 @@ namespace Jing.TurbochargedScrollList
             h -= layout.gap;
 
             //加上上下边距
-            h = h + layout.paddingTop + layout.paddingBottom;            
+            h = h + layout.paddingTop + layout.paddingBottom;
             var w = viewportSize.x;
             SetContentSize(w, h);
         }
 
         protected override void Refresh(UpdateData updateConfig, out int lastStartIndex)
-        {                                  
+        {
             if (updateConfig.keepPaddingType == EKeepPaddingType.END)
             {
                 var targetRenderStartPos = (ContentHeight - updateConfig.tempLastContentRect.height) + contentRenderStartPos;
                 var temp = content.localPosition;
                 temp.y = targetRenderStartPos;
-                content.localPosition = temp;                
+                content.localPosition = temp;
             }
 
             contentRenderStartPos = content.localPosition.y;
-            if(contentRenderStartPos < 0)
+            if (contentRenderStartPos < 0)
             {
                 contentRenderStartPos = 0;
             }
-            else if(contentRenderStartPos > ContentHeight - viewportSize.y)
+            else if (contentRenderStartPos > ContentHeight - viewportSize.y)
             {
                 contentRenderStartPos = ContentHeight - viewportSize.y;
             }
@@ -65,7 +65,7 @@ namespace Jing.TurbochargedScrollList
             int dataIdx;
             float startPos = layout.paddingTop;
 
-            for(dataIdx = 0; dataIdx < _itemModels.Count; dataIdx++)
+            for (dataIdx = 0; dataIdx < _itemModels.Count; dataIdx++)
             {
                 var dataBottom = startPos + _itemModels[dataIdx].height;
                 if (dataBottom >= contentRenderStartPos)
@@ -90,17 +90,17 @@ namespace Jing.TurbochargedScrollList
 
             _showingItems.Clear();
 
-            while(dataIdx < _itemModels.Count)
+            while (dataIdx < _itemModels.Count)
             {
                 var model = _itemModels[dataIdx];
 
                 ScrollListItem item = CreateItem(model, dataIdx, lastShowingItems);
                 //item.gameObject.name += $"_{_itemModels[dataIdx].height}";
-                
+
                 _showingItems[model] = item;
 
-                var pos = Vector3.zero;                
-                pos.y = itemY;                
+                var pos = Vector3.zero;
+                pos.y = itemY;
                 item.rectTransform.localPosition = pos;
                 //下一个item的Y坐标
                 itemY -= (item.height + layout.gap);
@@ -116,7 +116,7 @@ namespace Jing.TurbochargedScrollList
             //回收没有使用的item
             RecycleUselessItems(lastShowingItems);
         }
-        
+
         protected override bool AdjustmentItemSize(ScrollListItem item)
         {
             if (item.height != _itemModels[item.index].height)
@@ -129,12 +129,12 @@ namespace Jing.TurbochargedScrollList
         }
 
         public override void ScrollToItem(int index)
-        {          
+        {
             if (index < 0)
             {
                 index = 0;
             }
-            else if(index >= _itemModels.Count)
+            else if (index >= _itemModels.Count)
             {
                 index = _itemModels.Count - 1;
             }

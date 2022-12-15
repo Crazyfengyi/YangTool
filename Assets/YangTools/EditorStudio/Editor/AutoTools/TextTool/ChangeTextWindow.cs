@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEditor;
-using UnityEditor.SceneManagement;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace YangTools

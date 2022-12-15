@@ -5,13 +5,11 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-20 
 */
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-using YangTools.Extend;
+using UnityEngine;
 using UnityEngine.UI;
+using YangTools.Extend;
+using Debug = UnityEngine.Debug;
 
 namespace YangTools.UGUI
 {

@@ -535,8 +535,8 @@ namespace Exploder
 
                 if (UseCubeRadius)
                 {
-					var pos = ExploderUtils.GetCentroid(gameObject);
-					Gizmos.matrix = transform.localToWorldMatrix;
+                    var pos = ExploderUtils.GetCentroid(gameObject);
+                    Gizmos.matrix = transform.localToWorldMatrix;
                     Gizmos.DrawWireCube(transform.InverseTransformPoint(pos), CubeRadius);
                 }
                 else

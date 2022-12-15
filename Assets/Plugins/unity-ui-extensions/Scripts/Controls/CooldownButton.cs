@@ -20,17 +20,23 @@ namespace UnityEngine.UI.Extensions
         private float cooldownTimeout;
         [SerializeField]
         private float cooldownSpeed = 1;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private bool cooldownActive;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private bool cooldownInEffect;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private float cooldownTimeElapsed;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private float cooldownTimeRemaining;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private int cooldownPercentRemaining;
-        [SerializeField][ReadOnly]
+        [SerializeField]
+        [ReadOnly]
         private int cooldownPercentComplete;
 
         PointerEventData buttonSource;
@@ -173,7 +179,7 @@ namespace UnityEngine.UI.Extensions
             }
             if (!CooldownInEffect)
             {
-                if(OnCooldownStart != null) OnCooldownStart.Invoke(eventData.button);
+                if (OnCooldownStart != null) OnCooldownStart.Invoke(eventData.button);
                 cooldownTimeRemaining = cooldownTimeout;
                 cooldownActive = cooldownInEffect = true;
             }

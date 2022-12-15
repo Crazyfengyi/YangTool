@@ -1,9 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 [CustomEditor(typeof(ES3ReferenceMgr))]
 [System.Serializable]
@@ -170,7 +167,7 @@ public class ES3ReferenceMgrEditor : Editor
     [MenuItem("Assets/Easy Save 3/Add Manager to Scene", false, 33)]
     public static void EnableForScene()
     {
-        if(!SceneManager.GetActiveScene().isLoaded)
+        if (!SceneManager.GetActiveScene().isLoaded)
             EditorUtility.DisplayDialog("Could not add manager to scene", "Could not add Easy Save 3 Manager to scene because there is not currently a scene open.", "Ok");
         Selection.activeObject = ES3Postprocessor.AddManagerToScene();
     }

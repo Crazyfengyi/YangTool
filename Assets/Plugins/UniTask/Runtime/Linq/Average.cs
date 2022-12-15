@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks.Internal;
+using System;
 using System.Threading;
-using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Linq
 {
@@ -893,7 +893,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = e.Current;
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -925,7 +925,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -957,7 +957,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -989,7 +989,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current, cancellationToken);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1021,7 +1021,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = e.Current;
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1053,7 +1053,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1085,7 +1085,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1117,7 +1117,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current, cancellationToken);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1149,7 +1149,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = e.Current;
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1181,7 +1181,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1213,7 +1213,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1245,7 +1245,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current, cancellationToken);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1277,7 +1277,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = e.Current;
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1309,7 +1309,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1341,7 +1341,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1373,7 +1373,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current, cancellationToken);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1405,7 +1405,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = e.Current;
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1437,7 +1437,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1469,7 +1469,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;
@@ -1501,7 +1501,7 @@ namespace Cysharp.Threading.Tasks.Linq
                     var v = await selector(e.Current, cancellationToken);
                     if (v.HasValue)
                     {
-                        checked    
+                        checked
                         {
                             sum += v.Value;
                             count++;

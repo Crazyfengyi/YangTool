@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 
 namespace Jing.TurbochargedScrollList
-{    
+{
     [DisallowMultipleComponent]
     [RequireComponent(typeof(ScrollRect))]
     public class TurbochargedVerticalScrollList : MonoBehaviour

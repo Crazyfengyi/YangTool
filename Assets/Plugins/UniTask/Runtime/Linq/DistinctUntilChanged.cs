@@ -111,7 +111,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
             void MoveNext()
             {
-                REPEAT:
+            REPEAT:
                 try
                 {
                     switch (state)
@@ -182,12 +182,12 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 state = -2;
                 completionSource.TrySetResult(false);
                 return;
 
-                CONTINUE:
+            CONTINUE:
                 state = 0;
                 completionSource.TrySetResult(true);
                 return;
@@ -253,7 +253,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
             void MoveNext()
             {
-                REPEAT:
+            REPEAT:
                 try
                 {
                     switch (state)
@@ -326,12 +326,12 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 state = -2;
                 completionSource.TrySetResult(false);
                 return;
 
-                CONTINUE:
+            CONTINUE:
                 state = 0;
                 completionSource.TrySetResult(true);
                 return;
@@ -399,7 +399,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
             void MoveNext()
             {
-                REPEAT:
+            REPEAT:
                 try
                 {
                     switch (state)
@@ -484,12 +484,12 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 state = -2;
                 completionSource.TrySetResult(false);
                 return;
 
-                CONTINUE:
+            CONTINUE:
                 state = 0;
                 completionSource.TrySetResult(true);
                 return;
@@ -557,7 +557,7 @@ namespace Cysharp.Threading.Tasks.Linq
 
             void MoveNext()
             {
-                REPEAT:
+            REPEAT:
                 try
                 {
                     switch (state)
@@ -642,12 +642,12 @@ namespace Cysharp.Threading.Tasks.Linq
                     return;
                 }
 
-                DONE:
+            DONE:
                 state = -2;
                 completionSource.TrySetResult(false);
                 return;
 
-                CONTINUE:
+            CONTINUE:
                 state = 0;
                 completionSource.TrySetResult(true);
                 return;

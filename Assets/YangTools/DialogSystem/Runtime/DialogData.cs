@@ -7,7 +7,6 @@
 */
 using System;
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// 节点数据

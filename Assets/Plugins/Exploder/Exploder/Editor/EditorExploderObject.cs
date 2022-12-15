@@ -7,7 +7,7 @@ using Exploder;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof (ExploderObject)), CanEditMultipleObjects]
+[CustomEditor(typeof(ExploderObject)), CanEditMultipleObjects]
 public class EditorExploderObject : UnityEditor.Editor
 {
     SerializedProperty radius;
@@ -126,7 +126,7 @@ public class EditorExploderObject : UnityEditor.Editor
 
             GUI.enabled = !(exploder.ExplodeSelf && exploder.DisableRadiusScan && useCubeRadius.boolValue);
 
-			change |= EditorExploderUtils.SliderEdit("Radius", "Explosion radius.", 0.0f, 100, radius);
+            change |= EditorExploderUtils.SliderEdit("Radius", "Explosion radius.", 0.0f, 100, radius);
 
             GUI.enabled = true;
 
@@ -149,11 +149,11 @@ public class EditorExploderObject : UnityEditor.Editor
             change |= EditorExploderUtils.Toggle("Mesh colliders", "Use mesh colliders for all fragments.", meshColliders);
 
             change |= EditorExploderUtils.Toggle("Explode self", "Explode this game object.", explodeSelf);
-//            else
-//            {
-//                change |= EditorExploderUtils.Toggle2("Explode self", "Explode this game object.", "", "Disable radius",
-//                                                      explodeSelf, disableRadiusScan);
-//            }
+            //            else
+            //            {
+            //                change |= EditorExploderUtils.Toggle2("Explode self", "Explode this game object.", "", "Disable radius",
+            //                                                      explodeSelf, disableRadiusScan);
+            //            }
 
             if (exploder.ExplodeSelf)
             {
@@ -167,18 +167,18 @@ public class EditorExploderObject : UnityEditor.Editor
             change |= EditorExploderUtils.Toggle("Disable triangulation", "Disable triangulation of fragments.", disableTriangulation);
             change |= EditorExploderUtils.Toggle("Use 2D physics", "Enable 2D explosion.", user2dPhysics);
 
-			change |= EditorExploderUtils.Toggle("Use Cube Radius", "Explosion cubic radius.", useCubeRadius);
+            change |= EditorExploderUtils.Toggle("Use Cube Radius", "Explosion cubic radius.", useCubeRadius);
 
-			if (useCubeRadius.boolValue)
-			{
-				change |= EditorExploderUtils.Vector3("", "Explosion cubic radius.", cubeRadius);
-			}
+            if (useCubeRadius.boolValue)
+            {
+                change |= EditorExploderUtils.Vector3("", "Explosion cubic radius.", cubeRadius);
+            }
 
             EditorExploderUtils.EnumSelection("Multi-threading", "Options for multi-threaded calculations.", exploder.ThreadOption, threadingOptions, ref change);
 
-//            EditorGUILayout.Space();
-//            EditorExploderUtils.Separator("Partial explosion", 20);
-//            EditorGUILayout.Space();
+            //            EditorGUILayout.Space();
+            //            EditorExploderUtils.Separator("Partial explosion", 20);
+            //            EditorGUILayout.Space();
 
             EditorGUILayout.Space();
             EditorExploderUtils.Separator("Deactivation options", 20);

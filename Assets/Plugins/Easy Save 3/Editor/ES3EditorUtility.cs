@@ -1,33 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using System.IO;
-using System.Linq;
-using ES3Internal;
+using UnityEngine;
 
-public class ES3EditorUtility : Editor 
+public class ES3EditorUtility : Editor
 {
-	public static void DisplayLink(string label, string url)
-	{
-		var style = ES3Editor.EditorStyle.Get;
-		if(GUILayout.Button(label, style.link))
-			Application.OpenURL(url);
+    public static void DisplayLink(string label, string url)
+    {
+        var style = ES3Editor.EditorStyle.Get;
+        if (GUILayout.Button(label, style.link))
+            Application.OpenURL(url);
 
-		var buttonRect = GUILayoutUtility.GetLastRect();
-		buttonRect.width = style.link.CalcSize(new GUIContent(label)).x;
+        var buttonRect = GUILayoutUtility.GetLastRect();
+        buttonRect.width = style.link.CalcSize(new GUIContent(label)).x;
 
-		EditorGUIUtility.AddCursorRect(buttonRect, MouseCursor.Link);	
-	}
+        EditorGUIUtility.AddCursorRect(buttonRect, MouseCursor.Link);
+    }
 
-	public static bool IsPrefabInAssets(UnityEngine.Object obj)
-	{
-		#if UNITY_2018_3_OR_NEWER
-		return PrefabUtility.IsPartOfPrefabAsset(obj);
-		#else
+    public static bool IsPrefabInAssets(UnityEngine.Object obj)
+    {
+#if UNITY_2018_3_OR_NEWER
+        return PrefabUtility.IsPartOfPrefabAsset(obj);
+#else
 		return (PrefabUtility.GetPrefabType(obj) == PrefabType.Prefab);
-		#endif
-	}
+#endif
+    }
 
     /* 
      * Gets all children and components from a GameObject or GameObjects.
@@ -41,7 +37,7 @@ public class ES3EditorUtility : Editor
             deepHierarchy.Add(go);
             deepHierarchy.UnionWith(go.GetComponents<Component>());
             foreach (Transform t in go.transform)
-                deepHierarchy.UnionWith( CollectDeepHierarchy( new GameObject[] { t.gameObject } ) );
+                deepHierarchy.UnionWith(CollectDeepHierarchy(new GameObject[] { t.gameObject }));
         }
         return deepHierarchy;
     }

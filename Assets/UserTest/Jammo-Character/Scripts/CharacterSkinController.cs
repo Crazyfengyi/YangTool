@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterSkinController : MonoBehaviour
 {
@@ -8,9 +6,9 @@ public class CharacterSkinController : MonoBehaviour
     Renderer[] characterMaterials;
 
     public Texture2D[] albedoList;
-    [ColorUsage(true,true)]
+    [ColorUsage(true, true)]
     public Color[] eyeColors;
-    public enum EyePosition { normal, happy, angry, dead}
+    public enum EyePosition { normal, happy, angry, dead }
     public EyePosition eyeState;
 
     // Start is called before the first frame update
@@ -18,7 +16,7 @@ public class CharacterSkinController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         characterMaterials = GetComponentsInChildren<Renderer>();
-        
+
     }
 
     // Update is called once per frame
@@ -62,7 +60,7 @@ public class CharacterSkinController : MonoBehaviour
             if (characterMaterials[i].transform.CompareTag("PlayerEyes"))
                 characterMaterials[i].material.SetColor("_EmissionColor", eyeColors[index]);
             else
-                characterMaterials[i].material.SetTexture("_MainTex",albedoList[index]);
+                characterMaterials[i].material.SetTexture("_MainTex", albedoList[index]);
         }
     }
 

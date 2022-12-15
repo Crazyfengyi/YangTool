@@ -6,9 +6,8 @@
  *UnityVersion：2019.3.3f1 
  *创建时间:         2020-07-05 
 */
-using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using UnityEngine;
 namespace YangTools
 {
     public static class CopyAllComponent

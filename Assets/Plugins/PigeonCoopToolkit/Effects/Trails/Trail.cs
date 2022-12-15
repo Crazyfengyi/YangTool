@@ -17,11 +17,11 @@ namespace PigeonCoopToolkit.Effects.Trails
 
         protected override void LateUpdate()
         {
-            if(_emit)
+            if (_emit)
             {
                 _distanceMoved += Vector3.Distance(_t.position, _lastPosition);
 
-                if(_distanceMoved >= MinVertexDistance)
+                if (_distanceMoved >= MinVertexDistance)
                 {
                     AddPoint(new PCTrailPoint(), _lastPosition);
                     _distanceMoved = 0;

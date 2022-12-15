@@ -1,7 +1,6 @@
-using System.Collections;
+using Assets.PigeonCoopUtil;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.PigeonCoopUtil;
 using UnityEngine;
 
 namespace PigeonCoopToolkit.Effects.Trails
@@ -19,7 +18,7 @@ namespace PigeonCoopToolkit.Effects.Trails
         private List<Mesh> _toCleanUp = new List<Mesh>();
 
         protected Transform _t;
-        
+
         protected virtual void Awake()
         {
             _activeTrail = new CircularBuffer<PCTrailPoint>(MaxNumberOfPoints);
@@ -30,7 +29,7 @@ namespace PigeonCoopToolkit.Effects.Trails
 
         protected virtual void Start()
         {
-            
+
         }
 
         protected virtual void LateUpdate()
@@ -49,20 +48,20 @@ namespace PigeonCoopToolkit.Effects.Trails
 
             CheckEmitChange();
 
-            if(_activeTrail != null)
+            if (_activeTrail != null)
             {
                 UpdatePoints(Time.deltaTime, _activeTrail);
 
                 Mesh trailMesh = GenerateMesh(_activeTrail);
-                if(trailMesh != null)
+                if (trailMesh != null)
                 {
                     DrawMesh(trailMesh);
-                    _toCleanUp.Add(trailMesh);  
-                } 
+                    _toCleanUp.Add(trailMesh);
+                }
             }
-            
-             
-            for (int i = _fadingTrails.Count-1; i >= 0; i--)
+
+
+            for (int i = _fadingTrails.Count - 1; i >= 0; i--)
             {
                 CircularBuffer<PCTrailPoint> trail = _fadingTrails[i];
                 if (trail == null || trail.Any(a => a.TimeActive() < TrailData.Lifetime) == false)
@@ -75,14 +74,14 @@ namespace PigeonCoopToolkit.Effects.Trails
                 if (trailMesh != null)
                 {
                     DrawMesh(trailMesh);
-                    _toCleanUp.Add(trailMesh); 
+                    _toCleanUp.Add(trailMesh);
                 }
             }
         }
 
         protected virtual void OnStopEmit()
         {
-            
+
         }
 
         protected virtual void OnStartEmit()
@@ -91,7 +90,7 @@ namespace PigeonCoopToolkit.Effects.Trails
 
         protected virtual void Reset()
         {
-            if(TrailData == null)
+            if (TrailData == null)
                 TrailData = new PCTrailRendererData();
 
             TrailData.ColorOverLife = new Gradient();
@@ -123,7 +122,7 @@ namespace PigeonCoopToolkit.Effects.Trails
                                               ? 0
                                               : _activeTrail[_activeTrail.Count - 1].GetDistanceFromStart() + Vector3.Distance(_activeTrail[_activeTrail.Count - 1].Position, pos));
 
-            if(TrailData.UseForwardOverride)
+            if (TrailData.UseForwardOverride)
             {
                 newPoint.Forward = TrailData.ForwardOverideRelative
                                        ? _t.TransformDirection(TrailData.ForwardOverride.normalized)
@@ -137,7 +136,7 @@ namespace PigeonCoopToolkit.Effects.Trails
         {
             Vector3 camForward = Camera.main != null ? Camera.main.transform.forward : Vector3.forward;
 
-            if(TrailData.UseForwardOverride)
+            if (TrailData.UseForwardOverride)
             {
                 camForward = TrailData.ForwardOverride.normalized;
             }
@@ -159,9 +158,9 @@ namespace PigeonCoopToolkit.Effects.Trails
             for (int i = 0; i < trail.Count; i++)
             {
                 PCTrailPoint p = trail[i];
-                float timeAlong = p.TimeActive()/TrailData.Lifetime;
+                float timeAlong = p.TimeActive() / TrailData.Lifetime;
 
-                if(p.TimeActive() > TrailData.Lifetime)
+                if (p.TimeActive() > TrailData.Lifetime)
                 {
                     continue;
                 }
@@ -188,7 +187,7 @@ namespace PigeonCoopToolkit.Effects.Trails
                 float s = TrailData.StretchToFit ? TrailData.SizeOverLife.Evaluate(1 - ((float)vertIndex / (float)activePointCount / 2f)) : TrailData.SizeOverLife.Evaluate(timeAlong);
                 verticies[vertIndex] = p.Position + cross * s;
 
-                if(TrailData.MaterialTileLength <= 0)
+                if (TrailData.MaterialTileLength <= 0)
                 {
                     uvs[vertIndex] = new Vector2((float)vertIndex / (float)activePointCount / 2f, 0);
                 }
@@ -220,7 +219,7 @@ namespace PigeonCoopToolkit.Effects.Trails
             int indIndex = 0;
             for (int pointIndex = 0; pointIndex < 2 * (activePointCount - 1); pointIndex++)
             {
-                if(pointIndex%2==0)
+                if (pointIndex % 2 == 0)
                 {
                     indicies[indIndex] = pointIndex;
                     indIndex++;
@@ -241,7 +240,7 @@ namespace PigeonCoopToolkit.Effects.Trails
             }
 
             generatedMesh.vertices = verticies;
-            generatedMesh.SetIndices(indicies,MeshTopology.Triangles,0);
+            generatedMesh.SetIndices(indicies, MeshTopology.Triangles, 0);
             generatedMesh.uv = uvs;
             generatedMesh.normals = normals;
             generatedMesh.colors = colors;
@@ -308,11 +307,11 @@ namespace PigeonCoopToolkit.Effects.Trails
 
             CircularBuffer<PCTrailPoint> newLine = new CircularBuffer<PCTrailPoint>(MaxNumberOfPoints);
             int pointNumber = 0;
-            while (currentLength < distanceBetween) 
+            while (currentLength < distanceBetween)
             {
                 PCTrailPoint newPoint = new PCTrailPoint();
                 newPoint.PointNumber = pointNumber;
-                newPoint.Position = from + dirVector*currentLength;
+                newPoint.Position = from + dirVector * currentLength;
                 newLine.Add(newPoint);
                 InitialiseNewPoint(newPoint);
 
@@ -332,7 +331,7 @@ namespace PigeonCoopToolkit.Effects.Trails
 
             _fadingTrails.Add(newLine);
         }
-        
+
         /// <summary>
         /// Clears all active trails from the system.
         /// </summary>

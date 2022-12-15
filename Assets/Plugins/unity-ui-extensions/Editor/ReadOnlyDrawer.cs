@@ -4,7 +4,7 @@
 using UnityEditor;
 
 namespace UnityEngine.UI.Extensions
-{ 
+{
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
     {

@@ -68,9 +68,9 @@ namespace Exploder
 
             if (index >= size)
             {
-                ExploderUtils.Log("Resizing Array: " + size + " => " + size*2);
+                ExploderUtils.Log("Resizing Array: " + size + " => " + size * 2);
 
-                var array2 = new T[size*2];
+                var array2 = new T[size * 2];
                 for (int i = 0; i < size; i++)
                 {
                     array2[i] = array[i];

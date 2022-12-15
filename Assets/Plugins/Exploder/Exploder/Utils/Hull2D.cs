@@ -4,7 +4,6 @@
 // Redistribution of source code without permission not allowed
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Exploder.Utils
@@ -21,7 +20,7 @@ namespace Exploder.Utils
         /// <param name="array"></param>
         public static void Sort(Vector2[] array)
         {
-            Array.Sort(array, delegate(Vector2 value0, Vector2 value1)
+            Array.Sort(array, delegate (Vector2 value0, Vector2 value1)
             {
                 var comp0 = value0.x.CompareTo(value1.x);
 
@@ -53,20 +52,21 @@ namespace Exploder.Utils
 
             Sort(Pnts);
 
-            var Hull = new Vector2[2*n];
- 
-	        // Build lower hull
-	        for (int i = 0; i < n; i++)
+            var Hull = new Vector2[2 * n];
+
+            // Build lower hull
+            for (int i = 0; i < n; i++)
             {
                 while (k >= 2 && Hull2DCross(ref Hull[k - 2], ref Hull[k - 1], ref Pnts[i]) <= 0) k--;
                 Hull[k++] = Pnts[i];
-	        }
- 
-	        // Build upper hull
-	        for (int i = n-2, t = k+1; i >= 0; i--) {
+            }
+
+            // Build upper hull
+            for (int i = n - 2, t = k + 1; i >= 0; i--)
+            {
                 while (k >= t && Hull2DCross(ref Hull[k - 2], ref Hull[k - 1], ref Pnts[i]) <= 0) k--;
                 Hull[k++] = Pnts[i];
-	        }
+            }
 
             var trim = new Vector2[k];
 

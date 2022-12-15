@@ -3,7 +3,6 @@
 // All rights reserved
 // Redistribution of source code without permission not allowed
 
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Exploder
@@ -201,7 +200,7 @@ namespace Exploder
         public void SetSFX(ExploderObject.SFXOption sfx, bool allowParticle)
         {
             audioClip = sfx.FragmentSoundClip;
-            
+
             if (audioClip && !audioSource)
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
@@ -252,7 +251,7 @@ namespace Exploder
                 {
                     audioSource.PlayOneShot(audioClip);
                 }
-                
+
                 pool.OnFragmentHit();
             }
         }
@@ -309,7 +308,7 @@ namespace Exploder
         /// <summary>
         /// apply physical explosion to fragment piece
         /// </summary>
-        public void ApplyExplosion(ExploderTransform meshTransform, Vector3 centroid, Vector3 mainCentroid, ExploderObject.FragmentOption fragmentOption, 
+        public void ApplyExplosion(ExploderTransform meshTransform, Vector3 centroid, Vector3 mainCentroid, ExploderObject.FragmentOption fragmentOption,
                                     bool useForceVector, Vector3 ForceVector, float force, GameObject original, int targetFragments)
         {
             if (rigid2D)
@@ -541,7 +540,7 @@ namespace Exploder
                     }
                     else
                     {
-                        var t = deactivateTimer/deactivateTimeout;
+                        var t = deactivateTimer / deactivateTimeout;
 
                         switch (fadeoutOptions)
                         {
@@ -555,7 +554,7 @@ namespace Exploder
                                 break;
 
                             case FadeoutOptions.ScaleDown:
-                                gameObject.transform.localScale = originalScale*t;
+                                gameObject.transform.localScale = originalScale * t;
                                 break;
                         }
                     }

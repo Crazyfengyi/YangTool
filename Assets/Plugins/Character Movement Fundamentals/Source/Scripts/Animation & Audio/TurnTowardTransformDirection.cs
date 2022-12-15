@@ -1,37 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CMF
 {
-	//This script rotates an object toward the 'forward' direction of another target transform;
-	public class TurnTowardTransformDirection : MonoBehaviour {
+    //This script rotates an object toward the 'forward' direction of another target transform;
+    public class TurnTowardTransformDirection : MonoBehaviour
+    {
 
-		public Transform targetTransform;
-		Transform tr;
-		Transform parentTransform;
+        public Transform targetTransform;
+        Transform tr;
+        Transform parentTransform;
 
-		//Setup;
-		void Start () {
-			tr = transform;
-			parentTransform = transform.parent;
+        //Setup;
+        void Start()
+        {
+            tr = transform;
+            parentTransform = transform.parent;
 
-			if(targetTransform == null)
-				Debug.LogWarning("No target transform has been assigned to this script.", this);
-		}
-		
-		//Update;
-		void LateUpdate () {
+            if (targetTransform == null)
+                Debug.LogWarning("No target transform has been assigned to this script.", this);
+        }
 
-			if(!targetTransform)
-				return;
+        //Update;
+        void LateUpdate()
+        {
 
-			//Calculate up and forward direction;
-			Vector3 _forwardDirection = Vector3.ProjectOnPlane(targetTransform.forward, parentTransform.up).normalized;
-			Vector3 _upDirection = parentTransform.up;
+            if (!targetTransform)
+                return;
 
-			//Set rotation;
-			tr.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
-		}
-	}
+            //Calculate up and forward direction;
+            Vector3 _forwardDirection = Vector3.ProjectOnPlane(targetTransform.forward, parentTransform.up).normalized;
+            Vector3 _upDirection = parentTransform.up;
+
+            //Set rotation;
+            tr.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
+        }
+    }
 }

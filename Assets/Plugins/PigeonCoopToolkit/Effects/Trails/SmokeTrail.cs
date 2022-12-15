@@ -43,7 +43,7 @@ namespace PigeonCoopToolkit.Effects.Trails
 
                 if (_distanceMoved >= MinVertexDistance)
                 {
-                    AddPoint(new SmokeTrailPoint(),_lastPosition);
+                    AddPoint(new SmokeTrailPoint(), _lastPosition);
                     _distanceMoved = 0;
                 }
                 _lastPosition = _t.position;

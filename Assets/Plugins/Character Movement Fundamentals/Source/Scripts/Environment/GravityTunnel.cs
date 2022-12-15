@@ -1,92 +1,92 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CMF
 {
-	//This script rotates all gameobjects inside the attached trigger collider around a central axis (the forward axis of this gameobject);
-	//In combination with a tube-shaped collider, this script can be used to let a player walk around on the inside walls of a tunnel;
-	public class GravityTunnel : MonoBehaviour {
+    //This script rotates all gameobjects inside the attached trigger collider around a central axis (the forward axis of this gameobject);
+    //In combination with a tube-shaped collider, this script can be used to let a player walk around on the inside walls of a tunnel;
+    public class GravityTunnel : MonoBehaviour
+    {
 
-		//List of rigidbodies inside the attached trigger;
-		List<Rigidbody> rigidbodies = new List<Rigidbody>();
+        //List of rigidbodies inside the attached trigger;
+        List<Rigidbody> rigidbodies = new List<Rigidbody>();
 
-		void FixedUpdate ()
-		{
-			for(int i = 0; i < rigidbodies.Count; i++)
-			{
-				//Calculate center position based on rigidbody position;
-				Vector3 _center = 
-					Vector3.Project((rigidbodies[i].transform.position - transform.position) ,((transform.position + transform.forward) - transform.position)) + transform.position;
-				
-				RotateRigidbody(rigidbodies[i].transform, (_center - rigidbodies[i].transform.position).normalized);
-			}
-		}
+        void FixedUpdate()
+        {
+            for (int i = 0; i < rigidbodies.Count; i++)
+            {
+                //Calculate center position based on rigidbody position;
+                Vector3 _center =
+                    Vector3.Project((rigidbodies[i].transform.position - transform.position), ((transform.position + transform.forward) - transform.position)) + transform.position;
 
-		void OnTriggerEnter(Collider col)
-		{
-			Rigidbody _rigidbody = col.GetComponent<Rigidbody>();
-			if(!_rigidbody)
-				return;
-			
-			//Make sure that the entering collider is actually a character;
-			if(col.GetComponent<Mover>() == null)
-				return;
+                RotateRigidbody(rigidbodies[i].transform, (_center - rigidbodies[i].transform.position).normalized);
+            }
+        }
 
-			rigidbodies.Add(_rigidbody);
-		}
+        void OnTriggerEnter(Collider col)
+        {
+            Rigidbody _rigidbody = col.GetComponent<Rigidbody>();
+            if (!_rigidbody)
+                return;
 
-		void OnTriggerExit(Collider col)
-		{
-			Rigidbody _rigidbody = col.GetComponent<Rigidbody>();
-			if(!_rigidbody)
-				return;
+            //Make sure that the entering collider is actually a character;
+            if (col.GetComponent<Mover>() == null)
+                return;
 
-			//Make sure that the leaving collider is actually a character;
-			if(col.GetComponent<Mover>() == null)
-				return;
+            rigidbodies.Add(_rigidbody);
+        }
 
-			rigidbodies.Remove(_rigidbody);
+        void OnTriggerExit(Collider col)
+        {
+            Rigidbody _rigidbody = col.GetComponent<Rigidbody>();
+            if (!_rigidbody)
+                return;
 
-			RotateRigidbody(_rigidbody.transform, Vector3.up);
+            //Make sure that the leaving collider is actually a character;
+            if (col.GetComponent<Mover>() == null)
+                return;
 
-			//Reset rigidbody rotation;
-			Vector3 _eulerAngles = _rigidbody.rotation.eulerAngles;
+            rigidbodies.Remove(_rigidbody);
 
-			_eulerAngles.z = 0f;
-			_eulerAngles.x = 0f;
+            RotateRigidbody(_rigidbody.transform, Vector3.up);
 
-			_rigidbody.MoveRotation(Quaternion.Euler(_eulerAngles));
-		}
+            //Reset rigidbody rotation;
+            Vector3 _eulerAngles = _rigidbody.rotation.eulerAngles;
 
-		void RotateRigidbody(Transform _transform, Vector3 _targetDirection)
-		{
-			//Get rigidbody component of transform;
-			Rigidbody _rigidbody = _transform.GetComponent<Rigidbody>();
-			
-			_targetDirection.Normalize();
+            _eulerAngles.z = 0f;
+            _eulerAngles.x = 0f;
 
-			//Calculate rotation difference;
-			Quaternion _rotationDifference = Quaternion.FromToRotation(_transform.up, _targetDirection);
+            _rigidbody.MoveRotation(Quaternion.Euler(_eulerAngles));
+        }
 
-			//Save start and end rotation;
-			Quaternion _startRotation = _transform.rotation;
-			Quaternion _endRotation = _rotationDifference * _transform.rotation;
+        void RotateRigidbody(Transform _transform, Vector3 _targetDirection)
+        {
+            //Get rigidbody component of transform;
+            Rigidbody _rigidbody = _transform.GetComponent<Rigidbody>();
 
-			//Rotate rigidbody;
-			_rigidbody.MoveRotation(_endRotation);
-		}
+            _targetDirection.Normalize();
 
-		//Calculate a counter rotation from a rotation;
-		Quaternion GetCounterRotation(Quaternion _rotation)
-		{
-			Vector3 _axis;
-			float _angle;
+            //Calculate rotation difference;
+            Quaternion _rotationDifference = Quaternion.FromToRotation(_transform.up, _targetDirection);
 
-			_rotation.ToAngleAxis(out _angle, out _axis);
-			Quaternion _rotationAdd = Quaternion.AngleAxis( Mathf.Sign(_angle) * 180f, _axis);
+            //Save start and end rotation;
+            Quaternion _startRotation = _transform.rotation;
+            Quaternion _endRotation = _rotationDifference * _transform.rotation;
 
-			return _rotation * Quaternion.Inverse(_rotationAdd);
-		}
-	}
+            //Rotate rigidbody;
+            _rigidbody.MoveRotation(_endRotation);
+        }
+
+        //Calculate a counter rotation from a rotation;
+        Quaternion GetCounterRotation(Quaternion _rotation)
+        {
+            Vector3 _axis;
+            float _angle;
+
+            _rotation.ToAngleAxis(out _angle, out _axis);
+            Quaternion _rotationAdd = Quaternion.AngleAxis(Mathf.Sign(_angle) * 180f, _axis);
+
+            return _rotation * Quaternion.Inverse(_rotationAdd);
+        }
+    }
 }

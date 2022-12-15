@@ -1,8 +1,8 @@
-using UTJ.GameObjectExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UTJ.GameObjectExtensions;
 
 namespace UTJ
 {
@@ -17,7 +17,7 @@ namespace UTJ
 
         public static IEnumerable<GameObject> FindObjectsByComponent
         (
-            string componentPattern, 
+            string componentPattern,
             IEnumerable<string> ignorePatterns = null
         )
         {
@@ -35,7 +35,7 @@ namespace UTJ
 
         public static IEnumerable<GameObject> FindObjectsByPattern
         (
-            IEnumerable<string> namePatterns, 
+            IEnumerable<string> namePatterns,
             IEnumerable<string> ignorePatterns,
             string componentPattern
         )
@@ -97,7 +97,7 @@ namespace UTJ
                 .Where(component => component != null)
                 .Select(component => component.GetType().ToString().ToLowerInvariant());
             var dottedComponentTypeToFind = "." + componentTypeToFind;
-            return componentTypes.Any(type => 
+            return componentTypes.Any(type =>
                 type == componentTypeToFind
                 || type.EndsWith(dottedComponentTypeToFind));
         }
@@ -118,7 +118,7 @@ namespace UTJ
             // For components, if there are any objects whose components match exactly (whole word),
             // then only return those
             componentPattern = componentPattern.ToLowerInvariant();
-            var exactMatches = sourceObjects.Where(gameObject => 
+            var exactMatches = sourceObjects.Where(gameObject =>
                 HasExactComponentMatch(gameObject, componentPattern));
             if (exactMatches.Any())
             {
@@ -142,7 +142,7 @@ namespace UTJ
             return sourceObjects
                 .Where(gameObject => !StringUtil.GlobMatch(gameObject.name, removePattern));
         }
-        
+
         private void ReacquireData()
         {
             if (objectPattern == null) { objectPattern = ""; }

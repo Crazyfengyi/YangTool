@@ -80,7 +80,7 @@ namespace Jing.TurbochargedScrollList
                 //根据滚动区域左下角算出结束item的二维位置
                 GridPos endPos = new GridPos((int)((scrollX + viewportSize.x) / _bigW), (int)((scrollY + viewportSize.y) / _bigH), colCount, rowCount, _bigW, _bigH);
 
-                if(isColByCol)
+                if (isColByCol)
                 {
                     RefreshGridPosColByCol(list, ref startPos, ref endPos);
                 }
@@ -113,8 +113,8 @@ namespace Jing.TurbochargedScrollList
             //回收没有使用的item
             RecycleUselessItems(lastShowingItems);
         }
-        
-        
+
+
         /// <summary>
         /// 从左往右，从上往下依次刷新
         /// ↓ ↓ ↓ Example
@@ -139,7 +139,7 @@ namespace Jing.TurbochargedScrollList
                         break;
                     }
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Jing.TurbochargedScrollList
                     }
                 }
             }
-        }        
+        }
 
         protected override void ResizeContent(UpdateData updateConfig)
         {
@@ -251,7 +251,7 @@ namespace Jing.TurbochargedScrollList
             var h = contentH + layout.paddingTop + layout.paddingBottom;
 
             SetContentSize(w, h);
-        }        
+        }
 
         public override void ScrollToItem(int index)
         {
@@ -260,7 +260,7 @@ namespace Jing.TurbochargedScrollList
             if (isColByCol)
             {
                 int x = index / rowCount;
-                int y = index % rowCount;                
+                int y = index % rowCount;
                 gridPos = new GridPos(x, y, colCount, rowCount, _bigW, _bigH);
                 gridPos.AxisFlip();
             }
@@ -269,13 +269,13 @@ namespace Jing.TurbochargedScrollList
                 int x = index % colCount;
                 int y = index / colCount;
                 gridPos = new GridPos(x, y, colCount, rowCount, _bigW, _bigH);
-            }            
+            }
 
             ScrollToPosition(gridPos.pixelX + layout.paddingLeft, gridPos.pixelY + layout.paddingTop);
         }
 
         public void ScrollToPosition(float x, float y)
-        {        
+        {
             ScrollToPosition(new Vector2(x, y));
         }
     }

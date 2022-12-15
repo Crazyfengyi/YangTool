@@ -1,15 +1,11 @@
 ﻿#if  UNITY_EDITOR
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using Excel;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Text;
 using System.Reflection;
-using System.Reflection.Emit;
-using System;
-using LitJson;
+using System.Text;
 
 public class ExcelUtility
 {
@@ -25,7 +21,7 @@ public class ExcelUtility
     public ExcelUtility(string excelFile)
     {
         FileStream mStream = File.Open(excelFile, FileMode.Open, FileAccess.Read);
-        IExcelDataReader mExcelReader = ExcelReaderFactory .CreateOpenXmlReader(mStream);
+        IExcelDataReader mExcelReader = ExcelReaderFactory.CreateOpenXmlReader(mStream);
         mResultSet = mExcelReader.AsDataSet();
     }
 

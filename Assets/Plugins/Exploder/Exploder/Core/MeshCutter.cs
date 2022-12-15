@@ -43,7 +43,7 @@ namespace Exploder
         public void Init(int trianglesNum, int verticesNum)
         {
             AllocateBuffers(trianglesNum, verticesNum, false, false);
-            AllocateContours(trianglesNum/2);
+            AllocateContours(trianglesNum / 2);
         }
 
         void AllocateBuffers(int trianglesNum, int verticesNum, bool useMeshTangents, bool useVertexColors)
@@ -59,8 +59,8 @@ namespace Exploder
                 triangles[1].Clear();
             }
 
-            if (vertices == null || vertices[0].Capacity < verticesNum || triCache.Length < verticesNum || 
-                (useMeshTangents && (tangents == null || tangents[0].Capacity < verticesNum)) || 
+            if (vertices == null || vertices[0].Capacity < verticesNum || triCache.Length < verticesNum ||
+                (useMeshTangents && (tangents == null || tangents[0].Capacity < verticesNum)) ||
                 (useVertexColors && (vertexColors == null || vertexColors[0].Capacity < verticesNum)))
             {
                 vertices = new[] { new List<Vector3>(verticesNum), new List<Vector3>(verticesNum) };
@@ -69,7 +69,7 @@ namespace Exploder
 
                 if (useMeshTangents)
                 {
-                    tangents = new[] {new List<Vector4>(verticesNum), new List<Vector4>(verticesNum)};
+                    tangents = new[] { new List<Vector4>(verticesNum), new List<Vector4>(verticesNum) };
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace Exploder
 
                 if (useVertexColors)
                 {
-                    vertexColors = new[] {new List<Color32>(verticesNum), new List<Color32>(verticesNum)};
+                    vertexColors = new[] { new List<Color32>(verticesNum), new List<Color32>(verticesNum) };
                 }
                 else
                 {
@@ -121,7 +121,7 @@ namespace Exploder
             // pre-allocate contour data
             if (contour == null)
             {
-//                Utils.Log("Allocating contours buffes: " + cutTrianglesNum);
+                //                Utils.Log("Allocating contours buffes: " + cutTrianglesNum);
 
                 contour = new Contour(cutTrianglesNum);
                 cutVertCache = new[] { new Dictionary<long, int>(cutTrianglesNum * 2), new Dictionary<long, int>(cutTrianglesNum * 2) };
@@ -132,7 +132,7 @@ namespace Exploder
             {
                 if (contourBufferSize < cutTrianglesNum)
                 {
-//                    Utils.Log("Re-allocating contours buffes: " + cutTrianglesNum);
+                    //                    Utils.Log("Re-allocating contours buffes: " + cutTrianglesNum);
 
                     cutVertCache = new[] { new Dictionary<long, int>(cutTrianglesNum * 2), new Dictionary<long, int>(cutTrianglesNum * 2) };
                     cornerVertCache = new[] { new Dictionary<int, int>(cutTrianglesNum), new Dictionary<int, int>(cutTrianglesNum) };
@@ -219,7 +219,7 @@ namespace Exploder
                 meshVertices[meshTriangles[i + 1]] = v1;
                 meshVertices[meshTriangles[i + 2]] = v2;
 
-//                Utils.Log(plane.Pnt + " " + v0 + " " + v1 + " " + " " + v2);
+                //                Utils.Log(plane.Pnt + " " + v0 + " " + v1 + " " + " " + v2);
 
                 // all points on one side
                 if (side0 == side1 && side1 == side2)
@@ -275,12 +275,12 @@ namespace Exploder
 
                         if (useMeshTangents)
                         {
-                            tangents[idx].Add(meshTangents[meshTriangles[i+1]]);
+                            tangents[idx].Add(meshTangents[meshTriangles[i + 1]]);
                         }
 
                         if (useVertexColors)
                         {
-                            vertexColors[idx].Add(meshColors[meshTriangles[i+1]]);
+                            vertexColors[idx].Add(meshColors[meshTriangles[i + 1]]);
                         }
 
                         centroid[idx] += meshVertices[meshTriangles[i + 1]];
@@ -306,12 +306,12 @@ namespace Exploder
 
                         if (useMeshTangents)
                         {
-                            tangents[idx].Add(meshTangents[meshTriangles[i+2]]);
+                            tangents[idx].Add(meshTangents[meshTriangles[i + 2]]);
                         }
 
                         if (useVertexColors)
                         {
-                            vertexColors[idx].Add(meshColors[meshTriangles[i+2]]);
+                            vertexColors[idx].Add(meshColors[meshTriangles[i + 2]]);
                         }
 
                         centroid[idx] += meshVertices[meshTriangles[i + 2]];
@@ -349,7 +349,7 @@ namespace Exploder
                 centroid[1] /= vertices[1].Count;
             }
 
-//            UnityEngine.Debug.LogFormat("cut: {0} -- {1}, normal: {2}, tris: {3}", vertices[0].Count, vertices[1].Count, plane.Normal, cutTris.Count);
+            //            UnityEngine.Debug.LogFormat("cut: {0} -- {1}, normal: {2}, tris: {3}", vertices[0].Count, vertices[1].Count, plane.Normal, cutTris.Count);
 
 #if PROFILING
             MeasureIt.End("CutCycleFirstPass");
@@ -373,7 +373,7 @@ namespace Exploder
                     pos = new[] { meshVertices[meshTriangles[cutTri + 0]], meshVertices[meshTriangles[cutTri + 1]], meshVertices[meshTriangles[cutTri + 2]] },
                     normal = useNormals ? new[] { meshNormals[meshTriangles[cutTri + 0]], meshNormals[meshTriangles[cutTri + 1]], meshNormals[meshTriangles[cutTri + 2]] } : new[] { Vector3.zero, Vector3.zero, Vector3.zero },
                     uvs = new[] { meshUV[meshTriangles[cutTri + 0]], meshUV[meshTriangles[cutTri + 1]], meshUV[meshTriangles[cutTri + 2]] },
-                    tangents = useMeshTangents ? new[] { meshTangents[meshTriangles[cutTri + 0]], meshTangents[meshTriangles[cutTri + 1]], meshTangents[meshTriangles[cutTri + 2]]} : new []{ Vector4.zero, Vector4.zero, Vector4.zero },
+                    tangents = useMeshTangents ? new[] { meshTangents[meshTriangles[cutTri + 0]], meshTangents[meshTriangles[cutTri + 1]], meshTangents[meshTriangles[cutTri + 2]] } : new[] { Vector4.zero, Vector4.zero, Vector4.zero },
                     colors = useVertexColors ? new[] { meshColors[meshTriangles[cutTri + 0]], meshColors[meshTriangles[cutTri + 1]], meshColors[meshTriangles[cutTri + 2]] } : new Color32[] { Color.white, Color.white, Color.white },
                 };
 
@@ -542,7 +542,7 @@ namespace Exploder
 
                 if (contour.contour.Count == 0 || contour.contour[0].Count < 3)
                 {
-//                    triangulateHoles = false;
+                    //                    triangulateHoles = false;
 
                     if (allowOpenMesh)
                     {
@@ -623,11 +623,11 @@ namespace Exploder
                 mesh0.triangles = triangles[0].ToArray();
                 mesh1.triangles = triangles[1].ToArray();
 
-//                if (!triangulateHoles)
-//                {
-//                    // don't triangulate holes means the mesh is a 2d plane
-//                    // it is better to recalculate centroid to get precise center not just an approximation
-//                }
+                //                if (!triangulateHoles)
+                //                {
+                //                    // don't triangulate holes means the mesh is a 2d plane
+                //                    // it is better to recalculate centroid to get precise center not just an approximation
+                //                }
 
                 mesh0.CalculateCentroid();
                 mesh1.CalculateCentroid();
@@ -644,7 +644,7 @@ namespace Exploder
 
             stopWatch.Stop();
 
-//            UnityEngine.Debug.Log("Empty cut! " + vertices[0].Count + " " + vertices[1].Count);
+            //            UnityEngine.Debug.Log("Empty cut! " + vertices[0].Count + " " + vertices[1].Count);
 
             return stopWatch.ElapsedMilliseconds;
         }
@@ -662,7 +662,7 @@ namespace Exploder
         int AddIntersectionPoint(Vector3 pos, Triangle tri, int edge0, int edge1, Dictionary<long, int> cache, List<Vector3> vertices, List<Vector3> normals, List<Vector2> uvs, List<Vector4> tangents, List<Color32> colors32, bool useTangents, bool useColors, bool useNormals)
         {
             //! TODO: figure out position hash for shared vertices
-//            var key = pos.GetHashCode();
+            //            var key = pos.GetHashCode();
             var key = edge0 < edge1 ? (edge0 << 16) + edge1 : (edge1 << 16) + edge0;
 
             int result;
@@ -708,8 +708,8 @@ namespace Exploder
             return vertIndex;
         }
 
-        int AddTrianglePoint(Vector3 pos, Vector3 normal, Vector2 uv, Vector4 tangent, Color32 color, int idx, 
-                             int[] triCache, Dictionary<int, int> cache, List<Vector3> vertices, List<Vector3> normals, 
+        int AddTrianglePoint(Vector3 pos, Vector3 normal, Vector2 uv, Vector4 tangent, Color32 color, int idx,
+                             int[] triCache, Dictionary<int, int> cache, List<Vector3> vertices, List<Vector3> normals,
                              List<Vector2> uvs, List<Vector4> tangents, List<Color32> colors, bool useTangents, bool useColors, bool useNormals)
         {
             // tricache
@@ -753,12 +753,12 @@ namespace Exploder
             return vertIndex;
         }
 
-        void Triangulate(List<Dictionary<int, int>> contours, Plane plane, List<Vector3>[] vertices, List<Vector3>[] normals, List<Vector2>[] uvs, 
+        void Triangulate(List<Dictionary<int, int>> contours, Plane plane, List<Vector3>[] vertices, List<Vector3>[] normals, List<Vector2>[] uvs,
                          List<Vector4>[] tangents, List<Color32>[] colors, List<int>[] triangles, bool uvCutMesh, bool useTangents, bool useColors, bool useNormals)
         {
             if (contours.Count == 0 || contours[0].Count < 3)
             {
-//                Utils.Log("Contour empty!: ");
+                //                Utils.Log("Contour empty!: ");
                 return;
             }
 
@@ -779,7 +779,7 @@ namespace Exploder
 
                 foreach (var i in ctr.Values)
                 {
-                    var p = mInv*vertices[0][i];
+                    var p = mInv * vertices[0][i];
                     polygonPoints[j++] = p;
 
                     // save z-coordinate
@@ -830,26 +830,26 @@ namespace Exploder
                     continue;
                 }
 
-//                ExploderUtils.Assert(indices.Count == polygonIndicesArray.Count, "Count mismatch!");
-//
-//                for (int i = 0; i < indices.Count; i++)
-//                {
-//                    ExploderUtils.Assert(polygonIndicesArray[i] == indices[i], "Indices not match: " + polygons.Count);
-//
-//                    if (indices[i] != polygonIndicesArray[i])
-//                    {
-//                        ExploderUtils.Assert(false, "");
-//                    }
-//                }
+                //                ExploderUtils.Assert(indices.Count == polygonIndicesArray.Count, "Count mismatch!");
+                //
+                //                for (int i = 0; i < indices.Count; i++)
+                //                {
+                //                    ExploderUtils.Assert(polygonIndicesArray[i] == indices[i], "Indices not match: " + polygons.Count);
+                //
+                //                    if (indices[i] != polygonIndicesArray[i])
+                //                    {
+                //                        ExploderUtils.Assert(false, "");
+                //                    }
+                //                }
 
                 // get polygon bounding square size
                 var min = Mathf.Min(polygon.Min.x, polygon.Min.y);
                 var max = Mathf.Max(polygon.Max.x, polygon.Max.y);
                 var polygonSize = max - min;
 
-//                Utils.Log("PolygonSize: " + polygonSize + " " + polygon.Min + " " + polygon.Max);
+                //                Utils.Log("PolygonSize: " + polygonSize + " " + polygon.Min + " " + polygon.Max);
 
-//                Utils.Log("Triangulate polygons: " + polygon.Points.Length);
+                //                Utils.Log("Triangulate polygons: " + polygon.Points.Length);
 
                 foreach (var polyPoint in polygon.Points)
                 {
@@ -866,10 +866,10 @@ namespace Exploder
 
                     if (uvCutMesh)
                     {
-                        var uv0 = new Vector2((polyPoint.x - min)/polygonSize,
-                                              (polyPoint.y - min)/polygonSize);
-                        var uv1 = new Vector2((polyPoint.x - min)/polygonSize,
-                                              (polyPoint.y - min)/polygonSize);
+                        var uv0 = new Vector2((polyPoint.x - min) / polygonSize,
+                                              (polyPoint.y - min) / polygonSize);
+                        var uv1 = new Vector2((polyPoint.x - min) / polygonSize,
+                                              (polyPoint.y - min) / polygonSize);
 
                         // normalize uv to fit cross-section uv area
                         var areaSizeX = crossSectionUV.z - crossSectionUV.x;

@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using LitJson;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net;
-using System.IO;
-using LitJson;
+using UnityEngine;
 
 namespace YangTools.Translate
 {

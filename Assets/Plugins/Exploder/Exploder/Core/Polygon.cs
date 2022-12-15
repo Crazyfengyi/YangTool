@@ -17,7 +17,7 @@ namespace Exploder
         public Vector2[] Points;
         public readonly float Area;
         public Vector2 Min, Max;
-        private readonly List<Polygon> holes; 
+        private readonly List<Polygon> holes;
 
         /// <summary>
         /// c-tor
@@ -70,7 +70,7 @@ namespace Exploder
                 }
             }
 
-            return A*0.5f;
+            return A * 0.5f;
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Exploder
                 }
 
                 int nv = n;
-                int count = 2*nv;
+                int count = 2 * nv;
                 for (int m = 0, v = nv - 1; nv > 2;)
                 {
                     if ((count--) <= 0)
@@ -192,7 +192,7 @@ namespace Exploder
                         for (s = v, t = v + 1; t < nv; s++, t++)
                             V[s] = V[t];
                         nv--;
-                        count = 2*nv;
+                        count = 2 * nv;
                     }
                 }
 
@@ -240,7 +240,7 @@ namespace Exploder
 
                 indicesArray.Initialize(triangles * 3);
 
-                Points = new Vector2[triangles*3];
+                Points = new Vector2[triangles * 3];
                 var j = 0;
 
                 // recalc min max

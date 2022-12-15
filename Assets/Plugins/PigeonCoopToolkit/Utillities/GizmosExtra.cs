@@ -7,7 +7,7 @@ namespace PigeonCoopToolkit.Utillities
 
         public static void GizmosDrawCircle(Vector3 position, Vector3 up, float size, int divisions)
         {
-            Vector3 offset = (Quaternion.Euler(90,0,0) * (up* size)) ;
+            Vector3 offset = (Quaternion.Euler(90, 0, 0) * (up * size));
 
             for (int i = 0; i < divisions; i++)
             {
@@ -23,10 +23,10 @@ namespace PigeonCoopToolkit.Utillities
             Gizmos.DrawLine(from, to);
 
             Vector3 dir = to - from;
-            dir = dir.normalized*arrowSize;
+            dir = dir.normalized * arrowSize;
 
-            Gizmos.DrawLine(to, to - Quaternion.Euler(0, 0, 45)*dir);
-            Gizmos.DrawLine(to, to - Quaternion.Euler(0, 0, -45)*dir);
+            Gizmos.DrawLine(to, to - Quaternion.Euler(0, 0, 45) * dir);
+            Gizmos.DrawLine(to, to - Quaternion.Euler(0, 0, -45) * dir);
 
         }
     }

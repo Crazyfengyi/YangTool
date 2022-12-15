@@ -6,7 +6,7 @@ namespace Cysharp.Threading.Tasks
     public static partial class UniTaskExtensions
     {
         // shorthand of WhenAll
-    
+
         public static UniTask.Awaiter GetAwaiter(this UniTask[] tasks)
         {
             return UniTask.WhenAll(tasks).GetAwaiter();

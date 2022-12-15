@@ -6,7 +6,6 @@
  *创建时间:         2022-07-23 
 */
 using UnityEngine;
-using System.Collections;
 using YangTools.Extend;
 
 public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtker, IBeHit

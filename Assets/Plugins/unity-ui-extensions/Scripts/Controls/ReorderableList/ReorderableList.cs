@@ -22,7 +22,7 @@ namespace UnityEngine.UI.Extensions
 
         [Tooltip("Can new draggable items be dropped in to the container?")]
         public bool IsDropable = true;
-        
+
 
         [Header("UI Re-orderable Events")]
         public ReorderableListHandler OnElementDropped = new ReorderableListHandler();
@@ -49,7 +49,7 @@ namespace UnityEngine.UI.Extensions
         {
             Transform t = transform;
             Canvas canvas = null;
-        
+
 
             int lvlLimit = 100;
             int lvl = 0;

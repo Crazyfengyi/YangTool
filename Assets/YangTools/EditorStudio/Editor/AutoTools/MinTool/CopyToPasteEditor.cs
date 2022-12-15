@@ -11,14 +11,14 @@ namespace YangTools.EditorStudio
         public void Copy(object _fromScript)
         {
             copyType = _fromScript.GetType();//类型
-            copyField = copyType.GetFields(BindingFlags.Public| BindingFlags.Instance);
+            copyField = copyType.GetFields(BindingFlags.Public | BindingFlags.Instance);
         }
         public void Paste(object toScript)
         {
             foreach (var item in copyField)
             {
                 object value = item.GetValue(fromScript);
-                item.SetValue(toScript,value);
+                item.SetValue(toScript, value);
             }
         }
     }

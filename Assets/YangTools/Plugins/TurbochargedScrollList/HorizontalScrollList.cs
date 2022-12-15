@@ -11,7 +11,7 @@ namespace Jing.TurbochargedScrollList
     {
         public HorizontalLayoutSettings layout { get; private set; }
 
-        public HorizontalScrollList(ScrollRect scrollRect, GameObject itemPrefab, Transform itemParentTrans,HorizontalLayoutSettings layoutSettings = null)
+        public HorizontalScrollList(ScrollRect scrollRect, GameObject itemPrefab, Transform itemParentTrans, HorizontalLayoutSettings layoutSettings = null)
         {
             if (null == layoutSettings)
             {
@@ -22,9 +22,9 @@ namespace Jing.TurbochargedScrollList
                 layout = layoutSettings;
             }
 
-            InitScrollView(scrollRect);            
+            InitScrollView(scrollRect);
 
-            InitItem(itemPrefab,itemParentTrans);
+            InitItem(itemPrefab, itemParentTrans);
         }
 
         protected override void ResizeContent(UpdateData updateConfig)
@@ -51,18 +51,18 @@ namespace Jing.TurbochargedScrollList
                 var targetRenderStartPos = (contentWidth - updateConfig.tempLastContentRect.width) + contentRenderStartPos;
                 var temp = content.localPosition;
                 temp.x = -targetRenderStartPos;
-                content.localPosition = temp;                
+                content.localPosition = temp;
             }
 
             //content的滚动是负数
             contentRenderStartPos = -content.localPosition.x;
-            
 
-            if(contentRenderStartPos < 0)
+
+            if (contentRenderStartPos < 0)
             {
                 contentRenderStartPos = 0;
             }
-            else if(contentRenderStartPos > contentWidth - viewportSize.x)
+            else if (contentRenderStartPos > contentWidth - viewportSize.x)
             {
                 contentRenderStartPos = contentWidth - viewportSize.x;
             }
@@ -70,7 +70,7 @@ namespace Jing.TurbochargedScrollList
             int dataIdx;
             float startPos = layout.paddingLeft;
 
-            for(dataIdx = 0; dataIdx < _itemModels.Count; dataIdx++)
+            for (dataIdx = 0; dataIdx < _itemModels.Count; dataIdx++)
             {
                 var dataRight = startPos + _itemModels[dataIdx].width;
                 if (dataRight >= contentRenderStartPos)
@@ -93,7 +93,7 @@ namespace Jing.TurbochargedScrollList
 
             _showingItems.Clear();
 
-            while(dataIdx < _itemModels.Count)
+            while (dataIdx < _itemModels.Count)
             {
                 var model = _itemModels[dataIdx];
 

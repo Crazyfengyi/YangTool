@@ -5,10 +5,8 @@
  *UnityVersion：2020.3.1f1c1 
  *创建时间:         2021-04-27 
 */
-using UnityEngine;
-using System.Collections;
-using System;
 using Sirenix.OdinInspector;
+using System;
 
 /// <summary>
 /// buff状态

@@ -2,7 +2,6 @@
 // Created: 2018/07/13
 
 #if true // MODULE_MARKER
-using System;
 using UnityEngine;
 #if UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.Audio; // Required for AudioMixer
@@ -11,7 +10,7 @@ using UnityEngine.Audio; // Required for AudioMixer
 #pragma warning disable 1591
 namespace DG.Tweening
 {
-	public static class DOTweenModuleAudio
+    public static class DOTweenModuleAudio
     {
         #region Shortcuts
 
@@ -47,11 +46,12 @@ namespace DG.Tweening
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         public static Tweener DOSetFloat(this AudioMixer target, string floatName, float endValue, float duration)
         {
-            return DOTween.To(()=> {
-                    float currVal;
-                    target.GetFloat(floatName, out currVal);
-                    return currVal;
-                }, x=> target.SetFloat(floatName, x), endValue, duration)
+            return DOTween.To(() =>
+            {
+                float currVal;
+                target.GetFloat(floatName, out currVal);
+                return currVal;
+            }, x => target.SetFloat(floatName, x), endValue, duration)
                 .SetTarget(target);
         }
 

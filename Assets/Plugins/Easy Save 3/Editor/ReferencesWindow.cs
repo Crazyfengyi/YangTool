@@ -1,21 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using ES3Internal;
+﻿using UnityEditor;
 
 namespace ES3Editor
 {
-	public class ReferencesWindow : SubWindow
-	{
+    public class ReferencesWindow : SubWindow
+    {
 
 
-		public ReferencesWindow(EditorWindow window) : base("References", window){}
+        public ReferencesWindow(EditorWindow window) : base("References", window) { }
 
-		public override void OnGUI()
-		{
-			
-		}
-	}
+        public override void OnGUI()
+        {
+
+        }
+    }
 
 }

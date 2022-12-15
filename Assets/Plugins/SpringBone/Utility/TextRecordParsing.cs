@@ -215,7 +215,7 @@ namespace UTJ
 
         private static bool LineIsCommentedOut(string trimmedLine, IEnumerable<string> commentPrefixes)
         {
-            return commentPrefixes.Any(prefix => prefix.Length > 0 
+            return commentPrefixes.Any(prefix => prefix.Length > 0
                 && trimmedLine.StartsWith(prefix));
         }
     }

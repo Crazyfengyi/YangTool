@@ -18,7 +18,7 @@ namespace UTJ
         (
             Vector3 position,
             Vector3 normal,
-            float radius, 
+            float radius,
             SpringBone.CollisionStatus collisionStatus
         )
         {

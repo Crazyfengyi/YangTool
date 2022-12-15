@@ -20,7 +20,7 @@ namespace UnityEngine.UI.Extensions
         void Awake()
         {
             instance = this;
-            if(!TooltipText) TooltipText = GetComponentInChildren<Text>();
+            if (!TooltipText) TooltipText = GetComponentInChildren<Text>();
             HideTooltip();
         }
 
@@ -53,4 +53,4 @@ namespace UnityEngine.UI.Extensions
     }
 }
 
- 
+

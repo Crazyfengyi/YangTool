@@ -56,7 +56,7 @@ namespace Exploder
         {
             slowMotionSpeed = slowMotionTime;
             Time.timeScale = slowMotionSpeed;
-            Time.fixedDeltaTime = slowMotionSpeed*0.02f;
+            Time.fixedDeltaTime = slowMotionSpeed * 0.02f;
 
             if (Input.GetKeyDown(KeyCode.T))
             {

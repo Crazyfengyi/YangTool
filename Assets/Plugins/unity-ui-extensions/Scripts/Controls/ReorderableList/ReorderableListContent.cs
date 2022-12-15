@@ -16,13 +16,13 @@ namespace UnityEngine.UI.Extensions
 
         private void OnEnable()
         {
-            if(_rect)StartCoroutine(RefreshChildren());
+            if (_rect) StartCoroutine(RefreshChildren());
         }
 
 
         public void OnTransformChildrenChanged()
         {
-            if(this.isActiveAndEnabled)StartCoroutine(RefreshChildren());
+            if (this.isActiveAndEnabled) StartCoroutine(RefreshChildren());
         }
 
         public void Init(ReorderableList extList)

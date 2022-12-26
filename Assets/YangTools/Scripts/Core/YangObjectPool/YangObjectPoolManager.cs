@@ -354,7 +354,6 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
-        /// <returns></returns>
         T Get(string arg);
         /// <summary>
         /// 回收对象

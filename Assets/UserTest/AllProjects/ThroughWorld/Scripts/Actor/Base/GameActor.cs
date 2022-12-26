@@ -36,6 +36,10 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     /// 阵营
     /// </summary>
     public ActorCampType campType;
+    /// <summary>
+    /// 可攻击阵营
+    /// </summary>
+    public ActorCampType canAtkCamp;
 
     #region 生命周期
     public abstract void IInit();

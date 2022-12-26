@@ -37,12 +37,20 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     }
     public void Start()
     {
+        CreateMainPlayer();
+    }
+    /// <summary>
+    /// 创建主角
+    /// </summary>
+    public void CreateMainPlayer()
+    {
         ICustomLife player = Instantiate(playerPrefab);
         if (player != null)
         {
             mainPlayer = player as PlayerController;
             customLives.Add(player);
             player.IInit();
+            CameraManager.Instance.ChangeMainPlayer();
             DontDestroyOnLoad(mainPlayer);
         }
     }

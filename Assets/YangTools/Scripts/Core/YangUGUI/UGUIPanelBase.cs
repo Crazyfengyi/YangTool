@@ -121,8 +121,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 关闭页面
         /// </summary>
-        /// <param name="ignoreFade"></param>
-        public void ClosePanel(bool ignoreFade = false)
+        public void ClosePanel(bool ignoreFade = true)
         {
             StopAllCoroutines();
 

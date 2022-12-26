@@ -8,6 +8,7 @@
 using CMF;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using YangTools.UGUI;
 
 public class PlayerController : RoleBase
 {
@@ -88,6 +89,7 @@ public class PlayerController : RoleBase
         GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
+        UIMonoInstance.Instance.OpenUIPanel("GameOverPanel", "One");
     }
 
     #region 输入

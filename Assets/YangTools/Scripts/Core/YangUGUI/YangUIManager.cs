@@ -24,7 +24,6 @@ namespace YangTools.UGUI
 
         public event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
         public event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
-        public event EventHandler<OpenUIPanelDependencyAssetEventArgs> OpenUIPanelDependencyAsset;//打开界面时
         public event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
         public event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
         /// <summary>
@@ -39,15 +38,13 @@ namespace YangTools.UGUI
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
             recycleQueue = new Queue<IUIPanel>();
             //TODO:对象池优化
-            instancePool = null;
-            //instancePool = new ObjectPool<UIPanelInstanceObject>();
+            instancePool = new ObjectPool<UIPanelInstanceObject>();
             uiPanelHelper = null;
             serial = 0;
             isShutdown = false;
             OpenUIPanelSuccess = null;
             OpenUIPanelFailure = null;
             OpenUIPanelUpdate = null;
-            OpenUIPanelDependencyAsset = null;
             CloseUIPanelComplete = null;
         }
 
@@ -398,28 +395,16 @@ namespace YangTools.UGUI
         /// <returns>界面的序列编号</returns>
         public int OpenUIPanel(string uiPanelAssetName, string uiGroupName, int priority, bool pauseCovereduiPanel, object userData)
         {
-
-            if (uiPanelHelper == null)
-            {
-                throw new Exception("You must set UI form helper first.");
-            }
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
-            if (string.IsNullOrEmpty(uiGroupName))
-            {
-                throw new Exception("UI group name is invalid.");
-            }
+            if (uiPanelHelper == null) throw new Exception("You must set UI form helper first.");
+            if (string.IsNullOrEmpty(uiPanelAssetName)) throw new Exception("UI form asset name is invalid.");
+            if (string.IsNullOrEmpty(uiGroupName)) throw new Exception("UI group name is invalid.");
 
             UIGroup uiGroup = (UIGroup)GetUIGroup(uiGroupName);
-            if (uiGroup == null)
-            {
-                throw new Exception(string.Format("UI group '{0}' is not exist.", uiGroupName));
-            }
+            if (uiGroup == null) throw new Exception(string.Format("UI group '{0}' is not exist.", uiGroupName));
+
             int serialId = ++serial;
             //TODO:对象池
-            UIPanelInstanceObject uiPanelInstanceObject = instancePool?.Get("");
+            UIPanelInstanceObject uiPanelInstanceObject = null;/*instancePool?.Get("")*/
             //uiPanelInstanceObject.OnGet(uiPanelInstanceObject);//uiPanelAssetName
 
             if (uiPanelInstanceObject == null)
@@ -431,15 +416,15 @@ namespace YangTools.UGUI
                     Debug.LogError($"UI页面加载失败:{uiPanelAssetName}");
                     throw new Exception();
                 }
+
                 uiPanelInstanceObject = UIPanelInstanceObject.Create(uiPanelAssetName, panelAsset, uiPanelHelper.InstantiateUIPanel(panelAsset), uiPanelHelper);
 
-                OpenUIPanelInfo openUIPanelInfo = OpenUIPanelInfo.Create(serialId, uiGroup, pauseCovereduiPanel, userData);
-                InternalOpenUIPanel(openUIPanelInfo.SerialId, uiPanelAssetName, openUIPanelInfo.UIGroup, uiPanelInstanceObject.Target, openUIPanelInfo.PauseCoveredUIPanel, true, 0f, openUIPanelInfo.UserData);
+                InternalOpenUIPanel(serialId, uiPanelAssetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, true, 0f, userData);
             }
             else
             {
                 //打开界面
-                InternalOpenUIPanel(serialId, uiPanelAssetName, uiGroup, uiPanelInstanceObject.Target, pauseCovereduiPanel, false, 0f, userData);
+                InternalOpenUIPanel(serialId, uiPanelAssetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, false, 0f, userData);
             }
 
             return serialId;
@@ -569,20 +554,18 @@ namespace YangTools.UGUI
         /// <summary>
         /// 打开界面
         /// </summary>
-        private void InternalOpenUIPanel(int serialId, string uiPanelAssetName, UIGroup uiGroup, object uiPanelInstance, bool pauseCovereduiPanel, bool isNewInstance, float duration, object userData)
+        private void InternalOpenUIPanel(int serialId, string uiPanelAssetName, UIGroup uiGroup, object uiPanelInstance, UIPanelInstanceObject uIPanelInstanceObject, bool pauseCovereduiPanel, bool isNewInstance, float duration, object userData)
         {
             try
             {
                 IUIPanel uiPanel = uiPanelHelper.CreateUIPanel(uiPanelInstance, uiGroup, userData);
-                if (uiPanel == null)
-                {
-                    throw new Exception("Can not create UI form in UI form helper.");
-                }
+                if (uiPanel == null) throw new Exception("Can not create UI form in UI form helper.");
 
                 uiPanel.OnInit(serialId, uiPanelAssetName, uiGroup, pauseCovereduiPanel, isNewInstance, userData);
                 uiGroup.AddUIPanel(uiPanel);
                 uiPanel.OnOpen(userData);
                 uiGroup.Refresh();
+                uiPanel.Handle = (object)uIPanelInstanceObject;
 
                 if (OpenUIPanelSuccess != null)
                 {
@@ -596,7 +579,6 @@ namespace YangTools.UGUI
                 {
                     OpenUIPanelFailureEventArgs openuiPanelFailureEventArgs = OpenUIPanelFailureEventArgs.Create(serialId, uiPanelAssetName, uiGroup.Name, pauseCovereduiPanel, exception.ToString(), userData);
                     OpenUIPanelFailure(this, openuiPanelFailureEventArgs);
-                    return;
                 }
                 throw;
             }
@@ -1049,19 +1031,7 @@ namespace YangTools.UGUI
         private IUIPanel uiPanel;
         private bool paused;//暂停
         private bool covered;//覆盖
-        public UIPanelInfo()
-        {
-            uiPanel = null;
-            paused = false;
-            covered = false;
-        }
-        public IUIPanel UIPanel
-        {
-            get
-            {
-                return uiPanel;
-            }
-        }
+        public IUIPanel UIPanel => uiPanel;
         public bool Paused
         {
             get
@@ -1084,6 +1054,9 @@ namespace YangTools.UGUI
                 covered = value;
             }
         }
+        public UIPanelInfo()
+        {
+        }
         public static UIPanelInfo Create(IUIPanel uiPanel)
         {
             if (uiPanel == null) throw new Exception("UI panel is invalid.");
@@ -1099,70 +1072,6 @@ namespace YangTools.UGUI
         }
     }
     /// <summary>
-    /// 打开UI页面信息
-    /// </summary>
-    internal sealed class OpenUIPanelInfo
-    {
-        private int serialId;
-        private UIGroup uiGroup;
-        private bool pauseCoveredUIPanel;
-        private object userData;
-
-        public OpenUIPanelInfo()
-        {
-            serialId = 0;
-            uiGroup = null;
-            pauseCoveredUIPanel = false;
-            userData = null;
-        }
-
-        public int SerialId
-        {
-            get
-            {
-                return serialId;
-            }
-        }
-        public UIGroup UIGroup
-        {
-            get
-            {
-                return uiGroup;
-            }
-        }
-        public bool PauseCoveredUIPanel
-        {
-            get
-            {
-                return pauseCoveredUIPanel;
-            }
-        }
-        public object UserData
-        {
-            get
-            {
-                return userData;
-            }
-        }
-
-        public static OpenUIPanelInfo Create(int serialId, UIGroup uiGroup, bool pauseCoveredUIForm, object userData)
-        {
-            OpenUIPanelInfo openUIFormInfo = new OpenUIPanelInfo();
-            openUIFormInfo.serialId = serialId;
-            openUIFormInfo.uiGroup = uiGroup;
-            openUIFormInfo.pauseCoveredUIPanel = pauseCoveredUIForm;
-            openUIFormInfo.userData = userData;
-            return openUIFormInfo;
-        }
-        public void Clear()
-        {
-            serialId = 0;
-            uiGroup = null;
-            pauseCoveredUIPanel = false;
-            userData = null;
-        }
-    }
-    /// <summary>
     /// UI界面实例对象
     /// </summary>
     internal sealed class UIPanelInstanceObject : IPoolItem<UIPanelInstanceObject>
@@ -1174,28 +1083,16 @@ namespace YangTools.UGUI
         private DateTime lastUseTime;//上一次使用时间
         private object uiPanelAsset;//UI资源
         private IUIPanelHelper uiPanelHelper;//UI页面辅助类
-
-        public object Target
-        {
-            get { return target; }
-        }
+        public object Target => target;
         public bool IsInPool { get; set; }
         public UIPanelInstanceObject()
         {
-            uiPanelAsset = null;
-            uiPanelHelper = null;
+
         }
         public static UIPanelInstanceObject Create(string name, object uiPanelAsset, object uiPanelInstance, IUIPanelHelper uiPanelHelper)
         {
-            if (uiPanelAsset == null)
-            {
-                throw new Exception("UI form asset is invalid.");
-            }
-
-            if (uiPanelHelper == null)
-            {
-                throw new Exception("UI form helper is invalid.");
-            }
+            if (uiPanelAsset == null) throw new Exception("UI form asset is invalid.");
+            if (uiPanelHelper == null) throw new Exception("UI form helper is invalid.");
 
             UIPanelInstanceObject uiPanelInstanceObject = new UIPanelInstanceObject();
             uiPanelInstanceObject.Init(name, uiPanelInstance, 0);
@@ -1227,15 +1124,15 @@ namespace YangTools.UGUI
         }
         public void OnGet()
         {
-            throw new NotImplementedException();
+
         }
         public void OnRecycle()
         {
-            throw new NotImplementedException();
+
         }
         public void OnDestroy()
         {
-            throw new NotImplementedException();
+
         }
     }
 }

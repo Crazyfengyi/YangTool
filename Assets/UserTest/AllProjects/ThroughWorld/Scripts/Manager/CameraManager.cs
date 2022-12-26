@@ -76,6 +76,11 @@ public class CameraManager : MonoSingleton<CameraManager>
     }
     public void Start()
     {
+        ChangeMainPlayer();
+    }
+
+    public void ChangeMainPlayer()
+    {
         mainCM.Follow = GameActorManager.Instance.MainPlayer.transform;
         mainCM.LookAt = GameActorManager.Instance.MainPlayer.transform;
     }

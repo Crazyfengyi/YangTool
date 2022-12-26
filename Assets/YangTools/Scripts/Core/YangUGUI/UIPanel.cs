@@ -11,7 +11,7 @@ using UnityEngine;
 namespace YangTools.UGUI
 {
     /// <summary>
-    /// UI页面管理类--框架啊自动生成挂载到UI
+    /// UI页面管理类--框架自动生成挂载到UI
     /// </summary>
     public class UIPanel : MonoBehaviour, IUIPanel
     {
@@ -20,6 +20,7 @@ namespace YangTools.UGUI
         private IUIGroup uiGroup;//UI组
         private int depthInUIGroup;//在组里的深度
         private bool pauseCoveredUIPanel;//是否暂停被覆盖的页面
+        private object handle;
 
         private UGUIPanelBase uiPanelLogic;//UGUI界面逻辑类
 
@@ -27,73 +28,35 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面序列编号
         /// </summary>
-        public int SerialId
-        {
-            get
-            {
-                return serialId;
-            }
-        }
+        public int SerialId => serialId;
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        public string UIPanelAssetName
-        {
-            get
-            {
-                return uiPanelAssetName;
-            }
-        }
+        public string UIPanelAssetName => uiPanelAssetName;
         /// <summary>
         /// 获取界面实例
         /// </summary>
         public object Handle
         {
-            get
-            {
-                return gameObject;
-            }
+            get => handle;
+            set => handle = value;
         }
         /// <summary>
         /// 获取界面所属的界面组
         /// </summary>
-        public IUIGroup UIGroup
-        {
-            get
-            {
-                return uiGroup;
-            }
-        }
+        public IUIGroup UIGroup => uiGroup;
         /// <summary>
         /// 获取界面深度
         /// </summary>
-        public int DepthInUIGroup
-        {
-            get
-            {
-                return depthInUIGroup;
-            }
-        }
+        public int DepthInUIGroup => depthInUIGroup;
         /// <summary>
         /// 获取是否暂停被覆盖的界面
         /// </summary>
-        public bool PauseCoveredUIPanel
-        {
-            get
-            {
-                return pauseCoveredUIPanel;
-            }
-        }
+        public bool PauseCoveredUIPanel => pauseCoveredUIPanel;
         /// <summary>
         /// 获取界面逻辑类
         /// </summary>
-        public UGUIPanelBase Logic
-        {
-            get
-            {
-                return uiPanelLogic;
-            }
-        }
+        public UGUIPanelBase Logic => uiPanelLogic;
         #endregion
 
         #region 生命周期

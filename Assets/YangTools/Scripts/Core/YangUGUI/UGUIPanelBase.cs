@@ -5,6 +5,7 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-20 
 */
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ namespace YangTools.UGUI
         private CanvasGroup canvasGroup;//缓存的CanvasGroup
         private Canvas cachedCanvas;//缓存的Canvas
         private List<Canvas> cachedCanvasList = new List<Canvas>();//缓存的Canvas列表
+
+        private Transform Node;//页面表现节点(动画节点)
 
         private int originalLayer = 0;//原始层级
 
@@ -121,8 +124,7 @@ namespace YangTools.UGUI
         /// <summary>
         /// 关闭页面
         /// </summary>
-        /// <param name="ignoreFade"></param>
-        public void ClosePanel(bool ignoreFade = false)
+        public void ClosePanel(bool ignoreFade = true)
         {
             StopAllCoroutines();
 
@@ -161,6 +163,7 @@ namespace YangTools.UGUI
             OriginalDepth = cachedCanvas.sortingOrder;
 
             canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+            Node = transform.Find("Node");
 
             RectTransform trans = GetComponent<RectTransform>();
             trans.anchorMin = Vector2.zero;
@@ -195,8 +198,25 @@ namespace YangTools.UGUI
             available = true;
             Visible = true;
 
-            canvasGroup.alpha = 1f;
-            StopAllCoroutines();
+            DOTween.Kill(this);
+            //默认动画
+            if (Node)
+            {
+                DOTween.Sequence()
+                    .AppendCallback(() =>
+                    {
+                        canvasGroup.alpha = 0.6f;
+                        Node.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+                    })
+                    .Append(Node.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutElastic))
+                    .Join(canvasGroup.DOFade(1f, 0.2f))
+                    .OnComplete(() =>
+                    {
+                        canvasGroup.alpha = 1f;
+                        Node.transform.localScale = Vector3.one;
+                    })
+                    .SetTarget(this);
+            }
         }
         /// <summary>
         /// 界面关闭
@@ -222,8 +242,6 @@ namespace YangTools.UGUI
         protected internal virtual void OnResume()
         {
             Visible = true;
-            canvasGroup.alpha = 1f;
-            StopAllCoroutines();
         }
         /// <summary>
         /// 界面遮挡

@@ -55,7 +55,6 @@ namespace YangTools.Extend
             YangToolEventManager.Instance.Send(_eventName, _args);
         }
         #endregion
-
     }
 
     //——THE END——

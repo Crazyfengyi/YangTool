@@ -83,6 +83,7 @@
     <Compile Include="Assets\UserTest\ExcelDataExport\DataChange.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\AnimatorController3rdPersonIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKCalibrator.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\GameOverPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\Inertia.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\BipedIK\BipedIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\PenetrationAvoidance.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\ExplosionDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LookAtIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatformController.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForInteresting.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Monster\MonsterEmitter.cs" />
     <Compile Include="Assets\UserTest\Jammo-Character\Scripts\CharacterSkinController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionEffector.cs" />
@@ -378,7 +380,6 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForInteresting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />

@@ -16,19 +16,6 @@ namespace YangTools.Extend
     public partial class YangExtend
     {
         /// <summary>
-        /// 自动设置显隐--会先判断是否已经是目标状态
-        /// </summary>
-        /// <param name="isActive">bool值</param>
-        public static void AutoSetActive(this GameObject gameObject, bool isActive)
-        {
-            //与或--相同取0，不同取1
-            if (isActive ^ gameObject.activeSelf)
-            {
-                gameObject.SetActive(isActive);
-            }
-        }
-
-        /// <summary>
         /// 删除所有子节点
         /// </summary>
         /// <param name="content"></param>
@@ -297,37 +284,6 @@ namespace YangTools.Extend
 
             return result;
         }
-
-        /// <summary>
-        /// 去除富文本
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string GetNoHtmlString(string input)
-        {
-            input = Regex.Replace(input, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"-->", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"<!--.*", "", RegexOptions.IgnoreCase);
-
-            input = Regex.Replace(input, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&#(\d+);", "", RegexOptions.IgnoreCase);
-
-            input.Replace("<", "");
-            input.Replace(">", "");
-            input.Replace("\r\n", "");
-            //去两端空格，中间多余空格
-            input = Regex.Replace(input.Trim(), "\\s+", " ");
-            return input;
-        }
         /// <summary>
         /// 检测物体是否为空
         /// </summary>
@@ -341,6 +297,7 @@ namespace YangTools.Extend
 
             return false;
         }
+
         /// <summary>
         /// 获得颜色
         /// </summary>
@@ -352,6 +309,7 @@ namespace YangTools.Extend
             ColorUtility.TryParseHtmlString(htmlStr, out Color nowColor);
             return nowColor;
         }
+
         /// <summary>
         /// 获得颜色的string
         /// </summary>
@@ -362,6 +320,7 @@ namespace YangTools.Extend
             return ColorUtility.ToHtmlStringRGB(color);
         }
     }
+
     //跟资源有关---张艺洪那边移过来
     public partial class YangExtend
     {

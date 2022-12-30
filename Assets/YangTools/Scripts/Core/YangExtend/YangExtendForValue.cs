@@ -38,7 +38,6 @@ namespace YangTools.Extend
             //这些数减1后与自身进行按位与，如果结果为0，表示这个数是2的n次幂
             return num > 0 && (num & (num - 1)) == 0;
         }
-
         /// <summary>
         /// 获取大于N的最小的2的N次方(如果本身是2的N次幂就返回)
         /// </summary>
@@ -58,7 +57,6 @@ namespace YangTools.Extend
             n += 1;  //大于N的最小的2的N次方
             return n;
         }
-
         /// <summary>
         /// 获取小于于N的最大的2的N次方(如果本身是2的N次幂就返回)
         /// </summary>
@@ -80,7 +78,6 @@ namespace YangTools.Extend
 
             return n;
         }
-
         /// <summary>
         /// 判断字符串是否为空
         /// </summary> 
@@ -110,9 +107,6 @@ namespace YangTools.Extend
         /// <summary>
         /// 随机返回枚举--不知道手动枚举值是否有效，需验证
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="random"></param>
-        /// <returns></returns>
         public static T RandomEnum<T>(this System.Random random) where T : struct
         {
             Type type = typeof(T);
@@ -122,7 +116,6 @@ namespace YangTools.Extend
             int index = random.Next(array.GetLowerBound(0), array.GetUpperBound(0) + 1);
             return (T)array.GetValue(index);
         }
-
         /// <summary>
         /// 随机一个int32
         /// </summary>
@@ -141,7 +134,6 @@ namespace YangTools.Extend
         {
             return BitConverter.ToSingle(random.NextBytes(4), 0);
         }
-
         /// <summary>
         /// 生成一个Byte[]，用随机数填充
         /// </summary>
@@ -154,13 +146,10 @@ namespace YangTools.Extend
             random.NextBytes(data);
             return data;
         }
-
         /// <summary>
-        /// 去掉字符串的html标签
+        /// 去除富文本--去掉字符串的html标签
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string ContentReplace(this string input)
+        public static string GetNoHtmlString(this string input)
         {
             input = Regex.Replace(input, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
             input = Regex.Replace(input, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
@@ -185,7 +174,6 @@ namespace YangTools.Extend
             input = Regex.Replace(input.Trim(), "\\s+", " ");
             return input;
         }
-
         /// <summary>
         /// 克隆List
         /// </summary>
@@ -440,7 +428,6 @@ namespace YangTools.Extend
         }
 
         #region 根据权重获取
-
         /// <summary>
         /// 从权重信息组里根据权重随机一个
         /// </summary>
@@ -496,7 +483,6 @@ namespace YangTools.Extend
             /// <returns>类型</returns>
             public T GetItem();
         }
-
         #endregion
     }
 }

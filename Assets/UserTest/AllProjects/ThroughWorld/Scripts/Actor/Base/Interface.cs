@@ -146,4 +146,5 @@ public interface IInteractive
     {
 
     }
+    //string GetAnimationState(PlayerController interactor, out bool shouldBeFlipped);
 }

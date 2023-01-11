@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+using System.Security.Cryptography.X509Certificates;
 /** 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
@@ -61,7 +63,24 @@ namespace YangTools.ObjectPool
             }
             else
             {
-                ObjectPool<T> pool = new ObjectPool<T>();
+                // ObjectPool<T> pool = new ObjectPool<T>();
+                // pool.PoolKey = key;
+
+                // //包裹类-为了将对象池放进字典统一管理
+                // PoolPackage package = new PoolPackage();
+                // package.objectPool = pool;
+                // package.T_type = typeof(T);
+                // package.Pool_type = pool.GetType();
+                // package.Binding<T>();
+
+                // m_allPools.Add(key, package);
+                CreatePool<T>(key);
+                return m_allPools[key].GetPool<T>().Get(arg);
+            }
+        }
+        public void CreatePool<T>(string key): class, IPoolItem<T>, new()
+        {
+              ObjectPool<T> pool = new ObjectPool<T>();
                 pool.PoolKey = key;
 
                 //包裹类-为了将对象池放进字典统一管理
@@ -72,8 +91,35 @@ namespace YangTools.ObjectPool
                 package.Binding<T>();
 
                 m_allPools.Add(key, package);
-                return m_allPools[key].GetPool<T>().Get(arg);
+        }
+        /// <summary>
+        /// 获得自动回收包裹
+        /// </summary>
+        public static PooledObjectPackage<T> Get<T>(out T item,string poolKey = "") where T : class, IPoolItem<T>, new()
+        {
+            string key = typeof(T).FullName;
+            string arg = poolKey;
+            if (!string.IsNullOrEmpty(poolKey))
+            {
+                key = poolKey;
             }
+
+            if (m_allPools.ContainsKey(key))
+            {
+                return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
+            }
+            else
+            {
+                //ToDo:需要统一Key的获取
+                 CreatePool<T>(poolKey);
+                 return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
+            }
+
+            return default;
+        }
+        public PooledObjectPackage<T> Get(out T item)
+        {
+            return new PooledObjectPackage<T>(item=Get(), this);
         }
         /// <summary>
         /// 回收对象
@@ -280,6 +326,10 @@ namespace YangTools.ObjectPool
             item.OnGet();
             return item;
         }
+        public PooledObjectPackage<T> GetAutoRecycleItem()
+        {
+            return new PooledObjectPackage<T>(Get(), this);
+        }
         public void RecycleToDefaultCount()
         {
             AutoRecycleTime = 0f;
@@ -356,6 +406,10 @@ namespace YangTools.ObjectPool
         /// </summary>
         T Get(string arg);
         /// <summary>
+        /// 获得自动回收包裹
+        /// </summary>
+        PooledObjectPackage<T> GetAutoRecycleItem();
+        /// <summary>
         /// 回收对象
         /// </summary>
         /// <param name="element"></param>
@@ -368,6 +422,39 @@ namespace YangTools.ObjectPool
         /// 清空对象池
         /// </summary>
         void Clear();
+    }
+    /*
+     * 使用事例(Unity官方的):
+        var simplifiedPoints = CollectionPool<List<Vector2>, Vector2>.Get();
+        using (CollectionPool<List<Vector2>, Vector2>.Get(out List<Vector2> tempList))
+        {
+            for (int i = 0; i < points.Length; ++i)
+            {
+                tempList.Add(points[i]);
+            }
+
+            LineUtility.Simplify(tempList, 1.5f, simplifiedPoints);
+        }
+        return simplifiedPoints;
+     * */
+    //值类型-值类型回收时(销毁时)自动回收对象到对象池--Unity默认对象池抄的
+    public struct PooledObjectPackage<T> : IDisposable where T : class
+    {
+        private readonly T m_ToReturn;
+        private readonly IObjectPool<T> m_Pool;
+        internal PooledObjectPackage(T value, IObjectPool<T> pool)
+        {
+            m_ToReturn = value;
+            m_Pool = pool;
+        }
+        public T GetData()
+        {
+            return m_ToReturn;
+        }
+        void IDisposable.Dispose()
+        {
+             m_Pool.Recycle(m_ToReturn);
+        }
     }
     /// <summary>
     /// 对象池物体接口

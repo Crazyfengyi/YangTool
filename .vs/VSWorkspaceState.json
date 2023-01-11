@@ -1,7 +1,14 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Assets",
+    "\\Assets\\UserTest",
+    "\\Assets\\YangTools",
+    "\\Assets\\YangTools\\EditorStudio",
+    "\\Assets\\YangTools\\Scripts",
+    "\\Assets\\YangTools\\Scripts\\Core",
+    "\\Assets\\YangTools\\Scripts\\Core\\YangExtend",
+    "\\Assets\\YangTools\\Scripts\\Core\\YangObjectPool"
   ],
-  "SelectedNode": "\\YangTool.sln",
   "PreviewInSolutionExplorer": false
 }

@@ -229,19 +229,22 @@ namespace CMF
         }
 
         //Recalculate sensor layermask based on current physics settings;
+        //根据当前物理设置重新计算传感器层掩码;地面监测层设置
         void RecalculateSensorLayerMask()
         {
             int _layerMask = 0;
             int _objectLayer = this.gameObject.layer;
 
-            //Calculate layermask;
+            //Calculate layermask;计算层级遮罩
             for (int i = 0; i < 32; i++)
             {
+                //layer1和layer2之间的碰撞被忽略了吗?
                 if (!Physics.GetIgnoreLayerCollision(_objectLayer, i))
                     _layerMask = _layerMask | (1 << i);
             }
 
             //Make sure that the calculated layermask does not include the 'Ignore Raycast' layer;
+            //确保计算的图层蒙版不包括“忽略光线投射”层;
             if (_layerMask == (_layerMask | (1 << LayerMask.NameToLayer("Ignore Raycast"))))
             {
                 _layerMask ^= (1 << LayerMask.NameToLayer("Ignore Raycast"));

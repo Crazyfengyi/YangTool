@@ -5,6 +5,7 @@ namespace CMF
 {
     //This script is responsible for casting rays and spherecasts;
     //It is instantiated by the 'Mover' component at runtime;
+    //这个脚本负责投射光线和球体;它由'Mover'组件在运行时实例化;
     [System.Serializable]
     public class Sensor
     {

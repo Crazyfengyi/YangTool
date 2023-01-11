@@ -13,6 +13,7 @@ using System.Reflection;
 
 namespace YangTools.ObjectPool
 {
+    #region 对象池
     /// <summary>
     /// 通用对象池
     /// </summary>
@@ -489,8 +490,6 @@ namespace YangTools.ObjectPool
         /// </summary>
         void OnDestroy();
     }
-    #endregion
-
     /// <summary>
     /// 反射信息
     /// </summary>
@@ -533,6 +532,8 @@ namespace YangTools.ObjectPool
             }
         }
     }
+    #endregion
+
     /// <summary>
     /// 默认对象池对象
     /// </summary>
@@ -553,4 +554,93 @@ namespace YangTools.ObjectPool
         {
         }
     }
+    #endregion
+
+    #region 引用池
+    /// <summary>
+    /// 引用池
+    /// </summary>
+    public static class ReferencePool
+    {
+        private static Dictionary<Type, object> poolDictionary = new Dictionary<Type, object>();
+        private static readonly Object lockObject = new Object();
+        /// <summary>
+        /// 获取
+        /// </summary>
+        public static T Get<T>()
+        {
+            T newObject;
+            lock (lockObject)
+            {
+                if (poolDictionary.ContainsKey(typeof(T)))
+                {
+                    var pooledObjects = poolDictionary[typeof(T)] as Stack<T>;
+                    if (pooledObjects.Count > 0)
+                    {
+                        return pooledObjects.Pop();
+                    }
+                }
+
+                newObject = (T)CreateInstance(typeof(T));
+            }
+
+            return newObject;
+        }
+        /// <summary>
+        /// 回收
+        /// </summary>
+        public static void Recycle<T>(T obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            lock (lockObject)
+            {
+                object value;
+                if (poolDictionary.TryGetValue(typeof(T), out value))
+                {
+                    var pooledObjects = value as Stack<T>;
+                    pooledObjects.Push(obj);
+                }
+                else
+                {
+                    var pooledObjects = new Stack<T>();
+                    pooledObjects.Push(obj);
+                    poolDictionary.Add(typeof(T), pooledObjects);
+                }
+            }
+        }
+        /// <summary>
+        /// 清空
+        /// </summary>
+        public static void Clear()
+        {
+            lock (lockObject)
+            {
+                poolDictionary.Clear();
+            }
+        }
+        /// <summary>
+        /// 创建实例 
+        /// </summary>
+        public static object CreateInstance(Type t)
+        {
+#if NETFX_CORE && !UNITY_EDITOR//微软VR
+            if (t.IsGenericType() && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+#else
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+#endif
+                t = Nullable.GetUnderlyingType(t);
+            }
+#if NETFX_CORE && !UNITY_EDITOR//微软VR
+            return Activator.CreateInstance(t);
+#else
+            return Activator.CreateInstance(t, true);
+#endif
+        }
+    }
+    #endregion
 }

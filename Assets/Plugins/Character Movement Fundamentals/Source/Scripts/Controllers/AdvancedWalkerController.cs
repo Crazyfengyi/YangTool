@@ -65,10 +65,25 @@ namespace CMF
         //Enum describing basic controller states; 
         public enum ControllerState
         {
+            /// <summary>
+            /// 地面
+            /// </summary>
             Grounded,
+            /// <summary>
+            /// 滑行-斜坡
+            /// </summary>
             Sliding,
+            /// <summary>
+            /// 下落
+            /// </summary>
             Falling,
+            /// <summary>
+            /// 上升
+            /// </summary>
             Rising,
+            /// <summary>
+            /// 跳跃
+            /// </summary>
             Jumping
         }
 
@@ -130,7 +145,7 @@ namespace CMF
             //Check if mover is grounded;
             mover.CheckForGround();
 
-            //Determine controller state;
+            //Determine controller state; 确定控制器状态
             currentControllerState = DetermineControllerState();
 
             //Apply friction and gravity to 'momentum';
@@ -228,28 +243,31 @@ namespace CMF
         }
 
         //Determine current controller state based on current momentum and whether the controller is grounded (or not);
-        //Handle state transitions;
+        //根据电流动量和控制器是否接地(或未接地)判断当前控制器状态;
+        //Handle state transitions; 处理状态转换
         ControllerState DetermineControllerState()
         {
             //Check if vertical momentum is pointing upwards;
+            //检查垂直动量是否指向上方--上升
             bool _isRising = IsRisingOrFalling() && (VectorMath.GetDotProduct(GetMomentum(), tr.up) > 0f);
             //Check if controller is sliding;
+            //检查控制器是否滑行-滑行
             bool _isSliding = mover.IsGrounded() && IsGroundTooSteep();
 
-            //Grounded;
+            //Grounded;在地面
             if (currentControllerState == ControllerState.Grounded)
             {
-                if (_isRising)
+                if (_isRising)//上升
                 {
                     OnGroundContactLost();
                     return ControllerState.Rising;
                 }
-                if (!mover.IsGrounded())
+                if (!mover.IsGrounded())//不在地面
                 {
                     OnGroundContactLost();
                     return ControllerState.Falling;
                 }
-                if (_isSliding)
+                if (_isSliding)//滑行
                 {
                     OnGroundContactLost();
                     return ControllerState.Sliding;
@@ -257,39 +275,39 @@ namespace CMF
                 return ControllerState.Grounded;
             }
 
-            //Falling;
+            //Falling;下落
             if (currentControllerState == ControllerState.Falling)
             {
-                if (_isRising)
+                if (_isRising)//上升
                 {
                     return ControllerState.Rising;
                 }
-                if (mover.IsGrounded() && !_isSliding)
+                if (mover.IsGrounded() && !_isSliding)//在地面并且没滑行
                 {
                     OnGroundContactRegained();
                     return ControllerState.Grounded;
                 }
-                if (_isSliding)
+                if (_isSliding)//滑行
                 {
                     return ControllerState.Sliding;
                 }
                 return ControllerState.Falling;
             }
 
-            //Sliding;
+            //Sliding;滑行
             if (currentControllerState == ControllerState.Sliding)
             {
-                if (_isRising)
+                if (_isRising)//上升
                 {
                     OnGroundContactLost();
                     return ControllerState.Rising;
                 }
-                if (!mover.IsGrounded())
+                if (!mover.IsGrounded())//下落
                 {
                     OnGroundContactLost();
                     return ControllerState.Falling;
                 }
-                if (mover.IsGrounded() && !_isSliding)
+                if (mover.IsGrounded() && !_isSliding)//地面
                 {
                     OnGroundContactRegained();
                     return ControllerState.Grounded;
@@ -297,53 +315,55 @@ namespace CMF
                 return ControllerState.Sliding;
             }
 
-            //Rising;
+            //Rising;上升
             if (currentControllerState == ControllerState.Rising)
             {
-                if (!_isRising)
+                if (!_isRising)//没上升了
                 {
-                    if (mover.IsGrounded() && !_isSliding)
+                    if (mover.IsGrounded() && !_isSliding)//地面
                     {
                         OnGroundContactRegained();
                         return ControllerState.Grounded;
                     }
-                    if (_isSliding)
+                    if (_isSliding)//滑行
                     {
                         return ControllerState.Sliding;
                     }
-                    if (!mover.IsGrounded())
+                    if (!mover.IsGrounded())//下落
                     {
                         return ControllerState.Falling;
                     }
                 }
 
                 //If a ceiling detector has been attached to this gameobject, check for ceiling hits;
+                //如果天花板探测器已经连接到这个游戏物体，检查天花板击中;
                 if (ceilingDetector != null)
                 {
-                    if (ceilingDetector.HitCeiling())
+                    if (ceilingDetector.HitCeiling())//碰到头了
                     {
                         OnCeilingContact();
-                        return ControllerState.Falling;
+                        return ControllerState.Falling;//下落
                     }
                 }
                 return ControllerState.Rising;
             }
 
-            //Jumping;
+            //Jumping;跳跃
             if (currentControllerState == ControllerState.Jumping)
             {
-                //Check for jump timeout;
+                //Check for jump timeout;检查跳跃超时;
                 if ((Time.time - currentJumpStartTime) > jumpDuration)
-                    return ControllerState.Rising;
+                    return ControllerState.Rising;//上升
 
-                //Check if jump key was let go;
+                //Check if jump key was let go;//检查跳跃键是否被释放;
                 if (jumpKeyWasLetGo)
-                    return ControllerState.Rising;
+                    return ControllerState.Rising;//下落
 
                 //If a ceiling detector has been attached to this gameobject, check for ceiling hits;
+                //如果天花板探测器已经连接到这个游戏物体，检查天花板击中;
                 if (ceilingDetector != null)
                 {
-                    if (ceilingDetector.HitCeiling())
+                    if (ceilingDetector.HitCeiling())//击中天花板
                     {
                         OnCeilingContact();
                         return ControllerState.Falling;
@@ -499,6 +519,7 @@ namespace CMF
         }
 
         //This function is called when the controller has lost ground contact, i.e. is either falling or rising, or generally in the air;
+        //当控制器与地面失去联系时，即下落或上升，或通常在空中时调用此函数;
         void OnGroundContactLost()
         {
             //If local momentum is used, transform momentum into world coordinates first;
@@ -532,6 +553,7 @@ namespace CMF
         }
 
         //This function is called when the controller has landed on a surface after being in the air;
+        //当控制器在空中降落在一个表面时，这个函数被调用;
         void OnGroundContactRegained()
         {
             //Call 'OnLand' event;
@@ -578,6 +600,7 @@ namespace CMF
         }
 
         //Returns true if angle between controller and ground normal is too big (> slope limit), i.e. ground is too steep;
+        //如果控制器和地面法线之间的角度太大(>坡度极限)，即地面太陡，则返回true;
         private bool IsGroundTooSteep()
         {
             if (!mover.IsGrounded())

@@ -79,25 +79,26 @@ namespace YangTools.ObjectPool
                 return m_allPools[key].GetPool<T>().Get(arg);
             }
         }
-        public void CreatePool<T>(string key): class, IPoolItem<T>, new()
+        public static void CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
         {
-              ObjectPool<T> pool = new ObjectPool<T>();
-                pool.PoolKey = key;
+            ObjectPool<T> pool = new ObjectPool<T>();
+            pool.PoolKey = key;
 
-                //包裹类-为了将对象池放进字典统一管理
-                PoolPackage package = new PoolPackage();
-                package.objectPool = pool;
-                package.T_type = typeof(T);
-                package.Pool_type = pool.GetType();
-                package.Binding<T>();
+            //包裹类-为了将对象池放进字典统一管理
+            PoolPackage package = new PoolPackage();
+            package.objectPool = pool;
+            package.T_type = typeof(T);
+            package.Pool_type = pool.GetType();
+            package.Binding<T>();
 
-                m_allPools.Add(key, package);
+            m_allPools.Add(key, package);
         }
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        public static PooledObjectPackage<T> Get<T>(out T item,string poolKey = "") where T : class, IPoolItem<T>, new()
+        public static PooledObjectPackage<T> Get<T>(out T item, string poolKey = "") where T : class, IPoolItem<T>, new()
         {
+            item = null;
             string key = typeof(T).FullName;
             string arg = poolKey;
             if (!string.IsNullOrEmpty(poolKey))
@@ -112,15 +113,11 @@ namespace YangTools.ObjectPool
             else
             {
                 //ToDo:需要统一Key的获取
-                 CreatePool<T>(poolKey);
-                 return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
+                CreatePool<T>(poolKey);
+                return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
             }
 
             return default;
-        }
-        public PooledObjectPackage<T> Get(out T item)
-        {
-            return new PooledObjectPackage<T>(item=Get(), this);
         }
         /// <summary>
         /// 回收对象
@@ -454,7 +451,7 @@ namespace YangTools.ObjectPool
         }
         void IDisposable.Dispose()
         {
-             m_Pool.Recycle(m_ToReturn);
+            m_Pool.Recycle(m_ToReturn);
         }
     }
     /// <summary>

@@ -28,7 +28,7 @@ public class ExcelUtility
     /// <summary>
     /// 转换为实体类列表
     /// </summary>
-    public List<T> ConvertToList<T>()
+    public List<T> ConvertToList<T>(int fieldNameRow = 0, int dataStartRow = 1)
     {
         //Excel文件中是否存在数据表
         if (mResultSet.Tables.Count < 1) return null;
@@ -41,7 +41,7 @@ public class ExcelUtility
         int colCount = mSheet.Columns.Count;//列数
         List<T> dataList = new List<T>();//list列表
         //读取数据
-        for (int i = 1; i < rowCount; i++)
+        for (int i = dataStartRow; i < rowCount; i++)
         {
             Type type = typeof(T);
             //构造函数
@@ -51,7 +51,7 @@ public class ExcelUtility
             for (int j = 0; j < colCount; j++)
             {
                 //读取第1行数据作为表头字段
-                string field = mSheet.Rows[0][j].ToString();
+                string field = mSheet.Rows[fieldNameRow][j].ToString();
                 object value = mSheet.Rows[i][j];
                 //设置属性值
                 SetTargetProperty(target, field, value);
@@ -61,6 +61,24 @@ public class ExcelUtility
         }
 
         return dataList;
+    }
+    /// <summary>
+    /// 设置目标实例的属性
+    /// </summary>
+    private void SetTargetProperty(object target, string propertyName, object propertyValue)
+    {
+        //获取类型
+        Type mType = target.GetType();
+        //获取字段集合
+        FieldInfo[] fieldInfos = mType.GetFields();
+        foreach (FieldInfo fieldInfo in fieldInfos)
+        {
+            if (fieldInfo.Name == propertyName)
+            {
+                fieldInfo.SetValue(target, Convert.ChangeType(propertyValue, fieldInfo.FieldType));
+                break;
+            }
+        }
     }
 
     /// <summary>
@@ -261,25 +279,6 @@ public class ExcelUtility
                 {
                     textWriter.Write(stringBuilder.ToString());
                 }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 设置目标实例的属性
-    /// </summary>
-    private void SetTargetProperty(object target, string propertyName, object propertyValue)
-    {
-        //获取类型
-        Type mType = target.GetType();
-        //获取属性集合
-        PropertyInfo[] mPropertys = mType.GetProperties();
-        foreach (PropertyInfo property in mPropertys)
-        {
-            if (property.Name == propertyName)
-            {
-                property.SetValue(target, Convert.ChangeType(propertyValue, property.PropertyType), null);
-                break;
             }
         }
     }

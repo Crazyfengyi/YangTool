@@ -48,37 +48,42 @@ namespace YangTools.ObjectPool
         /// 获得对象
         /// </summary>
         /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
-        public static T Get<T>(string poolKey = "") where T : class, IPoolItem<T>, new()
+        public static T Get<T>(string poolKey = "", params object[] args) where T : class, IPoolItem<T>, new()
         {
-            string key = typeof(T).FullName;
-            string arg = poolKey;
+            string resultKey = GetTypeKey<T>(poolKey);
 
-            if (!string.IsNullOrEmpty(poolKey))
+            if (m_allPools.ContainsKey(resultKey))
             {
-                key = poolKey;
-            }
-
-            if (m_allPools.ContainsKey(key))
-            {
-                return m_allPools[key].GetPool<T>().Get(arg);
+                return m_allPools[resultKey].GetPool<T>().Get(args);
             }
             else
             {
-                // ObjectPool<T> pool = new ObjectPool<T>();
-                // pool.PoolKey = key;
-
-                // //包裹类-为了将对象池放进字典统一管理
-                // PoolPackage package = new PoolPackage();
-                // package.objectPool = pool;
-                // package.T_type = typeof(T);
-                // package.Pool_type = pool.GetType();
-                // package.Binding<T>();
-
-                // m_allPools.Add(key, package);
-                CreatePool<T>(key);
-                return m_allPools[key].GetPool<T>().Get(arg);
+                CreatePool<T>(resultKey);
+                return m_allPools[resultKey].GetPool<T>().Get(args);
             }
         }
+
+        /// <summary>
+        /// 获得自动回收包裹
+        /// </summary>
+        public static PooledObjectPackage<T> Get<T>(out T item, string poolKey = "") where T : class, IPoolItem<T>, new()
+        {
+            item = null;
+            string resultKey = GetTypeKey<T>(poolKey);
+
+            if (m_allPools.ContainsKey(resultKey))
+            {
+                return m_allPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+            }
+            else
+            {
+                CreatePool<T>(resultKey);
+                return m_allPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+            }
+        }
+        /// <summary>
+        /// 创建对象池
+        /// </summary>
         public static void CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
         {
             ObjectPool<T> pool = new ObjectPool<T>();
@@ -92,32 +97,6 @@ namespace YangTools.ObjectPool
             package.Binding<T>();
 
             m_allPools.Add(key, package);
-        }
-        /// <summary>
-        /// 获得自动回收包裹
-        /// </summary>
-        public static PooledObjectPackage<T> Get<T>(out T item, string poolKey = "") where T : class, IPoolItem<T>, new()
-        {
-            item = null;
-            string key = typeof(T).FullName;
-            string arg = poolKey;
-            if (!string.IsNullOrEmpty(poolKey))
-            {
-                key = poolKey;
-            }
-
-            if (m_allPools.ContainsKey(key))
-            {
-                return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
-            }
-            else
-            {
-                //ToDo:需要统一Key的获取
-                CreatePool<T>(poolKey);
-                return m_allPools[key].GetPool<T>().GetAutoRecycleItem();
-            }
-
-            return default;
         }
         /// <summary>
         /// 回收对象
@@ -168,6 +147,21 @@ namespace YangTools.ObjectPool
                 return true;
             }
             return false;
+        }
+        /// <summary>
+        /// 获得类型的对象池Key
+        /// </summary>
+        public static string GetTypeKey<T>(string poolKey = "")
+        {
+            //默认用全路径
+            string resultKey = typeof(T).FullName;
+            //如果有自定义名称
+            if (!string.IsNullOrEmpty(poolKey))
+            {
+                resultKey = poolKey;
+            }
+
+            return resultKey;
         }
         #endregion
     }
@@ -296,18 +290,18 @@ namespace YangTools.ObjectPool
             }
             RecycleToDefaultCount();
         }
-        public T Get(string arg = "")
+        public T Get(params object[] args)
         {
             T item;
             if (m_Stack.Count == 0)
             {
-                if (!string.IsNullOrEmpty(arg))
+                if (args.Length > 0)
                 {
                     if (createFunc2 == null)
                     {
                         throw new InvalidOperationException();
                     }
-                    item = (T)createFunc2?.Invoke(null, new object[] { arg });
+                    item = (T)createFunc2?.Invoke(null, args);
                 }
                 else
                 {
@@ -402,7 +396,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
-        T Get(string arg);
+        T Get(params object[] args);
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
@@ -469,9 +463,9 @@ namespace YangTools.ObjectPool
             T result = new T();//在构造函数里初始化
             return result;
         }
-        public static T PoolCreate(string arg)
+        public static T PoolCreate(params object[] args)
         {
-            T result = (T)Activator.CreateInstance(typeof(T), arg);//在构造函数里初始化
+            T result = (T)Activator.CreateInstance(typeof(T), args);//在构造函数里初始化
             return result;
         }
         /// <summary>

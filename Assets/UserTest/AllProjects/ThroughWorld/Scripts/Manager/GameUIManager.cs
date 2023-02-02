@@ -55,7 +55,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private static List<HPBarObjectPoolItem> allHPBar = new List<HPBarObjectPoolItem>();
     #endregion
 
-    //private static ;
     protected override void Awake()
     {
         allHPBar.Clear();
@@ -74,7 +73,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         if (Input.GetKeyDown(KeyCode.M))
         {
             //AddTipsShow("测试提示！");
-            AddScoreShow(Vector3.zero, "-100");
+            //AddScoreShow(Vector3.zero, "-100");
+            UICommonTool.Instance.ShowTip("测试....");
         }
 
         timer += Time.deltaTime;

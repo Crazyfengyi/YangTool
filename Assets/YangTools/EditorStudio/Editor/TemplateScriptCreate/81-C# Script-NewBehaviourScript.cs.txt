@@ -5,8 +5,13 @@
  *UnityVersion：#UNITYVERSION# 
  *创建时间:         #DATE# 
 */  
-using UnityEngine;  
+using System;
 using System.Collections;  
+using UnityEngine;  
+using UnityEngine.UI;
+using TMPro;
+using YangTools;
+using YangTools.UGUI;
   
 public class #SCRIPTNAME# : MonoBehaviour 
 {  

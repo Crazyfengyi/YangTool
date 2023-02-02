@@ -190,6 +190,18 @@ namespace YangTools.UGUI
         #endregion
 
         #region 判断界面
+        public (bool have, UIPanelInfo panelInfo) PanelIsOpen(string assetName)
+        {
+            foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
+            {
+                if (uiGroup.Value.UIPanelIsOpen(assetName).have)
+                {
+                    return uiGroup.Value.UIPanelIsOpen(assetName);
+                }
+            }
+            return (false, null);
+        }
+
         /// <summary>
         /// 是否存在界面
         /// </summary>
@@ -199,7 +211,7 @@ namespace YangTools.UGUI
         {
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
-                if (uiGroup.Value.HasUIPanel(serialId))
+                if (uiGroup.Value.HasUIPanel(serialId).have)
                 {
                     return true;
                 }
@@ -209,17 +221,14 @@ namespace YangTools.UGUI
         /// <summary>
         /// 是否存在界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
+        /// <param name="assetName">界面资源名称</param>
         /// <returns>是否存在界面</returns>
-        public bool HasUIPanel(string uiPanelAssetName)
+        public bool HasUIPanel(string assetName)
         {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
+            CheckStringIsNull(assetName);
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
-                if (uiGroup.Value.HasUIPanel(uiPanelAssetName))
+                if (uiGroup.Value.HasUIPanel(assetName).have)
                 {
                     return true;
                 }
@@ -251,18 +260,15 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
+        /// <param name="assetName">界面资源名称</param>
         /// <returns>要获取的界面</returns>
-        public IUIPanel GetUIPanel(string uiPanelAssetName)
+        public IUIPanel GetUIPanel(string assetName)
         {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
+            CheckStringIsNull(assetName);
 
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
-                IUIPanel uiPanel = uiGroup.Value.GetUIPanel(uiPanelAssetName);
+                IUIPanel uiPanel = uiGroup.Value.GetUIPanel(assetName);
                 if (uiPanel != null)
                 {
                     return uiPanel;
@@ -410,7 +416,7 @@ namespace YangTools.UGUI
             if (uiPanelInstanceObject == null)
             {
                 //TODO 需要完整的资源加载器
-                UnityEngine.Object panelAsset = Resources.Load("Panel/" + uiPanelAssetName);//资源
+                UnityEngine.Object panelAsset = Resources.Load("Panel/" + uiPanelAssetName + "/" + uiPanelAssetName);//资源
                 if (panelAsset == null)
                 {
                     Debug.LogError($"UI页面加载失败:{uiPanelAssetName}");
@@ -584,6 +590,16 @@ namespace YangTools.UGUI
             }
         }
         #endregion
+
+        #region 工具
+        public static void CheckStringIsNull(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                throw new Exception($"UI资源名称不合法:{str}");
+            }
+        }
+        #endregion
     }
 
     /// <summary>
@@ -690,10 +706,8 @@ namespace YangTools.UGUI
         /// <param name="uiGroupHelper">界面组辅助器</param>
         public UIGroup(string name, int depth, IUIGroupHelper uiGroupHelper)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new Exception("UI group name is invalid.");
-            }
+            YangUIManager.CheckStringIsNull(name);
+
             if (uiGroupHelper == null)
             {
                 throw new Exception("UI group helper is invalid.");
@@ -731,104 +745,83 @@ namespace YangTools.UGUI
         /// UI界面组中是否存在界面
         /// </summary>
         /// <param name="serialId">界面序列编号</param>
-        /// <returns>界面组中是否存在界面</returns>
-        public bool HasUIPanel(int serialId)
+        public (bool have, UIPanelInfo panelInfo) HasUIPanel(int serialId)
         {
             foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
             {
                 if (uiPanelInfo.UIPanel.SerialId == serialId)
                 {
-                    return true;
+                    return (true, uiPanelInfo);
                 }
             }
 
-            return false;
+            return (false, null);
         }
         /// <summary>
         /// UI界面组中是否存在界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>界面组中是否存在界面</returns>
-        public bool HasUIPanel(string uiPanelAssetName)
+        /// <param name="assetName">界面资源名称</param>
+        public (bool have, UIPanelInfo panelInfo) HasUIPanel(string assetName)
         {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
+            YangUIManager.CheckStringIsNull(assetName);
+
             foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
             {
-                if (uiPanelInfo.UIPanel.UIPanelAssetName == uiPanelAssetName)
+                if (uiPanelInfo.UIPanel.UIPanelAssetName == assetName)
                 {
-                    return true;
+                    return (true, uiPanelInfo);
                 }
             }
-            return false;
+            return (false, null);
+        }
+        /// <summary>
+        /// UI界面组中是否有打开的目标界面
+        /// </summary>
+        public (bool have, UIPanelInfo panelInfo) UIPanelIsOpen(string assetName)
+        {
+            (bool have, UIPanelInfo panelInfo) info = HasUIPanel(assetName);
+            return info;
         }
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
         /// <param name="serialId">界面序列编号</param>
-        /// <returns>要获取的界面</returns>
         public IUIPanel GetUIPanel(int serialId)
         {
-            foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
-            {
-                if (uiPanelInfo.UIPanel.SerialId == serialId)
-                {
-                    return uiPanelInfo.UIPanel;
-                }
-            }
-            return null;
+            (bool have, UIPanelInfo panelInfo) info = HasUIPanel(serialId);
+            return info.have ? info.panelInfo.UIPanel : null;
         }
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
-        public IUIPanel GetUIPanel(string uiPanelAssetName)
+        /// <param name="assetName">界面资源名称</param>
+        public IUIPanel GetUIPanel(string assetName)
         {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
-
-            foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
-            {
-                if (uiPanelInfo.UIPanel.UIPanelAssetName == uiPanelAssetName)
-                {
-                    return uiPanelInfo.UIPanel;
-                }
-            }
-
-            return null;
+            YangUIManager.CheckStringIsNull(assetName);
+            (bool have, UIPanelInfo panelInfo) info = HasUIPanel(assetName);
+            return info.have ? info.panelInfo.UIPanel : null;
         }
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
-        public IUIPanel[] GetUIPanels(string uiPanelAssetName)
+        /// <param name="assetName">界面资源名称</param>
+        public IUIPanel[] GetUIPanels(string assetName)
         {
-            if (string.IsNullOrEmpty(uiPanelAssetName))
-            {
-                throw new Exception("UI form asset name is invalid.");
-            }
+            YangUIManager.CheckStringIsNull(assetName);
 
             List<IUIPanel> results = new List<IUIPanel>();
             foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
             {
-                if (uiPanelInfo.UIPanel.UIPanelAssetName == uiPanelAssetName)
+                if (uiPanelInfo.UIPanel.UIPanelAssetName == assetName)
                 {
                     results.Add(uiPanelInfo.UIPanel);
                 }
             }
-
             return results.ToArray();
         }
         /// <summary>
         /// 从UI界面组中获取所有界面
         /// </summary>
-        /// <returns>界面组中的所有界面</returns>
         public IUIPanel[] GetAllUIPanels()
         {
             List<IUIPanel> results = new List<IUIPanel>();
@@ -1026,11 +1019,11 @@ namespace YangTools.UGUI
     /// <summary>
     /// UI界面信息
     /// </summary>
-    internal sealed class UIPanelInfo
+    public sealed class UIPanelInfo
     {
-        private IUIPanel uiPanel;
         private bool paused;//暂停
         private bool covered;//覆盖
+        private IUIPanel uiPanel;
         public IUIPanel UIPanel => uiPanel;
         public bool Paused
         {

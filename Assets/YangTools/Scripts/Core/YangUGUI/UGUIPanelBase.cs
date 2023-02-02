@@ -127,7 +127,6 @@ namespace YangTools.UGUI
         public void ClosePanel(bool ignoreFade = true)
         {
             StopAllCoroutines();
-
             if (ignoreFade)
             {
                 UIMonoInstance.Instance.CloseUIPanel(this.UIPanel);
@@ -173,6 +172,7 @@ namespace YangTools.UGUI
 
             gameObject.GetOrAddComponent<GraphicRaycaster>();
 
+            //TODO:多语言处理
             Text[] texts = GetComponentsInChildren<Text>(true);
             for (int i = 0; i < texts.Length; i++)
             {
@@ -284,7 +284,6 @@ namespace YangTools.UGUI
             {
                 cachedCanvasList[i].sortingOrder += deltaDepth;
             }
-
             cachedCanvasList.Clear();
         }
         #endregion

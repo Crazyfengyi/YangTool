@@ -114,33 +114,56 @@ namespace YangTools.UGUI
         }
         #endregion
 
+        #region 获取界面信息
+        public (bool have, UIPanelInfo panelInfo) IsOpening(string assetName)
+        {
+            return UIManager.PanelIsOpen(assetName);
+        }
+        #endregion
+
         #region 获取UI界面
         /// <summary>
-        /// 获取界面
+        /// 获取界面类
         /// </summary>
-        /// <param name="serialId">界面序列编号</param>
+        /// <param name="serialId">序列编号</param>
         /// <returns>要获取的界面</returns>
         public UIPanel GetUIPanel(int serialId)
         {
             return (UIPanel)UIManager.GetUIPanel(serialId);
         }
         /// <summary>
-        /// 获取界面
+        /// 获取界面逻辑类
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
-        public UIPanel GetUIPanel(string uiPanelAssetName)
+        /// <param name="serialId">序列编号</param>
+        /// <returns>要获取的界面逻辑类</returns>
+        public T GetUIPanel<T>(int serialId) where T : UGUIPanelBase
         {
-            return (UIPanel)UIManager.GetUIPanel(uiPanelAssetName);
+            return ((UIPanel)UIManager.GetUIPanel(serialId)).UGUIPanel as T;
         }
         /// <summary>
-        /// 获取界面
+        /// 获取界面类
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
-        public UIPanel[] GetUIPanels(string uiPanelAssetName)
+        /// <param name="assetName">资源名称</param>
+        public UIPanel GetUIPanel(string assetName)
         {
-            IUIPanel[] uiPanels = UIManager.GetUIPanels(uiPanelAssetName);
+            return (UIPanel)UIManager.GetUIPanel(assetName);
+        }
+        /// <summary>
+        /// 获取界面逻辑类
+        /// </summary>
+        /// <param name="assetName">资源名称</param>
+        /// <returns>要获取的界面</returns>
+        public T GetUIPanel<T>(string assetName) where T : UGUIPanelBase
+        {
+            return ((UIPanel)UIManager.GetUIPanel(assetName)).UGUIPanel as T;
+        }
+        /// <summary>
+        /// 获取界面类
+        /// </summary>
+        /// <param name="assetName">资源名称</param>
+        public UIPanel[] GetUIPanels(string assetName)
+        {
+            IUIPanel[] uiPanels = UIManager.GetUIPanels(assetName);
             UIPanel[] uiPanelImpls = new UIPanel[uiPanels.Length];
             for (int i = 0; i < uiPanels.Length; i++)
             {
@@ -151,7 +174,6 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取所有已加载的界面
         /// </summary>
-        /// <returns>所有已加载的界面</returns>
         public UIPanel[] GetAllLoadedUIPanels()
         {
             IUIPanel[] uiPanels = UIManager.GetAllLoadedUIPanels();

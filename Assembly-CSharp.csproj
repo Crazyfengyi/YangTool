@@ -83,7 +83,7 @@
     <Compile Include="Assets\UserTest\ExcelDataExport\DataChange.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\AnimatorController3rdPersonIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKCalibrator.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\GameOverPanel.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\GameOverPanel\GameOverPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\Inertia.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\BipedIK\BipedIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\PenetrationAvoidance.cs" />
@@ -165,6 +165,7 @@
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\BaseScrollList.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\Core\BuffControl.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\Poser.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\UICommonTool.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterAnimationThirdPersonIK.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\YangDataCode.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatform.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Assets\YangTools\Scripts\Function\LoopList\UIExtractEggs.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\UserControlThirdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Camera Controllers\CameraControllerFPS.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\LoadingPanel\LoadingPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Grounder\Scripts\PlatformRotator.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForGenerics.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\FullBodyBipedIK.cs" />
@@ -237,6 +239,7 @@
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForData.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\FBBIKHeadEffector.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\TurbochargedHorizontalScrollList.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\CommonConfirmPanel\CommonConfirmPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBIKBendGoal.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\AnimatorController3rdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderQuadruped.cs" />
@@ -252,6 +255,7 @@
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\UnityLoopScript.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameLevelManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderBipedIK.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\TipsPanel\TipsPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\IKExecutionOrder.cs" />
     <Compile Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenAnimation.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Interp.cs" />

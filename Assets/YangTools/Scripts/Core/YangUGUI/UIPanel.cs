@@ -19,10 +19,11 @@ namespace YangTools.UGUI
         private string uiPanelAssetName;//页面资源名
         private IUIGroup uiGroup;//UI组
         private int depthInUIGroup;//在组里的深度
+        private bool isOpening;//是否打开中
         private bool pauseCoveredUIPanel;//是否暂停被覆盖的页面
         private object handle;
 
-        private UGUIPanelBase uiPanelLogic;//UGUI界面逻辑类
+        private UGUIPanelBase uguiPanelBase;//UGUI界面逻辑类
 
         #region 对外属性
         /// <summary>
@@ -50,13 +51,17 @@ namespace YangTools.UGUI
         /// </summary>
         public int DepthInUIGroup => depthInUIGroup;
         /// <summary>
+        /// 是否打开中
+        /// </summary>
+        public bool IsOpening => isOpening;
+        /// <summary>
         /// 获取是否暂停被覆盖的界面
         /// </summary>
         public bool PauseCoveredUIPanel => pauseCoveredUIPanel;
         /// <summary>
         /// 获取界面逻辑类
         /// </summary>
-        public UGUIPanelBase Logic => uiPanelLogic;
+        public UGUIPanelBase UGUIPanel => uguiPanelBase;
         #endregion
 
         #region 生命周期
@@ -82,8 +87,8 @@ namespace YangTools.UGUI
                 return;
             }
 
-            uiPanelLogic = GetComponent<UGUIPanelBase>();
-            if (uiPanelLogic == null)
+            uguiPanelBase = GetComponent<UGUIPanelBase>();
+            if (uguiPanelBase == null)
             {
                 Debug.LogError(string.Format("UI form '{0}' can not get UI form logic.", uiPanelAssetName));
                 return;
@@ -91,11 +96,11 @@ namespace YangTools.UGUI
 
             try
             {
-                uiPanelLogic.OnInit(userData);
+                uguiPanelBase.OnInit(userData);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnInit with exception '{2}'.", this.serialId.ToString(), this.uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面初始化异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -105,11 +110,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnRecycle();
+                uguiPanelBase.OnRecycle();
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnRecycle with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面回收异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
 
             serialId = 0;
@@ -124,12 +129,13 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnOpen(userData);
+                uguiPanelBase.OnOpen(userData);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnOpen with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面打开异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
+            isOpening = true;
         }
         /// <summary>
         /// 界面关闭
@@ -140,12 +146,13 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnClose(isShutdown, userData);
+                uguiPanelBase.OnClose(isShutdown, userData);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnClose with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面关闭异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
+            isOpening = false;
         }
         /// <summary>
         /// 界面暂停
@@ -154,11 +161,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnPause();
+                uguiPanelBase.OnPause();
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnPause with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面暂停异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -168,11 +175,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnResume();
+                uguiPanelBase.OnResume();
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnResume with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面暂停恢复异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -182,11 +189,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnCover();
+                uguiPanelBase.OnCover();
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnCover with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面遮挡异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -196,11 +203,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnReveal();
+                uguiPanelBase.OnReveal();
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnReveal with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面遮挡恢复异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -211,11 +218,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnRefocus(userData);
+                uguiPanelBase.OnRefocus(userData);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnRefocus with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面激活异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -227,11 +234,11 @@ namespace YangTools.UGUI
         {
             try
             {
-                uiPanelLogic.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
+                uguiPanelBase.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnUpdate with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面轮询异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         /// <summary>
@@ -244,11 +251,11 @@ namespace YangTools.UGUI
             this.depthInUIGroup = depthInUIGroup;
             try
             {
-                uiPanelLogic.OnDepthChanged(uiGroupDepth, depthInUIGroup);
+                uguiPanelBase.OnDepthChanged(uiGroupDepth, depthInUIGroup);
             }
             catch (Exception exception)
             {
-                Debug.LogError(string.Format("UI form '[{0}]{1}' OnDepthChanged with exception '{2}'.", serialId.ToString(), uiPanelAssetName, exception.ToString()));
+                Debug.LogError($"UI界面深度改变异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
         #endregion

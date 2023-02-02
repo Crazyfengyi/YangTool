@@ -133,35 +133,31 @@ namespace YangTools.UGUI
         #endregion
 
         #region UI界面操作
+        (bool have, UIPanelInfo panelInfo) PanelIsOpen(string assetName);
         /// <summary>
         /// 是否存在UI界面
         /// </summary>
-        /// <param name="serialId">界面序列编号</param>
-        /// <returns>是否存在界面</returns>
+        /// <param name="serialId">序列编号</param>
         bool HasUIPanel(int serialId);
         /// <summary>
         /// 是否存在UI界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>是否存在界面</returns>
-        bool HasUIPanel(string uiPanelAssetName);
+        /// <param name="assetName">资源名称</param>
+        bool HasUIPanel(string assetName);
         /// <summary>
         /// 获取UI界面
         /// </summary>
         /// <param name="serialId">界面序列编号</param>
-        /// <returns>要获取的界面</returns>
         IUIPanel GetUIPanel(int serialId);
         /// <summary>
         /// 获取UI界面
         /// </summary>
         /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
         IUIPanel GetUIPanel(string uiPanelAssetName);
         /// <summary>
         /// 获取UI界面
         /// </summary>
         /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <returns>要获取的界面</returns>
         IUIPanel[] GetUIPanels(string uiPanelAssetName);
         /// <summary>
         /// 获取所有已加载的UI界面
@@ -169,10 +165,9 @@ namespace YangTools.UGUI
         /// <returns>所有已加载的界面</returns>
         IUIPanel[] GetAllLoadedUIPanels();
         /// <summary>
-        /// 是否是合法的UI界面
+        /// UI界面是否合法
         /// </summary>
         /// <param name="uiPanel">界面</param>
-        /// <returns>界面是否合法</returns>
         bool IsValidUIPanel(IUIPanel uiPanel);
         /// <summary>
         /// 打开UI界面
@@ -344,13 +339,13 @@ namespace YangTools.UGUI
         /// </summary>
         /// <param name="serialId">界面序列编号</param>
         /// <returns>界面组中是否存在界面</returns>
-        bool HasUIPanel(int serialId);
+        (bool have, UIPanelInfo panelInfo) HasUIPanel(int serialId);
         /// <summary>
         /// 界面组中是否存在界面
         /// </summary>
         /// <param name="uiPanelAssetName">界面资源名称</param>
         /// <returns>界面组中是否存在界面</returns>
-        bool HasUIPanel(string uiPanelAssetName);
+        (bool have, UIPanelInfo panelInfo) HasUIPanel(string uiPanelAssetName);
         /// <summary>
         /// 从界面组中获取界面
         /// </summary>
@@ -385,46 +380,31 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取界面序列编号
         /// </summary>
-        int SerialId
-        {
-            get;
-        }
+        int SerialId { get; }
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
-        string UIPanelAssetName
-        {
-            get;
-        }
+        string UIPanelAssetName { get; }
         /// <summary>
         /// 获取界面实例
         /// </summary>
-        object Handle
-        {
-            get;
-            set;
-        }
+        object Handle { get; set; }
         /// <summary>
         /// 获取界面所属的界面组
         /// </summary>
-        IUIGroup UIGroup
-        {
-            get;
-        }
+        IUIGroup UIGroup { get; }
         /// <summary>
         /// 获取界面在界面组中的深度
         /// </summary>
-        int DepthInUIGroup
-        {
-            get;
-        }
+        int DepthInUIGroup { get; }
+        /// <summary>
+        /// 是否打开中
+        /// </summary>
+        bool IsOpening { get; }
         /// <summary>
         /// 获取是否暂停被覆盖的界面
         /// </summary>
-        bool PauseCoveredUIPanel
-        {
-            get;
-        }
+        bool PauseCoveredUIPanel { get; }
         #endregion
 
         #region 方法

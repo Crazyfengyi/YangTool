@@ -8,7 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace YangTools
@@ -214,6 +216,39 @@ namespace YangTools
         //        return false;
         //    });
         //}
+        #endregion
+
+        #region  时间戳和异步
+        /// <summary>
+        /// 时间转换为时间戳--UTC
+        /// </summary>
+        /// <return>毫秒</return>
+        public static long DataTimeConvertToTimeStamp(DateTime dataTime = default)
+        {
+            if (dataTime == default) dataTime = DateTime.UtcNow;
+            TimeSpan ts = dataTime - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            long timeStampStr = Convert.ToInt64(ts.TotalMilliseconds);
+            return timeStampStr;
+        }
+        /// <summary>
+        /// 时间戳转换为时间--UTC
+        /// </summary>
+        /// <param name="timestamp">毫秒</param>
+        public static DateTime TimestampConvertToDate(this long timestamp)
+        {
+            DateTime dtStart = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Utc);
+            return dtStart.AddMilliseconds(timestamp);
+        }
+
+        /// <summary>
+        /// 将异步操作改成await
+        /// </summary>
+        public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            asyncOp.completed += obj => { tcs.SetResult(null); };
+            return ((Task)tcs.Task).GetAwaiter();
+        }
         #endregion
     }
 }

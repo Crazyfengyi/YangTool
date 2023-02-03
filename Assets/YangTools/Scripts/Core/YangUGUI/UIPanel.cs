@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2022-02-20 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2022-02-20
 */
+
 using System;
 using UnityEngine;
 
@@ -23,17 +24,20 @@ namespace YangTools.UGUI
         private bool pauseCoveredUIPanel;//是否暂停被覆盖的页面
         private object handle;
 
-        private UGUIPanelBase uguiPanelBase;//UGUI界面逻辑类
+        private IUGUIPanel uguiPanelBase;//UGUI界面逻辑类
 
         #region 对外属性
+
         /// <summary>
         /// 获取界面序列编号
         /// </summary>
         public int SerialId => serialId;
+
         /// <summary>
         /// 获取界面资源名称
         /// </summary>
         public string UIPanelAssetName => uiPanelAssetName;
+
         /// <summary>
         /// 获取界面实例
         /// </summary>
@@ -42,29 +46,36 @@ namespace YangTools.UGUI
             get => handle;
             set => handle = value;
         }
+
         /// <summary>
         /// 获取界面所属的界面组
         /// </summary>
         public IUIGroup UIGroup => uiGroup;
+
         /// <summary>
         /// 获取界面深度
         /// </summary>
         public int DepthInUIGroup => depthInUIGroup;
+
         /// <summary>
         /// 是否打开中
         /// </summary>
         public bool IsOpening => isOpening;
+
         /// <summary>
         /// 获取是否暂停被覆盖的界面
         /// </summary>
         public bool PauseCoveredUIPanel => pauseCoveredUIPanel;
+
         /// <summary>
         /// 获取界面逻辑类
         /// </summary>
-        public UGUIPanelBase UGUIPanel => uguiPanelBase;
-        #endregion
+        public IUGUIPanel UGUIPanel => uguiPanelBase;
+
+        #endregion 对外属性
 
         #region 生命周期
+
         /// <summary>
         /// 初始化界面
         /// </summary>
@@ -87,7 +98,7 @@ namespace YangTools.UGUI
                 return;
             }
 
-            uguiPanelBase = GetComponent<UGUIPanelBase>();
+            uguiPanelBase = GetComponent<IUGUIPanel>();
             if (uguiPanelBase == null)
             {
                 Debug.LogError(string.Format("UI form '{0}' can not get UI form logic.", uiPanelAssetName));
@@ -103,6 +114,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面初始化异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面回收
         /// </summary>
@@ -121,6 +133,7 @@ namespace YangTools.UGUI
             depthInUIGroup = 0;
             pauseCoveredUIPanel = true;
         }
+
         /// <summary>
         /// 界面打开
         /// </summary>
@@ -137,6 +150,7 @@ namespace YangTools.UGUI
             }
             isOpening = true;
         }
+
         /// <summary>
         /// 界面关闭
         /// </summary>
@@ -154,6 +168,7 @@ namespace YangTools.UGUI
             }
             isOpening = false;
         }
+
         /// <summary>
         /// 界面暂停
         /// </summary>
@@ -168,6 +183,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面暂停异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面暂停恢复
         /// </summary>
@@ -182,6 +198,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面暂停恢复异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面遮挡
         /// </summary>
@@ -196,6 +213,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面遮挡异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面遮挡恢复
         /// </summary>
@@ -210,6 +228,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面遮挡恢复异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面激活
         /// </summary>
@@ -225,6 +244,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面激活异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面轮询
         /// </summary>
@@ -241,6 +261,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面轮询异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
+
         /// <summary>
         /// 界面深度改变
         /// </summary>
@@ -258,6 +279,7 @@ namespace YangTools.UGUI
                 Debug.LogError($"UI界面深度改变异常---ID:{serialId},名称:{uiPanelAssetName},异常:{exception}");
             }
         }
-        #endregion
+
+        #endregion 生命周期
     }
 }

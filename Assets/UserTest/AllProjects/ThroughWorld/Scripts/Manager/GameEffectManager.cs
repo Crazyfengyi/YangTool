@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-08-28 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2022-08-28
 */
+
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
@@ -17,6 +18,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     /// 所有特效
     /// </summary>
     private static List<EffectObjectPoolItem> allEffect = new List<EffectObjectPoolItem>();
+
     /*
      * effectTypeId: 特效类型id，关联配置表相关项。
        controlPoints：特效相关控制点数据，后文详细讲述。
@@ -29,6 +31,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
        Attach_Point: 特效基于目标挂点(attachName)位置创建，但不跟随目标。
        Attach_Point_Follow: 特效基于目标挂点(attachName)位置创建，跟随目标。
      * */
+
     public EffectObjectPoolItem PlayEffect(string name, Vector3 worldPos)
     {
         EffectObjectPoolItem effectObjectPoolItem = GetEffet(null, worldPos, name);
@@ -50,6 +53,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
         data.worldPos = worldPos;
         return CreateEffet(data);
     }
+
     /// <summary>
     /// 创建特效
     /// </summary>
@@ -64,6 +68,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
 
         return poolItem;
     }
+
     /// <summary>
     /// 回收特效
     /// </summary>
@@ -82,30 +87,37 @@ public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;
+
     public EffectObjectPoolItem()
     {
     }
+
     public EffectObjectPoolItem(string name)
     {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad($"Effects/{name}"));
         obj = tempObj;
     }
+
     public void InitData(EffectData effectData)
     {
     }
+
     public void OnGet()
     {
         obj.DefualtGameObjectOnGet();
     }
+
     public void OnRecycle()
     {
         obj.DefualtGameObjectRecycle();
     }
+
     public void OnDestroy()
     {
         obj.DefualtGameObjectDestory();
     }
 }
+
 /// <summary>
 /// 特效信息
 /// </summary>
@@ -114,6 +126,7 @@ public class EffectData
     public Transform target;
     public Vector3 worldPos;
     public string effectName;
+
     public EffectData(string _str)
     {
         effectName = _str;

@@ -1,21 +1,20 @@
-/** 
- *Copyright(C) 2020 by Test 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2023-02-02 
+/**
+ *Copyright(C) 2020 by Test
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2023-02-02
 */
-using UnityEngine;
-using System.Collections;
-using YangTools;
-using YangTools.UGUI;
+
+using System;
 using TMPro;
 using UnityEngine.UI;
-using System;
+using YangTools.UGUI;
+
 /// <summary>
 /// 通用二级确认界面
 /// </summary>
-public class CommonConfirmPanel : UGUIPanelBase
+public class CommonConfirmPanel : UGUIPanelBase<DefaultUGUIDataBase>
 {
     public TMP_Text text;
     public Button okBtn;
@@ -29,6 +28,7 @@ public class CommonConfirmPanel : UGUIPanelBase
         okBtn.onClick.AddListener(OK_OnClick);
         cancelBtn.onClick.AddListener(cancel_OnClick);
     }
+
     public void Init(params object[] data)
     {
         if (data.Length > 0)
@@ -53,11 +53,13 @@ public class CommonConfirmPanel : UGUIPanelBase
             cancelBtnCallback = null;
         }
     }
+
     public void OK_OnClick()
     {
         okBtnCallback?.Invoke();
         ClosePanel();
     }
+
     public void cancel_OnClick()
     {
         cancelBtnCallback?.Invoke();

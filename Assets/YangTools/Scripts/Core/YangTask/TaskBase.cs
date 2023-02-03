@@ -1,9 +1,9 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2022-02-18 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2022-02-18
 */
 
 namespace YangTools.TaskExtend
@@ -22,6 +22,7 @@ namespace YangTools.TaskExtend
         private int m_Priority;//优先级
         private TaskStatus m_Status;//任务状态
         private object m_UserData;//自定义数据
+
         /// <summary>
         /// 初始化任务基类的新实例。
         /// </summary>
@@ -32,6 +33,7 @@ namespace YangTools.TaskExtend
             m_Status = TaskStatus.None;
             m_UserData = null;
         }
+
         /// <summary>
         /// 获取任务的序列编号。
         /// </summary>
@@ -42,6 +44,7 @@ namespace YangTools.TaskExtend
                 return m_SerialId;
             }
         }
+
         /// <summary>
         /// 获取任务的优先级。
         /// </summary>
@@ -52,6 +55,7 @@ namespace YangTools.TaskExtend
                 return m_Priority;
             }
         }
+
         /// <summary>
         /// 获取任务的状态。
         /// </summary>
@@ -62,6 +66,7 @@ namespace YangTools.TaskExtend
                 return m_Status;
             }
         }
+
         /// <summary>
         /// 获取或设置用户自定义数据。
         /// </summary>
@@ -76,6 +81,7 @@ namespace YangTools.TaskExtend
                 m_UserData = value;
             }
         }
+
         /// <summary>
         /// 初始化任务基类。
         /// </summary>
@@ -86,6 +92,7 @@ namespace YangTools.TaskExtend
             m_SerialId = serialId;
             m_Priority = priority;
         }
+
         /// <summary>
         /// 清理任务基类
         /// </summary>
@@ -96,6 +103,7 @@ namespace YangTools.TaskExtend
             m_Status = TaskStatus.None;
             m_UserData = null;
         }
+
         /// <summary>
         /// 任务生成时调用
         /// </summary>
@@ -103,6 +111,7 @@ namespace YangTools.TaskExtend
         {
             m_Status = TaskStatus.Waiting;
         }
+
         /// <summary>
         /// 任务开始时调用
         /// </summary>
@@ -110,6 +119,7 @@ namespace YangTools.TaskExtend
         {
             m_Status = TaskStatus.Running;
         }
+
         /// <summary>
         /// 任务轮询时调用
         /// </summary>
@@ -118,6 +128,7 @@ namespace YangTools.TaskExtend
         protected internal virtual void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
         }
+
         /// <summary>
         /// 任务完成时调用。
         /// </summary>
@@ -126,6 +137,7 @@ namespace YangTools.TaskExtend
         {
             m_Status = TaskStatus.Completed;
         }
+
         /// <summary>
         /// 任务失败时调用。
         /// </summary>
@@ -134,6 +146,7 @@ namespace YangTools.TaskExtend
         {
             m_Status = TaskStatus.Failed;
         }
+
         /// <summary>
         /// 任务取消时调用。
         /// </summary>
@@ -143,6 +156,7 @@ namespace YangTools.TaskExtend
             m_Status = TaskStatus.Canceled;
         }
     }
+
     /// <summary>
     /// 任务状态。
     /// </summary>
@@ -152,22 +166,27 @@ namespace YangTools.TaskExtend
         /// 未初始化
         /// </summary>
         None = 0,
+
         /// <summary>
         /// 等待中。
         /// </summary>
         Waiting,
+
         /// <summary>
         /// 运行中。
         /// </summary>
         Running,
+
         /// <summary>
         /// 已完成。
         /// </summary>
         Completed,
+
         /// <summary>
         /// 已失败。
         /// </summary>
         Failed,
+
         /// <summary>
         /// 已取消。
         /// </summary>

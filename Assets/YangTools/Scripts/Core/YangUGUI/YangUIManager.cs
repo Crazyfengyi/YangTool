@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2022-02-19 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2022-02-19
 */
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace YangTools.UGUI
 {
     internal class YangUIManager : GameModuleBase, IUIManager
     {
+        public static Font mainFont = null;//主字体
+
         private readonly Dictionary<string, UIGroup> uiGroups;//UI组
         private readonly Queue<IUIPanel> recycleQueue;//回收队列
         private IObjectPool<UIPanelInstanceObject> instancePool;//对象池
@@ -23,13 +26,18 @@ namespace YangTools.UGUI
         private IUIPanelHelper uiPanelHelper;//UI界面辅助类
 
         public event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
+
         public event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
+
         public event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
+
         public event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
+
         /// <summary>
         /// 获取界面组数量
         /// </summary>
         public int UIGroupCount => uiGroups.Count;
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -49,9 +57,11 @@ namespace YangTools.UGUI
         }
 
         #region 生命周期
+
         internal override void InitModule()
         {
         }
+
         /// <summary>
         /// UI界面管理器轮询
         /// </summary>
@@ -70,6 +80,7 @@ namespace YangTools.UGUI
                 uiGroup.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
         }
+
         internal override void CloseModule()
         {
             isShutdown = true;
@@ -77,9 +88,11 @@ namespace YangTools.UGUI
             uiGroups.Clear();
             recycleQueue.Clear();
         }
-        #endregion
+
+        #endregion 生命周期
 
         #region 设置和查询
+
         /// <summary>
         /// 设置界面辅助器
         /// </summary>
@@ -92,6 +105,7 @@ namespace YangTools.UGUI
             }
             this.uiPanelHelper = uiPanelHelper;
         }
+
         /// <summary>
         /// 是否存在界面组
         /// </summary>
@@ -105,6 +119,7 @@ namespace YangTools.UGUI
             }
             return uiGroups.ContainsKey(uiGroupName);
         }
+
         /// <summary>
         /// 获取界面组
         /// </summary>
@@ -123,6 +138,7 @@ namespace YangTools.UGUI
             }
             return null;
         }
+
         /// <summary>
         /// 获取所有界面组
         /// </summary>
@@ -137,6 +153,7 @@ namespace YangTools.UGUI
             }
             return results;
         }
+
         /// <summary>
         /// 是否是合法的界面
         /// </summary>
@@ -150,9 +167,11 @@ namespace YangTools.UGUI
             }
             return HasUIPanel(uiPanel.SerialId);
         }
-        #endregion
+
+        #endregion 设置和查询
 
         #region 增加组
+
         /// <summary>
         /// 增加界面组
         /// </summary>
@@ -163,6 +182,7 @@ namespace YangTools.UGUI
         {
             return AddUIGroup(uiGroupName, 0, uiGroupHelper);
         }
+
         /// <summary>
         /// 增加界面组
         /// </summary>
@@ -187,9 +207,11 @@ namespace YangTools.UGUI
             uiGroups.Add(uiGroupName, new UIGroup(uiGroupName, uiGroupDepth, uiGroupHelper));
             return true;
         }
-        #endregion
+
+        #endregion 增加组
 
         #region 判断界面
+
         public (bool have, UIPanelInfo panelInfo) PanelIsOpen(string assetName)
         {
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
@@ -218,6 +240,7 @@ namespace YangTools.UGUI
             }
             return false;
         }
+
         /// <summary>
         /// 是否存在界面
         /// </summary>
@@ -235,7 +258,8 @@ namespace YangTools.UGUI
             }
             return false;
         }
-        #endregion
+
+        #endregion 判断界面
 
         #region 获得界面
 
@@ -257,6 +281,7 @@ namespace YangTools.UGUI
 
             return null;
         }
+
         /// <summary>
         /// 获取界面
         /// </summary>
@@ -276,6 +301,7 @@ namespace YangTools.UGUI
             }
             return null;
         }
+
         /// <summary>
         /// 获取界面
         /// </summary>
@@ -295,6 +321,7 @@ namespace YangTools.UGUI
             }
             return results.ToArray();
         }
+
         /// <summary>
         /// 获取所有已加载的界面
         /// </summary>
@@ -308,9 +335,11 @@ namespace YangTools.UGUI
             }
             return results.ToArray();
         }
-        #endregion
+
+        #endregion 获得界面
 
         #region 打开界面
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -321,6 +350,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, UISetting.DefaultPriority, false, null);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -332,6 +362,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, priority, false, null);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -343,6 +374,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, UISetting.DefaultPriority, pauseCovereduiPanel, null);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -354,6 +386,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, UISetting.DefaultPriority, false, userData);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -366,6 +399,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, priority, pauseCovereduiPanel, null);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -378,6 +412,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, priority, false, userData);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -390,6 +425,7 @@ namespace YangTools.UGUI
         {
             return OpenUIPanel(uiPanelAssetName, uiGroupName, UISetting.DefaultPriority, pauseCovereduiPanel, userData);
         }
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -435,9 +471,11 @@ namespace YangTools.UGUI
 
             return serialId;
         }
-        #endregion
+
+        #endregion 打开界面
 
         #region 激活界面
+
         /// <summary>
         /// 激活界面
         /// </summary>
@@ -446,6 +484,7 @@ namespace YangTools.UGUI
         {
             RefocusUIPanel(uiPanel, null);
         }
+
         /// <summary>
         /// 激活界面
         /// </summary>
@@ -468,9 +507,11 @@ namespace YangTools.UGUI
             uiGroup.Refresh();
             uiPanel.OnRefocus(userData);
         }
-        #endregion
+
+        #endregion 激活界面
 
         #region 关闭界面
+
         /// <summary>
         /// 关闭界面
         /// </summary>
@@ -479,6 +520,7 @@ namespace YangTools.UGUI
         {
             CloseUIPanel(serialId, null);
         }
+
         /// <summary>
         /// 关闭界面
         /// </summary>
@@ -493,6 +535,7 @@ namespace YangTools.UGUI
             }
             CloseUIPanel(uiPanel, userData);
         }
+
         /// <summary>
         /// 关闭界面
         /// </summary>
@@ -501,6 +544,7 @@ namespace YangTools.UGUI
         {
             CloseUIPanel(uiPanel, null);
         }
+
         /// <summary>
         /// 关闭界面
         /// </summary>
@@ -531,6 +575,7 @@ namespace YangTools.UGUI
 
             recycleQueue.Enqueue(uiPanel);
         }
+
         /// <summary>
         /// 关闭所有已加载的界面
         /// </summary>
@@ -538,6 +583,7 @@ namespace YangTools.UGUI
         {
             CloseAllLoadedUIPanels(null);
         }
+
         /// <summary>
         /// 关闭所有已加载的界面
         /// </summary>
@@ -554,9 +600,11 @@ namespace YangTools.UGUI
                 CloseUIPanel(uiPanel, userData);
             }
         }
-        #endregion
+
+        #endregion 关闭界面
 
         #region 内部方法
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -589,9 +637,11 @@ namespace YangTools.UGUI
                 throw;
             }
         }
-        #endregion
+
+        #endregion 内部方法
 
         #region 工具
+
         public static void CheckStringIsNull(string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -599,7 +649,8 @@ namespace YangTools.UGUI
                 throw new Exception($"UI资源名称不合法:{str}");
             }
         }
-        #endregion
+
+        #endregion 工具
     }
 
     /// <summary>
@@ -615,6 +666,7 @@ namespace YangTools.UGUI
         private LinkedListNode<UIPanelInfo> cachedNode;//缓存节点
 
         #region 属性
+
         /// <summary>
         /// 获取界面组名称
         /// </summary>
@@ -625,6 +677,7 @@ namespace YangTools.UGUI
                 return name;
             }
         }
+
         /// <summary>
         /// 获取或设置界面组深度
         /// </summary>
@@ -646,6 +699,7 @@ namespace YangTools.UGUI
                 Refresh();
             }
         }
+
         /// <summary>
         /// 获取或设置界面组是否暂停
         /// </summary>
@@ -666,6 +720,7 @@ namespace YangTools.UGUI
                 Refresh();
             }
         }
+
         /// <summary>
         /// 获取界面组中界面数量
         /// </summary>
@@ -676,6 +731,7 @@ namespace YangTools.UGUI
                 return uiPanelInfos.Count;
             }
         }
+
         /// <summary>
         /// 获取当前界面
         /// </summary>
@@ -686,6 +742,7 @@ namespace YangTools.UGUI
                 return uiPanelInfos.First != null ? uiPanelInfos.First.Value.UIPanel : null;
             }
         }
+
         /// <summary>
         /// 获取界面组辅助器
         /// </summary>
@@ -696,7 +753,8 @@ namespace YangTools.UGUI
                 return uiGroupHelper;
             }
         }
-        #endregion
+
+        #endregion 属性
 
         /// <summary>
         /// 初始化界面组
@@ -721,6 +779,7 @@ namespace YangTools.UGUI
         }
 
         #region 方法
+
         /// <summary>
         /// UI界面组轮询
         /// </summary>
@@ -741,6 +800,7 @@ namespace YangTools.UGUI
                 cachedNode = null;
             }
         }
+
         /// <summary>
         /// UI界面组中是否存在界面
         /// </summary>
@@ -757,6 +817,7 @@ namespace YangTools.UGUI
 
             return (false, null);
         }
+
         /// <summary>
         /// UI界面组中是否存在界面
         /// </summary>
@@ -774,6 +835,7 @@ namespace YangTools.UGUI
             }
             return (false, null);
         }
+
         /// <summary>
         /// UI界面组中是否有打开的目标界面
         /// </summary>
@@ -782,6 +844,7 @@ namespace YangTools.UGUI
             (bool have, UIPanelInfo panelInfo) info = HasUIPanel(assetName);
             return info;
         }
+
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
@@ -791,6 +854,7 @@ namespace YangTools.UGUI
             (bool have, UIPanelInfo panelInfo) info = HasUIPanel(serialId);
             return info.have ? info.panelInfo.UIPanel : null;
         }
+
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
@@ -801,6 +865,7 @@ namespace YangTools.UGUI
             (bool have, UIPanelInfo panelInfo) info = HasUIPanel(assetName);
             return info.have ? info.panelInfo.UIPanel : null;
         }
+
         /// <summary>
         /// 从UI界面组中获取界面
         /// </summary>
@@ -819,6 +884,7 @@ namespace YangTools.UGUI
             }
             return results.ToArray();
         }
+
         /// <summary>
         /// 从UI界面组中获取所有界面
         /// </summary>
@@ -831,6 +897,7 @@ namespace YangTools.UGUI
             }
             return results.ToArray();
         }
+
         /// <summary>
         /// 往UI界面组增加界面
         /// </summary>
@@ -839,6 +906,7 @@ namespace YangTools.UGUI
         {
             uiPanelInfos.AddFirst(UIPanelInfo.Create(uiPanel));
         }
+
         /// <summary>
         /// 从UI界面组移除界面
         /// </summary>
@@ -873,6 +941,7 @@ namespace YangTools.UGUI
 
             //ReferencePool.Release(uiPanelInfo);
         }
+
         /// <summary>
         /// 激活UI界面
         /// </summary>
@@ -889,6 +958,7 @@ namespace YangTools.UGUI
             uiPanelInfos.Remove(uiPanelInfo);
             uiPanelInfos.AddFirst(uiPanelInfo);
         }
+
         /// <summary>
         /// 刷新UI界面组
         /// </summary>
@@ -977,6 +1047,7 @@ namespace YangTools.UGUI
                 current = next;
             }
         }
+
         internal void InternalGetUIPanels(string uiPanelAssetName, List<IUIPanel> results)
         {
             foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
@@ -987,6 +1058,7 @@ namespace YangTools.UGUI
                 }
             }
         }
+
         internal void InternalGetAllUIPanels(List<IUIPanel> results)
         {
             foreach (UIPanelInfo uiPanelInfo in uiPanelInfos)
@@ -994,6 +1066,7 @@ namespace YangTools.UGUI
                 results.Add(uiPanelInfo.UIPanel);
             }
         }
+
         /// <summary>
         /// 获得UI界面信息
         /// </summary>
@@ -1014,8 +1087,10 @@ namespace YangTools.UGUI
 
             return null;
         }
-        #endregion
+
+        #endregion 方法
     }
+
     /// <summary>
     /// UI界面信息
     /// </summary>
@@ -1025,6 +1100,7 @@ namespace YangTools.UGUI
         private bool covered;//覆盖
         private IUIPanel uiPanel;
         public IUIPanel UIPanel => uiPanel;
+
         public bool Paused
         {
             get
@@ -1036,6 +1112,7 @@ namespace YangTools.UGUI
                 paused = value;
             }
         }
+
         public bool Covered
         {
             get
@@ -1047,9 +1124,11 @@ namespace YangTools.UGUI
                 covered = value;
             }
         }
+
         public UIPanelInfo()
         {
         }
+
         public static UIPanelInfo Create(IUIPanel uiPanel)
         {
             if (uiPanel == null) throw new Exception("UI panel is invalid.");
@@ -1057,6 +1136,7 @@ namespace YangTools.UGUI
             uiPanelInfo.uiPanel = uiPanel;
             return uiPanelInfo;
         }
+
         public void Clear()
         {
             uiPanel = null;
@@ -1064,6 +1144,7 @@ namespace YangTools.UGUI
             covered = false;
         }
     }
+
     /// <summary>
     /// UI界面实例对象
     /// </summary>
@@ -1078,10 +1159,11 @@ namespace YangTools.UGUI
         private IUIPanelHelper uiPanelHelper;//UI页面辅助类
         public object Target => target;
         public bool IsInPool { get; set; }
+
         public UIPanelInstanceObject()
         {
-
         }
+
         public static UIPanelInstanceObject Create(string name, object uiPanelAsset, object uiPanelInstance, IUIPanelHelper uiPanelHelper)
         {
             if (uiPanelAsset == null) throw new Exception("UI form asset is invalid.");
@@ -1093,6 +1175,7 @@ namespace YangTools.UGUI
             uiPanelInstanceObject.uiPanelHelper = uiPanelHelper;
             return uiPanelInstanceObject;
         }
+
         /// <summary>
         /// 初始化对象基类
         /// </summary>
@@ -1106,26 +1189,28 @@ namespace YangTools.UGUI
             this.priority = priority;
             lastUseTime = DateTime.UtcNow;
         }
+
         public void Clear()
         {
             uiPanelAsset = null;
             uiPanelHelper = null;
         }
+
         public void Release(bool isShutdown)
         {
             uiPanelHelper.ReleaseUIPanel(uiPanelAsset, target);
         }
+
         public void OnGet()
         {
-
         }
+
         public void OnRecycle()
         {
-
         }
+
         public void OnDestroy()
         {
-
         }
     }
 }

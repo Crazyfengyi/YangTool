@@ -1,13 +1,15 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-07-31 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2022-07-31
 */
+
 using System.Collections;
 using UnityEngine;
 using YangTools;
+
 /// <summary>
 /// 交互系统
 /// </summary>
@@ -15,16 +17,21 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
 {
     public float InteractorRange = 3;//可交互范围
     private WaitForSeconds interactorTimerInterval = new WaitForSeconds(0.2f);//交互物检测间隔
+
     //交互者
     private RoleBase target;
+
     public GameObject ShowCircle;//显示的圆
 
     //最近的可交互物
     private IInteractive currentInteractive;
+
     //上一个交互物
     private IInteractive lastInteractive;
+
     //强制刷新可交互物
     private bool forceUpdate;
+
     /// <summary>
     /// 强制刷新
     /// </summary>
@@ -35,6 +42,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     }
 
     private InterActiveType interActiveType;
+
     /// <summary>
     /// 当前物体交互类型
     /// </summary>
@@ -95,6 +103,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
 
     private Vector3 recordPos;//记录位置
     private Collider[] recordCollider; //记录碰撞体
+
     /// <summary>
     /// 更新最近的可交互物
     /// </summary>

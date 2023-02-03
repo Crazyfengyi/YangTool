@@ -1,12 +1,14 @@
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
+
 /// <summary>
 /// 资源管理器
 /// </summary>
 public class GameResourceManager : MonoSingleton<GameResourceManager>
 {
     public BuffConfigSave buffConfigSave;
+
     public new void Awake()
     {
         base.Awake();

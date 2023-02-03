@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-08-28 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2022-08-28
 */
+
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
@@ -17,6 +18,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 {
     //所有子弹
     private static List<BulletBase> allBullet = new List<BulletBase>();
+
     public void Update()
     {
         for (int i = 0; i < allBullet.Count; i++)
@@ -24,6 +26,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
             allBullet[i].OnUpdate();
         }
     }
+
     /// <summary>
     /// 场景切换
     /// </summary>
@@ -35,6 +38,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         }
         allBullet.Clear();
     }
+
     /// <summary>
     /// 创建子弹
     /// </summary>
@@ -49,6 +53,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         allBullet.Add(bulletBase);
         return bulletBase;
     }
+
     /// <summary>
     /// 移除子弹
     /// </summary>
@@ -59,6 +64,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         Destroy(bulletBase.bulletObj);
     }
 }
+
 /// <summary>
 /// 发射器基类
 /// </summary>
@@ -68,6 +74,7 @@ public class EmitterBase
     /// 持有者
     /// </summary>
     public GameActor handle;
+
     /// <summary>
     /// 发射信息
     /// </summary>
@@ -76,10 +83,12 @@ public class EmitterBase
     protected int shootCount;//发射次数
     protected float timer;
     protected bool startShoot;//开始发射
+
     public EmitterBase(GameActor _actor)
     {
         handle = _actor;
     }
+
     /// <summary>
     /// 开始发射
     /// </summary>
@@ -87,6 +96,7 @@ public class EmitterBase
     {
         startShoot = true;
     }
+
     public virtual void OnUpdate()
     {
         if (!startShoot) return;
@@ -103,6 +113,7 @@ public class EmitterBase
             }
         }
     }
+
     /// <summary>
     /// 发射
     /// </summary>
@@ -123,11 +134,13 @@ public class EmitterBase
                     }
                 }
                 break;
+
             default:
                 GameProjectileManager.Instance.CreateBullet(bulletData);
                 break;
         }
     }
+
     /// <summary>
     /// 设置发射信息
     /// </summary>
@@ -136,6 +149,7 @@ public class EmitterBase
         emitData = _emitData;
     }
 }
+
 /// <summary>
 /// 子弹基类
 /// </summary>
@@ -145,23 +159,28 @@ public class BulletBase
     /// 子弹数据
     /// </summary>
     private BulletData bulletData;
+
     public BulletData BulletData => bulletData;
+
     /// <summary>
     /// 子弹物体
     /// </summary>
     public GameObject bulletObj;
+
     /// <summary>
     /// 目标阵营
     /// </summary>
     public ActorCampType targetCamp;
 
     private float timer;
+
     public BulletBase(BulletData data, GameObject Obj)
     {
         bulletData = data;
         bulletObj = Obj;
         bulletObj.transform.forward = data.direction;
     }
+
     public void OnUpdate()
     {
         if (bulletData == null || bulletObj == null) return;
@@ -188,6 +207,7 @@ public class BulletBase
             OnDie(BulletDieType.TimeOut);
         }
     }
+
     /// <summary>
     /// 检查攻击
     /// </summary>
@@ -211,6 +231,7 @@ public class BulletBase
             if (needDie) OnDie(BulletDieType.Atk);
         }
     }
+
     /// <summary>
     /// 死亡
     /// </summary>
@@ -225,6 +246,7 @@ public class BulletBase
                     GameEffectManager.Instance.PlayEffect("BulletAtkEffect", effectPos);
                 }
                 break;
+
             default:
                 break;
         }
@@ -232,6 +254,7 @@ public class BulletBase
         GameProjectileManager.Instance.RemoveBullet(this);
     }
 }
+
 /// <summary>
 /// 发射信息
 /// </summary>
@@ -241,31 +264,38 @@ public class EmitData
     /// 子弹ID
     /// </summary>
     public int bulletID;
+
     /// <summary>
     /// 是否循环
     /// </summary>
     public bool isLoop = false;
+
     /// <summary>
     /// 发射次数
     /// </summary>
     public int loopCount = 1;
+
     /// <summary>
     /// 时间间隔
     /// </summary>
     public float timeInterval = 0.1f;
+
     /// <summary>
     /// 生成子弹数量
     /// </summary>
     public float bulletCount;
+
     /// <summary>
     /// 角度
     /// </summary>
     public float angle;
+
     /// <summary>
     /// 子弹发射
     /// </summary>
     public BulletShootType bulletShootType;
 }
+
 /// <summary>
 /// 子弹数据
 /// </summary>
@@ -275,44 +305,54 @@ public class BulletData
     /// 创建者
     /// </summary>
     public GameActor owner;
+
     //创建它的技能
     //public SkillBase skill;  //命中后 调用技能的OnBulletHit(hitPos,hitTarget)
     /// <summary>
     /// 攻击信息
     /// </summary>
     public DamageInfo damageInfo;
+
     /// <summary>
     /// 出发点
     /// </summary>
     public Vector3 FromPostion;
+
     /// <summary>
     /// 目标
     /// </summary>
     public GameObject target;
+
     /// <summary>
     /// 速度
     /// </summary>
     public float speed;
+
     /// <summary>
     /// 加速度
     /// </summary>
     public float acceleration;
+
     /// <summary>
     /// 最大速度
     /// </summary>
     public float maxSpeed = 600;
+
     /// <summary>
     /// 转向速度
     /// </summary>
     public float angleSpeed = 10;
+
     /// <summary>
     /// 方向
     /// </summary>
     public Vector3 direction;
+
     /// <summary>
     /// 最大存活时间
     /// </summary>
     public float survivalMaxTime = 10f;
+
     /// <summary>
     /// 碰撞点
     /// </summary>

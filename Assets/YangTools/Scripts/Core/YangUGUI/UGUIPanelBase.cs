@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2022-02-20 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2022-02-20
 */
+
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,10 +18,9 @@ namespace YangTools.UGUI
     /// <summary>
     /// UGUI界面逻辑基类
     /// </summary>
-    public abstract class UGUIPanelBase : MonoBehaviour
+    public abstract class UGUIPanelBase<T> : MonoBehaviour, IUGUIPanel where T : UGUIDataBase
     {
         public const int DepthFactor = 10;//UI界面深度系数
-        private static Font mainFont = null;//主字体
 
         private bool available = false;//是否可用的
         private bool visible = false;//是否显示
@@ -35,10 +35,12 @@ namespace YangTools.UGUI
         private int originalLayer = 0;//原始层级
 
         #region 对外属性
+
         /// <summary>
         /// 获取界面
         /// </summary>
         public UIPanel UIPanel => uiPanel;
+
         /// <summary>
         /// 获取或设置界面名称
         /// </summary>
@@ -53,10 +55,12 @@ namespace YangTools.UGUI
                 gameObject.name = value;
             }
         }
+
         /// <summary>
         /// 获取界面是否可用
         /// </summary>
         public bool Available => available;
+
         /// <summary>
         /// 获取或设置界面是否可见
         /// </summary>
@@ -81,10 +85,12 @@ namespace YangTools.UGUI
                 SetVisible(value);
             }
         }
+
         /// <summary>
         /// 获取已缓存的Transform
         /// </summary>
         public Transform CachedTransform => cachedTransform;
+
         /// <summary>
         /// 原始深度
         /// </summary>
@@ -93,13 +99,37 @@ namespace YangTools.UGUI
             get;
             private set;
         }
+
         /// <summary>
         /// 深度
         /// </summary>
         public int Depth => cachedCanvas.sortingOrder;
+
+        public int SerialId => throw new System.NotImplementedException();
+
+        public string UIPanelAssetName => throw new System.NotImplementedException();
+
+        public object Handle { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+        public IUIGroup UIGroup => throw new System.NotImplementedException();
+
+        public int DepthInUIGroup => throw new System.NotImplementedException();
+
+        public bool IsOpening => throw new System.NotImplementedException();
+
+        public bool PauseCoveredUIPanel => throw new System.NotImplementedException();
+
+        #endregion 对外属性
+
+        #region 静态方法
+        public static void OpenPanel(T userData, string assetName, string groupName)
+        {
+            UIMonoInstance.Instance.OpenUIPanel(assetName, groupName, (object)userData);
+        }
         #endregion
 
         #region 父类设置
+
         /// <summary>
         /// 设置字体
         /// </summary>
@@ -111,8 +141,9 @@ namespace YangTools.UGUI
                 Debug.LogError("Main font is invalid.");
                 return;
             }
-            UGUIPanelBase.mainFont = mainFont;
+            YangUIManager.mainFont = mainFont;
         }
+
         /// <summary>
         /// 播放声音
         /// </summary>
@@ -121,6 +152,7 @@ namespace YangTools.UGUI
         {
             //TODO 差实现
         }
+
         /// <summary>
         /// 关闭页面
         /// </summary>
@@ -136,6 +168,7 @@ namespace YangTools.UGUI
                 //StartCoroutine(CloseCo(FadeTime));//动画
             }
         }
+
         /// <summary>
         /// 设置界面的可见性
         /// </summary>
@@ -143,14 +176,16 @@ namespace YangTools.UGUI
         {
             gameObject.SetActive(visible);
         }
-        #endregion
+
+        #endregion 父类设置
 
         #region 生命周期
+
         /// <summary>
         /// 界面初始化
         /// </summary>
         /// <param name="userData">用户自定义数据</param>
-        protected internal virtual void OnInit(object userData)
+        public virtual void OnInit(object userData)
         {
             if (cachedTransform == null) cachedTransform = transform;
 
@@ -176,24 +211,26 @@ namespace YangTools.UGUI
             Text[] texts = GetComponentsInChildren<Text>(true);
             for (int i = 0; i < texts.Length; i++)
             {
-                texts[i].font = mainFont;
+                texts[i].font = YangUIManager.mainFont;
                 if (!string.IsNullOrEmpty(texts[i].text))
                 {
                     texts[i].text = texts[i].text.ToString();//多语言
                 }
             }
         }
+
         /// <summary>
         /// 界面回收
         /// </summary>
-        protected internal virtual void OnRecycle()
+        public virtual void OnRecycle()
         {
         }
+
         /// <summary>
         /// 界面打开
         /// </summary>
         /// <param name="userData">用户自定义数据</param>
-        protected internal virtual void OnOpen(object userData)
+        public virtual void OnOpen(object userData)
         {
             available = true;
             Visible = true;
@@ -218,64 +255,72 @@ namespace YangTools.UGUI
                     .SetTarget(this);
             }
         }
+
         /// <summary>
         /// 界面关闭
         /// </summary>
         /// <param name="isShutdown">是否是关闭界面管理器时触发</param>
         /// <param name="userData">用户自定义数据</param>
-        protected internal virtual void OnClose(bool isShutdown, object userData)
+        public virtual void OnClose(bool isShutdown, object userData)
         {
             gameObject.SetLayerRecursively(originalLayer);
             Visible = false;
             available = false;
         }
+
         /// <summary>
         /// 界面暂停
         /// </summary>
-        protected internal virtual void OnPause()
+        public virtual void OnPause()
         {
             Visible = false;
         }
+
         /// <summary>
         /// 界面暂停恢复
         /// </summary>
-        protected internal virtual void OnResume()
+        public virtual void OnResume()
         {
             Visible = true;
         }
+
         /// <summary>
         /// 界面遮挡
         /// </summary>
-        protected internal virtual void OnCover()
+        public virtual void OnCover()
         {
         }
+
         /// <summary>
         /// 界面遮挡恢复
         /// </summary>
-        protected internal virtual void OnReveal()
+        public virtual void OnReveal()
         {
         }
+
         /// <summary>
         /// 界面激活
         /// </summary>
         /// <param name="userData">用户自定义数据</param>
-        protected internal virtual void OnRefocus(object userData)
+        public virtual void OnRefocus(object userData)
         {
         }
+
         /// <summary>
         /// 界面轮询
         /// </summary>
         /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
         /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
-        protected internal virtual void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
+        public virtual void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
         }
+
         /// <summary>
         /// 界面深度改变
         /// </summary>
         /// <param name="uiGroupDepth">界面组深度</param>
         /// <param name="depthInUIGroup">界面在界面组中的深度</param>
-        protected internal virtual void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
+        public virtual void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
             int oldDepth = Depth;
             int deltaDepth = UGUIGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
@@ -286,6 +331,12 @@ namespace YangTools.UGUI
             }
             cachedCanvasList.Clear();
         }
-        #endregion
+
+        public void OnInit(int serialId, string uiPanelAssetName, IUIGroup uiGroup, bool pauseCovereduiPanel, bool isNewInstance, object userData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion 生命周期
     }
 }

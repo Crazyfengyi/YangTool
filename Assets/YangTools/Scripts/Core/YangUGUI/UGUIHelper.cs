@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2022-02-20 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2022-02-20
 */
+
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools.Extend;
@@ -19,11 +20,13 @@ namespace YangTools.UGUI
         public const int DepthFactor = 200;
         private int depth = 0;//深度
         private Canvas cachedCanvas = null;//缓存的canvas
+
         private void Awake()
         {
             cachedCanvas = gameObject.GetOrAddComponent<Canvas>();
             gameObject.GetOrAddComponent<GraphicRaycaster>();
         }
+
         private void Start()
         {
             cachedCanvas.overrideSorting = true;
@@ -35,6 +38,7 @@ namespace YangTools.UGUI
             transform.anchoredPosition = Vector2.zero;
             transform.sizeDelta = Vector2.zero;
         }
+
         /// <summary>
         /// 设置UI界面组深度
         /// </summary>
@@ -46,6 +50,7 @@ namespace YangTools.UGUI
             cachedCanvas.sortingOrder = DepthFactor * depth;
         }
     }
+
     /// <summary>
     /// UGUI界面辅助器
     /// </summary>
@@ -60,6 +65,7 @@ namespace YangTools.UGUI
         {
             return Instantiate((Object)uiPanelAsset);
         }
+
         /// <summary>
         /// 创建UI界面
         /// </summary>
@@ -80,6 +86,7 @@ namespace YangTools.UGUI
             transform.localScale = Vector3.one;
             return gameObject.GetOrAddComponent<UIPanel>();
         }
+
         /// <summary>
         /// 释放UI界面
         /// </summary>

@@ -1,10 +1,11 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-07-23 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2022-07-23
 */
+
 using CMF;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,7 +14,7 @@ using YangTools.UGUI;
 public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
-    public bool isJumpPressed;//跳跃键按下 
+    public bool isJumpPressed;//跳跃键按下
     private GameInputSet GameInput;
     public GameObject model;//模型
     public GameObject shootPoint;//发射点
@@ -22,12 +23,14 @@ public class PlayerController : RoleBase
     private AdvancedWalkerController advancedWalker;//移动脚本
 
     private bool isJumpAni;
+
     public override void IInit()
     {
         base.IInit();
         campType = ActorCampType.Player;
 
         #region 输入
+
         GameInput = new GameInputSet();
         GameInput.Player.Enable();
         GameInput.Player.Move.performed += OnMove;
@@ -35,13 +38,15 @@ public class PlayerController : RoleBase
         GameInput.Player.Interactive.performed += OnInteractive;
         GameInput.Player.Jump.performed += OnJump;
         GameInput.Player.Jump.canceled += OnJump;
-        #endregion
+
+        #endregion 输入
 
         emitter = new PlayerEmitter(this);
         advancedWalker = GetComponent<AdvancedWalkerController>();
 
         roleBuffControl.Add(BuffID.buff_10001);
     }
+
     public override void IUpdate()
     {
         base.IUpdate();
@@ -77,13 +82,15 @@ public class PlayerController : RoleBase
             isJumpAni = false;
         }
     }
+
     public override void ILateUpdate()
     {
     }
+
     public override void IFixedUpdate()
     {
-
     }
+
     public override void IDie()
     {
         GameSoundManager.Instance.PlaySound("Audio_Click");
@@ -93,27 +100,33 @@ public class PlayerController : RoleBase
     }
 
     #region 输入
+
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 v2 = context.ReadValue<Vector2>();
         inputVector3 = v2;
     }
+
     public void OnMoveEnd(InputAction.CallbackContext context)
     {
         inputVector3 = Vector3.zero;
     }
+
     public void OnInteractive(InputAction.CallbackContext context)
     {
         InteractorSystem.Instance.OnInter();
     }
+
     public void OnJump(InputAction.CallbackContext context)
     {
         float value = context.ReadValue<float>();
         isJumpPressed = value > 0;
     }
-    #endregion
+
+    #endregion 输入
 
     #region 攻击和被击接口实现
+
     public override void Atk(AtkInfo atkInfo)
     {
         if (!IsCanAtk()) return;
@@ -124,35 +137,43 @@ public class PlayerController : RoleBase
             ShowAtkEffect(atkInfo.atkEffectInfo);
         }
     }
+
     public override void BeHit(ref DamageInfo damageInfo)
     {
         healthControl.MinusHp(damageInfo);
     }
+
     public override DamageInfo GetDamageInfo()
     {
         var result = new DamageInfo();
         result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
         return result;
     }
+
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
     {
         damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
         damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
         return damageInfo;
     }
+
     public override bool IsCanAtk()
     {
         return true;
     }
+
     public override bool IsCanBeHit()
     {
         return true;
     }
+
     public override void ShowAtkEffect(EffectInfo atkEffectInfo)
     {
     }
+
     public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
     {
     }
-    #endregion
+
+    #endregion 攻击和被击接口实现
 }

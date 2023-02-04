@@ -122,9 +122,9 @@ namespace YangTools.UGUI
         #endregion 对外属性
 
         #region 静态方法
-        public static void OpenPanel(T userData, string assetName, string groupName)
+        public static int OpenPanel(T userData, string assetName, string groupName)
         {
-            UIMonoInstance.Instance.OpenUIPanel(assetName, groupName, (object)userData);
+            return UIMonoInstance.Instance.OpenUIPanel(assetName, groupName, (object)userData);
         }
         #endregion
 
@@ -181,11 +181,15 @@ namespace YangTools.UGUI
 
         #region 生命周期
 
+        public virtual void OnInit(object userData)
+        {
+            OnInit(userData as T);
+        }
         /// <summary>
         /// 界面初始化
         /// </summary>
         /// <param name="userData">用户自定义数据</param>
-        public virtual void OnInit(object userData)
+        public virtual void OnInit(T userData)
         {
             if (cachedTransform == null) cachedTransform = transform;
 
@@ -217,13 +221,6 @@ namespace YangTools.UGUI
                     texts[i].text = texts[i].text.ToString();//多语言
                 }
             }
-        }
-
-        /// <summary>
-        /// 界面回收
-        /// </summary>
-        public virtual void OnRecycle()
-        {
         }
 
         /// <summary>
@@ -312,6 +309,13 @@ namespace YangTools.UGUI
         /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
         /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
         public virtual void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
+        {
+        }
+
+        /// <summary>
+        /// 界面回收
+        /// </summary>
+        public virtual void OnRecycle()
         {
         }
 

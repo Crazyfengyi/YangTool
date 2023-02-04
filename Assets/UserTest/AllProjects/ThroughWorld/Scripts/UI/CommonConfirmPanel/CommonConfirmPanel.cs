@@ -14,55 +14,36 @@ using YangTools.UGUI;
 /// <summary>
 /// 通用二级确认界面
 /// </summary>
-public class CommonConfirmPanel : UGUIPanelBase<DefaultUGUIDataBase>
+public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
 {
     public TMP_Text text;
     public Button okBtn;
     public Button cancelBtn;
 
-    private Action okBtnCallback;
-    private Action cancelBtnCallback;
+    private ConfirmData confirmData;
+    private ConfirmData ConfirmData => confirmData;
 
     private void Awake()
     {
         okBtn.onClick.AddListener(OK_OnClick);
-        cancelBtn.onClick.AddListener(cancel_OnClick);
+        cancelBtn.onClick.AddListener(Cancel_OnClick);
     }
 
-    public void Init(params object[] data)
+    public override void OnInit(ConfirmData _confirmData)
     {
-        if (data.Length > 0)
-        {
-            text.text = (string)data[0];
-        }
-        if (data.Length > 1)
-        {
-            okBtnCallback = (Action)data[1];
-        }
-        else
-        {
-            okBtnCallback = null;
-        }
-
-        if (data.Length > 2)
-        {
-            cancelBtnCallback = (Action)data[2];
-        }
-        else
-        {
-            cancelBtnCallback = null;
-        }
+        confirmData = _confirmData;
+        //TODO: 根据回调 动态显隐按钮
     }
 
     public void OK_OnClick()
     {
-        okBtnCallback?.Invoke();
+        confirmData?.okCallBack?.Invoke();
         ClosePanel();
     }
 
-    public void cancel_OnClick()
+    public void Cancel_OnClick()
     {
-        cancelBtnCallback?.Invoke();
+        confirmData?.cancelCallBack?.Invoke();
         ClosePanel();
     }
 }

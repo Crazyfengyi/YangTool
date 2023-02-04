@@ -31,8 +31,9 @@ public class EffectAutoRecycle : MonoBehaviour
     /// 对象池物体脚本
     /// </summary>
     public EffectObjectPoolItem effectObjectPoolItem;
-    public void Init()
+    public void Init(EffectObjectPoolItem _effectObjectPoolItem)
     {
+        effectObjectPoolItem = _effectObjectPoolItem;
         ParticleSystem[] list = transform.GetComponentsInChildren<ParticleSystem>(true);
 
         for (int i = 0; i < list.Length; i++)
@@ -83,9 +84,15 @@ public class EffectAutoRecycle : MonoBehaviour
         currentTime += Time.deltaTime;
         if (currentTime > maxLifeTime)
         {
-            if (effectObjectPoolItem != null) GameEffectManager.Instance.RecycleEffet(effectObjectPoolItem);
             isSurvive = false;
-            Destroy(this);
+            if (effectObjectPoolItem != null)
+            {
+                GameEffectManager.Instance.RecycleEffet(effectObjectPoolItem);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

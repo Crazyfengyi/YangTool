@@ -9,6 +9,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
+using YangTools.Extend;
+using YangTools.ObjectPool;
 
 /// <summary>
 /// 抛射体管理器(子弹)
@@ -44,12 +46,17 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// </summary>
     public BulletBase CreateBullet(BulletData bulletData, ActorCampType actorCampType = ActorCampType.Monster)
     {
-        //TODO:需要换成对象池
-        GameObject Obj = GameResourceManager.Instance.ResoruceLoad($"Bullets/BulletTest");
-        GameObject bulletObj = GameObject.Instantiate(Obj, bulletData.FromPostion, Quaternion.identity);
+        bulletData.name = "BulletTest";
+
+        //子弹对象
+        BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name);
+        poolItem.InitData(bulletData);
+        GameObject bulletObj = poolItem.obj;
+        bulletObj.transform.localPosition = bulletData.FromPostion;
 
         BulletBase bulletBase = new BulletBase(bulletData, bulletObj);
         bulletBase.targetCamp = actorCampType;
+        bulletBase.SetBulletObjectPoolItem(poolItem);
         allBullet.Add(bulletBase);
         return bulletBase;
     }
@@ -60,8 +67,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     public void RemoveBullet(BulletBase bulletBase)
     {
         allBullet.Remove(bulletBase);
-        //TODO:需要换成对象池
-        Destroy(bulletBase.bulletObj);
+        YangObjectPool.Recycle(bulletBase.BulletObjectPoolItem);
     }
 }
 
@@ -156,10 +162,15 @@ public class EmitterBase
 public class BulletBase
 {
     /// <summary>
+    /// 对象池子弹对象
+    /// </summary>
+    private BulletObjectPoolItem bulletObjectPoolItem;
+    public BulletObjectPoolItem BulletObjectPoolItem => bulletObjectPoolItem;
+
+    /// <summary>
     /// 子弹数据
     /// </summary>
     private BulletData bulletData;
-
     public BulletData BulletData => bulletData;
 
     /// <summary>
@@ -179,6 +190,13 @@ public class BulletBase
         bulletData = data;
         bulletObj = Obj;
         bulletObj.transform.forward = data.direction;
+    }
+    /// <summary>
+    /// 设置对象池子弹类引用
+    /// </summary>
+    public void SetBulletObjectPoolItem(BulletObjectPoolItem _bulletObjectPoolItem)
+    {
+        bulletObjectPoolItem = _bulletObjectPoolItem;
     }
 
     public void OnUpdate()
@@ -301,6 +319,7 @@ public class EmitData
 /// </summary>
 public class BulletData
 {
+    public string name;
     /// <summary>
     /// 创建者
     /// </summary>
@@ -351,10 +370,49 @@ public class BulletData
     /// <summary>
     /// 最大存活时间
     /// </summary>
-    public float survivalMaxTime = 10f;
+    public float survivalMaxTime = 6f;
 
     /// <summary>
     /// 碰撞点
     /// </summary>
     public Vector3 collisionPos;
+}
+
+/// <summary>
+/// 对象池子弹对象
+/// </summary>
+public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
+{
+    public string PoolKey { get; set; }
+    public bool IsInPool { get; set; }
+    public GameObject obj;
+
+    public BulletObjectPoolItem()
+    {
+    }
+
+    public BulletObjectPoolItem(string name)
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad($"Bullets/{name}"));
+        obj = tempObj;
+    }
+
+    public void InitData(BulletData bulletData)
+    {
+    }
+
+    public void OnGet()
+    {
+        obj.DefualtGameObjectOnGet();
+    }
+
+    public void OnRecycle()
+    {
+        obj.DefualtGameObjectRecycle();
+    }
+
+    public void OnDestroy()
+    {
+        obj.DefualtGameObjectDestory();
+    }
 }

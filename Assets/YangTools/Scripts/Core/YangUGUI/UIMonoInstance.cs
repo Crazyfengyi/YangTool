@@ -14,11 +14,10 @@ namespace YangTools.UGUI
     public class UIMonoInstance : MonoBehaviour
     {
         private static UIMonoInstance instance;
-        public static UIMonoInstance Instance
-        { get { return instance; } }
+        public static UIMonoInstance Instance => instance;
 
         //UI管理类
-        private IUIManager UIManager = null;
+        private IUIManager uiManager;
 
         [SerializeField]
         private Transform instanceRoot = null;
@@ -31,7 +30,7 @@ namespace YangTools.UGUI
 
         //UI组设置
         [SerializeField]
-        private UIGroupSetting[] m_UIGroups = null;
+        private UIGroupSetting[] uiGroups = null;
 
         //UI列表
         private readonly List<IUIPanel> internalUIPanelResults = new List<IUIPanel>();
@@ -49,14 +48,13 @@ namespace YangTools.UGUI
             }
             else
             {
-                Debug.LogError("UIMonoInstance 有重复");
+                Debug.LogError("UIMonoInstance有重复");
             }
 
-            UIManager = YangToolsManager.GetModule<YangUIManager>();
-            if (UIManager == null)
+            uiManager = YangToolsManager.GetModule<YangUIManager>();
+            if (uiManager == null)
             {
-                Debug.LogError("UI manager is null.");
-                return;
+                Debug.LogError("UIManager is null.");
             }
         }
 
@@ -65,27 +63,26 @@ namespace YangTools.UGUI
             //父节点
             if (instanceRoot == null)
             {
-                instanceRoot = new GameObject("UI Panel Instances").transform;
+                instanceRoot = new GameObject("UIPanelInstances").transform;
                 instanceRoot.SetParent(gameObject.transform);
                 instanceRoot.localScale = Vector3.one;
+                instanceRoot.gameObject.layer = LayerMask.NameToLayer("UI");
             }
-            instanceRoot.gameObject.layer = LayerMask.NameToLayer("UI");
 
             //界面辅助器
-            GameObject uiPanelHelper = new GameObject();
+            GameObject uiPanelHelper = new GameObject("UIPanelHelper");
             UGUIPanelHelper uiPanelHelperScript = uiPanelHelper.AddComponent<UGUIPanelHelper>();
-            uiPanelHelper.name = "UI Panel Helper";
             Transform transform = uiPanelHelper.transform;
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
-            UIManager.SetuiPanelHelper(uiPanelHelperScript);
+            uiManager.SetUIPanelHelper(uiPanelHelperScript);
 
             //根据设置添加组
-            for (int i = 0; i < m_UIGroups.Length; i++)
+            for (int i = 0; i < uiGroups.Length; i++)
             {
-                if (!AddUIGroup(m_UIGroups[i].Name, m_UIGroups[i].Depth))
+                if (!AddUIGroup(uiGroups[i].Name, uiGroups[i].Depth))
                 {
-                    Debug.LogWarning(string.Format("Add UI group '{0}' failure.", m_UIGroups[i].Name));
+                    Debug.LogWarning($"添加UI组失败:{uiGroups[i].Name}");
                     continue;
                 }
             }
@@ -94,12 +91,12 @@ namespace YangTools.UGUI
         /// <summary>
         /// 增加UI界面组
         /// </summary>
-        /// <param name="uiGroupName">界面组名称</param>
+        /// <param name="groupName">界面组名称</param>
         /// <param name="depth">界面组深度</param>
         /// <returns>是否增加界面组成功</returns>
-        public bool AddUIGroup(string uiGroupName, int depth = 0)
+        public bool AddUIGroup(string groupName, int depth = 0)
         {
-            if (UIManager.HasUIGroup(uiGroupName))
+            if (uiManager.HasUIGroup(groupName))
             {
                 return false;
             }
@@ -112,13 +109,13 @@ namespace YangTools.UGUI
                 Debug.LogError("Can not create UI group helper.");
                 return false;
             }
-            uiGroupHelper.name = string.Format("UI Group - {0}", uiGroupName);
+            uiGroupHelper.name = string.Format("UI Group - {0}", groupName);
             uiGroupHelper.gameObject.layer = LayerMask.NameToLayer("UI");
             Transform transform = uiGroupHelper.transform;
             transform.SetParent(instanceRoot);
             transform.localScale = Vector3.one;
 
-            return UIManager.AddUIGroup(uiGroupName, depth, uiPanelHelperScript);
+            return uiManager.AddUIGroup(groupName, depth, uiPanelHelperScript);
         }
 
         #endregion 初始化
@@ -127,7 +124,7 @@ namespace YangTools.UGUI
 
         public (bool have, UIPanelInfo panelInfo) IsOpening(string assetName)
         {
-            return UIManager.PanelIsOpen(assetName);
+            return uiManager.PanelIsOpen(assetName);
         }
 
         #endregion 获取界面信息
@@ -141,7 +138,7 @@ namespace YangTools.UGUI
         /// <returns>要获取的界面</returns>
         public UIPanel GetUIPanel(int serialId)
         {
-            return (UIPanel)UIManager.GetUIPanel(serialId);
+            return (UIPanel)uiManager.GetUIPanel(serialId);
         }
 
         /// <summary>
@@ -151,7 +148,7 @@ namespace YangTools.UGUI
         /// <returns>要获取的界面逻辑类</returns>
         public T GetUIPanel<T>(int serialId) where T : class, IUGUIPanel
         {
-            return ((UIPanel)UIManager.GetUIPanel(serialId)).UGUIPanel as T;
+            return ((UIPanel)uiManager.GetUIPanel(serialId)).UGUIPanel as T;
         }
 
         /// <summary>
@@ -160,7 +157,7 @@ namespace YangTools.UGUI
         /// <param name="assetName">资源名称</param>
         public UIPanel GetUIPanel(string assetName)
         {
-            return (UIPanel)UIManager.GetUIPanel(assetName);
+            return (UIPanel)uiManager.GetUIPanel(assetName);
         }
 
         /// <summary>
@@ -170,7 +167,7 @@ namespace YangTools.UGUI
         /// <returns>要获取的界面</returns>
         public T GetUIPanel<T>(string assetName) where T : class, IUGUIPanel
         {
-            return ((UIPanel)UIManager.GetUIPanel(assetName)).UGUIPanel as T;
+            return ((UIPanel)uiManager.GetUIPanel(assetName)).UGUIPanel as T;
         }
 
         /// <summary>
@@ -179,7 +176,7 @@ namespace YangTools.UGUI
         /// <param name="assetName">资源名称</param>
         public UIPanel[] GetUIPanels(string assetName)
         {
-            IUIPanel[] uiPanels = UIManager.GetUIPanels(assetName);
+            IUIPanel[] uiPanels = uiManager.GetUIPanels(assetName);
             UIPanel[] uiPanelImpls = new UIPanel[uiPanels.Length];
             for (int i = 0; i < uiPanels.Length; i++)
             {
@@ -193,7 +190,7 @@ namespace YangTools.UGUI
         /// </summary>
         public UIPanel[] GetAllLoadedUIPanels()
         {
-            IUIPanel[] uiPanels = UIManager.GetAllLoadedUIPanels();
+            IUIPanel[] uiPanels = uiManager.GetAllLoadedUIPanels();
             UIPanel[] uiPanelImpls = new UIPanel[uiPanels.Length];
             for (int i = 0; i < uiPanels.Length; i++)
             {
@@ -303,7 +300,7 @@ namespace YangTools.UGUI
         /// <returns>界面的序列编号</returns>
         public int OpenUIPanel(string uiPanelAssetName, string uiGroupName, int priority, bool pauseCovereduiPanel, object userData)
         {
-            return UIManager.OpenUIPanel(uiPanelAssetName, uiGroupName, priority, pauseCovereduiPanel, userData);
+            return uiManager.OpenUIPanel(uiPanelAssetName, uiGroupName, priority, pauseCovereduiPanel, userData);
         }
 
         #endregion 打开UI界面
@@ -316,7 +313,7 @@ namespace YangTools.UGUI
         /// <param name="serialId">要关闭界面的序列编号</param>
         public void CloseUIPanel(int serialId)
         {
-            UIManager.CloseUIPanel(serialId);
+            uiManager.CloseUIPanel(serialId);
         }
 
         /// <summary>
@@ -326,7 +323,7 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         public void CloseUIPanel(int serialId, object userData)
         {
-            UIManager.CloseUIPanel(serialId, userData);
+            uiManager.CloseUIPanel(serialId, userData);
         }
 
         /// <summary>
@@ -335,7 +332,7 @@ namespace YangTools.UGUI
         /// <param name="uiPanel">要关闭的界面</param>
         public void CloseUIPanel(UIPanel uiPanel)
         {
-            UIManager.CloseUIPanel(uiPanel);
+            uiManager.CloseUIPanel(uiPanel);
         }
 
         /// <summary>
@@ -345,7 +342,7 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         public void CloseUIPanel(UIPanel uiPanel, object userData)
         {
-            UIManager.CloseUIPanel(uiPanel, userData);
+            uiManager.CloseUIPanel(uiPanel, userData);
         }
 
         #endregion 关闭界面
@@ -358,7 +355,7 @@ namespace YangTools.UGUI
         /// <param name="uiPanel">要激活的界面</param>
         public void ActiveUIPanel(UIPanel uiPanel)
         {
-            UIManager.RefocusUIPanel(uiPanel);
+            uiManager.RefocusUIPanel(uiPanel);
         }
 
         /// <summary>
@@ -368,7 +365,7 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         public void ActiveUIPanel(UIPanel uiPanel, object userData)
         {
-            UIManager.RefocusUIPanel(uiPanel, userData);
+            uiManager.RefocusUIPanel(uiPanel, userData);
         }
 
         #endregion 激活界面

@@ -367,7 +367,7 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/WordUI"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"));
         obj = tempObj;
     }
     public void OnGet()
@@ -421,7 +421,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/HPBarUI"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"));
         obj = tempObj;
         //设置显示
         text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);

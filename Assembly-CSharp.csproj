@@ -165,8 +165,9 @@
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\BaseScrollList.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\Core\BuffControl.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\Poser.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\UICommonTool.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\UICommon\UICommonTool.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\CharacterAnimationThirdPersonIK.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\UICommon\UIDataStruct.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDataCode\YangDataCode.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatform.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\Constraint.cs" />

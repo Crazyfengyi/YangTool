@@ -36,8 +36,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     {
         EffectObjectPoolItem effectObjectPoolItem = GetEffet(null, worldPos, name);
         EffectAutoRecycle script = effectObjectPoolItem.obj.AddComponent<EffectAutoRecycle>();
-        script.effectObjectPoolItem = effectObjectPoolItem;
-        script.Init();
+        script.Init(effectObjectPoolItem);
         return effectObjectPoolItem;
     }
 
@@ -60,7 +59,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     private EffectObjectPoolItem CreateEffet(EffectData effectData)
     {
         //特效对象
-        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName);
+        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName, effectData.effectName);
         poolItem.InitData(effectData);
         GameObject effectObj = poolItem.obj;
         effectObj.transform.localPosition = effectData.worldPos;

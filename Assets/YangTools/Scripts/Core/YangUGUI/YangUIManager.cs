@@ -25,13 +25,13 @@ namespace YangTools.UGUI
         private bool isShutdown;//是否关闭
         private IUIPanelHelper uiPanelHelper;//UI界面辅助类
 
-        public event EventHandler<OpenUIPanelSuccessEventArgs> OpenUIPanelSuccess;//打开页面成功事件
+        public event EventHandler<UIPanelOpenSucceedEventArgs> OpenUIPanelSuccess;//打开页面成功事件
 
-        public event EventHandler<OpenUIPanelFailureEventArgs> OpenUIPanelFailure;//打开页面失败事件
+        public event EventHandler<UIPanelOpenFailedEventArgs> OpenUIPanelFailure;//打开页面失败事件
 
-        public event EventHandler<OpenUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
+        public event EventHandler<OnUIPanelUpdateEventArgs> OpenUIPanelUpdate;//打开页面轮询事件
 
-        public event EventHandler<CloseUIPanelCompleteEventArgs> CloseUIPanelComplete;//关闭界面时
+        public event EventHandler<OnUIPanelCloseEventArgs> CloseUIPanelComplete;//关闭界面时
 
         /// <summary>
         /// 获取界面组数量
@@ -97,7 +97,7 @@ namespace YangTools.UGUI
         /// 设置界面辅助器
         /// </summary>
         /// <param name="uiPanelHelper">界面辅助器</param>
-        public void SetuiPanelHelper(IUIPanelHelper uiPanelHelper)
+        public void SetUIPanelHelper(IUIPanelHelper uiPanelHelper)
         {
             if (uiPanelHelper == null)
             {
@@ -429,44 +429,43 @@ namespace YangTools.UGUI
         /// <summary>
         /// 打开界面
         /// </summary>
-        /// <param name="uiPanelAssetName">界面资源名称</param>
-        /// <param name="uiGroupName">界面组名称</param>
+        /// <param name="assetName">界面资源名称</param>
+        /// <param name="groupName">界面组名称</param>
         /// <param name="priority">加载界面资源的优先级</param>
         /// <param name="pauseCovereduiPanel">是否暂停被覆盖的界面</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>界面的序列编号</returns>
-        public int OpenUIPanel(string uiPanelAssetName, string uiGroupName, int priority, bool pauseCovereduiPanel, object userData)
+        public int OpenUIPanel(string assetName, string groupName, int priority, bool pauseCovereduiPanel, object userData)
         {
-            if (uiPanelHelper == null) throw new Exception("You must set UI form helper first.");
-            if (string.IsNullOrEmpty(uiPanelAssetName)) throw new Exception("UI form asset name is invalid.");
-            if (string.IsNullOrEmpty(uiGroupName)) throw new Exception("UI group name is invalid.");
+            if (uiPanelHelper == null) throw new Exception("你必须设置一个UIPanelHelper");
+            if (string.IsNullOrEmpty(assetName)) throw new Exception("UI资源名为空");
+            if (string.IsNullOrEmpty(groupName)) throw new Exception("UI组名为空");
 
-            UIGroup uiGroup = (UIGroup)GetUIGroup(uiGroupName);
-            if (uiGroup == null) throw new Exception(string.Format("UI group '{0}' is not exist.", uiGroupName));
+            UIGroup uiGroup = (UIGroup)GetUIGroup(groupName);
+            if (uiGroup == null) throw new Exception($"UI组是未找到{groupName}");
 
             int serialId = ++serial;
             //TODO:对象池
             UIPanelInstanceObject uiPanelInstanceObject = null;/*instancePool?.Get("")*/
-            //uiPanelInstanceObject.OnGet(uiPanelInstanceObject);//uiPanelAssetName
 
             if (uiPanelInstanceObject == null)
             {
                 //TODO 需要完整的资源加载器
-                UnityEngine.Object panelAsset = Resources.Load("Panel/" + uiPanelAssetName + "/" + uiPanelAssetName);//资源
+                UnityEngine.Object panelAsset = Resources.Load("UI/" + assetName + "/" + assetName);//资源
                 if (panelAsset == null)
                 {
-                    Debug.LogError($"UI页面加载失败:{uiPanelAssetName}");
+                    Debug.LogError($"UI页面加载失败:{assetName}");
                     throw new Exception();
                 }
 
-                uiPanelInstanceObject = UIPanelInstanceObject.Create(uiPanelAssetName, panelAsset, uiPanelHelper.InstantiateUIPanel(panelAsset), uiPanelHelper);
+                uiPanelInstanceObject = UIPanelInstanceObject.Create(assetName, panelAsset, uiPanelHelper.InstantiateUIPanel(panelAsset), uiPanelHelper);
 
-                InternalOpenUIPanel(serialId, uiPanelAssetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, true, 0f, userData);
+                InternalOpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, true, 0f, userData);
             }
             else
             {
                 //打开界面
-                InternalOpenUIPanel(serialId, uiPanelAssetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, false, 0f, userData);
+                InternalOpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, false, 0f, userData);
             }
 
             return serialId;
@@ -569,7 +568,7 @@ namespace YangTools.UGUI
 
             if (CloseUIPanelComplete != null)
             {
-                CloseUIPanelCompleteEventArgs closeuiPanelCompleteEventArgs = CloseUIPanelCompleteEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
+                OnUIPanelCloseEventArgs closeuiPanelCompleteEventArgs = OnUIPanelCloseEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
                 CloseUIPanelComplete(this, closeuiPanelCompleteEventArgs);
             }
 
@@ -623,7 +622,7 @@ namespace YangTools.UGUI
 
                 if (OpenUIPanelSuccess != null)
                 {
-                    OpenUIPanelSuccessEventArgs openuiPanelSuccessEventArgs = OpenUIPanelSuccessEventArgs.Create(uiPanel, duration, userData);
+                    UIPanelOpenSucceedEventArgs openuiPanelSuccessEventArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
                     OpenUIPanelSuccess(this, openuiPanelSuccessEventArgs);
                 }
             }
@@ -631,7 +630,7 @@ namespace YangTools.UGUI
             {
                 if (OpenUIPanelFailure != null)
                 {
-                    OpenUIPanelFailureEventArgs openuiPanelFailureEventArgs = OpenUIPanelFailureEventArgs.Create(serialId, uiPanelAssetName, uiGroup.Name, pauseCovereduiPanel, exception.ToString(), userData);
+                    UIPanelOpenFailedEventArgs openuiPanelFailureEventArgs = UIPanelOpenFailedEventArgs.Create(serialId, uiPanelAssetName, uiGroup.Name, pauseCovereduiPanel, exception.ToString(), userData);
                     OpenUIPanelFailure(this, openuiPanelFailureEventArgs);
                 }
                 throw;

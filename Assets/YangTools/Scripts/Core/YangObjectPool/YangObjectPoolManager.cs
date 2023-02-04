@@ -296,7 +296,7 @@ namespace YangTools.ObjectPool
                 if (item.Name.Contains("IPoolItem"))
                 {
                     methodInfoCreate = item.GetMethod("PoolCreate", new Type[0]);
-                    methodInfoCreate2 = item.GetMethod("PoolCreate", new Type[] { typeof(string) });
+                    methodInfoCreate2 = item.GetMethod("PoolCreate", new Type[] { typeof(object[]) });
                     break;
                 }
             }
@@ -328,7 +328,7 @@ namespace YangTools.ObjectPool
                     {
                         throw new InvalidOperationException();
                     }
-                    item = (T)createFunc2?.Invoke(null, args);
+                    item = (T)createFunc2?.Invoke(null, new object[] { args });
                 }
                 else
                 {

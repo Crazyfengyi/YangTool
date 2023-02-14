@@ -14,7 +14,7 @@ public class TestUIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            UIMonoInstance.Instance.OpenUIPanel("DialoguePanel", "One");
+            //UIMonoInstance.Instance.OpenUIPanel("DialoguePanel", "One");
         }
     }
 }

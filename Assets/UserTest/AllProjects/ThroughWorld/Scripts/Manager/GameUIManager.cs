@@ -91,10 +91,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                 allHPBar[i]?.Update();
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            UIMonoInstance.Instance.OpenUIPanel("DialoguePanel", "One");
-        }
     }
     /// <summary>
     /// 场景切换

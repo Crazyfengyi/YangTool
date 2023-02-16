@@ -17,7 +17,7 @@ namespace YangTools.ObjectPool
     /// <summary>
     /// 通用对象池
     /// </summary>
-    internal class YangObjectPool : GameModuleBase
+    public class YangObjectPool : GameModuleBase
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)

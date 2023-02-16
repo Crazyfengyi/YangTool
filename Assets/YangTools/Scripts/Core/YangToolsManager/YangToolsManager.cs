@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using YangTools.UGUI;
 
@@ -32,10 +33,22 @@ namespace YangTools
         {
             if (isInit) return;
             isInit = true;
+
             InitDontDestoryObject();
-            //保证模块创建
+            //手动创建模块(顺序问题)
             YangToolsManager.GetModule<YangUIManager>();
             YangToolsManager.GetModule<YangAudioManager>();
+            //初始化未手动创建的模块
+            for (int i = 0; i < allGameModule.Count; i++)
+            {
+                TypeInfo item = allGameModule[i];
+                //还没有创建过
+                if (!allCreateModuleName.Contains(item.FullName))
+                {
+                    GameModuleBase baseScript = item.Assembly.CreateInstance(item.FullName) as GameModuleBase;
+                    AddModuleToLinkList(baseScript);
+                }
+            }
         }
         /// <summary>
         /// 在Unity中创建一个不能删除的物体
@@ -48,6 +61,114 @@ namespace YangTools
             UnityEngine.Object.DontDestroyOnLoad(DontDestoryObject);
             GamePoolObject = new GameObject("GamePoolsObject");
             GamePoolObject.transform.SetParent(DontDestoryObject.transform);
+        }
+
+        //所有游戏模块
+        private readonly static List<TypeInfo> allGameModule = GetAllGameModule();
+        //已经创建过的模块全名
+        private readonly static List<string> allCreateModuleName = new List<string>();
+        //获得所有游戏模块
+        private static List<TypeInfo> GetAllGameModule()
+        {
+            List<TypeInfo> tempList = new List<TypeInfo>();
+            Type baseType = typeof(GameModuleBase);
+            //获取执行程序集,定义的类型
+            foreach (var typeInfo in System.Reflection.Assembly.GetExecutingAssembly().DefinedTypes)
+            {
+                //是class&&是子类
+                if (typeInfo.IsClass && typeInfo.IsSubclassOf(baseType))
+                {
+                    tempList.Add(typeInfo);
+                }
+            }
+            return tempList;
+        }
+        #endregion
+
+        #region 模块管理
+        /// <summary>
+        /// 游戏模块链表
+        /// </summary>
+        private static readonly LinkedList<GameModuleBase> GameModulesList = new LinkedList<GameModuleBase>();
+        /// <summary>
+        /// 获得模块
+        /// </summary>
+        /// <remarks>模块不存在,自动创建模块</remarks>
+        public static T GetModule<T>() where T : GameModuleBase
+        {
+            Type typeInfo = typeof(T);
+            if (typeInfo == null)
+            {
+                throw new Exception($"不能找到模块{typeInfo.Name}");
+            }
+
+            return GetModule(typeInfo) as T;
+        }
+        /// <summary>
+        /// 获得模块
+        /// </summary>
+        private static GameModuleBase GetModule(Type moduleType)
+        {
+            foreach (GameModuleBase module in GameModulesList)
+            {
+                if (module.GetType() == moduleType)
+                {
+                    return module;
+                }
+            }
+
+            return CreateModule(moduleType);
+        }
+        /// <summary>
+        /// 创建模块
+        /// </summary>
+        private static GameModuleBase CreateModule(Type moduleType)
+        {
+            //创建并初始化
+            GameModuleBase newModule = (GameModuleBase)Activator.CreateInstance(moduleType);
+            if (newModule == null) throw new Exception($"不能创建模块:{moduleType.FullName}");
+            AddModuleToLinkList(newModule);
+            return newModule;
+        }
+        /// <summary>
+        /// 添加模块到链表
+        /// </summary>
+        public static void AddModuleToLinkList(GameModuleBase newModule)
+        {
+            newModule.InitModule();
+            allCreateModuleName.Add(newModule.GetType().FullName);
+            //按优先级添加进链表
+            LinkedListNode<GameModuleBase> currentNode = GameModulesList.First;
+            while (currentNode != null)
+            {
+                if (newModule.Priority > currentNode.Value.Priority)
+                {
+                    break;
+                }
+
+                currentNode = currentNode.Next;
+            }
+            if (currentNode != null)
+            {
+                GameModulesList.AddBefore(currentNode, newModule);
+            }
+            else
+            {
+                GameModulesList.AddLast(newModule);
+            }
+
+        }
+        /// <summary>
+        /// 关闭所有游戏框架框架模块
+        /// </summary>
+        private static void CloseAllModule()
+        {
+            //先关闭优先级低的
+            for (LinkedListNode<GameModuleBase> current = GameModulesList.Last; current != null; current = current.Previous)
+            {
+                current.Value.CloseModule();
+            }
+            GameModulesList.Clear();
         }
         #endregion
 
@@ -72,93 +193,12 @@ namespace YangTools
             CloseAllModule();
         }
         #endregion
-
-        #region 模块管理
-        /// <summary>
-        /// 游戏管理器链表
-        /// </summary>
-        private static readonly LinkedList<GameModuleBase> GameModulesList = new LinkedList<GameModuleBase>();
-        /// <summary>
-        /// 获取游戏框架模块
-        /// </summary>
-        /// <typeparam name="T">要获取的游戏模块类型</typeparam>
-        /// <returns>要获取的游戏框架模块</returns>
-        /// <remarks>如果要获取的游戏框架模块不存在,则自动创建该游戏框架模块</remarks>
-        public static T GetModule<T>() where T : class
-        {
-            Type typeInfo = typeof(T);
-            string moduleName = String.Format("{0}.{1}", typeInfo.Namespace, typeInfo.Name);
-            Type moduleType = Type.GetType(moduleName);
-            if (moduleType == null) throw new Exception(string.Format("Can not find Game Module type '{0}'", moduleName));
-
-            return GetModule(moduleType) as T;
-        }
-        /// <summary>
-        /// 获取游戏模块
-        /// </summary>
-        private static GameModuleBase GetModule(Type moduleType)
-        {
-            foreach (GameModuleBase module in GameModulesList)
-            {
-                if (module.GetType() == moduleType)
-                {
-                    return module;
-                }
-            }
-
-            return CreateModule(moduleType);
-        }
-        /// <summary>
-        /// 创建游戏模块
-        /// </summary>
-        private static GameModuleBase CreateModule(Type moduleType)
-        {
-            //创建并初始化
-            GameModuleBase resultModule = (GameModuleBase)Activator.CreateInstance(moduleType);
-            resultModule.InitModule();
-            if (resultModule == null) throw new Exception(string.Format("Can not create module '{0}'", moduleType.FullName));
-
-            //按优先级添加进链表
-            LinkedListNode<GameModuleBase> currentNode = GameModulesList.First;
-            while (currentNode != null)
-            {
-                if (resultModule.Priority > currentNode.Value.Priority)
-                {
-                    break;
-                }
-
-                currentNode = currentNode.Next;
-            }
-            if (currentNode != null)
-            {
-                GameModulesList.AddBefore(currentNode, resultModule);
-            }
-            else
-            {
-                GameModulesList.AddLast(resultModule);
-            }
-
-            return resultModule;
-        }
-        /// <summary>
-        /// 关闭所有游戏框架框架模块
-        /// </summary>
-        private static void CloseAllModule()
-        {
-            //先关闭优先级低的
-            for (LinkedListNode<GameModuleBase> current = GameModulesList.Last; current != null; current = current.Previous)
-            {
-                current.Value.CloseModule();
-            }
-            GameModulesList.Clear();
-        }
-        #endregion
     }
 
     /// <summary>
-    /// 游戏模块
+    /// 游戏模块基类
     /// </summary>
-    internal abstract class GameModuleBase
+    public abstract class GameModuleBase
     {
         /// <summary>
         /// 优先级

@@ -13,7 +13,7 @@ namespace YangTools.TaskExtend
     /// <summary>
     /// 任务管理器。
     /// </summary>
-    internal sealed class YangTaskManager : GameModuleBase, ITaskManager
+    public sealed class YangTaskManager : GameModuleBase, ITaskManager
     {
         #region 属性
         private readonly LinkedList<TaskBase> allTasksList;//所有任务列表

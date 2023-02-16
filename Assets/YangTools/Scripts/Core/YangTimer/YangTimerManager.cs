@@ -6,7 +6,7 @@ namespace YangTools.Timer
     /// <summary>
     /// 计时器管理者
     /// </summary>
-    internal class YangTimerManager : GameModuleBase
+    public class YangTimerManager : GameModuleBase
     {
         #region 内部调用
         ///// 单例

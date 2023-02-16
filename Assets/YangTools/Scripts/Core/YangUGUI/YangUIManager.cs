@@ -13,7 +13,7 @@ using YangTools.ObjectPool;
 
 namespace YangTools.UGUI
 {
-    internal class YangUIManager : GameModuleBase, IUIManager
+    public class YangUIManager : GameModuleBase, IUIManager
     {
         public static Font mainFont = null;//主字体
 

@@ -9,7 +9,7 @@ namespace YangTools
     /// <summary>
     /// 声音管理器
     /// </summary>
-    internal class YangAudioManager : GameModuleBase
+    public class YangAudioManager : GameModuleBase
     {
         private static YangAudioManager instance;
         public static YangAudioManager Instance

@@ -308,6 +308,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\PendulumExample.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangToolsPartial\YangToolsForTest.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\AnimationWarping.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangFSM\YangFsmManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\Rotation Limits\Scripts\Turret.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\InteractorSystem.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\BipedNaming.cs" />

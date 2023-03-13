@@ -1,9 +1,166 @@
 // Generated file
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using YangTools;
 
 public static class ScenesMenu
 {
+
+    [MenuItem("YangTools/AllSecnes/Example2", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example2_Terrain_Example2_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example2_Terrain/Example2.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/PointGraphExample", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example5_PointGraph_PointGraphExample_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example5_PointGraph/PointGraphExample.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/NavmeshExample", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example6_Navmesh_NavmeshExample_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example6_Navmesh/NavmeshExample.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/PenaltiesExample", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example9_Penalties_PenaltiesExample_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example9_Penalties/PenaltiesExample.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/Procedural", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example12_Procedural_Procedural_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example12_Procedural/Procedural.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/2D", priority = 10)]
+    public static void Assets_Plugins_AstarPathfindingProject_ExampleScenes_Example15_2D_2D_unity() { ScenesChange.OpenScene("Assets/Plugins/AstarPathfindingProject/ExampleScenes/Example15_2D/2D.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/AN_Demo", priority = 10)]
+    public static void Assets_Plugins_AZURE_Nature_Demo_AN_Demo_unity() { ScenesChange.OpenScene("Assets/Plugins/AZURE Nature/Demo/AN_Demo.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/EmptyShowcaseScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Showcase_EmptyShowcaseScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Showcase/EmptyShowcaseScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ShowcaseScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Showcase_ShowcaseScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Showcase/ShowcaseScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/TopDownScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Showcase_TopDownScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Showcase/TopDownScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ClickToMoveScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Special_ClickToMoveScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Special/ClickToMoveScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ExternalCameraScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Special_ExternalCameraScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Special/ExternalCameraScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/PlanetWalkerScene", priority = 10)]
+    public static void Assets_Plugins_Character_Movement_Fundamentals_Example_Scenes_Special_PlanetWalkerScene_unity() { ScenesChange.OpenScene("Assets/Plugins/Character Movement Fundamentals/Example Scenes/Special/PlanetWalkerScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/Scene1stPerson", priority = 10)]
+    public static void Assets_Plugins_Exploder_Scene1stPerson_unity() { ScenesChange.OpenScene("Assets/Plugins/Exploder/Scene1stPerson.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/SceneClickExplode", priority = 10)]
+    public static void Assets_Plugins_Exploder_SceneClickExplode_unity() { ScenesChange.OpenScene("Assets/Plugins/Exploder/SceneClickExplode.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/SceneExplodeSelf", priority = 10)]
+    public static void Assets_Plugins_Exploder_SceneExplodeSelf_unity() { ScenesChange.OpenScene("Assets/Plugins/Exploder/SceneExplodeSelf.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/SceneSimple", priority = 10)]
+    public static void Assets_Plugins_Exploder_SceneSimple_unity() { ScenesChange.OpenScene("Assets/Plugins/Exploder/SceneSimple.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/Example Scene", priority = 10)]
+    public static void Assets_Plugins_Joystick_Pack_Examples_Example_Scene_unity() { ScenesChange.OpenScene("Assets/Plugins/Joystick Pack/Examples/Example Scene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/RifleScene", priority = 10)]
+    public static void Assets_Plugins_PigeonCoopToolkit___Effects__Trails__Examples_Scenes_RifleScene_unity() { ScenesChange.OpenScene("Assets/Plugins/PigeonCoopToolkit/__Effects (Trails) Examples/Scenes/RifleScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/SwordScene", priority = 10)]
+    public static void Assets_Plugins_PigeonCoopToolkit___Effects__Trails__Examples_Scenes_SwordScene_unity() { ScenesChange.OpenScene("Assets/Plugins/PigeonCoopToolkit/__Effects (Trails) Examples/Scenes/SwordScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/TankScene", priority = 10)]
+    public static void Assets_Plugins_PigeonCoopToolkit___Effects__Trails__Examples_Scenes_TankScene_unity() { ScenesChange.OpenScene("Assets/Plugins/PigeonCoopToolkit/__Effects (Trails) Examples/Scenes/TankScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/PickerTest", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_ColorPicker_PickerTest_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/ColorPicker/PickerTest.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ComboBox", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_ComboBox_ComboBox_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/ComboBox/ComboBox.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/CooldownExamples", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_Cooldown_CooldownExamples_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/Cooldown/CooldownExamples.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/CurlyUIDemo", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_CurlyUI_CurlyUIDemo_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/CurlyUI/CurlyUIDemo.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/01_BasicScene", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_FancyScrollView_01_Basic_01_BasicScene_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/FancyScrollView/01_Basic/01_BasicScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/02_CellEventHandling", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_FancyScrollView_02_CellEventHandling_02_CellEventHandling_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/FancyScrollView/02_CellEventHandling/02_CellEventHandling.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/03_InfiniteScroll", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_FancyScrollView_03_InfiniteScroll_03_InfiniteScroll_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/FancyScrollView/03_InfiniteScroll/03_InfiniteScroll.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/FullScreenScrollSnap", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_HSS_VSS_ScrollSnap_FullScreenScrollSnap_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/HSS-VSS-ScrollSnap/FullScreenScrollSnap.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/PaginationManagerExample", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_HSS_VSS_ScrollSnap_PaginationManagerExample_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/HSS-VSS-ScrollSnap/PaginationManagerExample.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ScrollSnapManagedTests", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_HSS_VSS_ScrollSnap_ScrollSnapManagedTests_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/HSS-VSS-ScrollSnap/ScrollSnapManagedTests.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/MainScene", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_MenuExample_MainScene_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/MenuExample/MainScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/radial_slider", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_RadialSlider_radial_slider_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/RadialSlider/radial_slider.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ReorderableList", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_ReorderableList_ReorderableList_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/ReorderableList/ReorderableList.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/ScrollrectConflictManagerDemo", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_ScrollRectConflictManager_ScrollrectConflictManagerDemo_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/ScrollRectConflictManager/ScrollrectConflictManagerDemo.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/Selection Box Test", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_SelectionBox_Selection_Box_Test_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/SelectionBox/Selection Box Test.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/TextEffects", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_TextEffects_TextEffects_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/TextEffects/TextEffects.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/UILineRendererDemo", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_UILineRenderer_UILineRendererDemo_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/UILineRenderer/UILineRendererDemo.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/VerticalCalendar", priority = 10)]
+    public static void Assets_Plugins_unity_ui_extensions_Examples_UIVerticalScrollerDemo_Scenes_VerticalCalendar_unity() { ScenesChange.OpenScene("Assets/Plugins/unity-ui-extensions/Examples/UIVerticalScrollerDemo/Scenes/VerticalCalendar.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/EndlessWorld", priority = 10)]
+    public static void Assets_UserTest_AllProjects_EndlessWorlds_Scene_EndlessWorld_unity() { ScenesChange.OpenScene("Assets/UserTest/AllProjects/EndlessWorlds/Scene/EndlessWorld.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/GameEntry", priority = 10)]
+    public static void Assets_UserTest_AllProjects_ThroughWorld_Secenes_GameEntry_unity() { ScenesChange.OpenScene("Assets/UserTest/AllProjects/ThroughWorld/Secenes/GameEntry.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/GameLevel1", priority = 10)]
+    public static void Assets_UserTest_AllProjects_ThroughWorld_Secenes_GameLevel1_unity() { ScenesChange.OpenScene("Assets/UserTest/AllProjects/ThroughWorld/Secenes/GameLevel1.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/GameLevel2", priority = 10)]
+    public static void Assets_UserTest_AllProjects_ThroughWorld_Secenes_GameLevel2_unity() { ScenesChange.OpenScene("Assets/UserTest/AllProjects/ThroughWorld/Secenes/GameLevel2.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/GameMain", priority = 10)]
+    public static void Assets_UserTest_AllProjects_ThroughWorld_Secenes_GameMain_unity() { ScenesChange.OpenScene("Assets/UserTest/AllProjects/ThroughWorld/Secenes/GameMain.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/JammoScene", priority = 10)]
+    public static void Assets_UserTest_Jammo_Character_Scenes_JammoScene_unity() { ScenesChange.OpenScene("Assets/UserTest/Jammo-Character/Scenes/JammoScene.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/Test", priority = 10)]
+    public static void Assets_UserTest_Scenes_Test_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/Test.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/UI管理器测试", priority = 10)]
+    public static void Assets_UserTest_Scenes_UI管理器测试_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/UI管理器测试.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/房间创建", priority = 10)]
+    public static void Assets_UserTest_Scenes_房间创建_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/房间创建.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/投影测试", priority = 10)]
+    public static void Assets_UserTest_Scenes_投影测试_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/投影测试.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/测试打字效果", priority = 10)]
+    public static void Assets_UserTest_Scenes_测试打字效果_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/测试打字效果.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/物理测试", priority = 10)]
+    public static void Assets_UserTest_Scenes_物理测试_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/物理测试.unity"); }
+
+    [MenuItem("YangTools/AllSecnes/画线物理", priority = 10)]
+    public static void Assets_UserTest_Scenes_画线物理_unity() { ScenesChange.OpenScene("Assets/UserTest/Scenes/画线物理.unity"); }
 
     [MenuItem("YangTools/AllSecnes/Humanoid Baker", priority = 10)]
     public static void Assets_YangTools_Plugins_RootMotion_FinalIK_Baker__DEMOS_Humanoid_Baker_unity() { ScenesChange.OpenScene("Assets/YangTools/Plugins/RootMotion_FinalIK/Baker/_DEMOS/Humanoid Baker.unity"); }

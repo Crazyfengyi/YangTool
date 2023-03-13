@@ -55,6 +55,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private static List<HPBarObjectPoolItem> allHPBar = new List<HPBarObjectPoolItem>();
     #endregion
 
+    #region 生命周期
     protected override void Awake()
     {
         allHPBar.Clear();
@@ -84,14 +85,18 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             TipShow(tipDatas[0]);
             tipDatas.RemoveAt(0);
         }
+    }
+    public void LateUpdate()
+    {
         for (int i = 0; i < allHPBar.Count; i++)
         {
             if (allHPBar[i] != null)
             {
-                allHPBar[i]?.Update();
+                allHPBar[i]?.LateUpdate();
             }
         }
     }
+
     /// <summary>
     /// 场景切换
     /// </summary>
@@ -99,6 +104,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         returnBtn.gameObject.SetActive(sceneName != "GameMain");
     }
+    #endregion
 
     #region 提示
     /// <summary>
@@ -414,6 +420,8 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     public Slider hpSlider;
     public Slider mpSlider;
 
+    public Vector3 targetPos;
+
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
@@ -431,10 +439,10 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
         hpSlider.value = hpBarData.hpValue;
         mpSlider.value = hpBarData.mpValue;
     }
-    public void Update()
+    public void LateUpdate()
     {
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, obj.transform.parent);
-        obj.transform.localPosition = pos;
+        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, obj.transform.parent);
+        obj.transform.localPosition = Vector3.Lerp(obj.transform.localPosition, targetPos, Time.deltaTime * 10);
     }
     /// <summary>
     /// 控制显隐

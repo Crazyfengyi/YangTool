@@ -64,7 +64,7 @@ public class NPC_Mortius : RoleBase
     public override void InterAction(RoleBase role)
     {
         SceneLoader.Instance.IsAutoSkip = true;
-        SceneLoader.Instance.Load("GameLevel1", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        SceneLoader.Instance.Load("GameLevel2", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
     #endregion
 }

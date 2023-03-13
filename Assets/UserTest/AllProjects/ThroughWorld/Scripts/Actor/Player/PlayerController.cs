@@ -16,6 +16,7 @@ public class PlayerController : RoleBase
     public Vector3 inputVector3;
     public bool isJumpPressed;//跳跃键按下
     private GameInputSet GameInput;
+    public GameObject modelRoot;//模型父节点
     public GameObject model;//模型
     public GameObject shootPoint;//发射点
 

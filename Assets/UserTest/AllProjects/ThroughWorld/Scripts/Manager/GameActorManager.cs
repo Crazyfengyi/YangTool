@@ -9,6 +9,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
+using YangTools.MiniMap;
 
 /// <summary>
 /// 游戏角色管理类
@@ -51,6 +52,8 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             customLives.Add(player);
             player.IInit();
             CameraManager.Instance.ChangeMainPlayer();
+            MiniMapManager.Instance.SetMainPlayer(mainPlayer.modelRoot);
+
             DontDestroyOnLoad(mainPlayer);
         }
     }

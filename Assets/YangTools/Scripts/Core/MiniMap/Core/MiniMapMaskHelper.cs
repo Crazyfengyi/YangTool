@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace YangTools.MiniMap
 {
+    /// <summary>
+    /// 小地图遮罩
+    /// </summary>
     public class MiniMapMaskHelper : MonoSingleton<MiniMapMaskHelper>
     {
         [Header("Mask")]
@@ -46,7 +49,7 @@ namespace YangTools.MiniMap
         }
 
         /// <summary>
-        /// 全地图与小地图切换
+        /// 大地图与小地图切换
         /// </summary>
         public void OnChange(bool full = false)
         {

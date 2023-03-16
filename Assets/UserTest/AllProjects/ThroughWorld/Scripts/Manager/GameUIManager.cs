@@ -58,7 +58,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     #region 生命周期
     protected override void Awake()
     {
-        allHPBar.Clear();
         base.Awake();
         DontDestroyOnLoad(gameObject);
         Debuger.IsForceLog = true;

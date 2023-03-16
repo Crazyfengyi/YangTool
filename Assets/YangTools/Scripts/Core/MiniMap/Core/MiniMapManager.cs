@@ -100,7 +100,7 @@ namespace YangTools.MiniMap
         #region 地图旋转
 
         [BoxGroup("地图旋转")]
-        [LabelText("使用圆形旋转")]
+        [LabelText("使用指南针旋转")]
         public bool useCompassRotation = false;
 
         [BoxGroup("地图旋转")]
@@ -379,7 +379,9 @@ namespace YangTools.MiniMap
             CreateMapPlane(renderType == RenderType.RealTime);
             //避免UI世界空间与场景中的其他物体碰撞
             if (renderMode == RenderMode.Mode3D) ConfigureCamera3D();
-
+        }
+        private void Start()
+        {
             if (mapType == MapType.Target)
             {
                 //获取存档高度
@@ -579,7 +581,7 @@ namespace YangTools.MiniMap
 
         private void Inputs()
         {
-            // If the minimap button is pressed then toggle the map state.
+            //切换小地图和大地图模式
             if (Input.GetKeyDown(toogleKey))
             {
                 ToggleSize();
@@ -751,7 +753,6 @@ namespace YangTools.MiniMap
         private void ToggleSize()
         {
             isFullScreen = !isFullScreen;
-
             //全屏
             if (isFullScreen)
             {

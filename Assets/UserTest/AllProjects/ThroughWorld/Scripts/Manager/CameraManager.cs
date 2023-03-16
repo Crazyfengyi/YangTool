@@ -12,18 +12,36 @@ using YangTools;
 
 public class CameraManager : MonoSingleton<CameraManager>
 {
+    private Camera mainCamera;
+    public Camera MainCamera => mainCamera;
     public Camera PlayerCamera
     {
         get
         {
+            if (mainCamera == null)
+            {
+                GameObject obj = GameObject.Instantiate(cameraPrefab);
+                obj.transform.SetParent(transform);
+                mainCamera = obj.GetComponentInChildren<Camera>();
+                mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
+            }
             return mainCamera;
         }
     }
 
-    private Camera mainCamera;
-    public Camera MainCamera => mainCamera;
-
     private CinemachineVirtualCameraBase mainCM;
+    public CinemachineVirtualCameraBase MainCM
+    {
+        get
+        {
+            if (mainCM == null)
+            {
+                _ = PlayerCamera;
+            }
+            return mainCM;
+        }
+    }
+
     public GameObject cameraPrefab;
 
     //相机旋转速度
@@ -41,8 +59,6 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     //对transform和camera组件的引用
     protected Transform tr;
-
-    protected Camera cam;
 
     //当前旋转值(以度为单位);
     private float currentXAngle = 0f;
@@ -70,15 +86,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         base.Awake();
         tr = transform;
-        GameObject obj = GameObject.Instantiate(cameraPrefab);
-        obj.transform.SetParent(transform);
 
-        if (cam == null)
-        {
-            cam = obj.GetComponentInChildren<Camera>();
-        }
-        mainCamera = cam;
-        mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
 
         //设置角度变量为当前变换的旋转角度
         currentXAngle = tr.localRotation.eulerAngles.x;
@@ -86,11 +94,6 @@ public class CameraManager : MonoSingleton<CameraManager>
         //执行一次相机旋转代码来计算面向和向上的方向
         RotateCamera(0f, 0f);
         Setup();
-    }
-
-    public void Start()
-    {
-        ChangeMainPlayer();
     }
 
     public void ChangeMainPlayer()
@@ -165,7 +168,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// </summary>
     public void SetFOV(float _fov)
     {
-        if (cam) cam.fieldOfView = _fov;
+        PlayerCamera.fieldOfView = _fov;
     }
 
     /// <summary>

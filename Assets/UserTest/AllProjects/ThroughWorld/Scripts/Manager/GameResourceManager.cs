@@ -9,7 +9,7 @@ public class GameResourceManager : MonoSingleton<GameResourceManager>
 {
     public BuffConfigSave buffConfigSave;
 
-    public new void Awake()
+    protected override void Awake()
     {
         base.Awake();
         buffConfigSave?.Init();

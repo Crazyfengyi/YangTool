@@ -35,9 +35,6 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         base.Awake();
         customLives.Clear();
         allMonster.Clear();
-    }
-    public void Start()
-    {
         CreateMainPlayer();
     }
     /// <summary>

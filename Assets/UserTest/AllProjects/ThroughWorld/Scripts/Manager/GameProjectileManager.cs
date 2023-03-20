@@ -44,17 +44,30 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// <summary>
     /// 创建子弹
     /// </summary>
-    public BulletBase CreateBullet(BulletData bulletData, ActorCampType actorCampType = ActorCampType.Monster)
+    public BulletBase CreateBullet(BulletData bulletData, BulletShootType bulletShootType, ActorCampType actorCampType = ActorCampType.Monster)
     {
-        bulletData.name = "BulletTest";
-
         //子弹对象
         BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name);
         poolItem.InitData(bulletData);
         GameObject bulletObj = poolItem.obj;
-        bulletObj.transform.localPosition = bulletData.FromPostion;
+        bulletObj.transform.localPosition = bulletData.StartPostion;
+        BulletBase bulletBase = null;
+        switch (bulletShootType)
+        {
+            case BulletShootType.None:
+                bulletBase = new BulletBase(bulletData, bulletObj);
+                break;
+            case BulletShootType.Circle:
+                bulletBase = new BulletBase(bulletData, bulletObj);
+                break;
+            case BulletShootType.Throw:
+                bulletBase = new ThrowBullet(bulletData, bulletObj);
+                break;
+            default:
+                bulletBase = new BulletBase(bulletData, bulletObj);
+                break;
+        }
 
-        BulletBase bulletBase = new BulletBase(bulletData, bulletObj);
         bulletBase.targetCamp = actorCampType;
         bulletBase.SetBulletObjectPoolItem(poolItem);
         allBullet.Add(bulletBase);
@@ -71,6 +84,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     }
 }
 
+#region 发射器和子弹基类 信息类
 /// <summary>
 /// 发射器基类
 /// </summary>
@@ -136,13 +150,13 @@ public class EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         bulletData.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(bulletData, ActorCampType.PlayerAndBuilding);
+                        GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType, ActorCampType.PlayerAndBuilding);
                     }
                 }
                 break;
 
             default:
-                GameProjectileManager.Instance.CreateBullet(bulletData);
+                GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType);
                 break;
         }
     }
@@ -155,7 +169,6 @@ public class EmitterBase
         emitData = _emitData;
     }
 }
-
 /// <summary>
 /// 子弹基类
 /// </summary>
@@ -170,7 +183,7 @@ public class BulletBase
     /// <summary>
     /// 子弹数据
     /// </summary>
-    private BulletData bulletData;
+    protected BulletData bulletData;
     public BulletData BulletData => bulletData;
 
     /// <summary>
@@ -183,7 +196,9 @@ public class BulletBase
     /// </summary>
     public ActorCampType targetCamp;
 
-    private float timer;
+    protected bool isDie;//是否销毁
+    protected float radius = 0.5f;//检查半径
+    protected float timer;
 
     public BulletBase(BulletData data, GameObject Obj)
     {
@@ -199,7 +214,7 @@ public class BulletBase
         bulletObjectPoolItem = _bulletObjectPoolItem;
     }
 
-    public void OnUpdate()
+    public virtual void OnUpdate()
     {
         if (bulletData == null || bulletObj == null) return;
         if (bulletData.target != null)
@@ -217,7 +232,11 @@ public class BulletBase
         }
 
         bulletObj.transform.Translate(bulletObj.transform.forward * bulletData.speed * Time.deltaTime, Space.World);
-        CheckAtk();
+
+        if (CheckAtk())
+        {
+            OnDie(BulletDieType.Atk);
+        }
 
         timer += Time.deltaTime;
         if (timer >= bulletData.survivalMaxTime)
@@ -229,12 +248,12 @@ public class BulletBase
     /// <summary>
     /// 检查攻击
     /// </summary>
-    public void CheckAtk()
+    public virtual bool CheckAtk()
     {
-        Collider[] temp = Physics.OverlapSphere(bulletObj.transform.position, 0.5f);
+        Collider[] temp = Physics.OverlapSphere(bulletObj.transform.position, radius);
+        bool needDie = false;
         if (temp.Length > 0)
         {
-            bool needDie = false;
             for (int i = 0; i < temp.Length; i++)
             {
                 GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
@@ -245,9 +264,8 @@ public class BulletBase
                     needDie = true;
                 }
             }
-
-            if (needDie) OnDie(BulletDieType.Atk);
         }
+        return needDie;
     }
 
     /// <summary>
@@ -255,6 +273,9 @@ public class BulletBase
     /// </summary>
     public virtual void OnDie(BulletDieType bulletDieType)
     {
+        if (isDie) return;
+        isDie = true;
+
         switch (bulletDieType)
         {
             case BulletDieType.Atk:
@@ -264,15 +285,19 @@ public class BulletBase
                     GameEffectManager.Instance.PlayEffect("BulletAtkEffect", effectPos);
                 }
                 break;
-
+            case BulletDieType.End:
+                {
+                    Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
+                    GameSoundManager.Instance.PlaySound("Audio_BulletAtk");
+                    GameEffectManager.Instance.PlayEffect("SmokeEffect", effectPos);
+                }
+                break;
             default:
                 break;
         }
-
         GameProjectileManager.Instance.RemoveBullet(this);
     }
 }
-
 /// <summary>
 /// 发射信息
 /// </summary>
@@ -313,7 +338,6 @@ public class EmitData
     /// </summary>
     public BulletShootType bulletShootType;
 }
-
 /// <summary>
 /// 子弹数据
 /// </summary>
@@ -335,7 +359,12 @@ public class BulletData
     /// <summary>
     /// 出发点
     /// </summary>
-    public Vector3 FromPostion;
+    public Vector3 StartPostion;
+
+    /// <summary>
+    /// 目标点
+    /// </summary>
+    public Vector3 EndPostion;
 
     /// <summary>
     /// 目标
@@ -377,7 +406,6 @@ public class BulletData
     /// </summary>
     public Vector3 collisionPos;
 }
-
 /// <summary>
 /// 对象池子弹对象
 /// </summary>
@@ -416,3 +444,4 @@ public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
         obj.DefualtGameObjectDestory();
     }
 }
+#endregion

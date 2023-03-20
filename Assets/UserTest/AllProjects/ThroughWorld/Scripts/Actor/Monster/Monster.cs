@@ -45,7 +45,10 @@ public class Monster : RoleBase
                     aiPath.isStopped = true;
                     timer = 0;
                 }
-                model.transform.LookAt(GameActorManager.Instance.MainPlayer.transform.position);
+
+                Vector3 targetPos = GameActorManager.Instance.MainPlayer.transform.position;
+                targetPos.y = 0;
+                model.transform.LookAt(targetPos);
             }
             else
             {
@@ -62,7 +65,7 @@ public class Monster : RoleBase
                 EmitData emitData = new EmitData();
                 emitData.bulletID = 0;//TODO:需要设置子弹ID
                 emitData.bulletCount = 1;
-                emitData.bulletShootType = BulletShootType.None;
+                emitData.bulletShootType = BulletShootType.Throw;
                 emitter?.SetEmitData(emitData);
                 emitter?.StartShoot();
             }

@@ -61,7 +61,7 @@ public class PlayerController : RoleBase
             EmitData emitData = new EmitData();
             emitData.bulletID = 0;//TODO:需要设置子弹ID
             emitData.bulletCount = 6;
-            emitData.bulletShootType = BulletShootType.Circle;
+            emitData.bulletShootType = BulletShootType.None;
             emitter.SetEmitData(emitData);
             emitter.StartShoot();
         }

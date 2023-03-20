@@ -52,7 +52,8 @@ public class EffectInfo
 public enum BulletShootType
 {
     None,
-    Circle
+    Circle,
+    Throw
 }
 /// <summary>
 /// 交互类型
@@ -111,4 +112,5 @@ public enum BulletDieType
     TimeOut,
     SceneChange,
     Atk,
+    End,
 }

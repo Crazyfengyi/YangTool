@@ -365,7 +365,7 @@ namespace YangTools.ObjectPool
         {
             if (m_CollectionCheck && m_Stack.Count > 0 && m_Stack.Contains(item))
             {
-                throw new InvalidOperationException("Trying to release an object that has already been released to the pool.");
+                throw new InvalidOperationException("试图释放一个已经释放到池中的对象.");
             }
 
             item.OnRecycle();

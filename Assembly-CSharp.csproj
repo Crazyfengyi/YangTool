@@ -95,7 +95,7 @@
     <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForOther.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\NoRenderImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpiderParticles.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapUtils.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapUtils.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\TwistRelaxer.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\SceneLoad\SceneLoader.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\UserControlInteractions.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Posers\HandPoser.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\TransferMotion.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\HoldingHands.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\WorldSpaceConsult.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\WorldSpaceConsult.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\_DEMOS\Scripts\FKOffset.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Base\GameActor.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\ConstraintPositionOffset.cs" />
@@ -181,7 +181,7 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\TextWalkingLantern.cs" />
     <Compile Include="Assets\UserTest\MyTest\Matrix.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\ResetInteractionObject.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapDataStruct.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapDataStruct.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionLookAt.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Common\BaiduTranslate.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Constraints\Constraints.cs" />
@@ -245,7 +245,7 @@
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\UnityComponents\TurbochargedHorizontalScrollList.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\UI\CommonConfirmPanel\CommonConfirmPanel.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBIKBendGoal.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapIcon.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapIcon.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\AnimatorController3rdPerson.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GrounderQuadruped.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\CustomText\CustomText.cs" />
@@ -281,7 +281,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\OffsetModifierVRIK.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameActorManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingLeg.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapMaskHelper.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapMaskHelper.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpiderController.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\SettingInfo.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Parabola\ParabolaPath.cs" />
@@ -295,7 +295,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\SoccerDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\VRIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVR.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapManager.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Warning.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionTarget.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverFullBodyBiped.cs" />
@@ -328,7 +328,7 @@
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Player\PlayerController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMappingBone.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Character Controllers\SimpleLocomotion.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\MiniMap\Core\MiniMapItem.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapItem.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\FBIKBoxing.cs" />
     <Compile Include="Assets\UserTest\MyTest\TestUIManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Scripts\Hierarchy.cs" />
@@ -393,6 +393,7 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Bullet\ThrowBullet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />
@@ -442,7 +443,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\YangTools\Plugins\Sirenix_Odin\Readme.txt" />
     <None Include="Assets\YangTools\EditorStudio\DataExport\Plugins\ICSharpCode.SharpZipLib.dll" />
-    <None Include="Assets\YangTools\Scripts\Core\MiniMap\Shader\OverAll.shader" />
+    <None Include="Assets\YangTools\ArtRes\MiniMap\Shader\OverAll.shader" />
     <None Include="Assets\YangTools\Plugins\Demigiant_DOTween\DOTweenPro\DOTweenPro.dll" />
     <None Include="Assets\YangTools\ReadMe.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />

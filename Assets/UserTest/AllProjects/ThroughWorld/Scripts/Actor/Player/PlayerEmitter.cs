@@ -24,8 +24,9 @@ public class PlayerEmitter : EmitterBase
         BulletData data = new BulletData();
         data.owner = handle;
         data.speed = 10;
-        data.FromPostion = ((PlayerController)handle).shootPoint.transform.position;
+        data.StartPostion = ((PlayerController)handle).shootPoint.transform.position;
         data.direction = ((PlayerController)handle).model.transform.forward;
+        data.name = "TestBullet";
 
         //Collider[] temp = Physics.OverlapSphere(transform.position, 10);
         //if (temp.Length > 0)
@@ -69,12 +70,12 @@ public class PlayerEmitter : EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data, ActorCampType.MonsterAndBuilding);
+                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.MonsterAndBuilding);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data, ActorCampType.MonsterAndBuilding);
+                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.MonsterAndBuilding);
                 break;
         }
     }

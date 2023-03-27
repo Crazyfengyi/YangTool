@@ -341,6 +341,7 @@
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\Basics\GridPos.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\LayoutSettings\VerticalLayoutSettings.cs" />
     <Compile Include="Assets\UserTest\Jammo-Character\Scripts\MovementInput.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Bullet\ThrowBullet.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\Baker.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\IK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverArm.cs" />
@@ -393,7 +394,6 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Bullet\ThrowBullet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />

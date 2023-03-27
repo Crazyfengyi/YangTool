@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: 7e84044036e409d4383a88c1041fc0a3
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_0
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 729
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e87e1ec484099fb48bbeeb9c80bcf28a
+      internalID: -2140044722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_1
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 729
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75cc3e7a14964f447b88d87072168ae0
+      internalID: -265500746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_2
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 729
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6d96ade213b82a48bda7c6e71b87601
+      internalID: -347200518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_3
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 727
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e5bf4cab0c863f47a6c9226dc604489
+      internalID: 153747523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_4
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 584
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 071dde03227075d438ce41a9b0ab83e7
+      internalID: -1287037346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_5
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 582
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c06474546befdf40a8b2b33cdb29ea1
+      internalID: -241430088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_6
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 582
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a0ed645075e144f86ce08162c2b825
+      internalID: -77292161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_7
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 583
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ff9155311b5b264aa08748ea679faf9
+      internalID: -1455115471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_8
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 448
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ffa802d8856a6348bc28bf6b476fca0
+      internalID: 580311359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_9
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 448
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d7b4e2337df2d04fb6627514eefac6c
+      internalID: 104093553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_10
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 447
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47970d79a8e1ad84bbdcf76ef6eefa61
+      internalID: -1529882458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_11
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 445
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b63996e60b0652e42b48f0928ece8eee
+      internalID: 1112020741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_12
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 314
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7562b81416c07314eb0dd30f0159536b
+      internalID: 1870847132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_13
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 316
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a26b90c01fec45f45be03849fa8d7bc7
+      internalID: 755028789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_14
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 313
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11ce75face8a6a2468170ae99ebe2c26
+      internalID: 1827262934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_15
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 314
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13d8169e8617b9b419868613c8799d90
+      internalID: 1484951820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_16
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 175
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb20c14f2b5673b45a140ac3244af324
+      internalID: -1985301403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_17
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 178
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22f437ba5153226429880e7baaa36276
+      internalID: -1423468521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_18
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 177
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8b0dba07f2e9844689b96257d26666a
+      internalID: 1648899714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_19
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 174
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dc5fcdebafc8a64c861b3a01941dfe5
+      internalID: 1605113713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_20
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 46
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0707476bf7c95d54abd6475ea4b82ebf
+      internalID: -660951377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_21
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 44
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d52cd6b568fe0448938c934d2c72123
+      internalID: 805505915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_22
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 43
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a3a7a756978a1249bed41c9a429f16c
+      internalID: 970563345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Material_studies_by_AnnikeAndrews_on_DeviantArt_23
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 43
+        width: 106
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a07ef9a3c7f629409560cbc3267377d
+      internalID: 840073217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 3f06d908817959247928e193b6e19eb3
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_9: 104093553
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_15: 1484951820
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_12: 1870847132
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_0: -2140044722
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_2: -347200518
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_14: 1827262934
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_22: 970563345
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_7: -1455115471
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_18: 1648899714
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_5: -241430088
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_16: -1985301403
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_20: -660951377
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_23: 840073217
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_19: 1605113713
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_8: 580311359
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_11: 1112020741
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_13: 755028789
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_6: -77292161
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_21: 805505915
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_1: -265500746
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_4: -1287037346
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_3: 153747523
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_10: -1529882458
+      Material_studies_by_AnnikeAndrews_on_DeviantArt_17: -1423468521
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

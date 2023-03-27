@@ -1,0 +1,1327 @@
+fileFormatVersion: 2
+guid: 9c1401fd361675844b316a4ad8b44041
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: RPG Gems Icons_0
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -600, y: 920.5}
+        - {x: -600, y: -920.5}
+        - {x: 600, y: -920.5}
+        - {x: 600, y: 920.5}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b90265338beb4749941d522c10e64a7
+      internalID: -356716644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_1
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 389a8bb2e4e8c7443a4f3417f8226df1
+      internalID: -990039951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_2
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 678df24c5b34965449e6c21f8946e4f3
+      internalID: -1219416569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_3
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bcc2a831bc33ad41b76cfb5b617afef
+      internalID: 1901688730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_4
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01645e3c4df086244ad7d4532e12d3d0
+      internalID: 1195125938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_5
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1594
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f59043504a66d854d960aa52fa2eeb49
+      internalID: -333890255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_6
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed295ff2785c0d44595f2811fbda3153
+      internalID: -1488484281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_7
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c11d3403663154f46ba45a78693a6f5a
+      internalID: -476068046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_8
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a734f9c3f75247a448e96aaba4e5149b
+      internalID: -390881341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_9
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 629de7a27f675254594e978204ec25e7
+      internalID: 1159717200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_10
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a2cdc48d6ac4a045ab2612217bb815a
+      internalID: 1695237553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_11
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1405
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4fce6a417fe1b74dbe65128e07789da
+      internalID: 1133196549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_12
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d1b7e10a3c8e7f459d2697df7396f51
+      internalID: 1843500019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_13
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f5874a5e1f14a148882295f536c3c4a
+      internalID: -975453253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_14
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb7c4c737cafcf940a9ee55641874660
+      internalID: -504199241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_15
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d8b1aeb1ab4881489ef8fe3098bfd93
+      internalID: -1085704300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_16
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d715930a9e9ac643a03fbaad77bfb06
+      internalID: -424158463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_17
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1216
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a11a419840ba7464286604938f231667
+      internalID: 1982713044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_18
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87d731f411eff684ca7c30e9189dd2bd
+      internalID: -749371772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_19
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17a8602739158c843865d7bf78340af6
+      internalID: 907886934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_20
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a00f1e3d1746c4f40b55d92324846640
+      internalID: -1744227847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_21
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 828ecb8602be4e34e88d95b5b2eb2882
+      internalID: 618421477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_22
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 108f75e16e84e3f48bff3358cf6f3019
+      internalID: 927918359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_23
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 1027
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aaa2fb5679220b4cac7e8f215322e8d
+      internalID: -571112438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_24
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 176d3b8d9302a7f4ab82eefb4ed92a11
+      internalID: 1299253970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_25
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77352dafea7c3da4e94aaa81f88bc5b7
+      internalID: 805344508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_26
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc8f2ae7fe6346e49bfbb7a869630617
+      internalID: 645658775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_27
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1663d0a73d0a50e4aac4f5d2e27dcefc
+      internalID: 1013184434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_28
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38a49559ee369e943971ab721df875f6
+      internalID: -1003797697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_29
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 838
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9fdadbff22e04f49bbca2bff0b30493
+      internalID: -2141498886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_30
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 669dba7f22250624ea94e9045738c0d8
+      internalID: 921311487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_31
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b012037b2162ae4dbd92b0cf058625e
+      internalID: 1824118792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_32
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5850dde2c2ced114381797160046c9e3
+      internalID: 1694811906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_33
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c98a9f34924e94745bf920c68f33f110
+      internalID: -1527204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_34
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 615df96ba14ff7c46b4f7a4de521ae2e
+      internalID: -1639331644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_35
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 649
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f556d96cae0c73f4f93ca3ee6ced42e5
+      internalID: 1743475956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_36
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec2f9374c61e4ad408db123395644934
+      internalID: -915511053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_37
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 764f0e1277c4c6d4eaead14c17d11c46
+      internalID: 905693499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_38
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7c4c8880ef56f641b21e41e42dffaec
+      internalID: 34324695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_39
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0169d42559cf7949a9405af1d66f44a
+      internalID: -1692446275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_40
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10e26c4d71284b34ba177946478e78e4
+      internalID: -212117039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_41
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 460
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e46ff4845d92280489c73d8e10320511
+      internalID: -362681902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_42
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b085b2eed8fc6e747bde080617b5cade
+      internalID: 1594813624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_43
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b394740312fe0ce428ebcf897fd24133
+      internalID: 1703376515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_44
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df14bb83da01d964d84bbbe88d7feefc
+      internalID: -1617192051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_45
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ded344ab3e1c6f459edb03ae16d15e7
+      internalID: -96267412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_46
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a23b90535c3b5a4da002f202fe25338
+      internalID: -1637436525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_47
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 271
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d223d81eb17d3594b968633a20143b9e
+      internalID: -1221473281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_48
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d459e296b5054b845ae4cd62badf0a96
+      internalID: -857101752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_49
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f07746c0cb3aac643a40e049cf3a6da4
+      internalID: 2007567724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_50
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64cde290e9d030a44963bb45151e651f
+      internalID: -844980955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_51
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbfcf57c01edc8d49b9a46fc476b077f
+      internalID: 877529490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_52
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 034da0c79200c7e4cb20c9d985153e6f
+      internalID: -1935464003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RPG Gems Icons_53
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 82
+        width: 159
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b64d94c35e1d7d45a687092b41a7251
+      internalID: 812944148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      RPG Gems Icons_43: 1703376515
+      RPG Gems Icons_20: -1744227847
+      RPG Gems Icons_22: 927918359
+      RPG Gems Icons_44: -1617192051
+      RPG Gems Icons_7: -476068046
+      RPG Gems Icons_1: -990039951
+      RPG Gems Icons_30: 921311487
+      RPG Gems Icons_49: 2007567724
+      RPG Gems Icons_38: 34324695
+      RPG Gems Icons_37: 905693499
+      RPG Gems Icons_50: -844980955
+      RPG Gems Icons_5: -333890255
+      RPG Gems Icons_17: 1982713044
+      RPG Gems Icons_23: -571112438
+      RPG Gems Icons_42: 1594813624
+      RPG Gems Icons_18: -749371772
+      RPG Gems Icons_12: 1843500019
+      RPG Gems Icons_2: -1219416569
+      RPG Gems Icons_29: -2141498886
+      RPG Gems Icons_16: -424158463
+      RPG Gems Icons_26: 645658775
+      RPG Gems Icons_32: 1694811906
+      RPG Gems Icons_19: 907886934
+      RPG Gems Icons_34: -1639331644
+      RPG Gems Icons_15: -1085704300
+      RPG Gems Icons_48: -857101752
+      RPG Gems Icons_6: -1488484281
+      RPG Gems Icons_9: 1159717200
+      RPG Gems Icons_8: -390881341
+      RPG Gems Icons_10: 1695237553
+      RPG Gems Icons_27: 1013184434
+      RPG Gems Icons_3: 1901688730
+      RPG Gems Icons_39: -1692446275
+      RPG Gems Icons_40: -212117039
+      RPG Gems Icons_47: -1221473281
+      RPG Gems Icons_31: 1824118792
+      RPG Gems Icons_46: -1637436525
+      RPG Gems Icons_24: 1299253970
+      RPG Gems Icons_28: -1003797697
+      RPG Gems Icons_33: -1527204
+      RPG Gems Icons_4: 1195125938
+      RPG Gems Icons_41: -362681902
+      RPG Gems Icons_14: -504199241
+      RPG Gems Icons_0: -356716644
+      RPG Gems Icons_52: -1935464003
+      RPG Gems Icons_51: 877529490
+      RPG Gems Icons_53: 812944148
+      RPG Gems Icons_25: 805344508
+      RPG Gems Icons_11: 1133196549
+      RPG Gems Icons_45: -96267412
+      RPG Gems Icons_13: -975453253
+      RPG Gems Icons_21: 618421477
+      RPG Gems Icons_35: 1743475956
+      RPG Gems Icons_36: -915511053
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

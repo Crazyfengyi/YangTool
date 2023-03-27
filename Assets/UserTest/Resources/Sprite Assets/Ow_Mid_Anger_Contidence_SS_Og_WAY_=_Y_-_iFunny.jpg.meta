@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: d7899ef129c57b142bfe668642dbb269
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 5
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_0
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 1058
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e18cfbdeeec0eef41926395070dced73
+      internalID: -1598283646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_1
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 1058
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9e6596945a16134c9105ef3b1ec2f95
+      internalID: 518098225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_2
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 1058
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56034d3ea45285341af511aca223957e
+      internalID: -462080164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_3
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 922
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9376d9a3539961a4d9e83be9af174d0a
+      internalID: 1807973203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_4
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 922
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16a218a6dc7110741939ff15b9a4f97c
+      internalID: 1043099878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_5
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 922
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66d81b61de591714995f6348ae6d4fed
+      internalID: -1926986740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_6
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 786
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26335cfe5c4d21043b738dff69037f8e
+      internalID: -1720294250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_7
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 786
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2534bb3e55ee4142ade9e75b2847326
+      internalID: 611043689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_8
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 786
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb40305a151eadb4aa8fb7cec84c7ad9
+      internalID: 1727815163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_9
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 650
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4921891e5c340a4caffe3a72f73d7a9
+      internalID: -1164133021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_10
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 650
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fa28d090e532b94081fff2a68bae213
+      internalID: -74260725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_11
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 650
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85cb5b7b06a87e34caa9a780a294cf19
+      internalID: 1143483310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_12
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 508
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e71242f9d4c207b4ea6fb9db54d8f62e
+      internalID: -1849346872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_13
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 509
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4395f3b214b2d354a9f441bca5017220
+      internalID: 71827365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 510
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24273592ef774384bbc4df943c7fb5e8
+      internalID: 1600697440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_15
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 364
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f89f5225580e8e8408e6eaf715af0cad
+      internalID: 701892583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_16
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 365
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19ef580158704804f8a1c6751d417994
+      internalID: -1165256998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_17
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 366
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 724448e4610faf44c974f06d92623dbf
+      internalID: 2000198456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_18
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 216
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a7eeaf8f00133048a6ec276c1e6ffdb
+      internalID: 799399836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_19
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 217
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a922d9d5fc81d145917bb8e507af7f7
+      internalID: 215089548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_20
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 219
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df8538fce21ae374b8c216d1cfc1e294
+      internalID: 45296124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_21
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 58
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c2d4249210b3b340a94130a9ec1be22
+      internalID: -2063512258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_22
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 60
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 295d93d4c5417ac42b60f9b779959567
+      internalID: 51864331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_23
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 61
+        width: 126
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e4be76c34b1ed34f9415d55deaad2fd
+      internalID: -1444916641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 68cd9401cd31ee94fb361743469a38a7
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_0: -1598283646
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_12: -1849346872
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_3: 1807973203
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_18: 799399836
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_13: 71827365
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_2: -462080164
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_22: 51864331
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_9: -1164133021
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_14: 1600697440
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_4: 1043099878
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_17: 2000198456
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_8: 1727815163
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_15: 701892583
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_23: -1444916641
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_10: -74260725
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_1: 518098225
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_20: 45296124
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_5: -1926986740
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_16: -1165256998
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_11: 1143483310
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_7: 611043689
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_19: 215089548
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_6: -1720294250
+      Ow_Mid_Anger_Contidence_SS_Og_WAY_=_Y_-_iFunny_21: -2063512258
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

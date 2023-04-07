@@ -92,7 +92,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Shared Demo Assets\Scripts\Camera Controllers\CameraController.cs" />
     <Compile Include="Assets\UserTest\AllProjects\EndlessWorlds\Script\EndlessWord.cs" />
     <Compile Include="Assets\YangTools\Scripts\Function\Common\WaitLineDestory.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForOther.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtendForOther.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\NoRenderImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\CCD IK\Scripts\MechSpiderParticles.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapUtils.cs" />
@@ -145,12 +145,12 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\ExplosionDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LookAtIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\VRIK\Scripts\VRIKPlatformController.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForInteresting.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtendForInteresting.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Monster\MonsterEmitter.cs" />
     <Compile Include="Assets\UserTest\Jammo-Character\Scripts\CharacterSkinController.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionEffector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\VRIKRootController.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtend.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtend.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolverVRFootstep.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\BUFF\Buff\AttributeChange.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\InteractionSystem\InteractionSystem.cs" />
@@ -253,7 +253,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKEffector.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\TwoHandedProp.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\Baker\Scripts\HumanoidBaker.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForGame.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtendForGame.cs" />
     <Compile Include="Assets\YangTools\Plugins\TurbochargedScrollList\HorizontalScrollList.cs" />
     <Compile Include="Assets\YangTools\EditorStudio\FolderWithEditor\PolygonImage.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMapping.cs" />
@@ -357,8 +357,8 @@
     <Compile Include="Assets\YangTools\Scripts\Core\YangTimer\YangTimerManager.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\InteractionDemo.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Base\DataStruct.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForTool.cs" />
-    <Compile Include="Assets\YangTools\Scripts\Core\YangExtend\YangExtendForValue.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtendForTool.cs" />
+    <Compile Include="Assets\YangTools\Scripts\Core\YangToolsManager\YangExtend\YangExtendForValue.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Components\LegIK.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\_DEMOS\FBBIK\Scripts\InteractionC2CDemo.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKMappingSpine.cs" />

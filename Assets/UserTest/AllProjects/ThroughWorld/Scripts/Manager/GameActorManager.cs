@@ -47,9 +47,9 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         {
             mainPlayer = player as PlayerController;
             customLives.Add(player);
-            player.IInit();
-            CameraManager.Instance.ChangeMainPlayer();
+            CameraManager.Instance.SetMainPlayer(mainPlayer.gameObject);
             MiniMapManager.Instance.SetMainPlayer(mainPlayer.modelRoot);
+            player.IInit();
 
             DontDestroyOnLoad(mainPlayer);
         }

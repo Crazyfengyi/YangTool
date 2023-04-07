@@ -9,6 +9,7 @@
 using CMF;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using YangTools;
 using YangTools.UGUI;
 
 public class PlayerController : RoleBase
@@ -44,13 +45,15 @@ public class PlayerController : RoleBase
 
         emitter = new PlayerEmitter(this);
         advancedWalker = GetComponent<AdvancedWalkerController>();
-
+        advancedWalker.cameraTransform = CameraManager.Instance.CameraLeftRightTransform;
         roleBuffControl.Add(BuffID.buff_10001);
     }
 
     public override void IUpdate()
     {
         base.IUpdate();
+
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             roleBuffControl.Add(BuffID.buff_10001);

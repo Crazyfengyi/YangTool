@@ -5,6 +5,7 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-11-13 
 */
+using UnityEngine;
 using YangTools;
 
 public class GameManager : MonoSingleton<GameManager>
@@ -15,5 +16,18 @@ public class GameManager : MonoSingleton<GameManager>
         SceneLoader.Instance.OnSceneLoadPre += GameProjectileManager.Instance.OnSceneChange;
         SceneLoader.Instance.OnSceneLoadPre += GameUIManager.Instance.OnSceneChange;
         SceneLoader.Instance.OnSceneLoadPre += GameActorManager.Instance.OnSceneChange;
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            YangToolsManager.SetCursorLock(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            YangToolsManager.SetCursorLock(false);
+        }
     }
 }

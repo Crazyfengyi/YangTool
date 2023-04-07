@@ -10,7 +10,6 @@ namespace CMF
     //自定义移动输入可以通过创建一个新脚本来实现，该脚本继承'AdvancedWalkerController'并覆盖'CalculateMovementDirection'函数;
     public class AdvancedWalkerController : Controller
     {
-
         //References to attached components;
         protected Transform tr;
         protected Mover mover;

@@ -10,7 +10,6 @@ namespace CMF
     //它还提供了几个获取重要信息的getter方法(移动设备是否接地，当前表面法线[…]);
     public class Mover : MonoBehaviour
     {
-
         //Collider variables;
         [Header("Mover Options :")]
         [Range(0f, 1f)][SerializeField] float stepHeightRatio = 0.25f;

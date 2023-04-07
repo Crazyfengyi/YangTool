@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YangTools;
 using YangTools.Extend;
 
 /// <summary>
@@ -67,11 +68,11 @@ public class EndlessWord : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            YangExtend.SetCursorLock(true);
+            YangToolsManager.SetCursorLock(true);
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            YangExtend.SetCursorLock(false);
+            YangToolsManager.SetCursorLock(false);
         }
 
         //计算目标所在的地图块

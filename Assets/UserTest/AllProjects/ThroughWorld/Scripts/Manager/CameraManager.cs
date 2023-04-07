@@ -9,11 +9,29 @@
 using Cinemachine;
 using UnityEngine;
 using YangTools;
+using Sirenix.OdinInspector;
 
+/// <summary>
+/// 相机管理器
+/// </summary>
 public class CameraManager : MonoSingleton<CameraManager>
 {
+    #region 相机引用
+    /// <summary>
+    /// 预制体
+    /// </summary>
+    public GameObject cameraPrefab;
+    //相机节点控制引用
+    private GameObject cameraRoot;
+    //左右
+    protected Transform cameraLeftRightTransform;
+    public Transform CameraLeftRightTransform => cameraLeftRightTransform;
+    //上下
+    protected Transform cameraUpDownTransform;
+    /// <summary>
+    /// 玩家相机
+    /// </summary>
     private Camera mainCamera;
-    public Camera MainCamera => mainCamera;
     public Camera PlayerCamera
     {
         get
@@ -21,6 +39,9 @@ public class CameraManager : MonoSingleton<CameraManager>
             if (mainCamera == null)
             {
                 GameObject obj = GameObject.Instantiate(cameraPrefab);
+                cameraRoot = obj;
+                cameraLeftRightTransform = obj.transform.GetChild(0).transform;
+                cameraUpDownTransform = cameraLeftRightTransform.GetChild(0).transform;
                 obj.transform.SetParent(transform);
                 mainCamera = obj.GetComponentInChildren<Camera>();
                 mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
@@ -28,7 +49,9 @@ public class CameraManager : MonoSingleton<CameraManager>
             return mainCamera;
         }
     }
-
+    /// <summary>
+    /// 虚拟相机
+    /// </summary>
     private CinemachineVirtualCameraBase mainCM;
     public CinemachineVirtualCameraBase MainCM
     {
@@ -41,94 +64,66 @@ public class CameraManager : MonoSingleton<CameraManager>
             return mainCM;
         }
     }
+    #endregion
 
-    public GameObject cameraPrefab;
-
-    //相机旋转速度
+    #region 相机参数
+    [LabelText("旋转速度")]
     public float cameraSpeed = 250f;
-
-    //是否对相机旋转值进行平滑处理;
+    [LabelText("旋转平滑")]
     public bool smoothCameraRotation = false;
-
-    //这个值控制如何平稳地将旧的相机旋转角度插值到新的相机旋转角度;
-    //设置此值为'50f'(或以上)将导致根本没有平滑;
-    //设置此值为'1f'(或以下)将会产生非常明显的平滑效果;
-    //在大多数情况下，建议值为'25f';
+    [LabelText("插值平滑速度")]
     [Range(1f, 50f)]
     public float cameraSmoothingFactor = 25f;
-
-    //对transform和camera组件的引用
-    protected Transform tr;
-
-    //当前旋转值(以度为单位);
-    private float currentXAngle = 0f;
-
-    private float currentYAngle = 0f;
-
-    //垂直旋转的上限和下限(游戏物体的局部x轴);
+    [LabelText("垂直旋转的上限角度")]
     [Range(0f, 90f)]
     public float upperVerticalLimit = 60f;
-
+    [LabelText("垂直旋转的下限角度")]
     [Range(0f, 90f)]
     public float lowerVerticalLimit = 60f;
 
+    //当前旋转值(以度为单位);
+    private float currentXAngle = 0f;
+    private float currentYAngle = 0f;
     //插值存储的旧旋转值
     private float oldHorizontalInput = 0f;
-
     private float oldVerticalInput = 0f;
-
-    //面向和向上方向
+    //前方
     private Vector3 facingDirection;
-
+    //右方
+    private Vector3 rightDirection;
+    //上方
     private Vector3 upwardsDirection;
+    #endregion
 
     protected override void Awake()
     {
         base.Awake();
-        tr = transform;
 
-
+        _ = PlayerCamera;
         //设置角度变量为当前变换的旋转角度
-        currentXAngle = tr.localRotation.eulerAngles.x;
-        currentYAngle = tr.localRotation.eulerAngles.y;
+        currentXAngle = cameraLeftRightTransform.localRotation.eulerAngles.x;
+        currentYAngle = cameraLeftRightTransform.localRotation.eulerAngles.y;
         //执行一次相机旋转代码来计算面向和向上的方向
         RotateCamera(0f, 0f);
-        Setup();
     }
-
-    public void ChangeMainPlayer()
-    {
-        mainCM.Follow = GameActorManager.Instance.MainPlayer.transform;
-        mainCM.LookAt = GameActorManager.Instance.MainPlayer.transform;
-    }
-
-    /// <summary>
-    /// 这个函数在Awake()之后被调用;它可以通过继承脚本来重写
-    /// </summary>
-    protected virtual void Setup()
-    {
-    }
-
     private void LateUpdate()
     {
-        //HandleCameraRotation();
+        HandleCameraRotation();
     }
 
+    #region 内部方法
     /// <summary>
-    /// 获取用户输入并处理相机旋转,这个方法可以重写从这个基类派生的类来修改相机的行为
+    /// 相机旋转
     /// </summary>
     protected virtual void HandleCameraRotation()
     {
-        float _inputHorizontal = Input.GetAxisRaw("Mouse X"); ;
-        float _inputVertical = Input.GetAxisRaw("Mouse Y"); ;
-        RotateCamera(_inputHorizontal, _inputVertical);
+        float inputHorizontal = Input.GetAxisRaw("Mouse X"); ;
+        float inputVertical = Input.GetAxisRaw("Mouse Y"); ;
+        RotateCamera(inputHorizontal, inputVertical);
     }
-
     /// <summary>
-    /// 旋转相机
+    /// 相机旋转
     /// </summary>
-    /// <param name="_newHorizontalInput">横向输入</param>
-    /// <param name="_newVerticalInput">纵向输入</param>
     protected void RotateCamera(float _newHorizontalInput, float _newVerticalInput)
     {
         if (smoothCameraRotation)
@@ -144,24 +139,36 @@ public class CameraManager : MonoSingleton<CameraManager>
         //为摄像机角度添加输入
         currentYAngle += oldHorizontalInput * cameraSpeed * Time.deltaTime;
         currentXAngle += oldVerticalInput * cameraSpeed * Time.deltaTime;
-        currentXAngle = Mathf.Clamp(currentXAngle, -upperVerticalLimit, lowerVerticalLimit);
+        currentXAngle = Mathf.Clamp(currentXAngle, lowerVerticalLimit, upperVerticalLimit);
 
         UpdateRotation();
     }
-
     /// <summary>
     /// 更新相机旋转
     /// </summary>
     protected void UpdateRotation()
     {
-        tr.localRotation = Quaternion.Euler(new Vector3(0, currentYAngle, 0));
-        //保存“facingDirection”和“upwardsDirection”稍后使用
-        facingDirection = tr.forward;
-        upwardsDirection = tr.up;
-        tr.localRotation = Quaternion.Euler(new Vector3(currentXAngle, currentYAngle, 0));
-    }
+        //左右
+        cameraLeftRightTransform.localRotation = Quaternion.Euler(new Vector3(0, currentYAngle, 0));
+        //上下
+        cameraUpDownTransform.localRotation = Quaternion.Euler(new Vector3(currentXAngle, 0, 0));
 
-    #region 对外
+        facingDirection = cameraLeftRightTransform.forward;
+        rightDirection = cameraLeftRightTransform.right;
+        upwardsDirection = cameraLeftRightTransform.up;
+    }
+    #endregion
+
+    #region 对外方法
+    /// <summary>
+    /// 设置主角
+    /// </summary>
+    public void SetMainPlayer(GameObject mainPlayer)
+    {
+        mainCM.Follow = mainPlayer.transform;
+        mainCM.LookAt = mainPlayer.transform;
+        cameraRoot.transform.SetParent(mainPlayer.transform);
+    }
 
     /// <summary>
     /// 设置FOV
@@ -170,7 +177,6 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         PlayerCamera.fieldOfView = _fov;
     }
-
     /// <summary>
     /// 设置旋转
     /// </summary>
@@ -180,16 +186,14 @@ public class CameraManager : MonoSingleton<CameraManager>
         currentYAngle = _yAngle;
         UpdateRotation();
     }
-
     /// <summary>
-    /// 旋转摄像机指向场景中的世界位置;
+    /// 旋转摄像机指向场景中的世界位置
     /// </summary>
     public void RotateTowardPosition(Vector3 _position, float _lookSpeed)
     {
-        Vector3 _direction = (_position - tr.position);
+        Vector3 _direction = (_position - cameraLeftRightTransform.position);
         RotateTowardDirection(_direction, _lookSpeed);
     }
-
     /// <summary>
     /// 旋转镜头向场景中的一个look向量
     /// </summary>
@@ -197,10 +201,10 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         _direction.Normalize();
         //变换目标视觉向量到这个变换的局部空间;
-        _direction = tr.parent.InverseTransformDirection(_direction);
+        _direction = cameraLeftRightTransform.parent.InverseTransformDirection(_direction);
         //计算(局部)当前look向量
         Vector3 _currentLookVector = GetAimingDirection();
-        _currentLookVector = tr.parent.InverseTransformDirection(_currentLookVector);
+        _currentLookVector = cameraLeftRightTransform.parent.InverseTransformDirection(_currentLookVector);
         //计算x角度差值
         float _xAngleDifference = GetAngle(new Vector3(0f, _currentLookVector.y, 1f), new Vector3(0f, _direction.y, 1f), Vector3.right);
         //计算y角度差值
@@ -230,9 +234,8 @@ public class CameraManager : MonoSingleton<CameraManager>
         currentXAngle = Mathf.Clamp(_currentAngles.x, -upperVerticalLimit, lowerVerticalLimit);
         UpdateRotation();
     }
-
     /// <summary>
-    /// 计算'_vector_1'和'_vector_2'之间的signed角(范围从-180到+180)
+    /// 有符号夹角(范围从-180到+180)
     /// </summary>
     public float GetAngle(Vector3 _vector1, Vector3 _vector2, Vector3 _planeNormal)
     {
@@ -260,36 +263,35 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     #region 相机相关向量
 
-    //返回相机面对的方向，没有任何垂直旋转,该矢量应用于与移动相关的目的(例如，向前移动);
+    /// <summary>
+    /// 前方
+    /// </summary>
     public Vector3 GetFacingDirection()
     {
         return facingDirection;
     }
-
     /// <summary>
-    /// 返回游戏物体的“前方”向量,这个矢量指向相机“瞄准”的方向，可以用于实例化投射物或光线投射
+    /// 右方
     /// </summary>
-    public Vector3 GetAimingDirection()
+    public Vector3 GetRightDirection()
     {
-        return tr.forward;
+        return rightDirection;
     }
-
     /// <summary>
-    /// 返回游戏对象的“右方”向量
-    /// </summary>
-    public Vector3 GetStrafeDirection()
-    {
-        return tr.right;
-    }
-
-    /// <summary>
-    /// 返回游戏物体的"向上"向量
+    /// 上方
     /// </summary>
     public Vector3 GetUpDirection()
     {
         return upwardsDirection;
     }
-
+    /// <summary>
+    /// 瞄准方向
+    /// </summary>
+    public Vector3 GetAimingDirection()
+    {
+        //return cameraLeftRightTransform.forward;
+        return new(currentYAngle, currentYAngle, 0);
+    }
     #endregion 相机相关向量
 
     #endregion 对外

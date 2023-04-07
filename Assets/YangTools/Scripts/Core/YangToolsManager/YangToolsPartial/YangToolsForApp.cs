@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace YangTools
 {
@@ -15,6 +16,22 @@ namespace YangTools
             Type type = assembly.GetType("UnityEditor.LogEntries");
             MethodInfo method = type.GetMethod("Clear");
             method.Invoke(new object(), null);
+        }
+        /// <summary>
+        /// 开关鼠标指针
+        /// </summary>
+        public static void SetCursorLock(bool lockCursor)
+        {
+            if (lockCursor)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
     }
 }

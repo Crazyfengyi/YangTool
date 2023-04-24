@@ -53,7 +53,6 @@ public class PlayerController : RoleBase
     {
         base.IUpdate();
 
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             roleBuffControl.Add(BuffID.buff_10001);
@@ -80,9 +79,10 @@ public class PlayerController : RoleBase
             Animator.Play("Jump", 0, 0);
         }
 
+        //跳跃切换到地面
         if (advancedWalker.IsGrounded() && isJumpAni == true)
         {
-            Animator.Play("a_Walking");
+            Animator.Play("Land");
             isJumpAni = false;
         }
     }

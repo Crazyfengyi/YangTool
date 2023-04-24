@@ -12,10 +12,13 @@ using System.Collections.Generic;
 [Serializable]
 public class RoleBase : GameActor
 {
+    [HideInEditorMode]
     [ShowInInspector]
     protected BuffControl roleBuffControl;
+    [HideInEditorMode]
     [ShowInInspector]
     protected RoleAttributeControl roleAttributeControl;
+    [HideInEditorMode]
     [ShowInInspector]
     protected HealthControl healthControl;
     /// <summary>

@@ -61,68 +61,55 @@ namespace YangTools
             //检查代码块中是否有任何控件被更改
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(10);
-            GUILayout.Label("===========");
-            GUILayout.Label("<color=#00F5FF>动画预览</color>", new GUIStyle() { richText = true, fontStyle = FontStyle.Normal, fontSize = 16 });
-            GUILayout.Label("===========");
-            GUILayout.Space(10);
-            GUILayout.EndHorizontal();
-
-
-            GUILayout.Label("当前片段：");
-            //创建一个通用的弹出式选择字段。
-            curIndex = EditorGUILayout.Popup(curIndex, clips.Select(p => p.name).ToArray()); //还原clip状态
-            AnimationClip clip = clips[curIndex];
-
-            GUILayout.Label("播放长度：");
-            timer = EditorGUILayout.Slider(timer, 0, clip.length);
-            string playAniBtnStr = isPlaying ? "暂停" : "播放动画";
-
-            if (GUILayout.Button(playAniBtnStr))
-            {
-                SetPlayAni(timer >= clip.length);
-            }
-
-            if (GUILayout.Button("返回到当前片段第一帧"))
-            {
-                isPlaying = false;
-                timer = 0;
-                clip.SampleAnimation(animator.gameObject, timer);
-            }
-
-            if (isPlaying)
-            {
-                timer += Time.realtimeSinceStartup - lastFrameTime;
-                if (timer >= clip.length)
-                {
-                    if (clip.isLooping)
-                    {
-                        timer = 0;
-                    }
-                    else
-                    {
-                        isPlaying = false;
-                        timer = clip.length;
-                    }
-                }
-            }
-
-            //重新绘制显示此编辑器的检查器。
-            Repaint();
-            lastFrameTime = Time.realtimeSinceStartup;
-            if (EditorGUI.EndChangeCheck() || isPlaying)
-            {
-                clip.SampleAnimation(animator.gameObject, timer);
-            }
-
-            _Foldout = CommonEditorTool.Foldout(_Foldout, "测试折叠栏");
+            _Foldout = CommonEditorTool.Foldout(_Foldout, "动画预览");
             if (_Foldout)
             {
+                GUILayout.Label("当前片段：");
+                //创建一个通用的弹出式选择字段。
+                curIndex = EditorGUILayout.Popup(curIndex, clips.Select(p => p.name).ToArray()); //还原clip状态
+                AnimationClip clip = clips[curIndex];
+
+                GUILayout.Label("播放长度：");
+                timer = EditorGUILayout.Slider(timer, 0, clip.length);
+                string playAniBtnStr = isPlaying ? "暂停" : "播放动画";
+
+                if (GUILayout.Button(playAniBtnStr))
+                {
+                    SetPlayAni(timer >= clip.length);
+                }
+                if (GUILayout.Button("返回到当前片段第一帧"))
+                {
+                    isPlaying = false;
+                    timer = 0;
+                    clip.SampleAnimation(animator.gameObject, timer);
+                }
+
+                if (isPlaying)
+                {
+                    timer += Time.realtimeSinceStartup - lastFrameTime;
+                    if (timer >= clip.length)
+                    {
+                        if (clip.isLooping)
+                        {
+                            timer = 0;
+                        }
+                        else
+                        {
+                            isPlaying = false;
+                            timer = clip.length;
+                        }
+                    }
+                }
+
+                //重新绘制显示此编辑器的检查器。
+                Repaint();
+                lastFrameTime = Time.realtimeSinceStartup;
+                if (EditorGUI.EndChangeCheck() || isPlaying)
+                {
+                    clip.SampleAnimation(animator.gameObject, timer);
+                }
 
             }
-
-            //EditorGUI.Foldout(new Rect(100, 100, 10, 10), true, new GUIContent("Test"));
         }
         /// <summary>
         /// 播放动画

@@ -27,16 +27,20 @@ namespace YangTools
             GUIStyle style = new GUIStyle("ShurikenModuleTitle");
             style.font = new GUIStyle(EditorStyles.boldLabel).font;
             style.border = new RectOffset(15, 7, 4, 4);
-            style.fixedHeight = 23;
+            style.fixedHeight = 30;
             style.contentOffset = new Vector2(20f, -3f);
+            style.fontSize = 12;
+            style.richText = true;
+            style.fontStyle = FontStyle.Normal;
 
             Rect rect = GUILayoutUtility.GetRect(16f, 22f, style);
-            GUI.Box(rect, title, style);
+            GUI.Box(rect, $"<color=#00F5FF>{title}</color>", style);
 
             Event e = Event.current;
-            Rect toggleRect = new Rect(rect.x + 4f, rect.y + 2f, 13f, 13f);
             if (e.type == EventType.Repaint)
             {
+                //箭头
+                Rect toggleRect = new Rect(rect.x + 4f, rect.y + 6f, 13f, 13f);
                 EditorStyles.foldout.Draw(toggleRect, false, false, display, false);
             }
 
@@ -45,6 +49,8 @@ namespace YangTools
                 display = !display;
                 e.Use();
             }
+
+            GUILayout.Space(10);
 
             //unity默认内容折叠
             //display = EditorGUILayout.Foldout(display, title);

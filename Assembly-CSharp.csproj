@@ -324,6 +324,7 @@
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\IK Solvers\IKSolver.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Tools\OffsetModifierVRIK.cs" />
     <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Manager\GameActorManager.cs" />
+    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Player\PlayerAniEvent.cs" />
     <Compile Include="Assets\ExplosiveLLC\RPG Character Mecanim Animation Pack\Code\Actions\Movement\MovementActionHandler.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingLeg.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangMiniMap\MiniMapMaskHelper.cs" />
@@ -457,7 +458,6 @@
     <Compile Include="Assets\YangTools\Scripts\Function\Common\EffectAutoDestory.cs" />
     <Compile Include="Assets\YangTools\Plugins\RootMotion_FinalIK\FinalIK\Grounder\GroundingPelvis.cs" />
     <Compile Include="Assets\YangTools\Scripts\Core\YangDownLoad\YangDownLoad.cs" />
-    <Compile Include="Assets\UserTest\AllProjects\ThroughWorld\Scripts\Actor\Player\PlayerAniEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Art\Effects\Shader\FX_smoke.shader" />

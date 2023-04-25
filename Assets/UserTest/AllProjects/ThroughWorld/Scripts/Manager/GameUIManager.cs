@@ -17,6 +17,7 @@ using YangTools.Extend;
 using YangTools.Log;
 using Sirenix.OdinInspector;
 using YangTools.UGUI;
+using Unity.Burst.Intrinsics;
 
 /// <summary>
 /// UI管理器
@@ -51,6 +52,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     #region 血条
     public Transform hpBarParent;
+    [HideInEditorMode]
     [ShowInInspector]
     private static List<HPBarObjectPoolItem> allHPBar = new List<HPBarObjectPoolItem>();
     #endregion
@@ -59,7 +61,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(gameObject);
         Debuger.IsForceLog = true;
 
         returnBtn.gameObject.SetActive(false);
@@ -72,9 +73,9 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            //AddTipsShow("测试提示！");
+            AddTipsShow("测试提示！", TipsReDoType.Discard);
             //AddScoreShow(Vector3.zero, "-100");
-            UICommonTool.Instance.ShowTip("测试....");
+            //UICommonTool.Instance.ShowTip("测试....");
         }
 
         timer += Time.deltaTime;
@@ -107,12 +108,25 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 
     #region 提示
     /// <summary>
-    /// 添加提示
+    ///  添加提示
     /// </summary>
-    public void AddTipsShow(string str)
+    /// <param name="str">提示文字</param>
+    /// <param name="tipsReDoType">重复处理(上一个提示文字相同时处理情况)</param>
+    public void AddTipsShow(string str, TipsReDoType tipsReDoType = TipsReDoType.None)
     {
+        //舍弃和上一个重复的提示
+        if (tipsReDoType == TipsReDoType.Discard)
+        {
+            if (tipsNodeList.Count > 0 && tipsNodeList[0].GetComponentInChildren<TMP_Text>(true).text == str)
+            {
+                return;
+            }
+        }
+
         tipDatas.Add(new TipData(str));
     }
+
+    private List<GameObject> tipsNodeList = new List<GameObject>();
     private void TipShow(TipData data)
     {
         currentCount++;
@@ -121,33 +135,37 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         GameObject obj = poolItem.obj;
         obj.transform.SetParent(tipsParent);
         obj.transform.SetAsLastSibling();
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition= Vector3.zero;
         tipsParent.gameObject.RefreshAllContentSizeFitter();
 
-        GameObject tip = obj.transform.GetChild(0).gameObject;
-        tip.GetComponentInChildren<TMP_Text>(true).text = data.tipStr;
+        GameObject tipObj = obj.transform.GetChild(0).gameObject;
+        tipObj.GetComponentInChildren<TMP_Text>(true).text = data.tipStr;
+        tipsNodeList.Add(tipObj);
 
-        DOTween.Kill(tip, true);
-        tip.SetActive(true);
-        var defaultPos = tip.transform.localPosition;
+        DOTween.Kill(tipObj, true);
+        tipObj.SetActive(true);
+        var defaultPos = tipObj.transform.localPosition;
         var startPos = defaultPos;
-        startPos.x += tip.GetComponent<RectTransform>().rect.width;
-        tip.transform.localPosition = startPos;
+        startPos.x += tipObj.GetComponent<RectTransform>().rect.width;
+        tipObj.transform.localPosition = startPos;
         DOTween.Sequence()
-            .Append(tip.transform.DOLocalMoveX(defaultPos.x, ANI_TIME_PRE).SetEase(Ease.InCubic))
+            .Append(tipObj.transform.DOLocalMoveX(defaultPos.x, ANI_TIME_PRE).SetEase(Ease.InCubic))
             .AppendInterval(ANI_TIME_WAIT * tipDatas.Count + Mathf.Max(0, currentCount - 1) * ANI_TIME_MOVE)
-            .Append(tip.transform.DOLocalMoveX(startPos.x, ANI_TIME_POST))
-            .Join(tip.GetComponent<CanvasGroup>().DOFade(0, ANI_TIME_POST))
+            .Append(tipObj.transform.DOLocalMoveX(startPos.x, ANI_TIME_POST))
+            .Join(tipObj.GetComponent<CanvasGroup>().DOFade(0, ANI_TIME_POST))
             .Append(obj.GetComponent<LayoutElement>().DOPreferredSize(new Vector2(0, 0), ANI_TIME_MOVE))
             .OnComplete(() =>
             {
                 currentCount--;
-                tip.SetActive(false);
-                tip.transform.localPosition = defaultPos;
-                tip.GetComponent<CanvasGroup>().alpha = 1;
+                tipsNodeList.Remove(tipObj);
+                tipObj.SetActive(false);
+                tipObj.transform.localPosition = defaultPos;
+                tipObj.GetComponent<CanvasGroup>().alpha = 1;
                 YangObjectPool.Recycle(poolItem);
                 obj.GetComponent<LayoutElement>().preferredHeight = 100;
             })
-            .SetTarget(tip);
+            .SetTarget(tipObj);
     }
     #endregion
 
@@ -322,12 +340,12 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     public GameObject obj;
     public TipObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
         obj = tempObj;
     }
     public TipObjectPoolItem(string arg)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/TipsNode"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
         obj = tempObj;
     }
     public void OnGet()
@@ -348,11 +366,29 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
 /// </summary>
 public class TipData
 {
+    /// <summary>
+    /// 提示文字
+    /// </summary>
     public string tipStr;
-    public TipData(string str)
+    public TipData(string _str)
     {
-        tipStr = str;
+        tipStr = _str;
     }
+}
+
+/// <summary>
+/// 重复处理
+/// </summary>
+public enum TipsReDoType
+{
+    /// <summary>
+    /// 默认(允许重复)
+    /// </summary>
+    None,
+    /// <summary>
+    /// 舍弃
+    /// </summary>
+    Discard,
 }
 #endregion
 

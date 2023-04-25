@@ -21,6 +21,8 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// 预制体
     /// </summary>
     public GameObject cameraPrefab;
+    [SerializeField]
+    [ShowInInspector]
     //相机节点控制引用
     private GameObject cameraRoot;
     //左右
@@ -28,10 +30,10 @@ public class CameraManager : MonoSingleton<CameraManager>
     public Transform CameraLeftRightTransform => cameraLeftRightTransform;
     //上下
     protected Transform cameraUpDownTransform;
+    private Camera mainCamera;
     /// <summary>
     /// 玩家相机
     /// </summary>
-    private Camera mainCamera;
     public Camera PlayerCamera
     {
         get
@@ -40,11 +42,7 @@ public class CameraManager : MonoSingleton<CameraManager>
             {
                 GameObject obj = GameObject.Instantiate(cameraPrefab);
                 cameraRoot = obj;
-                cameraLeftRightTransform = obj.transform.GetChild(0).transform;
-                cameraUpDownTransform = cameraLeftRightTransform.GetChild(0).transform;
-                obj.transform.SetParent(transform);
-                mainCamera = obj.GetComponentInChildren<Camera>();
-                mainCM = obj.GetComponentInChildren<CinemachineVirtualCameraBase>();
+                Init();
             }
             return mainCamera;
         }
@@ -98,6 +96,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     protected override void Awake()
     {
         base.Awake();
+        if (cameraRoot) Init();
 
         _ = PlayerCamera;
         //设置角度变量为当前变换的旋转角度
@@ -112,6 +111,14 @@ public class CameraManager : MonoSingleton<CameraManager>
     }
 
     #region 内部方法
+    private void Init()
+    {
+        cameraLeftRightTransform = cameraRoot.transform.GetChild(0).transform;
+        cameraUpDownTransform = cameraLeftRightTransform.GetChild(0).transform;
+        cameraRoot.transform.SetParent(transform);
+        mainCamera = cameraRoot.GetComponentInChildren<Camera>();
+        mainCM = cameraRoot.GetComponentInChildren<CinemachineVirtualCameraBase>();
+    }
     /// <summary>
     /// 相机旋转
     /// </summary>

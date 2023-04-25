@@ -16,19 +16,19 @@ using YangTools.MiniMap;
 /// </summary>
 public class GameActorManager : MonoSingleton<GameActorManager>
 {
+    //预制体
+    public PlayerController playerPrefab;
+    public PlayerController MainPlayer => mainPlayer;
+    private PlayerController mainPlayer;
+
+    public List<Monster> AllMonster => allMonster;
+    [HideInEditorMode]
+    [ShowInInspector]
+    private static List<Monster> allMonster = new List<Monster>();
+    [HideInEditorMode]
     [ShowInInspector]
     //生命周期更新列表
     private static List<ICustomLife> customLives = new List<ICustomLife>();
-    //预制体
-    public PlayerController playerPrefab;
-    private PlayerController mainPlayer;
-    public PlayerController MainPlayer
-    {
-        get { return mainPlayer; }
-    }
-    [ShowInInspector]
-    private static List<Monster> allMonster = new List<Monster>();
-    public List<Monster> AllMonster => allMonster;
 
     protected override void Awake()
     {

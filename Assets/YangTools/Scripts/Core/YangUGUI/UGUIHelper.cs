@@ -63,7 +63,7 @@ namespace YangTools.UGUI
         /// <returns>实例化后的界面</returns>
         public object InstantiateUIPanel(object uiPanelAsset)
         {
-            return Instantiate((Object)uiPanelAsset);
+            return Instantiate((Object)uiPanelAsset,Vector3.zero,Quaternion.identity);
         }
 
         /// <summary>
@@ -83,6 +83,7 @@ namespace YangTools.UGUI
             }
             Transform transform = gameObject.transform;
             transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
+            transform.localPosition = Vector3.zero;
             transform.localScale = Vector3.one;
             return gameObject.GetOrAddComponent<UIPanel>();
         }

@@ -109,10 +109,11 @@ namespace YangTools.UGUI
                 Debug.LogError("Can not create UI group helper.");
                 return false;
             }
-            uiGroupHelper.name = string.Format("UI Group - {0}", groupName);
+            uiGroupHelper.name = string.Format("UI Group-{0}", groupName);
             uiGroupHelper.gameObject.layer = LayerMask.NameToLayer("UI");
             Transform transform = uiGroupHelper.transform;
             transform.SetParent(instanceRoot);
+            transform.localPosition = Vector3.zero;
             transform.localScale = Vector3.one;
 
             return uiManager.AddUIGroup(groupName, depth, uiPanelHelperScript);

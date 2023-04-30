@@ -124,8 +124,10 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// </summary>
     protected virtual void HandleCameraRotation()
     {
-        float inputHorizontal = Input.GetAxisRaw("Mouse X"); ;
-        float inputVertical = Input.GetAxisRaw("Mouse Y"); ;
+        if (GameInputManager.Instance.GameInput.Player.enabled == false) return;
+
+        float inputHorizontal = Input.GetAxisRaw("Mouse X");
+        float inputVertical = Input.GetAxisRaw("Mouse Y");
         RotateCamera(inputHorizontal, inputVertical);
     }
     /// <summary>

@@ -73,9 +73,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            AddTipsShow("测试提示！", TipsReDoType.Discard);
+            //AddTipsShow("测试提示！", TipsReDoType.Discard);
             //AddScoreShow(Vector3.zero, "-100");
             //UICommonTool.Instance.ShowTip("测试....");
+            UICommonTool.Instance.SetLoadingShow(true);
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            UICommonTool.Instance.SetLoadingShow(false);
         }
 
         timer += Time.deltaTime;
@@ -136,7 +141,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         obj.transform.SetParent(tipsParent);
         obj.transform.SetAsLastSibling();
         obj.transform.localScale = Vector3.one;
-        obj.transform.localPosition= Vector3.zero;
+        obj.transform.localPosition = Vector3.zero;
         tipsParent.gameObject.RefreshAllContentSizeFitter();
 
         GameObject tipObj = obj.transform.GetChild(0).gameObject;

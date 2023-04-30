@@ -51,10 +51,12 @@ public class UICommonTool : Singleton<UICommonTool>
 
         if (isShow)
         {
+            GameInputManager.Instance.DisablePlayer();
             panel.OpenLoading();
         }
         else
         {
+            GameInputManager.Instance.EnablePlayer();
             panel.CloseLoading();
         }
     }

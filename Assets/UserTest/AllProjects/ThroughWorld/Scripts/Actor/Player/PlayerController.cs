@@ -8,6 +8,7 @@
 
 using CMF;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using YangTools;
 using YangTools.UGUI;
@@ -16,7 +17,7 @@ public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
     public bool isJumpPressed;//跳跃键按下
-    private GameInputSet GameInput;
+
     public GameObject modelRoot;//模型父节点
     public GameObject model;//模型
     public GameObject shootPoint;//发射点
@@ -31,18 +32,13 @@ public class PlayerController : RoleBase
         base.IInit();
         campType = ActorCampType.Player;
 
-        #region 输入
-
-        GameInput = new GameInputSet();
-        GameInput.Player.Enable();
-        GameInput.Player.Move.performed += OnMove;
-        GameInput.Player.Move.canceled += OnMoveEnd;
-        GameInput.Player.Interactive.performed += OnInteractive;
-        GameInput.Player.Jump.performed += OnJump;
-        GameInput.Player.Jump.canceled += OnJump;
-
-        #endregion 输入
-
+        GameInputSet gameInput = GameInputManager.Instance.GameInput;
+        gameInput.Player.Move.performed += OnMove;
+        gameInput.Player.Move.canceled += OnMoveEnd;
+        gameInput.Player.Interactive.performed += OnInteractive;
+        gameInput.Player.Jump.performed += OnJump;
+        gameInput.Player.Jump.canceled += OnJump;
+        
         emitter = new PlayerEmitter(this);
         advancedWalker = GetComponent<AdvancedWalkerController>();
         advancedWalker.cameraTransform = CameraManager.Instance.CameraLeftRightTransform;

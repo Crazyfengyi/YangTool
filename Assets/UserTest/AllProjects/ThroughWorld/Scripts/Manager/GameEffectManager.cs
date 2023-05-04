@@ -103,7 +103,7 @@ public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
 
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet(null);
     }
 
     public void OnRecycle()

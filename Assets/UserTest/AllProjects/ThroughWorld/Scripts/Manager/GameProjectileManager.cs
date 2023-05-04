@@ -431,7 +431,7 @@ public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
 
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet(null);
     }
 
     public void OnRecycle()

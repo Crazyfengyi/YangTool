@@ -18,6 +18,7 @@ using YangTools.Log;
 using Sirenix.OdinInspector;
 using YangTools.UGUI;
 using Unity.Burst.Intrinsics;
+using UnityEngine.SocialPlatforms.Impl;
 
 /// <summary>
 /// UI管理器
@@ -26,6 +27,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 {
     #region UI
     public Button returnBtn;
+    public Canvas uiCanvas;
     #endregion
 
     #region 提示
@@ -44,7 +46,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private const float ANI_TIME_POST = 0.3f;
     private const float ANI_TIME_MOVE = 0.2f;
     #endregion
-
+ 
     #region 飘分
     public GameObject scorePrefab;//飘字
     public Transform scoreParent;
@@ -196,7 +198,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
         ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
         GameObject score = poolItem.obj;
-        score.transform.SetParent(scoreParent);
         score.transform.SetAsLastSibling();
         score.transform.localPosition = pos;
         //文字设置
@@ -311,12 +312,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     private HPBarObjectPoolItem CreateHPBar(HPBarData hpBarData)
     {
-        //飘分对象
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, hpBarParent);
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
         HPBarObjectPoolItem poolItem = YangObjectPool.Get<HPBarObjectPoolItem>();
         poolItem.InitData(hpBarData);
         GameObject hpBar = poolItem.obj;
-        hpBar.transform.SetParent(scoreParent);
         hpBar.transform.SetAsLastSibling();
         hpBar.transform.localPosition = pos;
         allHPBar.Add(poolItem);
@@ -355,7 +354,7 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet(GameUIManager.Instance.scorePrefab.transform);
     }
     public void OnRecycle()
     {
@@ -409,12 +408,13 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"),GameUIManager.Instance.scoreParent);
         obj = tempObj;
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet(GameUIManager.Instance.hpBarParent);
+
     }
     public void OnRecycle()
     {
@@ -465,7 +465,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"),GameUIManager.Instance.hpBarParent);
         obj = tempObj;
         //设置显示
         text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
@@ -481,7 +481,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     }
     public void LateUpdate()
     {
-        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, hpBarData.target.position, obj.transform.parent);
+        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera,GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
         obj.transform.localPosition = Vector3.Lerp(obj.transform.localPosition, targetPos, Time.deltaTime * 10);
     }
     /// <summary>
@@ -506,7 +506,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet();
+        obj.DefualtGameObjectOnGet(GameUIManager.Instance.hpBarParent);
     }
     public void OnRecycle()
     {

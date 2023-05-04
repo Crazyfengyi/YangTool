@@ -76,8 +76,9 @@ public class #类名# : MonoBehaviour
 
         private void OnEnable()
         {
-            Type temp = Assembly.GetAssembly(typeof(Editor)).GetType("UnityEditor.RectTransformEditor", true);
+            Type temp = Assembly.GetAssembly(typeof(Editor)).GetType("UnityEditor.RectTransformEditor", false);
             if (temp == null) return;
+            if (target == null) return;
 
             editor = Editor.CreateEditor(target, temp);
             tagetTranform = target as RectTransform;
@@ -97,6 +98,7 @@ public class #类名# : MonoBehaviour
 
         public override void OnInspectorGUI()
         {
+            if (editor == null) return;
             editor.OnInspectorGUI();
             tagetTranform.position = EditorGUILayout.Vector3Field("世界坐标:", tagetTranform.position);
             GUI.enabled = false;

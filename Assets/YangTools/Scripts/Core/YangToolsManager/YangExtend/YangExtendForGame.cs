@@ -135,10 +135,10 @@ namespace YangTools.Extend
         /// <summary>
         /// 对象池默认Get
         /// </summary>
-        public static void DefualtGameObjectOnGet(this GameObject gameObject)
+        public static void DefualtGameObjectOnGet(this GameObject gameObject,Transform parent)
         {
             gameObject.SetActive(true);
-            gameObject.transform.SetParent(null);
+            gameObject.transform.SetParent(parent);
         }
         /// <summary>
         /// 对象池默认Recycle

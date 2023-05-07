@@ -28,16 +28,19 @@ public enum ActorCampType
 /// </summary>
 public class AtkInfo
 {
-    public GameActor targetActor;
+    public GameActor sourceActor;//攻击来源
+    public GameActor targetActor;//攻击目标
     public EffectInfo atkEffectInfo;
 }
 /// <summary>
-/// 伤害信息
+/// 击中伤害信息
 /// </summary>
 public class DamageInfo
 {
     public float damage;
-    public Vector3 atkPos;
+    public Vector3 atkPos;//攻击起点
+    public Vector3 behitPos;//受击点
+    public EffectInfo beHitEffectInfo;//击中特效
 }
 /// <summary>
 /// 特效信息
@@ -93,7 +96,6 @@ public enum RoleAttribute
     Atk,
     Def,
     AtkRang,
-
 }
 /// <summary>
 /// 角色标记

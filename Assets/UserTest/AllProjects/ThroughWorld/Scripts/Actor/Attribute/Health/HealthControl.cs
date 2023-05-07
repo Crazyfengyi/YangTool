@@ -7,6 +7,7 @@
 */
 using System;
 using UnityEngine;
+using YangTools.Extend;
 
 [Serializable]
 public class HealthControl
@@ -54,9 +55,9 @@ public class HealthControl
     public void MinusHp(DamageInfo damageInfo)
     {
         valueTotal.ChangeCurrentValue(-Mathf.Abs(damageInfo.damage));
-        Vector3 atkPos = damageInfo.atkPos == default ? gameActor.transform.position : damageInfo.atkPos;
+        Vector3 atkPos = damageInfo.behitPos == default ? gameActor.transform.position : damageInfo.behitPos;
 
-        GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", Color.red);
+        GameUIManager.Instance.AddScoreShow(atkPos, $"-{damageInfo.damage}", "#EE9A00".GetColor());
         healthBar.UpdateData(gameActor);
 
         if ((int)valueTotal.Value < 1)

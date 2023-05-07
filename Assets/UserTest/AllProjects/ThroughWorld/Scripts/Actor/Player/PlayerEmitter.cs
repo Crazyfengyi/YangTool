@@ -27,38 +27,9 @@ public class PlayerEmitter : EmitterBase
         data.StartPostion = ((PlayerController)handle).shootPoint.transform.position;
         data.direction = ((PlayerController)handle).model.transform.forward;
         data.name = "TestBullet";
-
-        //Collider[] temp = Physics.OverlapSphere(transform.position, 10);
-        //if (temp.Length > 0)
-        //{
-        //    for (int i = 0; i < temp.Length; i++)
-        //    {
-        //        GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
-        //        if (target && target.campType == ActorCampType.Monster)
-        //        {
-        //            data.target = target.gameObject;
-        //            break;
-        //        }
-        //    }
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    Collider[] temp = Physics.OverlapSphere(transform.position, 10);
-        //    if (temp.Length > 0)
-        //    {
-        //        for (int i = 0; i < temp.Length; i++)
-        //        {
-        //            GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
-        //            if (target && target.campType == ActorCampType.Monster)
-        //            {
-        //                AtkInfo atkInfo = new AtkInfo();
-        //                atkInfo.targetActor = target;
-        //                Atk(atkInfo);
-        //            }
-        //        }
-        //    }
-        //}
+        data.target = handle.Target.gameObject;
+        data.damageInfo = handle.GetDamageInfo();
+        data.damageInfo.beHitEffectInfo = new EffectInfo();
 
         switch (emitData.bulletShootType)
         {
@@ -70,12 +41,12 @@ public class PlayerEmitter : EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.MonsterAndBuilding);
+                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.MonsterAndBuilding);
+                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                 break;
         }
     }

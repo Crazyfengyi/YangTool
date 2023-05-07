@@ -21,14 +21,20 @@ public class MonsterEmitter : EmitterBase
     /// </summary>
     public override void Shoot()
     {
+        if (!handle.Target.transform) return;
+
         // GetBulletData(emitData.bulletID); 通过ID获取子弹
         BulletData data = new BulletData();
         data.owner = handle;
         data.speed = 10;
         data.StartPostion = ((Monster)handle).shootPoint.transform.position;
-        data.EndPostion = GameActorManager.Instance.MainPlayer.gameObject.transform.position;
+        data.EndPostion = handle.Target.transform.position;
         data.direction = ((Monster)handle).model.transform.forward;
         data.name = "TestBullet";
+        data.damageInfo = handle.GetDamageInfo();
+        data.damageInfo.beHitEffectInfo = new EffectInfo();
+
+        //测试
         emitData.bulletShootType = BulletShootType.Throw;
 
         switch (emitData.bulletShootType)
@@ -42,18 +48,18 @@ public class MonsterEmitter : EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.PlayerAndBuilding);
+                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                     }
                 }
                 break;
             case BulletShootType.Throw:
                 {
                     data.name = "ThrowBullet";
-                    GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.PlayerAndBuilding);
+                    GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, ActorCampType.PlayerAndBuilding);
+                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                 break;
         }
     }

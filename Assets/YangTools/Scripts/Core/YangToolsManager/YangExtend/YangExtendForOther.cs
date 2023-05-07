@@ -303,9 +303,12 @@ namespace YangTools.Extend
         /// </summary>
         /// <param name="htmlStr">16进制颜色值</param>
         /// <returns>颜色结果</returns>
-        public static Color GetColor(string htmlStr)
+        public static Color GetColor(this string htmlStr)
         {
-            htmlStr = "#" + htmlStr;
+            if (!htmlStr.StartsWith("#"))
+            {
+                htmlStr = "#" + htmlStr;
+            }
             ColorUtility.TryParseHtmlString(htmlStr, out Color nowColor);
             return nowColor;
         }
@@ -313,9 +316,7 @@ namespace YangTools.Extend
         /// <summary>
         /// 获得颜色的string
         /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static string GetHtmlColor(Color color)
+        public static string GetHtmlColor(this Color color)
         {
             return ColorUtility.ToHtmlStringRGB(color);
         }

@@ -7,6 +7,7 @@
 */
 
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using YangTools;
 using YangTools.Extend;
@@ -15,7 +16,7 @@ using YangTools.ObjectPool;
 /// <summary>
 /// 抛射体管理器(子弹)
 /// </summary>
-/// <remarks>Shooter射手---->emitter发射器--(发射信息--子弹id)-->生成子弹bullet</remarks>
+/// <remarks>Shooter射手-->emitter发射器--(发射信息--子弹id)-->生成子弹bullet(AtkInfo=>DamageInfo&&EffectInfo)</remarks>
 public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 {
     //所有子弹
@@ -150,11 +151,10 @@ public class EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         bulletData.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType, ActorCampType.PlayerAndBuilding);
+                        GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType, handle.canAtkCamp);
                     }
                 }
                 break;
-
             default:
                 GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType);
                 break;
@@ -257,10 +257,10 @@ public class BulletBase
             for (int i = 0; i < temp.Length; i++)
             {
                 GameActor target = temp[i].gameObject.GetComponentInParent<GameActor>();
-                if (target && targetCamp.HasFlag(target.campType))
+                if (target && targetCamp.HasFlag(target.campType) && target.IsCanAtk())
                 {
                     bulletData.collisionPos = target.ClosestColliderPos(bulletObj.transform.position);
-                    GameBattleManager.Instance.AtkProcess(bulletData.owner, target);
+                    GameBattleManager.Instance.ProjectileHitProcess(bulletData, target);
                     needDie = true;
                 }
             }
@@ -352,7 +352,7 @@ public class BulletData
     //创建它的技能
     //public SkillBase skill;  //命中后 调用技能的OnBulletHit(hitPos,hitTarget)
     /// <summary>
-    /// 攻击信息
+    /// 击中伤害信息
     /// </summary>
     public DamageInfo damageInfo;
 

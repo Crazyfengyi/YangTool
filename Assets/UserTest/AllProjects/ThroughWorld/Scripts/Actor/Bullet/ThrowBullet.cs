@@ -1,18 +1,13 @@
-/** 
- *Copyright(C) 2020 by Test 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2023-03-20 
+/**
+ *Copyright(C) 2020 by Test
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2023-03-20
 */
-using System;
-using System.Collections;
+
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using YangTools;
-using YangTools.UGUI;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 /// <summary>
 /// 投掷子弹
@@ -20,6 +15,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 public class ThrowBullet : BulletBase
 {
     protected ParabolaPath path;
+
     public ThrowBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
         bulletData = data;
@@ -27,9 +23,26 @@ public class ThrowBullet : BulletBase
         bulletObj.transform.forward = data.direction;
 
         radius = 0.2f;
-        path = new ParabolaPath(bulletData.StartPostion, bulletData.EndPostion, UnityEngine.Random.Range(4f, 6f));
+        float hight = 0;
+        float distance = Vector3.Distance(bulletData.StartPostion, bulletData.EndPostion);
+        //根据距离设置抛物线高度
+        if (distance > 6)
+        {
+            hight = distance / 3;
+        }
+        else if (distance > 2)
+        {
+            hight = distance / 4;
+        }
+        else
+        {
+            hight = 0;
+        }
+
+        path = new ParabolaPath(bulletData.StartPostion, bulletData.EndPostion, hight);
         path.isClampStartEnd = true;
     }
+
     public override void OnUpdate()
     {
         base.OnUpdate();
@@ -54,10 +67,12 @@ public class ThrowBullet : BulletBase
             OnDie(BulletDieType.End);
         }
     }
+
     public override bool CheckAtk()
     {
         return base.CheckAtk();
     }
+
     public override void OnDie(BulletDieType bulletDieType)
     {
         base.OnDie(bulletDieType);

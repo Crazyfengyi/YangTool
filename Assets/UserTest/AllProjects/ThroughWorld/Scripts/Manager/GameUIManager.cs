@@ -46,7 +46,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private const float ANI_TIME_POST = 0.3f;
     private const float ANI_TIME_MOVE = 0.2f;
     #endregion
- 
+
     #region 飘分
     public GameObject scorePrefab;//飘字
     public Transform scoreParent;
@@ -75,10 +75,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            //AddTipsShow("测试提示！", TipsReDoType.Discard);
+            AddTipsShow("测试提示！", TipsReDoType.None);
             //AddScoreShow(Vector3.zero, "-100");
             //UICommonTool.Instance.ShowTip("测试....");
-            UICommonTool.Instance.SetLoadingShow(true);
+            //UICommonTool.Instance.SetLoadingShow(true);
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
@@ -183,7 +183,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <param name="worldPos">世界坐标</param>
     /// <param name="text">文字</param>
     /// <param name="color">颜色</param>
-    public void AddScoreShow(Vector3 worldPos, string text, Color color = default, ScoreAniType scoreAniType = ScoreAniType.None)
+    public void AddScoreShow(Vector3 worldPos, string text, Color color = default, ScoreAniType scoreAniType = ScoreAniType.Ani2)
     {
         ScoreData scoreData = new ScoreData();
         scoreData.worldPos = worldPos;
@@ -195,7 +195,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private void StartScoreUIShow(ScoreData scoreData)
     {
         //飘分对象
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
         ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
         GameObject score = poolItem.obj;
         score.transform.SetAsLastSibling();
@@ -216,15 +216,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         {
             case ScoreAniType.Ani2:
                 {
-                    canvasGroup.alpha = 0;
                     DOTween.Sequence()
-                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 150, 1f))
-                        .Join(canvasGroup.DOFade(1, 1f))
-                        .AppendInterval(0.5f)
-                        .Append(canvasGroup.DOFade(0, 0.5f))
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 120, 1f))
+                        .Join(canvasGroup.DOFade(1f, 1f))
+                        .AppendInterval(0.2f)
+                        .Join(canvasGroup.DOFade(0.3f, 0.2f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -242,14 +241,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                 {
                     canvasGroup.alpha = 0;
                     DOTween.Sequence()
-                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 150, 0.25f))
-                        .Join(canvasGroup.DOFade(1, 0.25f))
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 120, 0.25f))
+                        .Join(canvasGroup.DOFade(1, 0.2f))
                         .AppendInterval(0.5f)
-                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 200, 0.15f))
+                        .Append(scoreText.transform.DOLocalMoveY(defaultPos.y + 160, 0.15f))
                         .Append(canvasGroup.DOFade(0, 0.15f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -273,7 +272,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         .Append(canvasGroup.DOFade(0, 0.2f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, null, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -354,7 +353,7 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(GameUIManager.Instance.scorePrefab.transform);
+        obj.DefualtGameObjectOnGet(GameUIManager.Instance.tipsParent.transform);
     }
     public void OnRecycle()
     {
@@ -408,12 +407,12 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"),GameUIManager.Instance.scoreParent);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"), GameUIManager.Instance.scoreParent);
         obj = tempObj;
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(GameUIManager.Instance.hpBarParent);
+        obj.DefualtGameObjectOnGet(GameUIManager.Instance.scoreParent);
 
     }
     public void OnRecycle()
@@ -441,8 +440,17 @@ public class ScoreData
 public enum ScoreAniType
 {
     None,
+    /// <summary>
+    /// 缩放向上--抄蛋壳特工队
+    /// </summary>
     Ani1,
+    /// <summary>
+    /// 向上飘
+    /// </summary>
     Ani2,
+    /// <summary>
+    /// 向上飘--中间停顿
+    /// </summary>
     Ani3,
 }
 #endregion
@@ -465,7 +473,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"),GameUIManager.Instance.hpBarParent);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"), GameUIManager.Instance.hpBarParent);
         obj = tempObj;
         //设置显示
         text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
@@ -481,7 +489,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     }
     public void LateUpdate()
     {
-        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera,GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
+        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
         obj.transform.localPosition = Vector3.Lerp(obj.transform.localPosition, targetPos, Time.deltaTime * 10);
     }
     /// <summary>

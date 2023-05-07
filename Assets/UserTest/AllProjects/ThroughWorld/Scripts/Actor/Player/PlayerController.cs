@@ -25,12 +25,28 @@ public class PlayerController : RoleBase
     private EmitterBase emitter;//发射器
     private AdvancedWalkerController advancedWalker;//移动脚本
 
+    /// <summary>
+    /// 目标物体
+    /// </summary>
+    public override GameObject Target
+    {
+        get { return target; }
+    }
+    /// <summary>
+    /// 目标点
+    /// </summary>
+    public override Vector3? TargetPos
+    {
+        get { return targetPos; }
+    }
+
     private bool isJumpAni;
 
     public override void IInit()
     {
         base.IInit();
         campType = ActorCampType.Player;
+        canAtkCamp = ActorCampType.MonsterAndBuilding;
 
         GameInputSet gameInput = GameInputManager.Instance.GameInput;
         gameInput.Player.Move.performed += OnMove;
@@ -38,7 +54,7 @@ public class PlayerController : RoleBase
         gameInput.Player.Interactive.performed += OnInteractive;
         gameInput.Player.Jump.performed += OnJump;
         gameInput.Player.Jump.canceled += OnJump;
-        
+
         emitter = new PlayerEmitter(this);
         advancedWalker = GetComponent<AdvancedWalkerController>();
         advancedWalker.cameraTransform = CameraManager.Instance.CameraLeftRightTransform;
@@ -93,10 +109,12 @@ public class PlayerController : RoleBase
 
     public override void IDie()
     {
+        base.IDie();
         GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
         UIMonoInstance.Instance.OpenUIPanel("GameOverPanel", "One");
+        YangToolsManager.SetCursorLock(false);
     }
 
     #region 输入
@@ -133,7 +151,10 @@ public class PlayerController : RoleBase
 
         if (atkInfo.targetActor.IsCanBeHit())
         {
-            GameBattleManager.Instance.AtkProcess(this, atkInfo.targetActor);
+            //伤害信息创建
+            DamageInfo damageInfo = GetDamageInfo();
+            damageInfo.atkPos = transform.position;
+            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
             ShowAtkEffect(atkInfo.atkEffectInfo);
         }
     }

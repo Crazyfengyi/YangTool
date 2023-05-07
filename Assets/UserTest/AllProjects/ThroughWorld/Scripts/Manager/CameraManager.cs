@@ -172,11 +172,21 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// <summary>
     /// 设置主角
     /// </summary>
-    public void SetMainPlayer(GameObject mainPlayer)
+    public void SetMainPlayer(PlayerController mainPlayer)
     {
         mainCM.Follow = mainPlayer.transform;
         mainCM.LookAt = mainPlayer.transform;
         cameraRoot.transform.SetParent(mainPlayer.transform);
+        cameraRoot.transform.localPosition = Vector3.zero;
+        mainPlayer.OnDieAction += DieAction;
+
+        void DieAction()
+        {
+            mainCM.Follow = null;
+            mainCM.LookAt = null;
+            cameraRoot.transform.parent = null;
+            mainPlayer.OnDieAction -= DieAction;
+        };
     }
 
     /// <summary>

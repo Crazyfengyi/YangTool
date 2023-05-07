@@ -8,6 +8,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class RoleBase : GameActor
@@ -28,6 +29,29 @@ public class RoleBase : GameActor
     [ShowInInspector]
     protected Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
 
+    #region 攻击目标
+    protected GameObject target;
+    /// <summary>
+    /// 目标物体
+    /// </summary>
+    public override GameObject Target
+    {
+        get { return target; }
+    }
+    protected Vector3? targetPos;
+    /// <summary>
+    /// 目标点
+    /// </summary>
+    public override Vector3? TargetPos
+    {
+        get { return targetPos; }
+    }
+    #endregion
+
+    #region 事件回调
+    public Action OnDieAction;
+    #endregion
+
     #region 生命周期接口实现
     public override void IInit()
     {
@@ -46,6 +70,7 @@ public class RoleBase : GameActor
     public override void IUpdate()
     {
         roleBuffControl?.IUpdate();
+        CheckAtkTarget();
     }
     public override void ILateUpdate()
     {
@@ -57,7 +82,7 @@ public class RoleBase : GameActor
     }
     public override void IDie()
     {
-
+        OnDieAction?.Invoke();
     }
     public override void IDestroy()
     {
@@ -85,6 +110,33 @@ public class RoleBase : GameActor
         if (roleAttribute == RoleAttribute.HP)
         {
             healthControl?.healthBar?.UpdateData(this);
+        }
+    }
+    #endregion
+
+    #region 检查攻击目标
+    /// <summary>
+    /// 检查攻击目标
+    /// </summary>
+    public virtual void CheckAtkTarget()
+    {
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        if (temp.Length > 0)
+        {
+            for (int i = 0; i < temp.Length; i++)
+            {
+                GameActor tempTarget = temp[i].gameObject.GetComponentInParent<GameActor>();
+                if (tempTarget && canAtkCamp.HasFlag(tempTarget.campType))
+                {
+                    target = tempTarget.gameObject;
+                    targetPos = tempTarget.transform.position;
+                }
+            }
+        }
+        else
+        {
+            target = null;
+            targetPos = null;
         }
     }
     #endregion

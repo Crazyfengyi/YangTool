@@ -22,7 +22,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            YangToolsManager.SetCursorLock(true);
+            if (GameActorManager.Instance.MainPlayer)
+            {
+                YangToolsManager.SetCursorLock(true);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

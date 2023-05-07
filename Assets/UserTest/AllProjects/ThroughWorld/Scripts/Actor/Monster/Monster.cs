@@ -21,10 +21,27 @@ public class Monster : RoleBase
     private float timer;
     private float interval = 1f;
 
+    /// <summary>
+    /// 目标物体
+    /// </summary>
+    public override GameObject Target
+    {
+        get { return target; }
+    }
+    /// <summary>
+    /// 目标点
+    /// </summary>
+    public override Vector3? TargetPos
+    {
+        get { return targetPos; }
+    }
+
     public override void IInit()
     {
         base.IInit();
         campType = ActorCampType.Monster;
+        canAtkCamp = ActorCampType.PlayerAndBuilding;
+
         aiPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
 
@@ -54,6 +71,7 @@ public class Monster : RoleBase
             {
                 aiPath.isStopped = false;
             }
+            Animator.SetFloat("Speed", aiPath.velocity.magnitude);
         }
 
         if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && GameActorManager.Instance.MainPlayer != null)
@@ -74,14 +92,16 @@ public class Monster : RoleBase
     }
     public override void ILateUpdate()
     {
+        base.ILateUpdate();
         //if (Animator) Animator.SetFloat("Speed", inputVector3.magnitude);
     }
     public override void IFixedUpdate()
     {
-
+        base.IFixedUpdate();
     }
     public override void IDie()
     {
+        base.IDie();
         GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
@@ -95,7 +115,16 @@ public class Monster : RoleBase
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)
     {
+        if (!IsCanAtk()) return;
 
+        if (atkInfo.targetActor.IsCanBeHit())
+        {
+            //伤害信息创建
+            DamageInfo damageInfo = GetDamageInfo();
+            damageInfo.atkPos = transform.position;
+            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
+            ShowAtkEffect(atkInfo.atkEffectInfo);
+        }
     }
     public override void BeHit(ref DamageInfo damageInfo)
     {

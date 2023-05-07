@@ -32,6 +32,21 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     }
     #endregion
 
+    #region 目标和阵营
+    /// <summary>
+    /// 目标物体
+    /// </summary>
+    public virtual GameObject Target
+    {
+        get { return null; }
+    }
+    /// <summary>
+    /// 目标点
+    /// </summary>
+    public virtual Vector3? TargetPos
+    {
+        get { return null; }
+    }
     /// <summary>
     /// 阵营
     /// </summary>
@@ -40,6 +55,7 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     /// 可攻击阵营
     /// </summary>
     public ActorCampType canAtkCamp;
+    #endregion
 
     #region 生命周期
     public abstract void IInit();

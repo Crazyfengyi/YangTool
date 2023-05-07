@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace YangTools.ObjectPool
 {
@@ -365,7 +366,8 @@ namespace YangTools.ObjectPool
         {
             if (m_CollectionCheck && m_Stack.Count > 0 && m_Stack.Contains(item))
             {
-                throw new InvalidOperationException("试图释放一个已经释放到池中的对象.");
+                Debug.LogError($"试图回收一个已经在池中里的对象:{item}");
+                return;
             }
 
             item.OnRecycle();
@@ -620,7 +622,7 @@ namespace YangTools.ObjectPool
     public static class ReferencePool
     {
         private static Dictionary<Type, object> poolDictionary = new Dictionary<Type, object>();
-        private static readonly Object lockObject = new Object();
+        private static readonly UnityEngine.Object lockObject = new UnityEngine.Object();
 
         /// <summary>
         /// 获取

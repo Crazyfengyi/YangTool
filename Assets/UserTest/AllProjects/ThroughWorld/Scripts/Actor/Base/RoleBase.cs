@@ -62,8 +62,8 @@ public class RoleBase : GameActor
             GameActorManager.Instance.RemoveActor(this);
         });
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 100);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 100);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
     }

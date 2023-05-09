@@ -111,8 +111,24 @@ public enum RoleFlag
 public enum BulletDieType
 {
     None,
-    TimeOut,
+    /// <summary>
+    /// 生存时间结束
+    /// </summary>
+    TimeEnd,
+    /// <summary>
+    /// 场景切换
+    /// </summary>
     SceneChange,
-    Atk,
-    End,
+    /// <summary>
+    /// 检测到攻击目标
+    /// </summary>
+    HaveAtk,
+    /// <summary>
+    /// 碰撞到建筑物和地面
+    /// </summary>
+    Collision,
+    /// <summary>
+    /// 到达目标点
+    /// </summary>
+    EndPoint,
 }

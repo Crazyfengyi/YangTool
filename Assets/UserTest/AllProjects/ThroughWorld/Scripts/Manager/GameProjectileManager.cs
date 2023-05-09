@@ -217,6 +217,7 @@ public class BulletBase
     public virtual void OnUpdate()
     {
         if (bulletData == null || bulletObj == null) return;
+        if (isDie) return;
         if (bulletData.target != null)
         {
             //追踪子弹--直接转向目标
@@ -235,13 +236,18 @@ public class BulletBase
 
         if (CheckAtk())
         {
-            OnDie(BulletDieType.Atk);
+            OnDie(BulletDieType.HaveAtk);
+        }
+
+        if (CheckCollision())
+        {
+            OnDie(BulletDieType.Collision);
         }
 
         timer += Time.deltaTime;
         if (timer >= bulletData.survivalMaxTime)
         {
-            OnDie(BulletDieType.TimeOut);
+            OnDie(BulletDieType.TimeEnd);
         }
     }
 
@@ -267,7 +273,28 @@ public class BulletBase
         }
         return needDie;
     }
-
+    /// <summary>
+    /// 检查碰撞
+    /// </summary>
+    public virtual bool CheckCollision()
+    {
+        Collider[] colliders = Physics.OverlapSphere(bulletObj.transform.position, radius);
+        bool needDie = false;
+        if (colliders.Length > 0)
+        {
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                int targetLayer = LayerMask.GetMask("Ground", "Build");
+                //位运算
+                if ((1 << colliders[i].gameObject.layer & targetLayer) != 0)
+                {
+                    bulletData.collisionPos = colliders[i].ClosestPoint(bulletObj.transform.position);
+                    needDie = true;
+                }
+            }
+        }
+        return needDie;
+    }
     /// <summary>
     /// 死亡
     /// </summary>
@@ -276,16 +303,24 @@ public class BulletBase
         if (isDie) return;
         isDie = true;
 
+        Debug.LogError($"子弹死亡:{bulletDieType}");
         switch (bulletDieType)
         {
-            case BulletDieType.Atk:
+            case BulletDieType.HaveAtk:
                 {
                     Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
                     GameSoundManager.Instance.PlaySound("Audio_BulletAtk");
                     GameEffectManager.Instance.PlayEffect("BulletAtkEffect", effectPos);
                 }
                 break;
-            case BulletDieType.End:
+            case BulletDieType.EndPoint:
+                {
+                    Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
+                    GameSoundManager.Instance.PlaySound("Audio_BulletAtk");
+                    GameEffectManager.Instance.PlayEffect("SmokeEffect", effectPos);
+                }
+                break;
+            case BulletDieType.Collision:
                 {
                     Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
                     GameSoundManager.Instance.PlaySound("Audio_BulletAtk");

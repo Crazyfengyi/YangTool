@@ -5,6 +5,7 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-08-14 
 */
+using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
 
@@ -57,7 +58,7 @@ public class Monster : RoleBase
             aiPath.destination = GameActorManager.Instance.MainPlayer.transform.position;
             if (Vector3.Distance(transform.position, GameActorManager.Instance.MainPlayer.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
             {
-                if (aiPath.isStopped != true)
+                if (aiPath.isStopped == false)
                 {
                     aiPath.isStopped = true;
                     timer = 0;
@@ -70,6 +71,7 @@ public class Monster : RoleBase
             else
             {
                 aiPath.isStopped = false;
+                model.transform.LookAt(aiPath.transform.position + aiPath.velocity);
             }
             Animator.SetFloat("Speed", aiPath.velocity.magnitude);
         }

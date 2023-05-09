@@ -58,13 +58,13 @@ public class ThrowBullet : BulletBase
         //是否检查到物体
         if (CheckAtk())
         {
-            OnDie(BulletDieType.Atk);
+            OnDie(BulletDieType.HaveAtk);
         }
 
         //到达目标点
         if (Vector3.Distance(tempPos, path.End) < 0.1f)
         {
-            OnDie(BulletDieType.End);
+            OnDie(BulletDieType.EndPoint);
         }
     }
 

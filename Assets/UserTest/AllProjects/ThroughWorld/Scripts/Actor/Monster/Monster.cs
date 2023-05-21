@@ -8,6 +8,7 @@
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
+using YangTools.Extend;
 
 /// <summary>
 /// 怪物控制器
@@ -22,6 +23,7 @@ public class Monster : RoleBase
     private float timer;
     private float interval = 1f;
 
+    private ActorCampType findCampType;//寻路目标阵营
     /// <summary>
     /// 目标物体
     /// </summary>
@@ -42,42 +44,42 @@ public class Monster : RoleBase
         base.IInit();
         campType = ActorCampType.Monster;
         canAtkCamp = ActorCampType.PlayerAndBuilding;
+        findCampType = ActorCampType.Player;
 
         aiPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(6, 12));
+        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(10, 16));
         roleBuffControl.Add(BuffID.buff_10001);
     }
     public override void IUpdate()
     {
         base.IUpdate();
 
-        if (AstarPath.active != null && aiPath != null && GameActorManager.Instance.MainPlayer != null)
+        if (AstarPath.active != null && aiPath != null && Target)
         {
-            aiPath.destination = GameActorManager.Instance.MainPlayer.transform.position;
-            if (Vector3.Distance(transform.position, GameActorManager.Instance.MainPlayer.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
+            aiPath.destination = Target.transform.position;
+            if (Vector3.Distance(transform.position, Target.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
             {
                 if (aiPath.isStopped == false)
                 {
                     aiPath.isStopped = true;
                     timer = 0;
                 }
-
-                Vector3 targetPos = GameActorManager.Instance.MainPlayer.transform.position;
-                targetPos.y = 0;
-                model.transform.LookAt(targetPos);
+     
+                model.transform.LookAt(Target.transform.position.SetYValue());
             }
             else
             {
                 aiPath.isStopped = false;
-                model.transform.LookAt(aiPath.transform.position + aiPath.velocity);
+                if (Target) model.transform.LookAt(Target.transform.position.SetYValue());
             }
             Animator.SetFloat("Speed", aiPath.velocity.magnitude);
         }
 
-        if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && GameActorManager.Instance.MainPlayer != null)
+        if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && Target)
         {
+            model.transform.LookAt(Target.transform.position.SetYValue());
             timer += Time.deltaTime;
             if (timer >= interval)
             {
@@ -113,6 +115,33 @@ public class Monster : RoleBase
         base.IDestroy();
         Destroy(gameObject);
     }
+
+    #region 搜索攻击目标
+    /// <summary>
+    /// 搜索攻击目标
+    /// </summary>
+    public override void SearchAtkTarget()
+    {
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        if (temp.Length > 0)
+        {
+            for (int i = 0; i < temp.Length; i++)
+            {
+                GameActor tempTarget = temp[i].gameObject.GetComponentInParent<GameActor>();
+                if (tempTarget && findCampType.HasFlag(tempTarget.campType))
+                {
+                    target = tempTarget.gameObject;
+                    targetPos = tempTarget.transform.position;
+                }
+            }
+        }
+        else
+        {
+            target = null;
+            targetPos = null;
+        }
+    }
+    #endregion
 
     #region 攻击和被击接口实现
     public override void Atk(AtkInfo atkInfo)
@@ -169,5 +198,4 @@ public class Monster : RoleBase
         return false;
     }
     #endregion
-
 }

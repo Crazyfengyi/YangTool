@@ -70,7 +70,7 @@ public class RoleBase : GameActor
     public override void IUpdate()
     {
         roleBuffControl?.IUpdate();
-        CheckAtkTarget();
+        SearchAtkTarget();
     }
     public override void ILateUpdate()
     {
@@ -114,11 +114,11 @@ public class RoleBase : GameActor
     }
     #endregion
 
-    #region 检查攻击目标
+    #region 搜索攻击目标
     /// <summary>
-    /// 检查攻击目标
+    /// 搜索攻击目标
     /// </summary>
-    public virtual void CheckAtkTarget()
+    public virtual void SearchAtkTarget()
     {
         Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
         if (temp.Length > 0)

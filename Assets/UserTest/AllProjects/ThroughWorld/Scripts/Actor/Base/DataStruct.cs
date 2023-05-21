@@ -56,7 +56,9 @@ public enum BulletShootType
 {
     None,
     Circle,
-    Throw
+    Throw,
+    Parabola,
+    Physics
 }
 /// <summary>
 /// 交互类型

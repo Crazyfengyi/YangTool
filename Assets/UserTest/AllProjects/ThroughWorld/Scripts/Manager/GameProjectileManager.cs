@@ -51,7 +51,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name);
         poolItem.InitData(bulletData);
         GameObject bulletObj = poolItem.obj;
-        bulletObj.transform.localPosition = bulletData.StartPostion;
+        bulletObj.transform.position = bulletData.StartPostion;
         BulletBase bulletBase = null;
         switch (bulletShootType)
         {
@@ -63,6 +63,9 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
                 break;
             case BulletShootType.Throw:
                 bulletBase = new ThrowBullet(bulletData, bulletObj);
+                break;
+            case BulletShootType.Parabola:
+                bulletBase = new ParabolaBullet(bulletData, bulletObj);
                 break;
             default:
                 bulletBase = new BulletBase(bulletData, bulletObj);
@@ -234,6 +237,13 @@ public class BulletBase
 
         bulletObj.transform.Translate(bulletObj.transform.forward * bulletData.speed * Time.deltaTime, Space.World);
 
+        CheckAllCollision();
+    }
+    /// <summary>
+    /// 检查所有碰撞相关
+    /// </summary>
+    public void CheckAllCollision()
+    {
         if (CheckAtk())
         {
             OnDie(BulletDieType.HaveAtk);
@@ -250,7 +260,6 @@ public class BulletBase
             OnDie(BulletDieType.TimeEnd);
         }
     }
-
     /// <summary>
     /// 检查攻击
     /// </summary>
@@ -399,7 +408,7 @@ public class BulletData
     /// <summary>
     /// 目标点
     /// </summary>
-    public Vector3 EndPostion;
+    public Vector3 TargetPostion;
 
     /// <summary>
     /// 目标
@@ -407,14 +416,24 @@ public class BulletData
     public GameObject target;
 
     /// <summary>
+    /// 初速度
+    /// </summary>
+    public Vector3 initialVelocity;
+
+    /// <summary>
     /// 速度
     /// </summary>
-    public float speed;
+    public float speed = 1;
 
     /// <summary>
     /// 加速度
     /// </summary>
-    public float acceleration;
+    public Vector3 aVelocity = new Vector3(0, -9.8f, 0);
+
+    /// <summary>
+    /// 伤害检查半径
+    /// </summary>
+    public float checkRadius = 0.2f;
 
     /// <summary>
     /// 最大速度
@@ -434,7 +453,7 @@ public class BulletData
     /// <summary>
     /// 最大存活时间
     /// </summary>
-    public float survivalMaxTime = 6f;
+    public float survivalMaxTime = 120f;
 
     /// <summary>
     /// 碰撞点

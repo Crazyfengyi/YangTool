@@ -139,7 +139,6 @@ public static class BuildTool
         {
             UnityEngine.Debug.LogError("复制文件夹出错:" + e.Message);
         }
-
     }
     /// <summary>
     /// 获取所有需要打包场景名

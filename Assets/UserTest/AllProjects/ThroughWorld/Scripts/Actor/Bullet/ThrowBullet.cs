@@ -14,67 +14,40 @@ using YangTools;
 /// </summary>
 public class ThrowBullet : BulletBase
 {
-    protected ParabolaPath path;
+    /// <summary>
+    /// 初速度
+    /// </summary>
+    public Vector3 initialVelocity;
+    /// <summary>
+    /// 加速度
+    /// </summary>
+    public Vector3 aVelocity;
+    /// <summary>
+    /// 当前速度
+    /// </summary>
+    public Vector3 currentVelocity;
 
     public ThrowBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
         bulletData = data;
         bulletObj = Obj;
         bulletObj.transform.forward = data.direction;
+        initialVelocity = data.initialVelocity;
+        aVelocity = data.aVelocity;
+        radius = data.checkRadius;
 
-        radius = 0.2f;
-        float hight = 0;
-        float distance = Vector3.Distance(bulletData.StartPostion, bulletData.EndPostion);
-        //根据距离设置抛物线高度
-        if (distance > 6)
-        {
-            hight = distance / 3;
-        }
-        else if (distance > 2)
-        {
-            hight = distance / 4;
-        }
-        else
-        {
-            hight = 0;
-        }
-
-        path = new ParabolaPath(bulletData.StartPostion, bulletData.EndPostion, hight);
-        path.isClampStartEnd = true;
+        currentVelocity = initialVelocity;
     }
 
     public override void OnUpdate()
     {
-        base.OnUpdate();
         if (bulletData == null || bulletObj == null) return;
-        path.Time += Time.deltaTime;
 
-        Vector3 tempPos = path.Position;
         //移动
+        currentVelocity += aVelocity * Time.deltaTime;
+        Vector3 tempPos = bulletObj.transform.position + currentVelocity * Time.deltaTime;
         bulletObj.transform.position = tempPos;
-        //转向
-        bulletObj.transform.LookAt(tempPos);
 
-        //是否检查到物体
-        if (CheckAtk())
-        {
-            OnDie(BulletDieType.HaveAtk);
-        }
-
-        //到达目标点
-        if (Vector3.Distance(tempPos, path.End) < 0.1f)
-        {
-            OnDie(BulletDieType.EndPoint);
-        }
-    }
-
-    public override bool CheckAtk()
-    {
-        return base.CheckAtk();
-    }
-
-    public override void OnDie(BulletDieType bulletDieType)
-    {
-        base.OnDie(bulletDieType);
+        CheckAllCollision();
     }
 }

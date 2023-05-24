@@ -84,32 +84,28 @@ namespace YangTools.Extend
             cachedTransforms.Clear();
         }
         /// <summary>
+        /// 获得某物体的bounds中心点
+        /// </summary>
+        public static Vector3 GetBoundsCenter(this GameObject target)
+        {
+            return GetBounds(target).center;
+        }
+        /// <summary>
         /// 获得某物体的bounds
         /// </summary>
-        public static Bounds GetBounds(this GameObject obj)
+        public static Bounds GetBounds(this GameObject target)
         {
-            Vector3 Min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            Vector3 Max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            Renderer[] renders = obj.GetComponentsInChildren<Renderer>();
-            for (int i = 0; i < renders.Length; i++)
+            Renderer[] mrs = target.GetComponentsInChildren<Renderer>();
+            Bounds bounds = new Bounds();
+            if (mrs.Length > 0)
             {
-                if (renders[i].bounds.min.x < Min.x)
-                    Min.x = renders[i].bounds.min.x;
-                if (renders[i].bounds.min.y < Min.y)
-                    Min.y = renders[i].bounds.min.y;
-                if (renders[i].bounds.min.z < Min.z)
-                    Min.z = renders[i].bounds.min.z;
-
-                if (renders[i].bounds.max.x > Max.x)
-                    Max.x = renders[i].bounds.max.x;
-                if (renders[i].bounds.max.y > Max.y)
-                    Max.y = renders[i].bounds.max.y;
-                if (renders[i].bounds.max.z > Max.z)
-                    Max.z = renders[i].bounds.max.z;
+                bounds = mrs[0].bounds;
             }
-            Vector3 center = (Min + Max) / 2;
-            Vector3 size = new Vector3(Max.x - Min.x, Max.y - Min.y, Max.z - Min.z);
-            return new Bounds(center, size);
+            for (int i = 0; i < mrs.Length; i++)
+            {
+                bounds.Encapsulate(mrs[i].bounds);
+            }
+            return bounds;
         }
         /// <summary>
         /// 自动设置显隐--会先判断是否已经是目标状态
@@ -631,6 +627,7 @@ namespace YangTools.Extend
                 .SetTarget(rectTrans);
         }
         #endregion
+
     }
     /// <summary>
     /// 范围检测类

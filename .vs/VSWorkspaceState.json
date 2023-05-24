@@ -7,8 +7,10 @@
     "\\Assets\\YangTools\\EditorStudio",
     "\\Assets\\YangTools\\Scripts",
     "\\Assets\\YangTools\\Scripts\\Core",
-    "\\Assets\\YangTools\\Scripts\\Core\\YangExtend",
-    "\\Assets\\YangTools\\Scripts\\Core\\YangObjectPool"
+    "\\Assets\\YangTools\\Scripts\\Core\\YangObjectPool",
+    "\\Assets\\YangTools\\Scripts\\Core\\YangToolsManager",
+    "\\Assets\\YangTools\\Scripts\\Core\\YangToolsManager\\YangExtend"
   ],
+  "SelectedNode": "\\Assets\\YangTools\\Scripts\\Core\\YangToolsManager\\YangExtend\\YangExtendForGame.cs",
   "PreviewInSolutionExplorer": false
 }

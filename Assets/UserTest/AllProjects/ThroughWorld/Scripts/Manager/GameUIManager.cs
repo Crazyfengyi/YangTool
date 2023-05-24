@@ -17,7 +17,6 @@ using YangTools.Extend;
 using YangTools.Log;
 using Sirenix.OdinInspector;
 using YangTools.UGUI;
-using Unity.Burst.Intrinsics;
 using UnityEngine.SocialPlatforms.Impl;
 
 /// <summary>

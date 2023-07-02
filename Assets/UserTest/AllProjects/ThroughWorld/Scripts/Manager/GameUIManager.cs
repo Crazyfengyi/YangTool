@@ -67,7 +67,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         returnBtn.gameObject.SetActive(false);
         returnBtn.onClick.AddListener(() =>
         {
-            SceneLoader.Instance.Load("GameMain");
+            GameManager.Instance.SceneLoad("GameMain");
         });
     }
     public void Update()
@@ -81,7 +81,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
-            UICommonTool.Instance.SetLoadingShow(false);
+            //UICommonTool.Instance.SetLoadingShow(false);
+            UICommonTool.Instance.ShowConfirmPanel("测试", okBtnCallBack: () => { }, cancelBtnCallBack: () => { },
+            isCountDownSelect: true);
+
         }
 
         timer += Time.deltaTime;
@@ -106,7 +109,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange(string sceneName)
+    public void OnSceneChangeStart(string sceneName)
     {
         returnBtn.gameObject.SetActive(sceneName != "GameMain");
     }

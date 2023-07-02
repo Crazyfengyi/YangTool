@@ -12,6 +12,6 @@ public class GameEntryLoad : MonoBehaviour
 {
     public void Awake()
     {
-        SceneLoader.Instance.Load("GameMain");
+        GameSceneManager.Instance.Load("GameMain");
     }
 }

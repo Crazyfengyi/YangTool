@@ -832,6 +832,13 @@ namespace YangTools.MiniMap
         #endregion 内部方法
 
         #region 对外方法
+        /// <summary>
+        /// 设置小地图显隐
+        /// </summary>
+        public void SetMiniMapShow(bool isShow)
+        {
+            m_Canvas.gameObject.SetActive(isShow);
+        }
 
         /// <summary>
         /// 设置显隐网格

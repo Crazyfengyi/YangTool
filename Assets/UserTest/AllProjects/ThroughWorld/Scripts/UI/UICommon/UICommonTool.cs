@@ -65,13 +65,40 @@ public class UICommonTool : Singleton<UICommonTool>
 
     #region 通用二级确认弹窗
 
-    public void ShowConfirmPanel(string str, Action okBtnCallBack, Action cancelBtnCallBack)
+    /// <summary>
+    /// 显示二级确认弹窗
+    /// </summary>
+    /// <param name="showMsg">显示的弹窗文字</param>
+    /// <param name="okBtnText">确认按钮文字</param>
+    /// <param name="cancelBtnText">关闭按钮文字</param>
+    /// <param name="okBtnCallBack">确认按钮回调</param>
+    /// <param name="cancelBtnCallBack">关闭按钮回调</param>
+    /// <param name="isCountDownSelect">是否倒计时自动选择</param>
+    /// <param name="countDownTime">倒计时时间</param>
+    /// <param name="autoSelectOk">是否倒计时完选择确定按钮</param>
+    public void ShowConfirmPanel(string showMsg, string okBtnText = "", string cancelBtnText = "",
+        Action okBtnCallBack = null, Action cancelBtnCallBack = null,
+        bool isCountDownSelect = false, float countDownTime = 10f, bool autoSelectOk = true)
     {
         ConfirmData data = new ConfirmData();
-        data.showStr = str;
+        data.showMsg = showMsg;
+        data.okBtnText = okBtnText;
+        data.cancelBtnText = cancelBtnText;
+
+        data.isCountDownSelect = isCountDownSelect;
+        data.countDownTime = countDownTime;
+        data.autoSelectOk = autoSelectOk;
+
         data.okCallBack = okBtnCallBack;
         data.cancelCallBack = cancelBtnCallBack;
-        CommonConfirmPanel.OpenPanel(data, "LoadingPanel", "Top");
+
+        //保底有个关闭按钮--按钮显隐是通过回调是否为null判断的
+        if (okBtnCallBack == null && cancelBtnCallBack == null)
+        {
+            data.cancelCallBack = () => { };
+        }
+
+        CommonConfirmPanel.OpenPanel(data, "CommonConfirmPanel", "Top");
     }
 
     #endregion 通用二级确认弹窗

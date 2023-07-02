@@ -78,7 +78,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange(string sceneName)
+    public void OnSceneChangeStart(string sceneName)
     {
         for (int i = allMonster.Count - 1; i >= 0; i--)
         {

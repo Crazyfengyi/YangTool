@@ -270,6 +270,8 @@ namespace YangTools.UGUI
         public void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
         {
             this.depthInUIGroup = depthInUIGroup;
+
+            //uguiPanelBase.OnDepthChanged(uiGroupDepth, depthInUIGroup);
             try
             {
                 uguiPanelBase.OnDepthChanged(uiGroupDepth, depthInUIGroup);

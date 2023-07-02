@@ -8,17 +8,21 @@
 
 using System;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 using YangTools.UGUI;
+using static UnityEngine.Application;
 
 /// <summary>
 /// 通用二级确认界面
 /// </summary>
 public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
 {
-    public TMP_Text text;
-    public Button okBtn;
-    public Button cancelBtn;
+    public TMP_Text text;//显示文字
+    public Button okBtn;//ok按钮
+    public TMP_Text okBtnText;//ok按钮文字
+    public Button cancelBtn;//关闭按钮
+    public TMP_Text cancelBtnText;//关闭按钮文字
 
     private ConfirmData confirmData;
     private ConfirmData ConfirmData => confirmData;
@@ -31,8 +35,59 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
 
     public override void OnInit(ConfirmData _confirmData)
     {
+        base.OnInit(_confirmData);
         confirmData = _confirmData;
-        //TODO: 根据回调 动态显隐按钮
+        Init();
+    }
+
+    private void Init()
+    {
+        okBtn.gameObject.SetActive(confirmData.okCallBack != null);
+        cancelBtn.gameObject.SetActive(confirmData.cancelCallBack != null);
+
+        if (okBtnText) okBtnText.text = GetOkBtnText();
+        if (cancelBtnText) cancelBtnText.text = GetCancelBtnText();
+    }
+
+    public override void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
+    {
+        base.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
+
+        if (confirmData.isCountDownSelect)
+        {
+            confirmData.countDownTime -= Time.unscaledDeltaTime;
+
+            if (confirmData.autoSelectOk)
+            {
+                okBtnText.text = GetOkBtnText() + $"({(int)confirmData.countDownTime})";
+            }
+            else
+            {
+                cancelBtnText.text = GetCancelBtnText() + $"({(int)confirmData.countDownTime})";
+            }
+
+            if (confirmData.countDownTime <= 0)
+            {
+                if (confirmData.autoSelectOk)
+                {
+                    OK_OnClick();
+                }
+                else
+                {
+                    Cancel_OnClick();
+                }
+            }
+        }
+    }
+
+    private string GetOkBtnText()
+    {
+        return string.IsNullOrEmpty(confirmData.okBtnText) ? "确定" : confirmData.okBtnText;
+    }
+
+    private string GetCancelBtnText()
+    {
+        return string.IsNullOrEmpty(confirmData.cancelBtnText) ? "取消" : confirmData.cancelBtnText;
     }
 
     public void OK_OnClick()

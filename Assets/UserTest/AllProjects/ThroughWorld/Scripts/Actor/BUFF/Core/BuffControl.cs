@@ -86,7 +86,7 @@ public class BuffControl : ICustomLife
     /// </summary>
     public BuffBase Add(BuffID buffId, GameActor creator = null)
     {
-        Debuger.ToError($"获得Buff:{buffId}");
+        //Debuger.ToError($"获得Buff:{buffId}");
         //创建BUFF
         BuffBase buffBase = CreateBuff(creator == null ? handle : creator, handle, buffId);
         buffBase = AddBuff(buffBase);

@@ -54,12 +54,12 @@ namespace YangTools.MiniMap
         {
             if (full)
             {
-                m_image.sprite = WorldMapMask;
+                if (m_image) m_image.sprite = WorldMapMask;
                 if (Background != null) { Background.sprite = WorldMapBackGround; }
             }
             else
             {
-                m_image.sprite = MiniMapMask;
+                if (m_image) m_image.sprite = MiniMapMask;
                 if (Background != null) { Background.sprite = MiniMapBackGround; }
             }
         }

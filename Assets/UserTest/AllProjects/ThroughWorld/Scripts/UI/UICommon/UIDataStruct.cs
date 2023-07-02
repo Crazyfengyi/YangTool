@@ -19,7 +19,29 @@ public class ConfirmData : UGUIDataBase
     /// <summary>
     /// 显示的文字
     /// </summary>
-    public string showStr;
+    public string showMsg;
+    /// <summary>
+    /// ok按钮文字
+    /// </summary>
+    public string okBtnText;
+    /// <summary>
+    /// 关闭按钮文字
+    /// </summary>
+    public string cancelBtnText;
+
+    /// <summary>
+    /// 是否倒计时自动选择
+    /// </summary>
+    public bool isCountDownSelect = false;
+    /// <summary>
+    /// 倒计时
+    /// </summary>
+    public float countDownTime;
+    /// <summary>
+    /// 自动选择OK按钮
+    /// </summary>
+    public bool autoSelectOk;
+
     /// <summary>
     /// OK按钮回调
     /// </summary>

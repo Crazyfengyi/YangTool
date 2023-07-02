@@ -33,7 +33,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// <summary>
     /// 场景切换
     /// </summary>
-    public void OnSceneChange(string sceneName)
+    public void OnSceneChangeStart(string sceneName)
     {
         for (int i = 0; i < allBullet.Count; i++)
         {
@@ -312,7 +312,7 @@ public class BulletBase
         if (isDie) return;
         isDie = true;
 
-        Debug.LogError($"子弹死亡:{bulletDieType}");
+        //Debug.LogError($"子弹死亡:{bulletDieType}");
         switch (bulletDieType)
         {
             case BulletDieType.HaveAtk:

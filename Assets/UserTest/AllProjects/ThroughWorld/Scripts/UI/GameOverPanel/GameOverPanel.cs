@@ -31,7 +31,7 @@ public class GameOverPanel : UGUIPanelBase<UGUIDataBase>
 
     public void Btn_OnClick()
     {
-        SceneLoader.Instance.Load("GameMain");
+        GameSceneManager.Instance.Load("GameMain");
         ClosePanel();
         GameActorManager.Instance.CreateMainPlayer();
     }

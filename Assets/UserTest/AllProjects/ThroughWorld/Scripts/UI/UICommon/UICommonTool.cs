@@ -102,4 +102,21 @@ public class UICommonTool : Singleton<UICommonTool>
     }
 
     #endregion 通用二级确认弹窗
+
+    #region 场景加载页面
+    /// <summary>
+    /// 场景加载页面显隐
+    /// </summary>
+    public void SetSeceneLoading(bool isShow)
+    {
+        if (isShow)
+        {
+            GameUIManager.Instance.StartSeceneLoading();
+        }
+        else
+        {
+            GameUIManager.Instance.EndSeceneLoading();
+        }
+    }
+    #endregion
 }

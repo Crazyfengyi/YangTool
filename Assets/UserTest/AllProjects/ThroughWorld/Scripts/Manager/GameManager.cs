@@ -48,12 +48,13 @@ public class GameManager : MonoSingleton<GameManager>
     public void SceneLoad(string sceneName)
     {
         GameSceneManager.Instance.IsAutoSkip = true;
-        UICommonTool.Instance.SetLoadingShow(true);
+        UICommonTool.Instance.SetSeceneLoading(true);
+        
         MiniMapManager.Instance.SetMiniMapShow(false);
 
         GameSceneManager.Instance.OnProgressEvent.OnEndLoad = (progrese) =>
         {
-            UICommonTool.Instance.SetLoadingShow(false);
+            UICommonTool.Instance.SetSeceneLoading(false);
             MiniMapManager.Instance.SetMiniMapShow(true);
         };
         GameSceneManager.Instance.OnProgressEvent.OnLoading = (progrese) =>

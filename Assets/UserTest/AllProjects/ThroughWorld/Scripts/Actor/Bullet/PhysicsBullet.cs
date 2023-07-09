@@ -4,33 +4,85 @@
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2023-05-21 
-*/  
+*/
 using System;
-using System.Collections;  
-using UnityEngine;  
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
 using YangTools.UGUI;
-  
+using UnityEngine.Rendering.PostProcessing;
+
 /// <summary>
 /// 物理子弹
 /// </summary>
 public class PhysicsBullet : BulletBase
 {
+    public Rigidbody body;
+    public Transform target;
+
+    public float h = 100;
+    public float gravity = -9.8f;
     public PhysicsBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
         bulletData = data;
         bulletObj = Obj;
         bulletObj.transform.forward = data.direction;
-        //initialVelocity = data.initialVelocity;
-        //aVelocity = data.aVelocity;
-        //radius = data.checkRadius;
 
-        //currentVelocity = initialVelocity;
+        body = bulletObj.GetComponent<Rigidbody>();
+        target = data.target.transform;
+
+        Init();
     }
 
     //TODO:用刚体做,有物理表现--碰撞到建筑后反弹
+    public void Init()
+    {
+        body.useGravity = true;
+        h = target.position.y + 2;
+        body.velocity = CalculateLaunchVelocity().initVelocity;
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+        bulletObj.transform.LookAt(bulletObj.transform.position + body.velocity.normalized);
+    }
+    /// <summary>
+    /// 计算发射速度和时间
+    /// </summary>
+    /// <returns></returns>
+    private (Vector3 initVelocity, float timeToTarget) CalculateLaunchVelocity()
+    {
+        //Y的位移
+        float displacementY = target.position.y - body.position.y;
+        //XZ的位移
+        Vector3 displacementXZ = new Vector3(target.position.x - body.position.x,
+            0, target.position.z - body.position.z);
 
+        float time = Mathf.Sqrt(-2 * h / gravity) + Mathf.Sqrt(2 * (displacementY - h) / gravity);
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * h);
+        Vector3 velocityXZ = displacementXZ / time;
 
-} 
+        return (velocityY * -Mathf.Sign(gravity) + velocityXZ, time);
+    }
+    /// <summary>
+    /// Debug画线
+    /// </summary>
+    void DrawPath()
+    {
+        var temp = CalculateLaunchVelocity();
+        Vector3 previousDrawPoint = body.position;
+
+        //画点个数
+        int resolution = 30;
+        for (int i = 1; i <= resolution; i++)
+        {
+            float simulationTime = i / (float)resolution * temp.timeToTarget;
+            Vector3 displacement = temp.initVelocity * simulationTime + Vector3.up * gravity * simulationTime * simulationTime / 2f;
+            Vector3 drawPoint = body.position + displacement;
+            Debug.DrawLine(previousDrawPoint, drawPoint, Color.green);
+            previousDrawPoint = drawPoint;
+        }
+    }
+}

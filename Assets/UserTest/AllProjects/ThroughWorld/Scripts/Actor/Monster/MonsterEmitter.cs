@@ -30,12 +30,13 @@ public class MonsterEmitter : EmitterBase
         data.StartPostion = ((Monster)handle).shootPoint.transform.position;
         data.TargetPostion = handle.Target.transform.position;
         data.direction = ((Monster)handle).model.transform.forward;
-        data.name = "TestBullet";
+        data.name = "TestBulletPhysic";
         data.damageInfo = handle.GetDamageInfo();
         data.damageInfo.beHitEffectInfo = new EffectInfo();
+        data.target = handle.Target;
 
         //测试
-        emitData.bulletShootType = BulletShootType.Throw;
+        emitData.bulletShootType = BulletShootType.Physics;
 
         switch (emitData.bulletShootType)
         {
@@ -88,6 +89,9 @@ public class MonsterEmitter : EmitterBase
                 }
                 break;
             case BulletShootType.Parabola:
+                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                break;
+            case BulletShootType.Physics:
                 GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
                 break;
             default:

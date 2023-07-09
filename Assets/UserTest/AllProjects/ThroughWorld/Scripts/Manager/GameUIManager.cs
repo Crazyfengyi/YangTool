@@ -27,6 +27,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     #region UI
     public Button returnBtn;
     public Canvas uiCanvas;
+
+    public GameObject seceneLoading;
     #endregion
 
     #region 提示
@@ -330,6 +332,23 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         allHPBar.Remove(poolItem);
         YangObjectPool.Recycle(poolItem);
+    }
+    #endregion
+
+    #region 场景加载
+    /// <summary>
+    /// 开始场景加载
+    /// </summary>
+    public void StartSeceneLoading()
+    {
+        seceneLoading.gameObject.SetActive(true);
+    }
+    /// <summary>
+    /// 结束场景加载
+    /// </summary>
+    public void EndSeceneLoading()
+    {
+        seceneLoading.gameObject.SetActive(false);
     }
     #endregion
 }

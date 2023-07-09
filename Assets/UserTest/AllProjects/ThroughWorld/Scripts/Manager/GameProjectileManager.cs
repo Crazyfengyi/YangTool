@@ -67,6 +67,9 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
             case BulletShootType.Parabola:
                 bulletBase = new ParabolaBullet(bulletData, bulletObj);
                 break;
+            case BulletShootType.Physics:
+                bulletBase = new PhysicsBullet(bulletData, bulletObj);
+                break;
             default:
                 bulletBase = new BulletBase(bulletData, bulletObj);
                 break;

@@ -30,6 +30,9 @@ public class PlayerEmitter : EmitterBase
         data.target = handle.Target.gameObject;
         data.damageInfo = handle.GetDamageInfo();
         data.damageInfo.beHitEffectInfo = new EffectInfo();
+        data.targetCampType = handle.canAtkCamp;
+
+        data.bulletType = (BulletType)emitData.bulletShootType;
 
         switch (emitData.bulletShootType)
         {
@@ -41,12 +44,12 @@ public class PlayerEmitter : EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                        GameProjectileManager.Instance.CreateBullet(data);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                GameProjectileManager.Instance.CreateBullet(data);
                 break;
         }
     }

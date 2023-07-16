@@ -54,9 +54,9 @@ namespace YangTools.Extend
         /// <summary>
         /// 获取或增加组件。
         /// </summary>
-        /// <typeparam name="T">要获取或增加的组件。</typeparam>
-        /// <param name="gameObject">目标对象。</param>
-        /// <returns>获取或增加的组件。</returns>
+        /// <typeparam name="T">要获取或增加的组件</typeparam>
+        /// <param name="gameObject">目标对象</param>
+        /// <returns>获取或增加的组件</returns>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             T component = gameObject.GetComponent<T>();
@@ -70,7 +70,7 @@ namespace YangTools.Extend
 
         private static readonly List<Transform> cachedTransforms = new List<Transform>();
         /// <summary>
-        /// 递归设置游戏对象的层次。
+        /// 递归设置游戏对象的层次
         /// </summary>
         /// <param name="gameObject">对象</param>
         /// <param name="layer">目标层次的编号</param>

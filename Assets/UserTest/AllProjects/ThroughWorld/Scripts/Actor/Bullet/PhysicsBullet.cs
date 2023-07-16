@@ -20,18 +20,14 @@ using UnityEngine.Rendering.PostProcessing;
 public class PhysicsBullet : BulletBase
 {
     public Rigidbody body;
-    public Transform target;
+    public Vector3 targetPos;
 
     public float h = 100;
     public float gravity = -9.8f;
     public PhysicsBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
-        bulletData = data;
-        bulletObj = Obj;
-        bulletObj.transform.forward = data.direction;
-
         body = bulletObj.GetComponent<Rigidbody>();
-        target = data.target.transform;
+        targetPos = data.TargetPostion;
 
         Init();
     }
@@ -40,13 +36,19 @@ public class PhysicsBullet : BulletBase
     public void Init()
     {
         body.useGravity = true;
-        h = target.position.y + 2;
+        h = targetPos.y + 2;
         body.velocity = CalculateLaunchVelocity().initVelocity;
+        DrawPath();
     }
     public override void OnUpdate()
     {
-        base.OnUpdate();
+        //base.OnUpdate();
+        if (bulletData == null || bulletObj == null) return;
+        if (isDie) return;
+
         bulletObj.transform.LookAt(bulletObj.transform.position + body.velocity.normalized);
+
+        CheckAllCollision();
     }
     /// <summary>
     /// 计算发射速度和时间
@@ -55,10 +57,10 @@ public class PhysicsBullet : BulletBase
     private (Vector3 initVelocity, float timeToTarget) CalculateLaunchVelocity()
     {
         //Y的位移
-        float displacementY = target.position.y - body.position.y;
+        float displacementY = targetPos.y - body.position.y;
         //XZ的位移
-        Vector3 displacementXZ = new Vector3(target.position.x - body.position.x,
-            0, target.position.z - body.position.z);
+        Vector3 displacementXZ = new Vector3(targetPos.x - body.position.x,
+            0, targetPos.z - body.position.z);
 
         float time = Mathf.Sqrt(-2 * h / gravity) + Mathf.Sqrt(2 * (displacementY - h) / gravity);
         Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * h);
@@ -81,7 +83,7 @@ public class PhysicsBullet : BulletBase
             float simulationTime = i / (float)resolution * temp.timeToTarget;
             Vector3 displacement = temp.initVelocity * simulationTime + Vector3.up * gravity * simulationTime * simulationTime / 2f;
             Vector3 drawPoint = body.position + displacement;
-            Debug.DrawLine(previousDrawPoint, drawPoint, Color.green);
+            Debug.DrawLine(previousDrawPoint, drawPoint, Color.green,2f);
             previousDrawPoint = drawPoint;
         }
     }

@@ -29,9 +29,6 @@ public class ThrowBullet : BulletBase
 
     public ThrowBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
-        bulletData = data;
-        bulletObj = Obj;
-        bulletObj.transform.forward = data.direction;
         initialVelocity = data.initialVelocity;
         aVelocity = data.aVelocity;
         radius = data.checkRadius;

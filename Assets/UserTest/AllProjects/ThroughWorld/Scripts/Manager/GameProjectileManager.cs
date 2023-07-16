@@ -12,6 +12,7 @@ using UnityEngine;
 using YangTools;
 using YangTools.Extend;
 using YangTools.ObjectPool;
+using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 /// <summary>
 /// 抛射体管理器(子弹)
@@ -45,37 +46,41 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// <summary>
     /// 创建子弹
     /// </summary>
-    public BulletBase CreateBullet(BulletData bulletData, BulletShootType bulletShootType, ActorCampType actorCampType = ActorCampType.Monster)
+    public BulletBase CreateBullet(BulletData bulletData)
     {
         //子弹对象
         BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name);
         poolItem.InitData(bulletData);
         GameObject bulletObj = poolItem.obj;
         bulletObj.transform.position = bulletData.StartPostion;
-        BulletBase bulletBase = null;
-        switch (bulletShootType)
+        BulletBase bulletBase = null; //需要表里拿配置的静态数据赋值
+        //TODO:更具子弹ID子弹类型
+        switch (bulletData.bulletType)
         {
-            case BulletShootType.None:
+            case BulletType.None:
                 bulletBase = new BulletBase(bulletData, bulletObj);
                 break;
-            case BulletShootType.Circle:
+            case BulletType.Circle:
                 bulletBase = new BulletBase(bulletData, bulletObj);
                 break;
-            case BulletShootType.Throw:
+            case BulletType.Throw:
                 bulletBase = new ThrowBullet(bulletData, bulletObj);
                 break;
-            case BulletShootType.Parabola:
+            case BulletType.Parabola:
                 bulletBase = new ParabolaBullet(bulletData, bulletObj);
                 break;
-            case BulletShootType.Physics:
+            case BulletType.Physics:
                 bulletBase = new PhysicsBullet(bulletData, bulletObj);
+                break;
+            case BulletType.Bomb:
+                bulletBase = new DelayBomb(bulletData, bulletObj);
                 break;
             default:
                 bulletBase = new BulletBase(bulletData, bulletObj);
                 break;
         }
 
-        bulletBase.targetCamp = actorCampType;
+        bulletBase.targetCamp = bulletData.targetCampType;
         bulletBase.SetBulletObjectPoolItem(poolItem);
         allBullet.Add(bulletBase);
         return bulletBase;
@@ -147,6 +152,7 @@ public class EmitterBase
     public virtual void Shoot()
     {
         BulletData bulletData = null;// GetBulletData(emitData.bulletID);
+
         switch (emitData.bulletShootType)
         {
             case BulletShootType.Circle:
@@ -157,12 +163,13 @@ public class EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         bulletData.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType, handle.canAtkCamp);
+                        bulletData.targetCampType = handle.canAtkCamp;
+                        GameProjectileManager.Instance.CreateBullet(bulletData);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(bulletData, emitData.bulletShootType);
+                GameProjectileManager.Instance.CreateBullet(bulletData);
                 break;
         }
     }
@@ -203,7 +210,7 @@ public class BulletBase
     public ActorCampType targetCamp;
 
     protected bool isDie;//是否销毁
-    protected float radius = 0.5f;//检查半径
+    protected float radius = 0.1f;//检查半径
     protected float timer;
 
     public BulletBase(BulletData data, GameObject Obj)
@@ -247,6 +254,8 @@ public class BulletBase
     /// </summary>
     public void CheckAllCollision()
     {
+        if (isDie) return;
+
         if (CheckAtk())
         {
             OnDie(BulletDieType.HaveAtk);
@@ -315,7 +324,6 @@ public class BulletBase
         if (isDie) return;
         isDie = true;
 
-        //Debug.LogError($"子弹死亡:{bulletDieType}");
         switch (bulletDieType)
         {
             case BulletDieType.HaveAtk:
@@ -339,9 +347,19 @@ public class BulletBase
                     GameEffectManager.Instance.PlayEffect("SmokeEffect", effectPos);
                 }
                 break;
+            case BulletDieType.TimeEnd:
+
+                break;
             default:
                 break;
         }
+
+        if (!string.IsNullOrEmpty(bulletData.dieEffectName))
+        {
+            Vector3 effectPos = bulletData.collisionPos != default ? bulletData.collisionPos : bulletObj.transform.position;
+            GameEffectManager.Instance.PlayEffect(bulletData.dieEffectName, effectPos);
+        }
+
         GameProjectileManager.Instance.RemoveBullet(this);
     }
 }
@@ -368,7 +386,7 @@ public class EmitData
     /// <summary>
     /// 时间间隔
     /// </summary>
-    public float timeInterval = 0.1f;
+    public float timeInterval = 1f;
 
     /// <summary>
     /// 生成子弹数量
@@ -381,7 +399,7 @@ public class EmitData
     public float angle;
 
     /// <summary>
-    /// 子弹发射
+    /// 子弹发射类型
     /// </summary>
     public BulletShootType bulletShootType;
 }
@@ -392,10 +410,17 @@ public class BulletData
 {
     public string name;
     /// <summary>
+    /// 子弹类型
+    /// </summary>
+    public BulletType bulletType;
+    /// <summary>
     /// 创建者
     /// </summary>
     public GameActor owner;
-
+    /// <summary>
+    /// 目标阵营
+    /// </summary>
+    public ActorCampType targetCampType;
     //创建它的技能
     //public SkillBase skill;  //命中后 调用技能的OnBulletHit(hitPos,hitTarget)
     /// <summary>
@@ -462,6 +487,11 @@ public class BulletData
     /// 碰撞点
     /// </summary>
     public Vector3 collisionPos;
+
+    /// <summary>
+    /// 死亡特效名称
+    /// </summary>
+    public string dieEffectName;
 }
 /// <summary>
 /// 对象池子弹对象

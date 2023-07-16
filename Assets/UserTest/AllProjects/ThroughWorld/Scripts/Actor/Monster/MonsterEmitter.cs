@@ -7,6 +7,8 @@
 */
 using UnityEngine;
 using System.Collections;
+using YangTools.Extend;
+using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 /// <summary>
 /// 怪物发射器
 /// </summary>
@@ -28,15 +30,18 @@ public class MonsterEmitter : EmitterBase
         data.owner = handle;
         data.speed = 1;
         data.StartPostion = ((Monster)handle).shootPoint.transform.position;
-        data.TargetPostion = handle.Target.transform.position;
+        data.TargetPostion = handle.Target.GetBoundsCenter();
         data.direction = ((Monster)handle).model.transform.forward;
-        data.name = "TestBulletPhysic";
+        data.name = "Bomb";
         data.damageInfo = handle.GetDamageInfo();
         data.damageInfo.beHitEffectInfo = new EffectInfo();
         data.target = handle.Target;
+        data.targetCampType = handle.canAtkCamp;
 
         //测试
-        emitData.bulletShootType = BulletShootType.Physics;
+        emitData.bulletShootType = BulletShootType.Bomb;
+       
+        data.bulletType = (BulletType)emitData.bulletShootType;
 
         switch (emitData.bulletShootType)
         {
@@ -49,7 +54,7 @@ public class MonsterEmitter : EmitterBase
                     {
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         data.direction = temp;
-                        GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                        GameProjectileManager.Instance.CreateBullet(data);
                     }
                 }
                 break;
@@ -85,17 +90,23 @@ public class MonsterEmitter : EmitterBase
                     Vector3 localVelocity = new Vector3(0f, Vy, Vz);
                     Vector3 globalVelocity = ((Monster)handle).shootPoint.transform.TransformDirection(localVelocity);
                     data.initialVelocity = globalVelocity;
-                    GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                    GameProjectileManager.Instance.CreateBullet(data);
                 }
                 break;
             case BulletShootType.Parabola:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                GameProjectileManager.Instance.CreateBullet(data);
                 break;
             case BulletShootType.Physics:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                GameProjectileManager.Instance.CreateBullet(data);
+                break;
+            case BulletShootType.Bomb:
+                data.checkRadius = 3;
+                data.dieEffectName = "SmokeEffect";
+                data.survivalMaxTime = 5;
+                GameProjectileManager.Instance.CreateBullet(data);
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(data, emitData.bulletShootType, handle.canAtkCamp);
+                GameProjectileManager.Instance.CreateBullet(data);
                 break;
         }
     }

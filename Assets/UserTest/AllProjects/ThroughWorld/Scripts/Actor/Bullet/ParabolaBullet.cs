@@ -23,9 +23,6 @@ public class ParabolaBullet : BulletBase
     private float speed;
     public ParabolaBullet(BulletData data, GameObject Obj) : base(data, Obj)
     {
-        bulletData = data;
-        bulletObj = Obj;
-        bulletObj.transform.forward = data.direction;
         speed = data.speed;
         radius = data.checkRadius;
 

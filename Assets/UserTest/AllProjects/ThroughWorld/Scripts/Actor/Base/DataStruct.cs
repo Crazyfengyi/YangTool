@@ -58,8 +58,23 @@ public enum BulletShootType
     Circle,
     Throw,
     Parabola,
-    Physics
+    Physics,
+    Bomb
 }
+
+/// <summary>
+/// 子弹类型
+/// </summary>
+public enum BulletType
+{
+    None,
+    Circle,
+    Throw,
+    Parabola,
+    Physics,
+    Bomb
+}
+
 /// <summary>
 /// 交互类型
 /// </summary>

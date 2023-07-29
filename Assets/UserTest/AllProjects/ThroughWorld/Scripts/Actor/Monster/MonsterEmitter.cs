@@ -100,7 +100,7 @@ public class MonsterEmitter : EmitterBase
                 GameProjectileManager.Instance.CreateBullet(data);
                 break;
             case BulletShootType.Bomb:
-                data.checkRadius = 3;
+                data.checkRadius = 6;
                 data.dieEffectName = "SmokeEffect";
                 data.survivalMaxTime = 5;
                 GameProjectileManager.Instance.CreateBullet(data);

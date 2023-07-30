@@ -11,6 +11,7 @@ using SimpleJSON;
 using System.IO;
 using cfg;
 using cfg.item;
+using cfg.player;
 
 public class GameTableManager : MonoSingleton<GameTableManager>
 {
@@ -20,7 +21,8 @@ public class GameTableManager : MonoSingleton<GameTableManager>
         base.Awake();
         table = new Tables(Loader);
 
-        //Item item = table.TbItem.Get(10000);
+        //Player item = table.TbPlayer.Get(10000);
+
         //Debug.LogError($"测试:{item.Name},{item.Desc}");
     }
 

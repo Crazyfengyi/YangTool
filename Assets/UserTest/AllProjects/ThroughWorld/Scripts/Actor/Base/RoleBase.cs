@@ -5,6 +5,7 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
+using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,19 @@ public class RoleBase : GameActor
     public HealthControl HealthControl => healthControl;
     [ShowInInspector]
     protected Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
+    [HideInEditorMode]
+    protected BehaviorTree aiBehavior;
+    /// <summary>
+    /// AI行为
+    /// </summary>
+    public BehaviorTree AIBehavior => aiBehavior;
+    [HideInEditorMode]
+    protected SkillControl skillControl;
+    /// <summary>
+    /// 技能控制器
+    /// </summary>
+    public SkillControl SkillControl => skillControl;
+
 
     #region 攻击目标
     protected GameObject target;
@@ -61,6 +75,9 @@ public class RoleBase : GameActor
         {
             GameActorManager.Instance.RemoveActor(this);
         });
+
+        aiBehavior = GetComponent<BehaviorTree>();
+        if (aiBehavior) skillControl = new SkillControl(aiBehavior);
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
         roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 10000,
+    "name": "角色0",
+    "desc": "模板角色",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  }
+]

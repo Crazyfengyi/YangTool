@@ -21,7 +21,7 @@ public class Monster : RoleBase
 
     private EmitterBase emitter;//发射器
     private float timer;
-    private float interval = 1f;
+    private float interval = 10f;
 
     private ActorCampType findCampType;//寻路目标阵营
     /// <summary>
@@ -84,12 +84,14 @@ public class Monster : RoleBase
             if (timer >= interval)
             {
                 timer = 0;
-                EmitData emitData = new EmitData();
-                emitData.bulletID = 0;//TODO:需要设置子弹ID
-                emitData.bulletCount = 1;
-                emitData.bulletShootType = BulletShootType.Throw;
-                emitter?.SetEmitData(emitData);
-                emitter?.StartShoot();
+                skillControl.UseSkill("");
+
+                //EmitData emitData = new EmitData();
+                //emitData.bulletID = 0;//TODO:需要设置子弹ID
+                //emitData.bulletCount = 1;
+                //emitData.bulletShootType = BulletShootType.Throw;
+                //emitter?.SetEmitData(emitData);
+                //emitter?.StartShoot();
             }
         }
         emitter?.OnUpdate();

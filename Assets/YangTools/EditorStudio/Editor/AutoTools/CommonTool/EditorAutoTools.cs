@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEditor;
@@ -29,8 +33,50 @@ namespace YangTools
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
         public static void TestScrpit()
         {
-            TestUniTask();
+            //TestUniTask();
+            SendEmail();
         }
+
+
+        /// <summary> 
+        /// 发送邮件 
+        /// </summary> 
+        static void SendEmail()
+        {
+            string mailSender = "enunang@foxmail.com";
+            var mailMessage = new MailMessage();
+            // 发送人 
+            mailMessage.From = new MailAddress(mailSender);
+            // 收件人 可以多个 
+            mailMessage.To.Add(mailSender);
+            // 标题 
+            mailMessage.Subject = "邮件标题";
+            // 正文 
+            mailMessage.Body += "邮件正文";
+            //添加附件-日志文件 
+            //if (System.IO.File.Exists(outputLog)) mailMessage.Attachments.Add(new Attachment(outputLog)); 
+
+            SmtpClient smtpServer = new SmtpClient("smtp.qq.com");
+            // 所使用邮箱的SMTP服务器 
+            // 账号授权码 邮箱开通SMTP服务，可生成授权码 
+            smtpServer.Credentials = new System.Net.NetworkCredential(mailSender, "密码") as ICredentialsByHost;
+            smtpServer.EnableSsl = true;
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            {
+                return true;
+            };
+            //发送邮件回调方法 
+            smtpServer.SendCompleted += new SendCompletedEventHandler((a, b) =>
+            {
+                Debug.LogError("发送邮件完成");
+            });
+
+            //同步发送 
+            //smtpServer.Send(mailMessage);
+            //异步发送 
+            smtpServer.SendAsync(mailMessage, new object());
+        }
+
         public static async void TestUniTask()
         {
             //Debug.LogError($"测试:{DateTime.Now}");

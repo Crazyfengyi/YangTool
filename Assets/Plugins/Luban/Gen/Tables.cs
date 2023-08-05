@@ -16,6 +16,7 @@ public sealed partial class Tables
 {
     public item.TbItem TbItem {get; }
     public player.TbPlayer TbPlayer {get; }
+    public monster.TbMonster TbMonster {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
@@ -24,10 +25,13 @@ public sealed partial class Tables
         tables.Add("item.TbItem", TbItem);
         TbPlayer = new player.TbPlayer(loader("player_tbplayer")); 
         tables.Add("player.TbPlayer", TbPlayer);
+        TbMonster = new monster.TbMonster(loader("monster_tbmonster")); 
+        tables.Add("monster.TbMonster", TbMonster);
         PostInit();
 
         TbItem.Resolve(tables); 
         TbPlayer.Resolve(tables); 
+        TbMonster.Resolve(tables); 
         PostResolve();
     }
 
@@ -35,6 +39,7 @@ public sealed partial class Tables
     {
         TbItem.TranslateText(translator); 
         TbPlayer.TranslateText(translator); 
+        TbMonster.TranslateText(translator); 
     }
     
     partial void PostInit();

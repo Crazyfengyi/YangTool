@@ -59,6 +59,8 @@ public class PlayerController : RoleBase
         advancedWalker = GetComponent<AdvancedWalkerController>();
         advancedWalker.cameraTransform = CameraManager.Instance.CameraLeftRightTransform;
         roleBuffControl.Add(BuffID.buff_10001);
+
+        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, 20);
     }
 
     public override void IUpdate()
@@ -75,7 +77,7 @@ public class PlayerController : RoleBase
             EmitData emitData = new EmitData();
             emitData.bulletID = 0;//TODO:需要设置子弹ID
             emitData.bulletCount = 6;
-            emitData.bulletShootType = BulletShootType.None;
+            emitData.bulletShootType = BulletShootType.Circle;
             emitter.SetEmitData(emitData);
             emitter.StartShoot();
         }
@@ -116,6 +118,33 @@ public class PlayerController : RoleBase
         UIMonoInstance.Instance.OpenUIPanel("GameOverPanel", "One");
         YangToolsManager.SetCursorLock(false);
     }
+
+    #region 搜索攻击目标
+    /// <summary>
+    /// 搜索攻击目标
+    /// </summary>
+    public override void SearchAtkTarget()
+    {
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        if (temp.Length > 0)
+        {
+            for (int i = 0; i < temp.Length; i++)
+            {
+                GameActor tempTarget = temp[i].gameObject.GetComponentInParent<GameActor>();
+                if (tempTarget && canAtkCamp.HasFlag(tempTarget.campType))
+                {
+                    target = tempTarget.gameObject;
+                    targetPos = tempTarget.transform.position;
+                }
+            }
+        }
+        else
+        {
+            target = null;
+            targetPos = null;
+        }
+    }
+    #endregion
 
     #region 输入
 

@@ -17,7 +17,7 @@ public class GameLevelManager : MonoBehaviour
     }
     public void Start()
     {
-        GameActorManager.Instance.CreateMonster();
+        GameActorManager.Instance.CreateMonster(10000);
         GameActorManager.Instance.CreateTree(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
     }
     public void Update()

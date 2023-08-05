@@ -1,0 +1,60 @@
+[
+  {
+    "id": 10000,
+    "name": "木桩怪",
+    "desc": "这是一个木桩",
+    "hp": 1000000,
+    "mp": 100,
+    "atk": 1,
+    "def": 100,
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  },
+  {
+    "id": 10001,
+    "name": "角色0",
+    "desc": "模板角色",
+    "hp": 100,
+    "mp": 100,
+    "atk": 100,
+    "def": 100,
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  }
+]

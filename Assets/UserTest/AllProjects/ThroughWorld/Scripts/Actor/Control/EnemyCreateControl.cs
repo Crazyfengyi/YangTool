@@ -58,6 +58,8 @@ public class EnemyCreateControl : MonoBehaviour
             //生成怪物
             Monster monster = GameActorManager.Instance.CreateMonster();
             monster.OnDieAction += EnemyDeath;
+
+            GameUIManager.Instance.AddTipsShow("新的怪物生成");
         }
     }
 

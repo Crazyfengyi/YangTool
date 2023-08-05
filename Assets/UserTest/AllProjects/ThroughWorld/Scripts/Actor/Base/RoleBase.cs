@@ -98,7 +98,6 @@ public abstract class RoleBase : GameActor
         roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
         InitRecord();
     }
-
     public override void IUpdate()
     {
         roleBuffControl?.IUpdate();

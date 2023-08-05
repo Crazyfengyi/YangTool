@@ -15,7 +15,9 @@ using cfg.player;
 
 public class GameTableManager : MonoSingleton<GameTableManager>
 {
-    Tables table;
+    private Tables table;
+    public Tables Tables => table;
+
     protected override void Awake()
     {
         base.Awake();

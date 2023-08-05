@@ -20,7 +20,7 @@ public class PlayerEmitter : EmitterBase
     /// </summary>
     public override void Shoot()
     {
-        // GetBulletData(emitData.bulletID); 通过ID火气子弹
+        // GetBulletData(emitData.bulletID); 通过ID获取子弹
         BulletData data = new BulletData();
         data.owner = handle;
         data.speed = 10;

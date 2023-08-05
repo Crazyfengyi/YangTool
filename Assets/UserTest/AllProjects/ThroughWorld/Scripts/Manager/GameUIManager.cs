@@ -42,10 +42,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private float timer = 0;
     private int currentCount = 0;
 
-    private const float ANI_TIME_PRE = 0.2f;
-    private const float ANI_TIME_WAIT = 0.5f;
-    private const float ANI_TIME_POST = 0.3f;
-    private const float ANI_TIME_MOVE = 0.2f;
+    private const float ANI_TIME_PRE = 0.36f;
+    private const float ANI_TIME_WAIT = 0.66f;
+    private const float ANI_TIME_POST = 0.36f;
+    private const float ANI_TIME_MOVE = 0.36f;
     #endregion
 
     #region 飘分

@@ -94,11 +94,14 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster/Monster_{id}");
         if (obj)
         {
-            ICustomLife monster = Instantiate(obj, new Vector3(Random.Range(-10, 10), 0f, Random.Range(-10, 10)), Quaternion.identity).GetComponent<ICustomLife>();
+            ICustomLife tempScript = Instantiate(obj, new Vector3(Random.Range(-10, 10), 0f, Random.Range(-10, 10)), Quaternion.identity).GetComponent<ICustomLife>();
+            Monster monster = tempScript as Monster;
             customLives.Add(monster);
-            allMonster.Add(monster as Monster);
+            allMonster.Add(monster);
+            cfg.monster.Monster tableData = GameTableManager.Instance.Tables.TbMonster.Get(id);
+            monster.SetTableData(tableData);
             monster.IInit();
-            return monster as Monster;
+            return monster;
         }
 
         return null;

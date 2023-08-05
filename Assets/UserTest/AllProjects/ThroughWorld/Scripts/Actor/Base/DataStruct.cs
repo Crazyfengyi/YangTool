@@ -6,6 +6,7 @@
  *创建时间:         2021-12-23 
 */
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
@@ -14,13 +15,19 @@ using UnityEngine;
 [Flags]
 public enum ActorCampType
 {
+    [LabelText("未知的")]
     None = 0,
+    [LabelText("玩家")]
     Player = 1 << 1,
+    [LabelText("怪物")]
     Monster = 1 << 2,
+    [LabelText("NPC")]
     Npc = 1 << 3,
+    [LabelText("建筑")]
     Building = 1 << 4,
-
+    [LabelText("怪物+建筑")]
     MonsterAndBuilding = Monster + Building,
+    [LabelText("玩家+建筑")]
     PlayerAndBuilding = Player + Building,
 }
 /// <summary>

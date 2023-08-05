@@ -44,7 +44,17 @@ public class Monster : RoleBase
     public float returnDesire;
     public bool needReturnStartPos;
 
+    cfg.monster.Monster tableData;
+    public cfg.monster.Monster TableData => tableData;
+
     #region 生命周期
+    /// <summary>
+    /// 设置表格数据
+    /// </summary>
+    public void SetTableData(cfg.monster.Monster tableData)
+    {
+        this.tableData = tableData;
+    }
     public override void IInit()
     {
         base.IInit();
@@ -56,6 +66,12 @@ public class Monster : RoleBase
         emitter = new MonsterEmitter(this);
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(10, 16));
+
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TableData.Hp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TableData.Mp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, TableData.Atk);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, TableData.Def);
+
         roleBuffControl.Add(BuffID.buff_10001);
     }
     public override void IUpdate()

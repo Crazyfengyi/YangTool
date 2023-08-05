@@ -43,7 +43,7 @@ public class PhysicsBullet : BulletBase
     public override void OnUpdate()
     {
         //base.OnUpdate();
-        if (bulletData == null || bulletObj == null) return;
+        if (Data == null || bulletObj == null) return;
         if (isDie) return;
 
         bulletObj.transform.LookAt(bulletObj.transform.position + body.velocity.normalized);

@@ -38,7 +38,7 @@ public class ThrowBullet : BulletBase
 
     public override void OnUpdate()
     {
-        if (bulletData == null || bulletObj == null) return;
+        if (Data == null || bulletObj == null) return;
 
         //移动
         currentVelocity += aVelocity * Time.deltaTime;

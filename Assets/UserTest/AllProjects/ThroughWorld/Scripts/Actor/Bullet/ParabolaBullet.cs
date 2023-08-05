@@ -27,20 +27,20 @@ public class ParabolaBullet : BulletBase
         radius = data.checkRadius;
 
         //假设抛物线最高点为目标点
-        float hight = bulletData.TargetPostion.y;
+        float hight = Data.TargetPostion.y;
         //结束位置为2倍--因为抛物线最高点为目标点,那结束位置就双倍
-        float distance = Vector3.Distance(bulletData.StartPostion.SetYValue(), bulletData.TargetPostion.SetYValue()) * 2;
+        float distance = Vector3.Distance(Data.StartPostion.SetYValue(), Data.TargetPostion.SetYValue()) * 2;
         //方向
-        var direction = (bulletData.TargetPostion.SetYValue() - bulletData.StartPostion.SetYValue()).normalized;
+        var direction = (Data.TargetPostion.SetYValue() - Data.StartPostion.SetYValue()).normalized;
         //结束位置
-        var endPos = bulletData.StartPostion.SetYValue() + direction * distance;
+        var endPos = Data.StartPostion.SetYValue() + direction * distance;
 
-        path = new ParabolaPath(bulletData.StartPostion, endPos, hight);
+        path = new ParabolaPath(Data.StartPostion, endPos, hight);
         path.isClampStartEnd = true;
     }
     public override void OnUpdate()
     {
-        if (bulletData == null || bulletObj == null) return;
+        if (Data == null || bulletObj == null) return;
         path.Time += Time.deltaTime * speed;
 
         Vector3 tempPos = path.Position;

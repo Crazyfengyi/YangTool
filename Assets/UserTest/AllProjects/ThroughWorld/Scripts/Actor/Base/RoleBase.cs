@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class RoleBase : GameActor
+public abstract class RoleBase : GameActor
 {
     [HideInEditorMode]
     [ShowInInspector]
@@ -42,7 +42,6 @@ public class RoleBase : GameActor
     /// </summary>
     public SkillControl SkillControl => skillControl;
 
-
     #region 攻击目标
     protected GameObject target;
     /// <summary>
@@ -66,6 +65,20 @@ public class RoleBase : GameActor
     public Action OnDieAction;
     #endregion
 
+    #region 初始化记录
+    private Vector3 startPos;
+    /// <summary>
+    /// 初始点
+    /// </summary>
+    public Vector3 StartPos => startPos;
+
+    public void InitRecord()
+    {
+        startPos = transform.position;
+    }
+
+    #endregion
+
     #region 生命周期接口实现
     public override void IInit()
     {
@@ -83,7 +96,9 @@ public class RoleBase : GameActor
         roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
+        InitRecord();
     }
+
     public override void IUpdate()
     {
         roleBuffControl?.IUpdate();

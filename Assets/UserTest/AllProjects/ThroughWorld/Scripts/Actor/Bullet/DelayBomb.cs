@@ -27,11 +27,11 @@ public class DelayBomb : BulletBase
     public override void OnUpdate()
     {
         //base.OnUpdate();
-        if (bulletData == null || bulletObj == null) return;
+        if (Data == null || bulletObj == null) return;
         if (isDie) return;
 
         timer += Time.deltaTime;
-        if (timer >= bulletData.survivalMaxTime)
+        if (timer >= Data.survivalMaxTime)
         {
             CheckAtk();
             OnDie(BulletDieType.TimeEnd);

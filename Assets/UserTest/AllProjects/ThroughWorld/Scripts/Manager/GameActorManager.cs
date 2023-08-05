@@ -86,7 +86,10 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         }
         allMonster.Clear();
     }
-    public void CreateMonster(int id = 10001)
+    /// <summary>
+    /// 怪物生成
+    /// </summary>
+    public Monster CreateMonster(int id = 10001)
     {
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster/Monster_{id}");
         if (obj)
@@ -95,7 +98,10 @@ public class GameActorManager : MonoSingleton<GameActorManager>
             customLives.Add(monster);
             allMonster.Add(monster as Monster);
             monster.IInit();
+            return monster as Monster;
         }
+
+        return null;
     }
     public void CreateTree(Vector3 pos)
     {

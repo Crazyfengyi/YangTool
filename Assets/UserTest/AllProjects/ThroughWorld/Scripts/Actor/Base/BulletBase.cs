@@ -88,7 +88,7 @@ public class BulletBase
 
             //追踪子弹--缓慢转向目标
             //当前朝向
-            Vector3 targetDirection = (Data.target.transform.position - bulletObj.transform.position).normalized;
+            Vector3 targetDirection = (Data.target.GetBoundsCenter() - bulletObj.transform.position).normalized;
             bulletObj.transform.forward = Vector3.Slerp(bulletObj.transform.forward, targetDirection, Time.deltaTime * 10);
         }
 

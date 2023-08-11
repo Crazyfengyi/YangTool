@@ -96,6 +96,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             TipShow(tipDatas[0]);
             tipDatas.RemoveAt(0);
         }
+
+        for (int i = 0; i < allHPBar.Count; i++)
+        {
+            if (allHPBar[i] != null)
+            {
+                allHPBar[i]?.UpdatePos();
+            }
+        }
     }
     public void LateUpdate()
     {
@@ -103,7 +111,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         {
             if (allHPBar[i] != null)
             {
-                allHPBar[i]?.LateUpdate();
+                allHPBar[i]?.UpdatePos();
             }
         }
     }
@@ -508,7 +516,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
         hpSlider.value = hpBarData.hpValue;
         mpSlider.value = hpBarData.mpValue;
     }
-    public void LateUpdate()
+    public void UpdatePos()
     {
         targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
         obj.transform.localPosition = Vector3.Lerp(obj.transform.localPosition, targetPos, Time.deltaTime * 10);

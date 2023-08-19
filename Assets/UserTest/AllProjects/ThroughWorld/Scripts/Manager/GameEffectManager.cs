@@ -53,6 +53,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
         return CreateEffet(data);
     }
 
+    #region 生命流程
     /// <summary>
     /// 创建特效
     /// </summary>
@@ -73,9 +74,11 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     /// </summary>
     public void RecycleEffet(EffectObjectPoolItem poolItem)
     {
+        Destroy(poolItem.obj.GetComponent<EffectAutoRecycle>());
         allEffect.Remove(poolItem);
         YangObjectPool.Recycle(poolItem);
     }
+    #endregion
 }
 
 /// <summary>

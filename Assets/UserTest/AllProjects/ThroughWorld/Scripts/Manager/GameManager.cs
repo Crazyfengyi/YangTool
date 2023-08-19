@@ -7,6 +7,7 @@
 */
 using UnityEngine;
 using YangTools;
+using YangTools.Extend;
 using YangTools.MiniMap;
 using YangTools.UGUI;
 
@@ -39,6 +40,16 @@ public class GameManager : MonoSingleton<GameManager>
         //{
         //    YangToolsManager.SetCursorLock(false);
         //}
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //屏幕坐标
+            Vector3 tempPos = Input.mousePosition;
+            tempPos.z = 10;
+            Vector3 WorldPos = CameraManager.Instance.PlayerCamera.ScreenToWorldPoint(tempPos);
+
+            GameEffectManager.Instance.PlayEffect("ClickEffect", worldPos: WorldPos);
+        }
     }
 
     #region 场景加载

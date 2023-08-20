@@ -77,6 +77,7 @@ public class PlayerController : RoleBase
             EmitData emitData = new EmitData();
             emitData.bulletID = 0;//TODO:需要设置子弹ID
             emitData.bulletCount = 6;
+            emitData.timeInterval = 0;
             emitData.bulletShootType = BulletShootType.Circle;
             emitter.SetEmitData(emitData);
             emitter.StartShoot();
@@ -90,13 +91,13 @@ public class PlayerController : RoleBase
         if (!advancedWalker.IsGrounded() && isJumpAni == false)
         {
             isJumpAni = true;
-            Animator.Play("Jump", 0, 0);
+            AniControl.Play("Jump", 0, 0);
         }
 
         //跳跃切换到地面
         if (advancedWalker.IsGrounded() && isJumpAni == true)
         {
-            Animator.Play("Land");
+            AniControl.Play("Land");
             isJumpAni = false;
         }
     }

@@ -29,6 +29,10 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     public Canvas uiCanvas;
 
     public GameObject seceneLoading;
+    [SerializeField]
+    private Camera uiCamera;
+    public Camera UICamera => uiCamera;
+
     #endregion
 
     #region 提示

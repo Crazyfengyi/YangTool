@@ -35,6 +35,13 @@ public abstract class RoleBase : GameActor
     /// AI行为
     /// </summary>
     public BehaviorTree AIBehavior => aiBehavior;
+    
+    private AniControl aniControl;
+    /// <summary>
+    /// 动画控制器
+    /// </summary>
+    public AniControl AniControl => aniControl;
+
     [HideInEditorMode]
     protected SkillControl skillControl;
     /// <summary>
@@ -82,6 +89,7 @@ public abstract class RoleBase : GameActor
     #region 生命周期接口实现
     public override void IInit()
     {
+        aniControl = new AniControl(Animator);
         roleBuffControl = new BuffControl(this);
         roleAttributeControl = new RoleAttributeControl(this);
         healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>

@@ -13,6 +13,7 @@ using TMPro;
 using YangTools;
 using YangTools.UGUI;
 using BehaviorDesigner.Runtime;
+using UnityEngine.Playables;
 
 [Serializable]
 /// <summary>
@@ -21,6 +22,7 @@ using BehaviorDesigner.Runtime;
 public class SkillControl
 {
     private BehaviorTree skillTree;//技能Tree
+    private PlayableDirector timeLine;//技能
 
     protected bool needUseSkill;
     /// <summary>
@@ -46,9 +48,13 @@ public class SkillControl
     /// <summary>
     /// 使用技能
     /// </summary>
-    public void UseSkill(string skillName)
+    public void UseSkill(string skillName,bool isTimeLine = false)
     {
         needUseSkill = true;
+        if (isTimeLine)
+        {
+            //timeLine
+        }
     }
     /// <summary>
     /// 打断技能

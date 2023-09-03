@@ -107,7 +107,7 @@ public class Monster : RoleBase
             if (timer >= interval)
             {
                 timer = 0;
-                skillControl.UseSkill("");
+                skillControl.UseSkill("Skill_Test2", true);
 
                 //EmitData emitData = new EmitData();
                 //emitData.bulletID = 0;//TODO:需要设置子弹ID

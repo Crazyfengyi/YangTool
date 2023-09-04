@@ -14,6 +14,8 @@ using YangTools;
 using YangTools.UGUI;
 using BehaviorDesigner.Runtime;
 using UnityEngine.Playables;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
+using System.Resources;
 
 [Serializable]
 /// <summary>
@@ -40,10 +42,12 @@ public class SkillControl
         }
     }
 
-    public SkillControl(BehaviorTree _skillTree)
+    public SkillControl(BehaviorTree _skillTree, PlayableDirector _timeLine)
     {
         skillTree = _skillTree;
         skillTree.OnBehaviorEnd += SkillEnd;
+
+        timeLine = _timeLine;
     }
     /// <summary>
     /// 使用技能
@@ -53,7 +57,8 @@ public class SkillControl
         needUseSkill = true;
         if (isTimeLine)
         {
-            //timeLine
+            timeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{skillName}");
+            timeLine.Play();
         }
     }
     /// <summary>

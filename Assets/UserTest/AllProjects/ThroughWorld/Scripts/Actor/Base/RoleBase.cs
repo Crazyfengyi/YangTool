@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 [Serializable]
 public abstract class RoleBase : GameActor
@@ -31,6 +32,8 @@ public abstract class RoleBase : GameActor
     protected Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
     [HideInEditorMode]
     protected BehaviorTree aiBehavior;
+    [HideInEditorMode]
+    protected PlayableDirector timeLine;
     /// <summary>
     /// AI行为
     /// </summary>
@@ -98,7 +101,8 @@ public abstract class RoleBase : GameActor
         });
 
         aiBehavior = GetComponent<BehaviorTree>();
-        if (aiBehavior) skillControl = new SkillControl(aiBehavior);
+        timeLine = GetComponent<PlayableDirector>();
+        if (aiBehavior) skillControl = new SkillControl(aiBehavior, timeLine);
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
         roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);

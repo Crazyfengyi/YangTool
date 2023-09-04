@@ -27,9 +27,13 @@ public class GameResourceManager : MonoSingleton<GameResourceManager>
 
     public GameObject ResoruceLoad(string str)
     {
-        GameObject obj;
-        obj = Resources.Load<GameObject>(str);
+        GameObject obj = Resources.Load<GameObject>(str);
+        return obj;
+    }
 
+    public T ResoruceLoad<T>(string str) where T : Object
+    {
+        T obj = Resources.Load<T>(str);
         return obj;
     }
 }

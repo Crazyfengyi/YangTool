@@ -7,6 +7,7 @@
 */
 using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,12 +39,16 @@ public abstract class RoleBase : GameActor
     /// AI行为
     /// </summary>
     public BehaviorTree AIBehavior => aiBehavior;
-    
+
     private AniControl aniControl;
     /// <summary>
     /// 动画控制器
     /// </summary>
     public AniControl AniControl => aniControl;
+    /// <summary>
+    /// 模型信息
+    /// </summary>
+    public ModelInfo modelInfo;
 
     [HideInEditorMode]
     protected SkillControl skillControl;
@@ -207,6 +212,78 @@ public abstract class RoleBase : GameActor
         {
             flagkeyValue.Add(roleFlag, value);
         }
+    }
+    #endregion
+
+    #region 特效
+    /// <summary>
+    /// 播放特效--挂载到身上
+    /// </summary>
+    /// <param name="effectName">特效名</param>
+    /// <param name="effectPointType">挂载点</param>
+    /// <param name="isLoop">是否循环</param>
+    public GameObject PlayEffectAtSelf(string effectName, ModelPointType effectPointType = ModelPointType.Root, bool isLoop = false)
+    {
+        if (!modelInfo)
+        {
+            modelInfo = GetComponentInChildren<ModelInfo>(true);
+        }
+
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
+
+        Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position - modelInfo.GetEffectPoint(ModelPointType.Foot).position;
+        GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity, modelInfo.GetEffectPoint(ModelPointType.Root));
+
+        //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
+        //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
+        //if (obj != null)
+        //{
+        //    obj.transform.Rotate(0, angle, 0, Space.World);
+        //}
+        //else
+        //{
+        //    Debug.LogError("�ҵ���Ч��" + effectName);
+        //}
+
+        if (isLoop)
+        {
+            //loopEffectList.Add(obj);
+        }
+
+        return obj;
+    }
+
+    /// <summary>
+    /// 播放特效--不挂载
+    /// </summary>
+    public GameObject PlayEffect(string effectName, ModelPointType effectPointType = ModelPointType.Root, bool isLoop = false)
+    {
+        if (!modelInfo)
+        {
+            modelInfo = GetComponentInChildren<ModelInfo>(true);
+        }
+        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
+
+        Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position;
+        GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity);
+
+        //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
+        //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
+        //if (obj != null)
+        //{
+        //    obj.transform.Rotate(0, angle, 0, Space.World);
+        //}
+        //else
+        //{
+        //    Debug.LogError("�ҵ���Ч��" + effectName);
+        //}
+
+        if (isLoop)
+        {
+            //loopEffectList.Add(effectObj);
+        }
+
+        return effect;
     }
     #endregion
 }

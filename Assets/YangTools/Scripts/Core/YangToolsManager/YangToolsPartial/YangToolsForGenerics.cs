@@ -85,7 +85,10 @@ namespace YangTools
                         }
                         else
                         {
-                            DontDestroyOnLoad(instance.gameObject);
+                            if (Application.isPlaying)
+                            {
+                                DontDestroyOnLoad(instance.gameObject);
+                            }
                         }
                     }
                     instance.hideFlags = HideFlags.None;

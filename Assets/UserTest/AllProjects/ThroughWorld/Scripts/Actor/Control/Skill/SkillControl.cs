@@ -57,6 +57,7 @@ public class SkillControl
         needUseSkill = true;
         if (isTimeLine)
         {
+            //TODO:测试用,正式应该用行为树里执行
             timeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{skillName}");
             timeLine.Play();
         }

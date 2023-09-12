@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,10 +19,6 @@ using UnityEngine;
 public static class BuildTool
 {
     /// <summary>
-    /// 打包机上的APK根目录
-    /// </summary>
-    private static string APK_ROOT_PATH = @"D:\SpaceWork\Out_APKs";
-    /// <summary>
     /// 计数
     /// </summary>
     private static int APK_FLAG = 0;
@@ -29,6 +26,11 @@ public static class BuildTool
     [MenuItem("YangTools/BuildTool/一键输出APK(Android打包)", priority = 9999)]
     public static void BuildAPK()
     {
+        if (!EditorUtility.DisplayDialog("重要提示", "是否确认打[Android包]", "确认", "取消"))
+        {
+            return;
+        }
+
         //打包设置
         BuildSetting();
         //打包APK
@@ -44,6 +46,8 @@ public static class BuildTool
         //PlayerSettings.Android.keystorePass = "x";
         //PlayerSettings.Android.keyaliasName = "x";
         //PlayerSettings.Android.keyaliasPass = "x";
+
+
     }
     /// <summary>
     /// 开始打包
@@ -61,23 +65,38 @@ public static class BuildTool
         APK_FLAG++;
         PlayerPrefs.SetInt("APK_FLAG", APK_FLAG);
 
-        if (!Directory.Exists(APK_ROOT_PATH))
-        {
-            Directory.CreateDirectory(APK_ROOT_PATH);
-        }
-
-        string apkRootPath = APK_ROOT_PATH;
+        string apkRootPath = SelectBuildFolder(BuildTarget.Android);
         string timeStr = DateTime.Now.ToString("yyyyMMdd");
 
         //Test_v1.0.0_20220512_1
         string apkName = "Test" + "_v" + Application.version + "_" + timeStr + "_" + APK_FLAG + ".apk";
         string apkFullName = Path.Combine(apkRootPath, apkName);
-        string[] buildSceneNames = GetBuildScenes().ToArray();
-        BuildPipeline.BuildPlayer(buildSceneNames, apkFullName, BuildTarget.Android, BuildOptions.None);
+        //所有场景名
+        string[] buildScenes = EditorBuildSettingsScene.GetActiveSceneList(EditorBuildSettings.scenes);
+        
+        //打包设置
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.options = BuildOptions.None;
+        options.target = BuildTarget.Android;
+        options.locationPathName = apkFullName;
+        options.scenes = buildScenes;
+        //打包
+        BuildPipeline.BuildPlayer(options);
+
         //打开APK目录
         Process.Start("Explorer.exe", apkRootPath);
         UnityEngine.Debug.Log("打包完成，输出目录:" + apkFullName);
     }
+
+    private static string SelectBuildFolder(BuildTarget target)
+    {
+        string pathKey = $"Editor_Build_Path_{target}";
+        var path = EditorPrefs.GetString(pathKey);
+        path = EditorUtility.SaveFolderPanel("选择要保存的路径", path, "");
+        EditorPrefs.SetString(pathKey, path);
+        return path;
+    }
+
     /// <summary>
     /// 拷贝A到B目录
     /// </summary>

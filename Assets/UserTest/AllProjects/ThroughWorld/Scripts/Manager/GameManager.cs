@@ -5,6 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-11-13 
 */
+using System;
+using System.Linq;
 using UnityEngine;
 using YangTools;
 using YangTools.Extend;
@@ -43,6 +45,10 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            //string[] name = { "x","y"};
+            //var temp = name.Skip(1).Take(1);
+            //var a = name.AsSpan();
+
             //屏幕坐标
             Vector3 tempPos = Input.mousePosition;
             tempPos.z = 10;

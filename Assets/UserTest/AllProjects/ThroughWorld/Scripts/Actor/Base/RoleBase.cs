@@ -234,17 +234,18 @@ public abstract class RoleBase : GameActor
         Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position - modelInfo.GetEffectPoint(ModelPointType.Foot).position;
         GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity, modelInfo.GetEffectPoint(ModelPointType.Root));
 
-        //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
-        //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
-        //if (obj != null)
-        //{
-        //    obj.transform.Rotate(0, angle, 0, Space.World);
-        //}
-        //else
-        //{
-        //    Debug.LogError("�ҵ���Ч��" + effectName);
-        //}
-
+        float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
+        angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
+        if (effect != null)
+        {
+            effect.transform.Rotate(0, angle, 0, Space.World);
+        }
+        else
+        {
+            Debug.LogError("生成特效失败:" + effectName);
+        }
+        //Mathf.MoveTowards();
+        //Vector3.MoveTowards();
         if (isLoop)
         {
             //loopEffectList.Add(obj);
@@ -267,16 +268,16 @@ public abstract class RoleBase : GameActor
         Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position;
         GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity);
 
-        //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
-        //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
-        //if (obj != null)
-        //{
-        //    obj.transform.Rotate(0, angle, 0, Space.World);
-        //}
-        //else
-        //{
-        //    Debug.LogError("�ҵ���Ч��" + effectName);
-        //}
+        float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
+        angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
+        if (effect != null)
+        {
+            effect.transform.Rotate(0, angle, 0, Space.World);
+        }
+        else
+        {
+            Debug.LogError("生成特效失败:" + effectName);
+        }
 
         if (isLoop)
         {

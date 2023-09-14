@@ -90,7 +90,6 @@ public class YangFsm
 /// <summary>
 /// 状态机
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public class YangFsm<T> : YangFsm
 {
     private T handle;
@@ -136,6 +135,17 @@ public class YangFsm<T> : YangFsm
         }
         if (toState != null) currentState = toState;
         currentState?.StateStart();
+    }
+
+    public bool GetCurrentStata<StateType>() where StateType : FsmStateBase<T>
+    {
+        Type temp = currentState.GetType();
+        if (typeof(StateType) == temp)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>

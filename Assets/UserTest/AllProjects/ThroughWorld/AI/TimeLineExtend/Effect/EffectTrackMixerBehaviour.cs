@@ -8,7 +8,7 @@ namespace TimelineExtend
     public class EffectTrackMixerBehaviour : PlayableBehaviour
     {
         /// <summary>
-        /// 该函数在运行时和编辑时调用。在设置属性值时请记住这一点。
+        /// 该函数在运行时和编辑时调用,在设置属性值时请记住这一点。
         /// </summary>
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
@@ -24,11 +24,9 @@ namespace TimelineExtend
                 float inputWeight = playable.GetInputWeight(i);
                 ScriptPlayable<EffectTrackBehaviour> inputPlayable = (ScriptPlayable<EffectTrackBehaviour>)playable.GetInput(i);
                 EffectTrackBehaviour input = inputPlayable.GetBehaviour();
-
                 if (input.effect && inputWeight == 0)
                 {
-                    UnityEngine.Object.DestroyImmediate(input.effect);
-                    input.effect = null;
+                    input.Destory();
                 }
             }
 

@@ -195,51 +195,51 @@ public class Monster : RoleBase
     }
     #endregion
 
-    #region 攻击和被击接口实现
-    public override void Atk(AtkInfo atkInfo)
-    {
-        if (!IsCanAtk()) return;
+    //#region 攻击和被击接口实现
+    //public override void Atk(AtkInfo atkInfo)
+    //{
+    //    if (!IsCanAtk()) return;
 
-        if (atkInfo.targetActor.IsCanBeHit())
-        {
-            //伤害信息创建
-            DamageInfo damageInfo = GetDamageInfo();
-            damageInfo.atkPos = transform.position;
-            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
-            ShowAtkEffect(atkInfo.atkEffectInfo);
-        }
-    }
-    public override void BeHit(ref DamageInfo damageInfo)
-    {
-        healthControl.MinusHp(damageInfo);
-    }
-    public override DamageInfo GetDamageInfo()
-    {
-        var result = new DamageInfo();
-        result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
-        return result;
-    }
-    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
-    {
-        damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
-        damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
-        return damageInfo;
-    }
-    public override bool IsCanAtk()
-    {
-        return false;
-    }
-    public override bool IsCanBeHit()
-    {
-        return true;
-    }
-    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
-    {
-    }
-    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
-    {
-    }
-    #endregion
+    //    if (atkInfo.targetActor.IsCanBeHit())
+    //    {
+    //        //伤害信息创建
+    //        DamageInfo damageInfo = GetDamageInfo();
+    //        damageInfo.atkPos = transform.position;
+    //        GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
+    //        ShowAtkEffect(atkInfo.atkEffectInfo);
+    //    }
+    //}
+    //public override void BeHit(ref DamageInfo damageInfo)
+    //{
+    //    healthControl.MinusHp(damageInfo);
+    //}
+    //public override DamageInfo GetDamageInfo()
+    //{
+    //    var result = new DamageInfo();
+    //    result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
+    //    return result;
+    //}
+    //public override DamageInfo GetHitCompute(DamageInfo damageInfo)
+    //{
+    //    damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
+    //    damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
+    //    return damageInfo;
+    //}
+    //public override bool IsCanAtk()
+    //{
+    //    return false;
+    //}
+    //public override bool IsCanBeHit()
+    //{
+    //    return true;
+    //}
+    //public override void ShowAtkEffect(EffectInfo atkEffectInfo)
+    //{
+    //}
+    //public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    //{
+    //}
+    //#endregion
 
     #region 交互
     /// <summary>

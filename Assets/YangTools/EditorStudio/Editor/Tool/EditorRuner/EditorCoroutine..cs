@@ -1,0 +1,64 @@
+#if UNITY_EDITOR
+/** 
+ *Copyright(C) 2020 by XCHANGE 
+ *All rights reserved. 
+ *Author:       YangWork 
+ *UnityVersion：2020.3.7f1c1 
+ *创建时间:         2021-06-07 
+*/
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class EditorCoroutine : IEnumerator
+{
+    private Stack<IEnumerator> executionStack;
+
+    public EditorCoroutine(IEnumerator iterator)
+    {
+        this.executionStack = new Stack<IEnumerator>();
+        this.executionStack.Push(iterator);
+    }
+
+    public bool MoveNext()
+    {
+        IEnumerator i = this.executionStack.Peek();
+
+        if (i.MoveNext())
+        {
+            object result = i.Current;
+            if (result != null && result is IEnumerator)
+            {
+                this.executionStack.Push((IEnumerator)result);
+            }
+
+            return true;
+        }
+        else
+        {
+            if (this.executionStack.Count > 1)
+            {
+                this.executionStack.Pop();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void Reset()
+    {
+        throw new System.NotSupportedException("This Operation Is Not Supported.");
+    }
+
+    public object Current
+    {
+        get { return this.executionStack.Peek().Current; }
+    }
+
+    public bool Find(IEnumerator iterator)
+    {
+        return this.executionStack.Contains(iterator);
+    }
+}
+#endif

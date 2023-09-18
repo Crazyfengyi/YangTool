@@ -32,15 +32,15 @@ namespace TimelineExtend
         public ParticleSystem particleSystem;
         public override void OnGraphStart(Playable playable)
         {
-            //Debug.LogError($"≤‚ ‘:OnGraphStart");
+           // Debug.LogError($"≤‚ ‘:OnGraphStart");
         }
         public override void OnGraphStop(Playable playable)
         {
-            //Debug.LogError($"≤‚ ‘:OnGraphStop");
+           // Debug.LogError($"≤‚ ‘:OnGraphStop");
         }
         public override void OnPlayableCreate(Playable playable)
         {
-            //Debug.LogError($"≤‚ ‘:OnPlayableCreate");
+           // Debug.LogError($"≤‚ ‘:OnPlayableCreate");
         }
 
         public override void OnBehaviourPlay(Playable playable, FrameData info)
@@ -62,24 +62,15 @@ namespace TimelineExtend
         }
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
-            //RoleBase trackBinding = playerData as RoleBase;
-            //if (!trackBinding)
-            //{
-            //    trackBinding = playable.GetHandle();
-            //}
-            //if (!trackBinding) return;
-
-            RoleBase trackBinding = role;
-
             if (effect == null)
             {
                 if (isInSelf)
                 {
-                    effect = trackBinding.PlayEffectAtSelf(effectName, effectPoint);
+                    effect = role.PlayEffectAtSelf(effectName, effectPoint);
                 }
                 else
                 {
-                    effect = trackBinding.PlayEffect(effectName, effectPoint);
+                    effect = role.PlayEffect(effectName, effectPoint);
                 }
 
                 effect.transform.localPosition += offsetVector;

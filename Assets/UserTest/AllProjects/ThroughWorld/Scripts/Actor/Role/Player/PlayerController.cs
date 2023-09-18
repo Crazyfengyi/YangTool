@@ -173,58 +173,58 @@ public class PlayerController : RoleBase
 
     #endregion 输入
 
-    #region 攻击和被击接口实现
+    //#region 攻击和被击接口实现
 
-    public override void Atk(AtkInfo atkInfo)
-    {
-        if (!IsCanAtk()) return;
+    //public override void Atk(AtkInfo atkInfo)
+    //{
+    //    if (!IsCanAtk()) return;
 
-        if (atkInfo.targetActor.IsCanBeHit())
-        {
-            //伤害信息创建
-            DamageInfo damageInfo = GetDamageInfo();
-            damageInfo.atkPos = transform.position;
-            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
-            ShowAtkEffect(atkInfo.atkEffectInfo);
-        }
-    }
+    //    if (atkInfo.targetActor.IsCanBeHit())
+    //    {
+    //        //伤害信息创建
+    //        DamageInfo damageInfo = GetDamageInfo();
+    //        damageInfo.atkPos = transform.position;
+    //        GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
+    //        ShowAtkEffect(atkInfo.atkEffectInfo);
+    //    }
+    //}
 
-    public override void BeHit(ref DamageInfo damageInfo)
-    {
-        healthControl.MinusHp(damageInfo);
-    }
+    //public override void BeHit(ref DamageInfo damageInfo)
+    //{
+    //    healthControl.MinusHp(damageInfo);
+    //}
 
-    public override DamageInfo GetDamageInfo()
-    {
-        var result = new DamageInfo();
-        result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
-        return result;
-    }
+    //public override DamageInfo GetDamageInfo()
+    //{
+    //    var result = new DamageInfo();
+    //    result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
+    //    return result;
+    //}
 
-    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
-    {
-        damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
-        damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
-        return damageInfo;
-    }
+    //public override DamageInfo GetHitCompute(DamageInfo damageInfo)
+    //{
+    //    damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
+    //    damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
+    //    return damageInfo;
+    //}
 
-    public override bool IsCanAtk()
-    {
-        return true;
-    }
+    //public override bool IsCanAtk()
+    //{
+    //    return true;
+    //}
 
-    public override bool IsCanBeHit()
-    {
-        return true;
-    }
+    //public override bool IsCanBeHit()
+    //{
+    //    return true;
+    //}
 
-    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
-    {
-    }
+    //public override void ShowAtkEffect(EffectInfo atkEffectInfo)
+    //{
+    //}
 
-    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
-    {
-    }
+    //public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    //{
+    //}
 
-    #endregion 攻击和被击接口实现
+    //#endregion 攻击和被击接口实现
 }

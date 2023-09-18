@@ -6,6 +6,7 @@
  *创建时间:         2021-12-23 
 */
 using BehaviorDesigner.Runtime;
+using DataStruct;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -286,5 +287,90 @@ public abstract class RoleBase : GameActor
 
         return effect;
     }
+    #endregion
+
+    #region 攻击和被击接口实现
+
+    public override void Atk(AtkInfo atkInfo)
+    {
+        if (!IsCanAtk()) return;
+
+        if (atkInfo.targetActor.IsCanBeHit())
+        {
+            //伤害信息创建
+            DamageInfo damageInfo = GetDamageInfo();
+            damageInfo.atkPos = transform.position;
+            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
+            ShowAtkEffect(atkInfo.atkEffectInfo);
+        }
+    }
+
+    public override void BeHit(ref DamageInfo damageInfo)
+    {
+        healthControl.MinusHp(damageInfo);
+    }
+
+    public override DamageInfo GetDamageInfo()
+    {
+        var result = new DamageInfo();
+        if (roleAttributeControl != null)
+        {
+            result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
+        }
+        return result;
+    }
+
+    public override DamageInfo GetHitCompute(DamageInfo damageInfo)
+    {
+        damageInfo.damage = damageInfo.damage - roleAttributeControl.GetAttribute(RoleAttribute.Def).Value;
+        damageInfo.damage = Mathf.Max(damageInfo.damage, 0);
+        return damageInfo;
+    }
+
+    public override bool IsCanAtk()
+    {
+        return true;
+    }
+
+    public override bool IsCanBeHit()
+    {
+        return true;
+    }
+
+    public override void ShowAtkEffect(EffectInfo atkEffectInfo)
+    {
+    }
+
+    public override void ShowBeHitEffect(EffectInfo hitEffectInfo)
+    {
+    }
+
+    #endregion 攻击和被击接口实现
+
+    #region 伤害检测
+    /// <summary>
+    /// 伤害检测
+    /// </summary>
+    /// <param name="checkConfig"></param>
+    public bool DamageCheck(CheckConfig checkConfig)
+    {
+        PhysicsCheckManager.Instance.PhysicCheck(checkConfig, this, out Collider[] array);
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            GameActor script = array[i].GetComponentInChildren<GameActor>(true);
+            if (script)
+            {
+                AtkInfo atkInfo = new AtkInfo();
+                atkInfo.sourceActor = this;
+                atkInfo.targetActor = script;
+                atkInfo.atkEffectInfo = null;
+                Atk(atkInfo);
+            }
+        }
+        Debug.LogError($"伤害检测:{array.Length}");
+        return array.Length > 0;
+    }
+
     #endregion
 }

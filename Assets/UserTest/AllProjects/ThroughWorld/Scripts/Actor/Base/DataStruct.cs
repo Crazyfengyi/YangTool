@@ -229,7 +229,7 @@ public class CheckConfig
     [ShowIf("@(checkType == HitCheckType.圆环)"), LabelText("内半径")]
     public float insideRadius = 1;
     [ShowIf("@(checkType == HitCheckType.圆环)"), LabelText("外半径")]
-    public float externalRadius = 2;
+    public float outsideRadius = 2;
 
     //球形射线
     [ShowIf("@(checkType == HitCheckType.球形射线)"), LabelText("距离")]

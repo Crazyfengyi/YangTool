@@ -157,5 +157,53 @@ namespace YangTools
             onProgressEvent = onProgress;
         }
         #endregion
+
+        /// <summary>
+        /// 异步温和的场景加载
+        /// </summary>
+        public static IEnumerator DoGentleSceneLoad(string sceneName)
+        {
+            yield return new WaitForSeconds(0.2f);
+
+            //清除当前场景对象
+            Scene currentScene = SceneManager.GetActiveScene();
+            foreach (var obj in currentScene.GetRootGameObjects())
+            {
+                GameObject.Destroy(obj);
+            }
+            yield return null;
+
+            Debug.Log("卸载当前场景:" + currentScene.name);
+            //异步卸载当前场景
+            AsyncOperation asyncUnloadSceneOp = SceneManager.UnloadSceneAsync(currentScene);
+            while (asyncUnloadSceneOp != null && !asyncUnloadSceneOp.isDone)
+            {
+                yield return null;
+            }
+
+            Debug.Log("卸载未使用的Assets");
+            var unloadAssets = Resources.UnloadUnusedAssets();
+            while (!unloadAssets.isDone)
+            {
+                yield return null;
+            }
+
+            Debug.Log("GC回收");
+            System.GC.Collect();
+            yield return null;
+
+            // bool loadingTreehouse = sceneName == "TreeHouseLobby";
+            //if (loadingTreehouse)
+            //{
+            //  LobbyManagerManager.BeforeLoadingTreehouse();
+            //}
+
+            Debug.Log("异步加载场景:" + sceneName);
+            AsyncOperation asyncLoadSceneOp = SceneManager.LoadSceneAsync(sceneName);
+            while (asyncLoadSceneOp != null && !asyncLoadSceneOp.isDone)
+            {
+                yield return null;
+            }
+        }
     }
 }

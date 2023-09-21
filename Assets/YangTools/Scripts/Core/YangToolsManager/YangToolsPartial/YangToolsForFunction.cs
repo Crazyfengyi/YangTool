@@ -157,5 +157,95 @@ namespace YangTools
             return curvePoint;
         }
         #endregion
+
+        #region 判断左右
+        /// <summary>
+        /// 判断方向
+        /// </summary>
+        /// <param name="Forward">正前方</param>
+        /// <param name="SecondValue">要判断的向量(点)</param>
+        public static CheckDirectionType CheckDirection(Vector3 Forward, Vector3 SecondValue)
+        {
+            CheckDirectionType directionType = CheckDirectionType.None;
+            //点乘--判断前后 >0:前 <0:后 
+            /*
+             * 小于0:表示两向量角度大于90度
+             * 等于0:表示两向量垂直
+             * 大于0:表示两向量角度小于90度
+             */
+            float dotVaule = Vector3.Dot(Forward.normalized, SecondValue.normalized);
+            //叉乘--判断左右 y>0:左 y<0:右
+            /*
+             * 结果为一条新的向量,并垂直于两条旧的向量
+             */
+            Vector3 crossVaule = Vector3.Cross(Forward.normalized, SecondValue.normalized);
+
+            //叉乘和点乘的结合可用来准确判断方位
+            //前
+            if (dotVaule > 0)
+            {
+                if (crossVaule.y > 0) //在左前方
+                {
+                    directionType = CheckDirectionType.LeftForward;
+                }
+                else if (crossVaule.y < 0)//在右前方
+                {
+                    directionType = CheckDirectionType.RightForward;
+                }
+                else
+                {
+                    directionType = CheckDirectionType.Forward;
+                }
+            }
+            else if (dotVaule < 0)//后
+            {
+                if (crossVaule.y > 0) //在左后方
+                {
+                    directionType = CheckDirectionType.LeftBack;
+                }
+                else if(crossVaule.y < 0)//在右后方
+                {
+                    directionType = CheckDirectionType.RightBack;
+                }
+                else
+                {
+                    directionType = CheckDirectionType.Back;
+                }
+            }
+            else
+            {
+                if (crossVaule.y > 0)//左
+                {
+                    directionType = CheckDirectionType.Left;
+
+                }
+                else if (crossVaule.y < 0)//右
+                {
+                    directionType = CheckDirectionType.Right;
+                }
+                else
+                {
+                    directionType = CheckDirectionType.Equal;
+                }
+            }
+
+            return directionType;
+        }
+        //方向
+        public enum CheckDirectionType
+        {
+            None = 0,
+            Equal,
+            Forward,
+            Back,
+            Left,
+            Right,
+            LeftForward,
+            LeftBack,
+            RightForward,
+            RightBack,
+        }
+
+        #endregion
     }
 }

@@ -33,5 +33,24 @@ namespace YangTools
                 Cursor.visible = true;
             }
         }
+        /// <summary>
+        /// 是:手机,否:平板
+        /// </summary>
+        public static bool IsPhone()
+        {
+            bool isPhone = true;
+
+            //iPhone，可以根据设备名字判断是否包含iphone
+            //android，可以比较设备分辨率的比例 是否大于4:3
+#if UNITY_IPHONE && !UNITY_EDITOR
+            string deviceInfo = SystemInfo.deviceModel.ToString();
+            isPhone = deviceInfo.Contains("iPhone");
+#else
+            float physicscreen = 1.0f * Screen.width / Screen.height;
+            isPhone = physicscreen > 1.7f; //(the ratio 4:3 = 1.33; 16:9 = 1.777;)
+#endif
+            return isPhone;
+
+        }
     }
 }

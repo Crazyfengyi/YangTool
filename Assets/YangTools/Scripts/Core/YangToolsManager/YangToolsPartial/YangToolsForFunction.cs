@@ -203,7 +203,7 @@ namespace YangTools
                 {
                     directionType = CheckDirectionType.LeftBack;
                 }
-                else if(crossVaule.y < 0)//在右后方
+                else if (crossVaule.y < 0)//在右后方
                 {
                     directionType = CheckDirectionType.RightBack;
                 }
@@ -232,18 +232,20 @@ namespace YangTools
             return directionType;
         }
         //方向
+        [Flags]
         public enum CheckDirectionType
         {
             None = 0,
-            Equal,
-            Forward,
-            Back,
-            Left,
-            Right,
-            LeftForward,
-            LeftBack,
-            RightForward,
-            RightBack,
+            Equal = 1,
+            Forward = 1 << 1,
+            Back = 1 << 2,
+            Left = 1 << 3,
+            Right = 1 << 4,
+
+            LeftForward = Left + Forward,
+            LeftBack = Left + Back,
+            RightForward = Right + Forward,
+            RightBack = Right + Back,
         }
 
         #endregion

@@ -250,5 +250,27 @@ namespace YangTools
             return ((Task)tcs.Task).GetAwaiter();
         }
         #endregion
+
+        /// <summary>
+        /// 返回相机在Z=0时的实际视口大小
+        /// </summary>
+        public static Bounds GetCameraView(Transform transform,Camera useCamera)
+        {
+            float width, height;
+            if (useCamera == null)
+                return new Bounds();
+            if (useCamera.orthographic)
+            {
+                height = useCamera.orthographicSize * 2;
+                width = useCamera.aspect * height;
+            }
+            else
+            {
+                height = (Mathf.Tan(useCamera.fieldOfView / 2f * Mathf.Deg2Rad)) * transform.position.z * 2;
+                width = height * useCamera.aspect;
+            }
+
+            return new Bounds(transform.position, new Vector3(Mathf.Abs(width), Mathf.Abs(height), 0));
+        }
     }
 }

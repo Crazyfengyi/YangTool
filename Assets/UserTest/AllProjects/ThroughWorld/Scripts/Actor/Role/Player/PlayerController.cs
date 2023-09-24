@@ -6,6 +6,7 @@
  *创建时间:         2022-07-23
 */
 
+using System;
 using CMF;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,6 +25,17 @@ public class PlayerController : RoleBase
 
     private EmitterBase emitter;//发射器
     private AdvancedWalkerController advancedWalker;//移动脚本
+
+    #region 事件
+    protected Action<BulletBase, EmitterBase> ShootBulletEvent { get; set; }
+    /// <summary>
+    /// 子弹生成回调
+    /// </summary>
+    void OnBulletCreated(BulletBase bullet, EmitterBase emitterBase)
+    {
+        ShootBulletEvent?.Invoke(bullet, emitterBase);
+    }
+    #endregion
 
     /// <summary>
     /// 目标物体
@@ -80,7 +92,7 @@ public class PlayerController : RoleBase
             emitData.timeInterval = 0;
             emitData.bulletShootType = BulletShootType.Circle;
             emitter.SetEmitData(emitData);
-            emitter.StartShoot();
+            emitter.StartShoot(OnBulletCreated);
         }
 
         emitter?.OnUpdate();

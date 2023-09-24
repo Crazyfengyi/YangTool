@@ -66,13 +66,13 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             //进入范围
             if (currentInteractive != null && !currentInteractive.Equals(null) && currentInteractive.IsValid())
             {
-                currentInteractive.EnterRang(target);
+                currentInteractive.OnEnterRang(target);
                 ShowCircle.transform.position = currentInteractive.GetPos();
             }
             //退出范围
             if (lastInteractive != null && !lastInteractive.Equals(null) && lastInteractive.IsValid())
             {
-                lastInteractive.ExitRang(target);
+                lastInteractive.OnExitRang(target);
             }
 
             //更新记录
@@ -96,7 +96,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     public void OnInter()
     {
         if (currentInteractive == null) return;
-        currentInteractive.InterAction(target);
+        currentInteractive.Interact(target);
         currentInteractive = null;
         ForceUpdate = true;
     }
@@ -122,7 +122,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
                 if (interactive == null || interactive.Equals(null)) continue;
 
                 float overideDistance = interactive.GetOverideMaxDistance();//覆盖范围
-                float distance = interactive.Distance(recordPos);//距离
+                float distance = interactive.DistanceToPoint(recordPos);//距离
                 if (distance < overideDistance && distance < currentMinDistance)
                 {
                     currentMinDistance = distance;

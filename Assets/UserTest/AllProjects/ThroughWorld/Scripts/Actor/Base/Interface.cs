@@ -100,7 +100,7 @@ public interface IInteractive
     /// <summary>
     /// 距离
     /// </summary>
-    public float Distance(Vector3 point)
+    public float DistanceToPoint(Vector3 point)
     {
         return float.MaxValue;
     }
@@ -126,23 +126,23 @@ public interface IInteractive
         return true;
     }
     /// <summary>
-    /// 进入范围
+    /// 进入触发范围
     /// </summary>
-    public void EnterRang(RoleBase role)
+    public void OnEnterRang(RoleBase role)
     {
 
     }
     /// <summary>
-    /// 退出范围
+    /// 退出触发范围
     /// </summary>
-    public void ExitRang(RoleBase role)
+    public void OnExitRang(RoleBase role)
     {
 
     }
     /// <summary>
-    /// 交互 
+    /// 处理交互 
     /// </summary>
-    public void InterAction(RoleBase role)
+    public void Interact(RoleBase role)
     {
 
     }

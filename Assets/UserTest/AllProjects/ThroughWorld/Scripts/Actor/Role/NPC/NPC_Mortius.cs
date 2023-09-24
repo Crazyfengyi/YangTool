@@ -35,7 +35,7 @@ public class NPC_Mortius : RoleBase
     /// <summary>
     /// 距离
     /// </summary>
-    public override float Distance(Vector3 point)
+    public override float DistanceToPoint(Vector3 point)
     {
         return Vector3.Distance(transform.position, point);
     }
@@ -49,19 +49,19 @@ public class NPC_Mortius : RoleBase
     /// <summary>
     /// 进入范围
     /// </summary>
-    public override void EnterRang(RoleBase role)
+    public override void OnEnterRang(RoleBase role)
     {
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public override void ExitRang(RoleBase role)
+    public override void OnExitRang(RoleBase role)
     {
     }
     /// <summary>
     /// 交互 
     /// </summary>
-    public override void InterAction(RoleBase role)
+    public override void Interact(RoleBase role)
     {
         GameManager.Instance.SceneLoad("GameLevel2");
     }

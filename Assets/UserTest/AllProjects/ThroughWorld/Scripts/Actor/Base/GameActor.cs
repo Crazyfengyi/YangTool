@@ -156,7 +156,7 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     /// <summary>
     /// 距离
     /// </summary>
-    public virtual float Distance(Vector3 point)
+    public virtual float DistanceToPoint(Vector3 point)
     {
         return Vector3.Distance(transform.position, point);
     }
@@ -177,21 +177,21 @@ public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtk
     /// <summary>
     /// 进入范围
     /// </summary>
-    public virtual void EnterRang(RoleBase role)
+    public virtual void OnEnterRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public virtual void ExitRang(RoleBase role)
+    public virtual void OnExitRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 交互
     /// </summary>
-    public virtual void InterAction(RoleBase role)
+    public virtual void Interact(RoleBase role)
     {
 
     }

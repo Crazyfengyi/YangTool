@@ -32,9 +32,9 @@ public class Apple : GameActor
     /// <summary>
     /// 距离
     /// </summary>
-    public override float Distance(Vector3 point)
+    public override float DistanceToPoint(Vector3 point)
     {
-        return base.Distance(point);
+        return base.DistanceToPoint(point);
     }
     /// <summary>
     /// 覆盖范围(物体需要的范围)
@@ -60,21 +60,21 @@ public class Apple : GameActor
     /// <summary>
     /// 进入范围
     /// </summary>
-    public override void EnterRang(RoleBase role)
+    public override void OnEnterRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 退出范围
     /// </summary>
-    public override void ExitRang(RoleBase role)
+    public override void OnExitRang(RoleBase role)
     {
 
     }
     /// <summary>
     /// 交互 
     /// </summary>
-    public override void InterAction(RoleBase role)
+    public override void Interact(RoleBase role)
     {
         GameUIManager.Instance.AddTipsShow("获得苹果");
         Destroy(gameObject);

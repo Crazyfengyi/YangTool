@@ -4,14 +4,15 @@
  *Author:       WIN-VJ19D9AB7HB 
  *UnityVersion：2022.3.0f1c1 
  *创建时间:         2023-08-05 
-*/  
+*/
 using System;
-using System.Collections;  
-using UnityEngine;  
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
 using YangTools.UGUI;
+using DataStruct;
 
 /// <summary>
 /// 发射器基类
@@ -31,6 +32,7 @@ public abstract class EmitterBase
     protected float timer;
     protected bool startShoot;//开始发射
 
+    protected Action<BulletBase, EmitterBase> ShootEvent { get; set; }
     public EmitterBase(GameActor _actor)
     {
         handle = _actor;
@@ -39,9 +41,10 @@ public abstract class EmitterBase
     /// <summary>
     /// 开始发射
     /// </summary>
-    public virtual void StartShoot()
+    public virtual void StartShoot(Action<BulletBase, EmitterBase> callBack)
     {
         startShoot = true;
+        ShootEvent = callBack;
     }
 
     public virtual void OnUpdate()
@@ -79,12 +82,16 @@ public abstract class EmitterBase
                         Vector3 temp = Quaternion.AngleAxis(angle * i, Vector3.up) * startDirection;
                         bulletData.direction = temp;
                         bulletData.targetCampType = handle.canAtkCamp;
-                        GameProjectileManager.Instance.CreateBullet(bulletData);
+                        BulletBase bullet = GameProjectileManager.Instance.CreateBullet(bulletData);
+                        ShootEvent?.Invoke(bullet, this);
                     }
                 }
                 break;
             default:
-                GameProjectileManager.Instance.CreateBullet(bulletData);
+                {
+                    BulletBase bullet = GameProjectileManager.Instance.CreateBullet(bulletData);
+                    ShootEvent?.Invoke(bullet, this);
+                }
                 break;
         }
     }

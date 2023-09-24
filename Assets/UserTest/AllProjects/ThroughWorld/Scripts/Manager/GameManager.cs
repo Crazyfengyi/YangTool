@@ -13,6 +13,7 @@ using YangTools.Extend;
 using YangTools.MiniMap;
 using YangTools.UGUI;
 
+[AddComponentMenu("游戏管理器")]
 public class GameManager : MonoSingleton<GameManager>
 {
     protected override void Awake()
@@ -54,6 +55,7 @@ public class GameManager : MonoSingleton<GameManager>
             tempPos.z = 10;
             Vector3 WorldPos = GameUIManager.Instance.UICamera.ScreenToWorldPoint(tempPos);
             GameEffectManager.Instance.PlayEffect("ClickEffect", worldPos: WorldPos);
+     
         }
     }
 

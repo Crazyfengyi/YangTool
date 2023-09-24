@@ -6,7 +6,6 @@ using YangTools.UGUI;
 
 namespace YangTools
 {
-    // TODO:自动读表绑定功能
     /// <summary>
     /// 工具总管理器
     /// </summary>

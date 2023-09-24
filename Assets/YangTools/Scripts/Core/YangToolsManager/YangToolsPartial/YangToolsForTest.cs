@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace YangTools
 {
@@ -39,6 +41,24 @@ namespace YangTools
             GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);
             IntPtr addr = h.AddrOfPinnedObject();
             return "0x" + addr.ToString("X");
+        }
+        /// <summary>
+        /// Debug位置
+        /// </summary>
+        public static void DebugPonit()
+        {
+            string logStart = "--DEBUG START--";
+            //文件名
+            string FileName = "FileName:" + System.IO.Path.GetFileName(new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileName());
+            //文件行号
+            string LineNumber = "Line:" + new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileLineNumber().ToString();
+            //方法名
+            string callStack = "CallStack:" + new System.Diagnostics.StackTrace().GetFrame(1).GetMethod();
+
+            string logEnd = "--END--";
+
+            string OutputResult = $"{logStart}\n{callStack} \n{FileName}\n{LineNumber}\n{logEnd}";
+            UnityEngine.Debug.Log(OutputResult);
         }
     }
 }

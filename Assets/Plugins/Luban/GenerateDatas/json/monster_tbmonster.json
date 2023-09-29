@@ -30,7 +30,36 @@
   },
   {
     "id": 10001,
-    "name": "角色0",
+    "name": "角色1",
+    "desc": "模板角色",
+    "hp": 100,
+    "mp": 100,
+    "atk": 100,
+    "def": 100,
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  },
+  {
+    "id": 10002,
+    "name": "角色2",
     "desc": "模板角色",
     "hp": 100,
     "mp": 100,

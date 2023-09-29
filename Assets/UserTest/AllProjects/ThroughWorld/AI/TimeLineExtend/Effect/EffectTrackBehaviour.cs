@@ -42,7 +42,6 @@ namespace TimelineExtend
         {
            // Debug.LogError($"≤‚ ‘:OnPlayableCreate");
         }
-
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             //Debug.LogError($"≤‚ ‘:OnBehaviourPlay");
@@ -73,7 +72,10 @@ namespace TimelineExtend
                     effect = role.PlayEffect(effectName, effectPoint);
                 }
 
-                effect.transform.localPosition += offsetVector;
+                effect.transform.localPosition += effect.transform.forward * offsetVector.z + 
+                    effect.transform.right * offsetVector.x +
+                    effect.transform.up * offsetVector.y;
+
                 particleSystem = effect.GetComponentInChildren<ParticleSystem>(true);
             }
 

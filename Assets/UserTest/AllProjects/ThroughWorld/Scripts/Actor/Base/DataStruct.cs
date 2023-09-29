@@ -214,6 +214,8 @@ public class CheckConfig
     public float Long = 2;
     [ShowIf("@(checkType == HitCheckType.矩形)"), LabelText("宽")]
     public float Width = 1;
+    [ShowIf("@(checkType == HitCheckType.矩形)"), LabelText("高")]
+    public float Hight = 1;
 
     //扇形
     [ShowIf("@(checkType == HitCheckType.扇形)"), LabelText("直径")]

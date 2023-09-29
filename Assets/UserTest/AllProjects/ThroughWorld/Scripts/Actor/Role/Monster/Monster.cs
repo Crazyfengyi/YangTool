@@ -16,7 +16,6 @@ using YangTools.Extend;
 public class Monster : RoleBase
 {
     private AIPath aiPath;
-    public GameObject model;//模型
     public GameObject shootPoint;//发射点
 
     private EmitterBase emitter;//发射器
@@ -90,24 +89,24 @@ public class Monster : RoleBase
                     timer = 0;
                 }
 
-                model.transform.LookAt(Target.transform.position.SetYValue());
+               modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
             }
             else
             {
                 aiPath.isStopped = false;
-                if (Target) model.transform.LookAt(Target.transform.position.SetYValue());
+                if (Target) modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
             }
             Animator.SetFloat("Speed", aiPath.velocity.magnitude);
         }
 
         if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && Target)
         {
-            model.transform.LookAt(Target.transform.position.SetYValue());
+            modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
             timer += Time.deltaTime;
             if (timer >= interval)
             {
                 timer = 0;
-                skillControl.UseSkill("Skill_Test2", true);
+                skillControl.UseSkill("Skill_10002_1", true);
 
                 //EmitData emitData = new EmitData();
                 //emitData.bulletID = 0;//TODO:需要设置子弹ID

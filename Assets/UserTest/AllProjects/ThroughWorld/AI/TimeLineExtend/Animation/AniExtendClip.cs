@@ -29,11 +29,6 @@ namespace TimelineExtend
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject go)
         {
-            if (defaultAni == null)
-            {
-                defaultAni = clip;
-            }
-
             RoleBase role = go.GetComponent<RoleBase>();
             if (role)
             {
@@ -41,7 +36,7 @@ namespace TimelineExtend
                 RuntimeAnimatorController runtimeAniController = role.Animator.runtimeAnimatorController;
                 AnimationClip[] clips = runtimeAniController.animationClips;
 
-                if (clip != null)
+                if (defaultAni != null)
                 {
                     for (int i = 0; i < clips.Length; i++)
                     {

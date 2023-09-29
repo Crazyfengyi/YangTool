@@ -80,9 +80,11 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
                     GetAtkLayer(role));
                 break;
             case HitCheckType.矩形:
-                colliders = SquareCheck(startPos, role.modelInfo.Root.forward, 0.5f * new Vector3(checkConfig.Width, 4, checkConfig.Long),
-                    Quaternion.Euler(role.modelInfo.Root.eulerAngles), GetAtkLayer(role));
-                break;
+                {
+                    colliders = SquareCheck(startPos, role.modelInfo.Root.forward, 0.5f * new Vector3(checkConfig.Width, checkConfig.Hight, checkConfig.Long),
+                        Quaternion.Euler(role.modelInfo.Root.eulerAngles), GetAtkLayer(role));
+                    break;
+                }
             case HitCheckType.扇形:
                 colliders = SectorCheck(startPos, role.modelInfo.Root.forward, checkConfig.diameter, checkConfig.Angle, GetAtkLayer(role));
                 break;
@@ -145,7 +147,7 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
     {
         Collider[] collider = Physics.OverlapSphere(pos, length, layerMask);
         GizmosManager.Instance.GizmosDrawSector(pos, forward, length, angle);
-       
+
         //角度的一半
         float sectorAngle = angle * 0.5f;
         allCollider.Clear();
@@ -171,7 +173,7 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
     private Collider[] SquareCheck(Vector3 pos, Vector3 forward, Vector3 halfExtents, Quaternion quaternion, int layerMask)
     {
         Collider[] collider = Physics.OverlapBox(pos + forward * halfExtents.z, halfExtents, quaternion, layerMask);
-        GizmosManager.Instance.GizmosDrawCube(pos + forward * halfExtents.z, halfExtents * 2);
+        GizmosManager.Instance.GizmosDrawCube(pos + forward * halfExtents.z, quaternion, halfExtents * 2);
 
         allCollider.Clear();
         for (int i = 0; i < collider.Length; i++)
@@ -232,10 +234,10 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
     /// <param name="radius">半径</param>
     /// <param name="direction">方向</param>
     /// <param name="distance">距离</param>
-    private Collider[] SphereRaycast(Vector3 pos, Vector3 direction, float distance,float radius, int layerMask)
+    private Collider[] SphereRaycast(Vector3 pos, Vector3 direction, float distance, float radius, int layerMask)
     {
         GizmosManager.Instance.GizmosDrawSphereRay(pos, direction, distance, radius);
-        
+
         allCollider.Clear();
         if (Physics.SphereCast(pos, radius, direction, out RaycastHit hitInfo, distance, layerMask))
         {
@@ -252,7 +254,7 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
     private Collider[] Raycast(Vector3 pos, Vector3 direction, float distance, int layerMask)
     {
         GizmosManager.Instance.GizmosDrawRay(pos, direction, distance);
-        
+
         allCollider.Clear();
         if (Physics.Raycast(pos, direction, out RaycastHit hitInfo, distance, layerMask))
         {

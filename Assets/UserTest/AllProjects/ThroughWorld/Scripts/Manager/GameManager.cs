@@ -55,7 +55,6 @@ public class GameManager : MonoSingleton<GameManager>
             tempPos.z = 10;
             Vector3 WorldPos = GameUIManager.Instance.UICamera.ScreenToWorldPoint(tempPos);
             GameEffectManager.Instance.PlayEffect("ClickEffect", worldPos: WorldPos);
-     
         }
     }
 

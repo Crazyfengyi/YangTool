@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,14 +29,15 @@ public class GizmosManager : MonoBehaviour
     /// <param name="center"></param>
     /// <param name="size"></param>
     /// <param name="time"></param>
-    public void GizmosDrawCube(Vector3 center, Vector3 size, float time = 2f)
+    public void GizmosDrawCube(Vector3 center, Quaternion quaternion, Vector3 size, float time = 2f)
     {
         drawInfos.Add(new DrawCubeInfo
         {
             center = center,
+            rotate = quaternion,
             size = size,
             time = time
-        });
+        }); ; ;
     }
     /// <summary>
     /// 扇形
@@ -113,7 +116,60 @@ public class GizmosManager : MonoBehaviour
             switch (item)
             {
                 case DrawCubeInfo temp:
-                    Gizmos.DrawWireCube(temp.center, temp.size);
+                    {
+                        #region 画矩形
+                        //中心
+                        Gizmos.DrawSphere(temp.center, 0.1f);
+                        var size = temp.size;
+                        var center = temp.center;
+                        var rotation = temp.rotate;
+
+                        var halfx = size.x / 2;
+                        var halfy = size.y / 2;
+                        var halfz = size.z / 2;
+
+                        var movedis = new Vector3(center.x, center.y, center.z);
+                        //4个顶点坐标
+                        var leftDownUpPos = rotation * new Vector3(-halfx, -halfy, halfz) + movedis;
+                        var leftDownDowns = rotation * new Vector3(-halfx, -halfy, -halfz) + movedis;
+
+                        var rightDownUpPos = rotation * new Vector3(halfx, -halfy, halfz) + movedis;
+                        var rightDownDownPos = rotation * new Vector3(halfx, -halfy, -halfz) + movedis;
+
+                        var leftUpUpPos = rotation * new Vector3(-halfx, halfy, halfz) + movedis;
+                        var leftUpDownPos = rotation * new Vector3(-halfx, halfy, -halfz) + movedis;
+
+                        var rightUpUpPos = rotation * new Vector3(halfx, halfy, halfz) + movedis;
+                        var rightUpDownPos = rotation * new Vector3(halfx, halfy, -halfz) + movedis;
+          
+                        //8个点
+                        Gizmos.DrawSphere(leftDownUpPos, 0.1f);
+                        Gizmos.DrawSphere(rightDownUpPos, 0.1f);
+                        Gizmos.DrawSphere(leftUpUpPos, 0.1f);
+                        Gizmos.DrawSphere(rightUpUpPos, 0.1f);
+                        Gizmos.DrawSphere(leftDownDowns, 0.1f);
+                        Gizmos.DrawSphere(rightDownDownPos, 0.1f);
+                        Gizmos.DrawSphere(leftUpDownPos, 0.1f);
+                        Gizmos.DrawSphere(rightUpDownPos, 0.1f);
+
+                        //线段
+                        Gizmos.DrawLine(leftDownUpPos, leftDownDowns);
+                        Gizmos.DrawLine(leftDownUpPos, leftUpUpPos);
+                        Gizmos.DrawLine(leftDownUpPos, rightDownUpPos);
+
+                        Gizmos.DrawLine(rightDownDownPos, leftDownDowns);
+                        Gizmos.DrawLine(rightDownDownPos, rightDownUpPos);
+                        Gizmos.DrawLine(rightDownDownPos, rightUpDownPos);
+
+                        Gizmos.DrawLine(leftUpDownPos, rightUpDownPos);
+                        Gizmos.DrawLine(leftUpDownPos, leftUpUpPos);
+                        Gizmos.DrawLine(leftUpDownPos, leftDownDowns);
+
+                        Gizmos.DrawLine(rightUpUpPos, leftUpUpPos);
+                        Gizmos.DrawLine(rightUpUpPos, rightDownUpPos);
+                        Gizmos.DrawLine(rightUpUpPos, rightUpDownPos);
+                        #endregion
+                    }
                     break;
                 case DrawSectorInfo temp:
                     for (float i = -(temp.angle / 2); i < temp.angle; i += 5)
@@ -177,6 +233,7 @@ public class DrawInfo
 public class DrawCubeInfo : DrawInfo
 {
     public Vector3 center;
+    public Quaternion rotate;
     public Vector3 size;
 }
 /// <summary>

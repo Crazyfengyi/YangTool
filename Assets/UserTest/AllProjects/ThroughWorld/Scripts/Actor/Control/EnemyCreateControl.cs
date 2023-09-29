@@ -56,7 +56,7 @@ public class EnemyCreateControl : MonoBehaviour
 
             //EnemyCreateData[] date = currentWave.MonsterCreateData;
             //生成怪物
-            Monster monster = GameActorManager.Instance.CreateMonster();
+            Monster monster = GameActorManager.Instance.CreateMonster(10002);
             monster.OnDieAction += EnemyDeath;
 
             GameUIManager.Instance.AddTipsShow("新的怪物生成");

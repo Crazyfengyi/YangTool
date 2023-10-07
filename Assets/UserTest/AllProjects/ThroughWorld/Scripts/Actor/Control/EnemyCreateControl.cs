@@ -17,7 +17,6 @@ using System.Collections.Generic;
 /// <summary>
 /// 怪物波数生成控制器
 /// </summary>
-
 public class EnemyCreateControl : MonoBehaviour
 {
     public List<WaveData> waveDatas;

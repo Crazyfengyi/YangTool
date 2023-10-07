@@ -15,7 +15,7 @@ using YangTools.Extend;
 /// </summary>
 public class Monster : RoleBase
 {
-    private AIPath aiPath;
+    public AIPath AIPath { get; set; }
     public GameObject shootPoint;//发射点
 
     private EmitterBase emitter;//发射器
@@ -61,10 +61,10 @@ public class Monster : RoleBase
         canAtkCamp = ActorCampType.PlayerAndBuilding;
         findCampType = ActorCampType.Player;
 
-        aiPath = GetComponent<AIPath>();
+        AIPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(10, 16));
+        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(3, 6));
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TableData.Hp);
         roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TableData.Mp);
@@ -78,30 +78,30 @@ public class Monster : RoleBase
         base.IUpdate();
         ReturnDesireUpdate();
 
-        if (AstarPath.active != null && aiPath != null && Target)
-        {
-            aiPath.destination = Target.transform.position;
-            if (Vector3.Distance(transform.position, Target.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
-            {
-                if (aiPath.isStopped == false)
-                {
-                    aiPath.isStopped = true;
-                    timer = 0;
-                }
+        //if (AstarPath.active != null && AIPath != null && Target)
+        //{
+        //    AIPath.destination = Target.transform.position;
+        //    if (Vector3.Distance(transform.position, Target.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
+        //    {
+        //        if (AIPath.isStopped == false)
+        //        {
+        //            AIPath.isStopped = true;
+        //            timer = 0;
+        //        }
 
-               modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
-            }
-            else
-            {
-                aiPath.isStopped = false;
-                if (Target) modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
-            }
-            Animator.SetFloat("Speed", aiPath.velocity.magnitude);
-        }
+        //        ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
+        //    }
+        //    else
+        //    {
+        //        AIPath.isStopped = false;
+        //        if (Target) ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
+        //    }
+        //    Animator.SetFloat("Speed", AIPath.velocity.magnitude);
+        //}
 
-        if (AstarPath.active != null && aiPath != null && aiPath.isStopped == true && Target)
+        if (AstarPath.active != null && AIPath != null && AIPath.isStopped == true && Target)
         {
-            modelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
+            ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
             timer += Time.deltaTime;
             if (timer >= interval)
             {

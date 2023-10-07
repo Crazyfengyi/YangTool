@@ -5,6 +5,7 @@ using static DG.Tweening.DOTweenCYInstruction;
 
 
 [TaskDescription("开始技能使用,并等待完成")]
+[TaskCategory("RoleAI/Motion")]
 [TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
 public class SkillUseAction : Action
 {

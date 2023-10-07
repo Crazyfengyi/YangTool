@@ -49,7 +49,7 @@ public abstract class RoleBase : GameActor
     /// <summary>
     /// 模型信息
     /// </summary>
-    public ModelInfo modelInfo;
+    public ModelInfo ModelInfo { get; set; }
 
     [HideInEditorMode]
     protected SkillControl skillControl;
@@ -108,6 +108,11 @@ public abstract class RoleBase : GameActor
 
         aiBehavior = GetComponent<BehaviorTree>();
         timeLine = GetComponent<PlayableDirector>();
+        if (!ModelInfo)
+        {
+            ModelInfo = GetComponentInChildren<ModelInfo>(true);
+        }
+
         if (aiBehavior) skillControl = new SkillControl(aiBehavior, timeLine);
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
@@ -225,16 +230,16 @@ public abstract class RoleBase : GameActor
     /// <param name="isLoop">是否循环</param>
     public GameObject PlayEffectAtSelf(string effectName, ModelPointType effectPointType = ModelPointType.Root, bool isLoop = false)
     {
-        if (!modelInfo)
+        if (!ModelInfo)
         {
-            modelInfo = GetComponentInChildren<ModelInfo>(true);
+            ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
 
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
 
-        Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position - modelInfo.GetEffectPoint(ModelPointType.Foot).position;
-        GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity, modelInfo.GetEffectPoint(ModelPointType.Root));
-        effect.transform.forward = modelInfo.Root.forward;
+        Vector3 tempPos = ModelInfo.GetEffectPoint(effectPointType).position - ModelInfo.GetEffectPoint(ModelPointType.Foot).position;
+        GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity, ModelInfo.GetEffectPoint(ModelPointType.Root));
+        effect.transform.forward = ModelInfo.Root.forward;
 
         //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
         //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
@@ -261,15 +266,15 @@ public abstract class RoleBase : GameActor
     /// </summary>
     public GameObject PlayEffect(string effectName, ModelPointType effectPointType = ModelPointType.Root, bool isLoop = false)
     {
-        if (!modelInfo)
+        if (!ModelInfo)
         {
-            modelInfo = GetComponentInChildren<ModelInfo>(true);
+            ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
         GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
 
-        Vector3 tempPos = modelInfo.GetEffectPoint(effectPointType).position;
+        Vector3 tempPos = ModelInfo.GetEffectPoint(effectPointType).position;
         GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity);
-        effect.transform.forward = modelInfo.Root.forward;
+        effect.transform.forward = ModelInfo.Root.forward;
         //float angle = Vector3.Angle(modelInfo.Root.forward, Vector3.forward);
         //angle = modelInfo.Root.forward.x > 0 ? angle : -angle;
         //if (effect != null)

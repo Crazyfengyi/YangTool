@@ -31,7 +31,7 @@ public class MonsterEmitter : EmitterBase
         data.speed = 1;
         data.StartPostion = ((Monster)handle).shootPoint.transform.position;
         data.TargetPostion = handle.Target.GetBoundsCenter();
-        data.direction = ((Monster)handle).modelInfo.Root.transform.forward;
+        data.direction = ((Monster)handle).ModelInfo.Root.transform.forward;
         data.name = "Bomb";
         data.damageInfo = handle.GetDamageInfo();
         data.damageInfo.beHitEffectInfo = new EffectInfo();

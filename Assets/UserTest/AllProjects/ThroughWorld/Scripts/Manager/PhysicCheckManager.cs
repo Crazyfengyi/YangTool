@@ -71,22 +71,22 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
             return;
         }
 
-        Vector3 startPos = GetStartPos(checkConfig, role.transform, role.modelInfo.Root);
+        Vector3 startPos = GetStartPos(checkConfig, role.transform, role.ModelInfo.Root);
 
         switch (checkConfig.checkType)
         {
             case HitCheckType.射线:
-                colliders = Raycast(startPos, role.modelInfo.Root.forward, checkConfig.distanceOfLine,
+                colliders = Raycast(startPos, role.ModelInfo.Root.forward, checkConfig.distanceOfLine,
                     GetAtkLayer(role));
                 break;
             case HitCheckType.矩形:
                 {
-                    colliders = SquareCheck(startPos, role.modelInfo.Root.forward, 0.5f * new Vector3(checkConfig.Width, checkConfig.Hight, checkConfig.Long),
-                        Quaternion.Euler(role.modelInfo.Root.eulerAngles), GetAtkLayer(role));
+                    colliders = SquareCheck(startPos, role.ModelInfo.Root.forward, 0.5f * new Vector3(checkConfig.Width, checkConfig.Hight, checkConfig.Long),
+                        Quaternion.Euler(role.ModelInfo.Root.eulerAngles), GetAtkLayer(role));
                     break;
                 }
             case HitCheckType.扇形:
-                colliders = SectorCheck(startPos, role.modelInfo.Root.forward, checkConfig.diameter, checkConfig.Angle, GetAtkLayer(role));
+                colliders = SectorCheck(startPos, role.ModelInfo.Root.forward, checkConfig.diameter, checkConfig.Angle, GetAtkLayer(role));
                 break;
             case HitCheckType.圆形:
                 colliders = CircleCheck(startPos, checkConfig.radius, GetAtkLayer(role));
@@ -96,7 +96,7 @@ public class PhysicsCheckManager : Singleton<PhysicsCheckManager>
                     GetAtkLayer(role));
                 break;
             case HitCheckType.球形射线:
-                colliders = SphereRaycast(startPos, role.modelInfo.Root.forward, checkConfig.distance,
+                colliders = SphereRaycast(startPos, role.ModelInfo.Root.forward, checkConfig.distance,
                     checkConfig.radiusOfBallLine, GetAtkLayer(role));
                 break;
             default:

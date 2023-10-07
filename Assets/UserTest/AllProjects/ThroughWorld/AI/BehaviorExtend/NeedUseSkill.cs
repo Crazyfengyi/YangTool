@@ -3,6 +3,7 @@ using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
 [TaskDescription("是否需要使用技能")]
+[TaskCategory("RoleAI/Conditionals")]
 //[TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
 public class NeedUseSkill : Conditional
 {

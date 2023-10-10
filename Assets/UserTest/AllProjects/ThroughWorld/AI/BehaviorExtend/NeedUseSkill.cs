@@ -16,7 +16,7 @@ public class NeedUseSkill : Conditional
     {
         if (role && role.SkillControl != null)
         {
-            return role.SkillControl.SkillTreeNeedUseSkill ? TaskStatus.Success : TaskStatus.Failure;
+            return role.SkillControl.NeedUseSkill ? TaskStatus.Success : TaskStatus.Failure;
         }
 
         return TaskStatus.Failure;

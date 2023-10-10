@@ -5,6 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-08-14 
 */
+using System.Collections.Generic;
+using cfg.skill;
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
@@ -19,8 +21,6 @@ public class Monster : RoleBase
     public GameObject shootPoint;//发射点
 
     private EmitterBase emitter;//发射器
-    private float timer;
-    private float interval = 10f;
 
     private ActorCampType findCampType;//寻路目标阵营
     /// <summary>
@@ -43,16 +43,27 @@ public class Monster : RoleBase
     public float returnDesire;
     public bool needReturnStartPos;
 
-    cfg.monster.Monster tableData;
-    public cfg.monster.Monster TableData => tableData;
-
+    public cfg.monster.Monster TableData { get; set; }
+    public List<RunTimeSkillData> SkillsList { get; set; }
     #region 生命周期
     /// <summary>
     /// 设置表格数据
     /// </summary>
     public void SetTableData(cfg.monster.Monster tableData)
     {
-        this.tableData = tableData;
+        TableData = tableData;
+
+        //技能列表
+        SkillsList = new List<RunTimeSkillData>();
+        List<int> skillList = tableData.SkillList;
+        for (int i = 0; i < skillList.Count; i++)
+        {
+            Skill data = GameTableManager.Instance.Tables.TbSkill.Get(skillList[i]);
+            SkillsList.Add(new RunTimeSkillData
+            {
+                skill = data,
+            });
+        }
     }
     public override void IInit()
     {
@@ -64,12 +75,12 @@ public class Monster : RoleBase
         AIPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, Random.Range(3, 6));
-
         roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TableData.Hp);
         roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TableData.Mp);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, TableData.Atk);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Def, TableData.Def);
+
+        roleAttributeControl.ChangeAttribute(RoleAttribute.GuardRang, TableData.GuardRang);
 
         roleBuffControl.Add(BuffID.buff_10001);
     }
@@ -101,24 +112,33 @@ public class Monster : RoleBase
 
         if (AstarPath.active != null && AIPath != null && AIPath.isStopped == true && Target)
         {
-            ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
-            timer += Time.deltaTime;
-            if (timer >= interval)
+            if (SkillsList != null)
             {
-                timer = 0;
-                skillControl.UseSkill("Skill_10002_1", true);
+                for (int i = 0; i < SkillsList.Count; i++)
+                {
+                    SkillsList[i].UpdateCD(Time.deltaTime);
+                }
 
-                //EmitData emitData = new EmitData();
-                //emitData.bulletID = 0;//TODO:需要设置子弹ID
-                //emitData.bulletCount = 1;
-                //emitData.bulletShootType = BulletShootType.Throw;
-                //emitter?.SetEmitData(emitData);
-                //emitter?.StartShoot();
+                for (int i = 0; i < SkillsList.Count; i++)
+                {
+                    if (SkillsList[i].currentCD <= 0)
+                    {
+                        SkillsList[i].ToCD();
+                        SkillControl.UseSkill(SkillsList[i].skill.ResName, SkillsList[i].skill.TimelineORbehavior == 0);
+                        break;
+                    }
+                }
             }
+
+            //EmitData emitData = new EmitData();
+            //emitData.bulletID = 0;//TODO:需要设置子弹ID
+            //emitData.bulletCount = 1;
+            //emitData.bulletShootType = BulletShootType.Throw;
+            //emitter?.SetEmitData(emitData);
+            //emitter?.StartShoot();
         }
         emitter?.OnUpdate();
     }
-
     public override void ILateUpdate()
     {
         base.ILateUpdate();
@@ -173,7 +193,7 @@ public class Monster : RoleBase
     /// </summary>
     public override void SearchAtkTarget()
     {
-        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
             for (int i = 0; i < temp.Length; i++)

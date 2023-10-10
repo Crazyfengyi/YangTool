@@ -45,7 +45,7 @@ public class AIFindTarget : Action
         {
             AIPath.destination = monster.Target.transform.position;
 
-            if (Vector3.Distance(transform.position, monster.Target.transform.position) < monster.GetRoleAttribute(RoleAttribute.AtkRang))
+            if (Vector3.Distance(transform.position, monster.Target.transform.position) < monster.GetRoleAttribute(RoleAttribute.GuardRang))
             {
                 if (!AIPath.isStopped)
                 {

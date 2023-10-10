@@ -23,43 +23,39 @@ using System.Resources;
 /// </summary>
 public class SkillControl
 {
-    private BehaviorTree skillTree;//技能Tree
-    private PlayableDirector timeLine;//技能
+    private BehaviorTree skillTree;//技能行为树
+    private PlayableDirector skillTimeLine;//技能时间线
 
-    protected bool needUseSkill;
     /// <summary>
-    /// 技能树是否需要使用技能
+    /// 需要使用技能
     /// </summary>
-    public bool SkillTreeNeedUseSkill
-    {
-        get
-        {
-            return needUseSkill;
-        }
-        set
-        {
-            needUseSkill = value;
-        }
-    }
+    public bool NeedUseSkill { get; set; }
+    /// <summary>
+    /// 是否为时间线
+    /// </summary>
+    public bool IsTimeLine { get; set; }
 
     public SkillControl(BehaviorTree _skillTree, PlayableDirector _timeLine)
     {
         skillTree = _skillTree;
         skillTree.OnBehaviorEnd += SkillEnd;
 
-        timeLine = _timeLine;
+        skillTimeLine = _timeLine;
     }
     /// <summary>
     /// 使用技能
     /// </summary>
     public void UseSkill(string skillName,bool isTimeLine = false)
     {
-        needUseSkill = true;
+        NeedUseSkill = true;
+        IsTimeLine = isTimeLine;
+
         if (isTimeLine)
         {
-            //TODO:测试用,正式应该用行为树里执行
-            timeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{skillName}");
-            timeLine.Play();
+            //TODO:资源加载
+            //行为树里正式执行
+            skillTimeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{skillName}");
+            //timeLine.Play();
         }
     }
     /// <summary>

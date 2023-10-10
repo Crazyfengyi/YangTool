@@ -72,7 +72,7 @@ public class PlayerController : RoleBase
         advancedWalker.cameraTransform = CameraManager.Instance.CameraLeftRightTransform;
         roleBuffControl.Add(BuffID.buff_10001);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.AtkRang, 20);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.GuardRang, 20);
     }
 
     public override void IUpdate()
@@ -138,7 +138,7 @@ public class PlayerController : RoleBase
     /// </summary>
     public override void SearchAtkTarget()
     {
-        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
             for (int i = 0; i < temp.Length; i++)

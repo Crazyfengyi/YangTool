@@ -2,45 +2,70 @@ using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using static DG.Tweening.DOTweenCYInstruction;
-
+using UnityEngine.Playables;
 
 [TaskDescription("开始技能使用,并等待完成")]
 [TaskCategory("RoleAI/Motion")]
 [TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
 public class SkillUseAction : Action
 {
-    private bool behaviorComplete;
-    private Behavior behavior;
-
     private RoleBase role;
+    private BehaviorTree skillTree;//技能行为树
+    private PlayableDirector skillTimeLine;//技能时间线
+
+    private bool isTimeLine;
+    private bool behaviorComplete;
     public override void OnStart()
     {
-        role = gameObject.GetComponent<RoleBase>();
-        if (role && role.SkillControl != null) role.SkillControl.SkillTreeNeedUseSkill = false;
-        //TODO:资源加载
-        behavior = gameObject.GetComponents<Behavior>()[1];
         behaviorComplete = false;
 
-        behavior.OnBehaviorEnd += BehaviorEnded;
-        behavior.EnableBehavior();
+        role = gameObject.GetComponent<RoleBase>();
+        skillTree = gameObject.GetComponents<BehaviorTree>()[1];
+        skillTimeLine = gameObject.GetComponent<PlayableDirector>();
+
+        isTimeLine = role.SkillControl.IsTimeLine;
+
+        if (isTimeLine)
+        {
+            isTimeLine = true;
+            skillTimeLine.Play();
+        }
+        else
+        {
+            skillTree.OnBehaviorEnd += BehaviorEnded;
+            skillTree.EnableBehavior();
+        }
+
+        if (role && role.SkillControl != null)
+        {
+            role.SkillControl.NeedUseSkill = false;
+        }
     }
     public override void OnEnd()
     {
-        if (behavior != null)
+        if (skillTree != null)
         {
-            behavior.OnBehaviorEnd -= BehaviorEnded;
+            skillTree.OnBehaviorEnd -= BehaviorEnded;
         }
     }
 
     public override TaskStatus OnUpdate()
     {
-        if (behavior == null)
+        if (skillTree == null)
         {
             return TaskStatus.Failure;
         }
 
         if (!behaviorComplete)
         {
+            if (isTimeLine)
+            {
+                if (Mathf.Abs((float)(skillTimeLine.time - skillTimeLine.duration)) < 0.01f)
+                {
+                    BehaviorEnded(null);
+                    return TaskStatus.Success;
+                }
+            }
             return TaskStatus.Running;
         }
 

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using YangTools.Extend;
+using cfg.skill;
 
 /// <summary>
 /// 阵营
@@ -58,6 +59,26 @@ public class DamageInfo
 public class EffectInfo
 {
 
+}
+
+/// <summary>
+/// 运行时技能数据
+/// </summary>
+public class RunTimeSkillData
+{
+    public Skill skill;
+    public float currentCD;
+
+    public void ToCD()
+    {
+        currentCD = skill.Cd;
+    }
+
+    public void UpdateCD(float timer)
+    {
+        currentCD -= timer;
+        currentCD = Mathf.Max(currentCD, 0);
+    }
 }
 
 /// <summary>
@@ -145,7 +166,7 @@ public enum RoleAttribute
     MP,
     Atk,
     Def,
-    AtkRang,
+    GuardRang
 }
 /// <summary>
 /// 角色标记

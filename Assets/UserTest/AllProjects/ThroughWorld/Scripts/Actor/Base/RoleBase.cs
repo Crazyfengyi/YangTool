@@ -174,7 +174,7 @@ public abstract class RoleBase : GameActor
     /// </summary>
     public virtual void SearchAtkTarget()
     {
-        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.AtkRang).Value);
+        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
             for (int i = 0; i < temp.Length; i++)

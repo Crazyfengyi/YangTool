@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1000,
+    "name": "技能模板",
+    "desc": "模板",
+    "atk": 1,
+    "atkRang": 1,
+    "cd": 5,
+    "timelineORbehavior": 0,
+    "resName": "Skill_1000",
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  },
+  {
+    "id": 1001,
+    "name": "普通攻击",
+    "desc": "近战普攻",
+    "atk": 10,
+    "atkRang": 1,
+    "cd": 5,
+    "timelineORbehavior": 0,
+    "resName": "Skill_1001",
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  },
+  {
+    "id": 1002,
+    "name": "技能2",
+    "desc": "模板角色",
+    "atk": 100,
+    "atkRang": 1,
+    "cd": 5,
+    "timelineORbehavior": 0,
+    "resName": "Skill_1002",
+    "batch_useable": false,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 2
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 3
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 0
+    }
+  }
+]

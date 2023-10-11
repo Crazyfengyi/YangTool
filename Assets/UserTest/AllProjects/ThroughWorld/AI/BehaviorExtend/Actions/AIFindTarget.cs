@@ -12,6 +12,8 @@ using System.Collections;
 using UnityEngine.AI;
 using Pathfinding;
 using cfg.monster;
+using YangTools.Extend;
+using Sirenix.OdinInspector;
 
 [TaskCategory("RoleAI/Motion")]
 public class AIFindTarget : Action
@@ -21,12 +23,14 @@ public class AIFindTarget : Action
     /// </summary>
     private Monster monster;
     private AIPath AIPath;
+    [LabelText("使用警戒范围")]
+    public bool UseGuardRang;
 
     /// <summary>
     /// 方向
     /// </summary>
     private Vector3 direction;
-
+    private float distance;
     public override void OnAwake()
     {
         monster = gameObject.GetComponent<Monster>();
@@ -36,6 +40,14 @@ public class AIFindTarget : Action
     public override void OnStart()
     {
         AIPath.isStopped = false;
+        if (UseGuardRang)
+        {
+            distance = monster.GetRoleAttribute(RoleAttribute.GuardRang);
+        }
+        else
+        {
+            distance = monster.AIFindTargetDistance;
+        }
     }
 
     // 寻找目标。代理到达目的地后返回success
@@ -45,7 +57,7 @@ public class AIFindTarget : Action
         {
             AIPath.destination = monster.Target.transform.position;
 
-            if (Vector3.Distance(transform.position, monster.Target.transform.position) < monster.GetRoleAttribute(RoleAttribute.GuardRang))
+            if (Vector3.Distance(transform.position.SetYValue(), monster.Target.transform.position.SetYValue()) <= distance)
             {
                 if (!AIPath.isStopped)
                 {
@@ -59,7 +71,7 @@ public class AIFindTarget : Action
             }
             monster.Animator.SetFloat("Speed", AIPath.velocity.magnitude);
         }
-      
+
         return TaskStatus.Running;
     }
 

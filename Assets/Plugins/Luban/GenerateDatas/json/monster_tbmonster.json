@@ -9,7 +9,10 @@
     "def": 100,
     "guardRang": 10,
     "skillList": [
-      1001
+      {
+        "id": 1001,
+        "weight": 10
+      }
     ],
     "batch_useable": false,
     "quality": 1,
@@ -42,7 +45,14 @@
     "def": 100,
     "guardRang": 10,
     "skillList": [
-      1001
+      {
+        "id": 1001,
+        "weight": 10
+      },
+      {
+        "id": 1002,
+        "weight": 10
+      }
     ],
     "batch_useable": false,
     "quality": 1,
@@ -75,7 +85,14 @@
     "def": 100,
     "guardRang": 10,
     "skillList": [
-      1001
+      {
+        "id": 1001,
+        "weight": 10
+      },
+      {
+        "id": 1002,
+        "weight": 10
+      }
     ],
     "batch_useable": false,
     "quality": 1,

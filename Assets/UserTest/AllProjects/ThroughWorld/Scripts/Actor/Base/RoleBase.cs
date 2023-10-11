@@ -115,10 +115,6 @@ public abstract class RoleBase : GameActor
 
         if (aiBehavior) skillControl = new SkillControl(aiBehavior, timeLine);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, 1000);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, 1000);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, 30);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, 20);
         InitRecord();
     }
     public override void IUpdate()
@@ -303,10 +299,7 @@ public abstract class RoleBase : GameActor
 
         if (atkInfo.targetActor.IsCanBeHit())
         {
-            //伤害信息创建
-            DamageInfo damageInfo = GetDamageInfo();
-            damageInfo.atkPos = transform.position;
-            GameBattleManager.Instance.HitProcess(damageInfo, atkInfo.targetActor);
+            GameBattleManager.Instance.HitProcess(atkInfo.damageInfo, atkInfo.targetActor);
             ShowAtkEffect(atkInfo.atkEffectInfo);
         }
     }
@@ -318,12 +311,12 @@ public abstract class RoleBase : GameActor
 
     public override DamageInfo GetDamageInfo()
     {
+        //伤害信息
         var result = new DamageInfo();
-        if (roleAttributeControl != null)
-        {
-            result.damage = roleAttributeControl.GetAttribute(RoleAttribute.Atk).Value;
-        }
-        return result;
+        result.damage = SkillControl.CurrentRunTimeSkillData.skill.Atk.Percent * GetRoleAttribute(RoleAttribute.Atk);
+        result.damage += SkillControl.CurrentRunTimeSkillData.skill.Atk.Num;
+
+        return result; 
     }
 
     public override DamageInfo GetHitCompute(DamageInfo damageInfo)
@@ -367,14 +360,18 @@ public abstract class RoleBase : GameActor
             GameActor script = array[i].GetComponentInChildren<GameActor>(true);
             if (script)
             {
+                DamageInfo damageInfo = GetDamageInfo();
+                damageInfo.atkPos = transform.position;
+
                 AtkInfo atkInfo = new AtkInfo();
                 atkInfo.sourceActor = this;
                 atkInfo.targetActor = script;
+                atkInfo.damageInfo = damageInfo;
                 atkInfo.atkEffectInfo = null;
                 Atk(atkInfo);
             }
         }
-        Debug.LogError($"伤害检测:{array.Length}");
+        //Debug.LogError($"伤害检测:{array.Length}");
         return array.Length > 0;
     }
 

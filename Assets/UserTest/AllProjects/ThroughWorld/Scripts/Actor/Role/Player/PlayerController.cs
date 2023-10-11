@@ -7,6 +7,7 @@
 */
 
 using System;
+using cfg.player;
 using CMF;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -54,6 +55,11 @@ public class PlayerController : RoleBase
 
     private bool isJumpAni;
 
+    Player TBdata;
+    public void SetTableData(Player _TBdata)
+    {
+        TBdata = _TBdata;
+    }
     public override void IInit()
     {
         base.IInit();
@@ -73,6 +79,9 @@ public class PlayerController : RoleBase
         roleBuffControl.Add(BuffID.buff_10001);
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.GuardRang, 20);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, TBdata.Atk);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TBdata.Hp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TBdata.Mp);
     }
 
     public override void IUpdate()

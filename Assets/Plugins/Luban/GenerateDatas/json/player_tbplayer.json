@@ -1,8 +1,11 @@
 [
   {
-    "id": 10000,
+    "id": 1000,
     "name": "角色0",
     "desc": "模板角色",
+    "atk": 100,
+    "hp": 3000,
+    "mp": 1000,
     "price": 100,
     "upgrade_to_item_id": 10001,
     "batch_useable": false,

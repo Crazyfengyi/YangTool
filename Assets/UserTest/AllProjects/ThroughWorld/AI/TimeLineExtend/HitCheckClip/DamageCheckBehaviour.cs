@@ -72,11 +72,7 @@ public class DamageCheckBehaviour : AutoBehaviour
     public void HitCheck()
     {
         if (bindRole == null) return;
-        //伤害信息
-        //DamageData damageData = new DamageData();
-        ////当前技能
-        //RoleSkill currentSkill = bindRole.GetUseingSkill();
-        //damageData.damageType = damageType;
+
         bindRole.DamageCheck(checkConfig);
     }
 }

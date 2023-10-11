@@ -26,6 +26,7 @@ public class SkillControl
     private BehaviorTree skillTree;//技能行为树
     private PlayableDirector skillTimeLine;//技能时间线
 
+    public RunTimeSkillData CurrentRunTimeSkillData { get; private set; }
     /// <summary>
     /// 需要使用技能
     /// </summary>
@@ -38,24 +39,22 @@ public class SkillControl
     public SkillControl(BehaviorTree _skillTree, PlayableDirector _timeLine)
     {
         skillTree = _skillTree;
-        skillTree.OnBehaviorEnd += SkillEnd;
-
         skillTimeLine = _timeLine;
     }
     /// <summary>
     /// 使用技能
     /// </summary>
-    public void UseSkill(string skillName,bool isTimeLine = false)
+    public void UseSkill(RunTimeSkillData skillData)
     {
+        CurrentRunTimeSkillData = skillData;
         NeedUseSkill = true;
-        IsTimeLine = isTimeLine;
+        IsTimeLine = CurrentRunTimeSkillData.skill.TimelineORbehavior == 0;
 
-        if (isTimeLine)
+        if (IsTimeLine)
         {
             //TODO:资源加载
             //行为树里正式执行
-            skillTimeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{skillName}");
-            //timeLine.Play();
+            skillTimeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{CurrentRunTimeSkillData.skill.ResName}");
         }
     }
     /// <summary>
@@ -69,12 +68,14 @@ public class SkillControl
     void StopSkill()
     {
         BehaviorManager.instance.DisableBehavior(skillTree);
+        SkillEnd();
     }
     /// <summary>
     /// 技能结束
     /// </summary>
-    void SkillEnd(Behavior behavior)
+    public void SkillEnd()
     {
-
+        NeedUseSkill = false;
+        CurrentRunTimeSkillData = null;
     }
 }

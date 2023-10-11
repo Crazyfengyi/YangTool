@@ -43,8 +43,14 @@ public class Monster : RoleBase
     public float returnDesire;
     public bool needReturnStartPos;
 
+    public float AIFindTargetDistance { get; set; }
     public cfg.monster.Monster TableData { get; set; }
     public List<RunTimeSkillData> SkillsList { get; set; }
+    //公共CD
+    private bool startSkillCommonCD;
+    private float skillCommonCDTimer;
+    private float skillCommonCDInterval = 2;
+
     #region 生命周期
     /// <summary>
     /// 设置表格数据
@@ -55,13 +61,15 @@ public class Monster : RoleBase
 
         //技能列表
         SkillsList = new List<RunTimeSkillData>();
-        List<int> skillList = tableData.SkillList;
+        List<SkillWeight> skillList = tableData.SkillList;
+
         for (int i = 0; i < skillList.Count; i++)
         {
-            Skill data = GameTableManager.Instance.Tables.TbSkill.Get(skillList[i]);
+            Skill data = GameTableManager.Instance.Tables.TbSkill.Get(skillList[i].Id);
             SkillsList.Add(new RunTimeSkillData
             {
                 skill = data,
+                weight = skillList[i].Id
             });
         }
     }
@@ -88,57 +96,62 @@ public class Monster : RoleBase
     {
         base.IUpdate();
         ReturnDesireUpdate();
+        SkillUse();
+        //EmitData emitData = new EmitData();
+        //emitData.bulletID = 0;//TODO:需要设置子弹ID
+        //emitData.bulletCount = 1;
+        //emitData.bulletShootType = BulletShootType.Throw;
+        //emitter?.SetEmitData(emitData);
+        //emitter?.StartShoot();
+        emitter?.OnUpdate();
+    }
 
-        //if (AstarPath.active != null && AIPath != null && Target)
-        //{
-        //    AIPath.destination = Target.transform.position;
-        //    if (Vector3.Distance(transform.position, Target.transform.position) < GetRoleAttribute(RoleAttribute.AtkRang))
-        //    {
-        //        if (AIPath.isStopped == false)
-        //        {
-        //            AIPath.isStopped = true;
-        //            timer = 0;
-        //        }
-
-        //        ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
-        //    }
-        //    else
-        //    {
-        //        AIPath.isStopped = false;
-        //        if (Target) ModelInfo?.Root?.transform.LookAt(Target.transform.position.SetYValue());
-        //    }
-        //    Animator.SetFloat("Speed", AIPath.velocity.magnitude);
-        //}
+    public void SkillUse()
+    {
+        if (startSkillCommonCD)
+        {
+            skillCommonCDTimer -= Time.deltaTime;
+        }
 
         if (AstarPath.active != null && AIPath != null && AIPath.isStopped == true && Target)
         {
-            if (SkillsList != null)
+            for (int i = 0; i < SkillsList.Count; i++)
             {
-                for (int i = 0; i < SkillsList.Count; i++)
-                {
-                    SkillsList[i].UpdateCD(Time.deltaTime);
-                }
+                SkillsList[i].UpdateCD(Time.deltaTime);
+            }
 
+            if (SkillsList != null && SkillControl.NeedUseSkill == false && skillCommonCDTimer <= 0)
+            {
+                var canUseSkills = new List<RunTimeSkillData>();
                 for (int i = 0; i < SkillsList.Count; i++)
                 {
                     if (SkillsList[i].currentCD <= 0)
                     {
-                        SkillsList[i].ToCD();
-                        SkillControl.UseSkill(SkillsList[i].skill.ResName, SkillsList[i].skill.TimelineORbehavior == 0);
-                        break;
+                        canUseSkills.Add(SkillsList[i]);
                     }
                 }
-            }
 
-            //EmitData emitData = new EmitData();
-            //emitData.bulletID = 0;//TODO:需要设置子弹ID
-            //emitData.bulletCount = 1;
-            //emitData.bulletShootType = BulletShootType.Throw;
-            //emitter?.SetEmitData(emitData);
-            //emitter?.StartShoot();
+                RunTimeSkillData target = YangExtend.GetRandomInfo(canUseSkills);
+                if (target != null)
+                {
+                    target.ToCD();
+                    AIFindTargetDistance = target.skill.AtkRang;
+                    SkillControl.UseSkill(target);
+                    skillCommonCDTimer = skillCommonCDInterval;
+                    startSkillCommonCD = false;
+                }
+            }
         }
-        emitter?.OnUpdate();
     }
+
+    /// <summary>
+    /// 开始计算技能公共CD(间隔CD)
+    /// </summary>
+    public void StartCommonSkillCD()
+    {
+        startSkillCommonCD = true;
+    }
+
     public override void ILateUpdate()
     {
         base.ILateUpdate();

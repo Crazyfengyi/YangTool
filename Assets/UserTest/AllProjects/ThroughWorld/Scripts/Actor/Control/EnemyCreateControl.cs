@@ -86,7 +86,7 @@ public class EnemyCreateControl : MonoBehaviour
     }
     public void SetWave(int index)
     {
-        Debug.LogError($"当前波数:{currentWaveIndex}");
+        //Debug.LogError($"当前波数:{currentWaveIndex}");
         currentWave = waveDatas[index];
         waitSpawnNum = waveDatas[index].enemyNum;
     }

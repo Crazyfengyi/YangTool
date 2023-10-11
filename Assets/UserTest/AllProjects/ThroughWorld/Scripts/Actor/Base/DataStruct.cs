@@ -12,6 +12,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using YangTools.Extend;
 using cfg.skill;
+using static YangTools.Extend.YangExtend;
 
 /// <summary>
 /// 阵营
@@ -41,6 +42,7 @@ public class AtkInfo
 {
     public GameActor sourceActor;//攻击来源
     public GameActor targetActor;//攻击目标
+    public DamageInfo damageInfo;//伤害信息
     public EffectInfo atkEffectInfo;
 }
 /// <summary>
@@ -64,9 +66,10 @@ public class EffectInfo
 /// <summary>
 /// 运行时技能数据
 /// </summary>
-public class RunTimeSkillData
+public class RunTimeSkillData : IWeight<RunTimeSkillData>
 {
     public Skill skill;
+    public int weight;
     public float currentCD;
 
     public void ToCD()
@@ -78,6 +81,16 @@ public class RunTimeSkillData
     {
         currentCD -= timer;
         currentCD = Mathf.Max(currentCD, 0);
+    }
+
+    public int GetWeight()
+    {
+        return weight;
+    }
+
+    public RunTimeSkillData GetItem()
+    {
+        return this;
     }
 }
 

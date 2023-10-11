@@ -5,6 +5,7 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
+using cfg.monster;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,6 +36,10 @@ public class GameActorManager : MonoSingleton<GameActorManager>
         base.Awake();
         customLives.Clear();
         allMonster.Clear();
+    }
+
+    private void Start()
+    {
         CreateMainPlayer();
     }
     /// <summary>
@@ -42,14 +47,16 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// </summary>
     public void CreateMainPlayer()
     {
-        ICustomLife player = Instantiate(playerPrefab);
-        if (player != null)
+        ICustomLife script = Instantiate(playerPrefab);
+        if (script != null)
         {
-            mainPlayer = player as PlayerController;
-            customLives.Add(player);
+            mainPlayer = script as PlayerController;
+            customLives.Add(script);
             CameraManager.Instance.SetMainPlayer(mainPlayer);
             MiniMapManager.Instance.SetMainPlayer(mainPlayer.modelRoot);
-            player.IInit();
+            var tableData = GameTableManager.Instance.Tables.TbPlayer.Get(1000);
+            mainPlayer.SetTableData(tableData);
+            mainPlayer.IInit();
 
             DontDestroyOnLoad(mainPlayer);
         }

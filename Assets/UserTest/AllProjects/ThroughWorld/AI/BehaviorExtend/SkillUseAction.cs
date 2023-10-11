@@ -14,10 +14,12 @@ public class SkillUseAction : Action
     private PlayableDirector skillTimeLine;//技能时间线
 
     private bool isTimeLine;
+    private float timer;
     private bool behaviorComplete;
     public override void OnStart()
     {
         behaviorComplete = false;
+        timer = 0;
 
         role = gameObject.GetComponent<RoleBase>();
         skillTree = gameObject.GetComponents<BehaviorTree>()[1];
@@ -34,11 +36,6 @@ public class SkillUseAction : Action
         {
             skillTree.OnBehaviorEnd += BehaviorEnded;
             skillTree.EnableBehavior();
-        }
-
-        if (role && role.SkillControl != null)
-        {
-            role.SkillControl.NeedUseSkill = false;
         }
     }
     public override void OnEnd()
@@ -60,7 +57,8 @@ public class SkillUseAction : Action
         {
             if (isTimeLine)
             {
-                if (Mathf.Abs((float)(skillTimeLine.time - skillTimeLine.duration)) < 0.01f)
+                timer += Time.deltaTime;
+                if (timer >= skillTimeLine.duration)
                 {
                     BehaviorEnded(null);
                     return TaskStatus.Success;
@@ -75,5 +73,10 @@ public class SkillUseAction : Action
     void BehaviorEnded(Behavior behavior)
     {
         behaviorComplete = true;
+        if (role && role.SkillControl != null)
+        {
+            role.SkillControl.SkillEnd();
+            if (role is Monster) ((Monster)role).StartCommonSkillCD();
+        }
     }
 }

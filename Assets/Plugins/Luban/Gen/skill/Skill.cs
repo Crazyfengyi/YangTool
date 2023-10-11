@@ -21,7 +21,7 @@ public sealed partial class Skill :  Bright.Config.BeanBase
         { if(!_json["id"].IsNumber) { throw new SerializationException(); }  Id = _json["id"]; }
         { if(!_json["name"].IsString) { throw new SerializationException(); }  Name = _json["name"]; }
         { if(!_json["desc"].IsString) { throw new SerializationException(); }  Desc = _json["desc"]; }
-        { if(!_json["atk"].IsNumber) { throw new SerializationException(); }  Atk = _json["atk"]; }
+        { if(!_json["atk"].IsObject) { throw new SerializationException(); }  Atk = skill.AtkData.DeserializeAtkData(_json["atk"]);  }
         { if(!_json["atkRang"].IsNumber) { throw new SerializationException(); }  AtkRang = _json["atkRang"]; }
         { if(!_json["cd"].IsNumber) { throw new SerializationException(); }  Cd = _json["cd"]; }
         { if(!_json["timelineORbehavior"].IsNumber) { throw new SerializationException(); }  TimelineORbehavior = _json["timelineORbehavior"]; }
@@ -35,7 +35,7 @@ public sealed partial class Skill :  Bright.Config.BeanBase
         PostInit();
     }
 
-    public Skill(int id, string name, string desc, int atk, int atkRang, int cd, int timelineORbehavior, string resName, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
+    public Skill(int id, string name, string desc, skill.AtkData atk, int atkRang, int cd, int timelineORbehavior, string resName, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
     {
         this.Id = id;
         this.Name = name;
@@ -74,7 +74,7 @@ public sealed partial class Skill :  Bright.Config.BeanBase
     /// <summary>
     /// 攻击
     /// </summary>
-    public int Atk { get; private set; }
+    public skill.AtkData Atk { get; private set; }
     /// <summary>
     /// 攻击范围
     /// </summary>
@@ -118,6 +118,7 @@ public sealed partial class Skill :  Bright.Config.BeanBase
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        Atk?.Resolve(_tables);
         ExchangeStream?.Resolve(_tables);
         foreach(var _e in ExchangeList) { _e?.Resolve(_tables); }
         ExchangeColumn?.Resolve(_tables);
@@ -126,6 +127,7 @@ public sealed partial class Skill :  Bright.Config.BeanBase
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        Atk?.TranslateText(translator);
         ExchangeStream?.TranslateText(translator);
         foreach(var _e in ExchangeList) { _e?.TranslateText(translator); }
         ExchangeColumn?.TranslateText(translator);

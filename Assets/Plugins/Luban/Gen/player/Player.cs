@@ -21,6 +21,9 @@ public sealed partial class Player :  Bright.Config.BeanBase
         { if(!_json["id"].IsNumber) { throw new SerializationException(); }  Id = _json["id"]; }
         { if(!_json["name"].IsString) { throw new SerializationException(); }  Name = _json["name"]; }
         { if(!_json["desc"].IsString) { throw new SerializationException(); }  Desc = _json["desc"]; }
+        { if(!_json["atk"].IsNumber) { throw new SerializationException(); }  Atk = _json["atk"]; }
+        { if(!_json["hp"].IsNumber) { throw new SerializationException(); }  Hp = _json["hp"]; }
+        { if(!_json["mp"].IsNumber) { throw new SerializationException(); }  Mp = _json["mp"]; }
         { if(!_json["price"].IsNumber) { throw new SerializationException(); }  Price = _json["price"]; }
         { if(!_json["upgrade_to_item_id"].IsNumber) { throw new SerializationException(); }  UpgradeToItemId = _json["upgrade_to_item_id"]; }
         { var _j = _json["expire_time"]; if (_j.Tag != JSONNodeType.None && _j.Tag != JSONNodeType.NullValue) { { if(!_j.IsNumber) { throw new SerializationException(); }  ExpireTime = _j; } } else { ExpireTime = null; } }
@@ -32,11 +35,14 @@ public sealed partial class Player :  Bright.Config.BeanBase
         PostInit();
     }
 
-    public Player(int id, string name, string desc, int price, int upgrade_to_item_id, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
+    public Player(int id, string name, string desc, int atk, int hp, int mp, int price, int upgrade_to_item_id, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
     {
         this.Id = id;
         this.Name = name;
         this.Desc = desc;
+        this.Atk = atk;
+        this.Hp = hp;
+        this.Mp = mp;
         this.Price = price;
         this.UpgradeToItemId = upgrade_to_item_id;
         this.ExpireTime = expire_time;
@@ -65,6 +71,18 @@ public sealed partial class Player :  Bright.Config.BeanBase
     /// 描述
     /// </summary>
     public string Desc { get; private set; }
+    /// <summary>
+    /// 攻击
+    /// </summary>
+    public int Atk { get; private set; }
+    /// <summary>
+    /// 血量
+    /// </summary>
+    public int Hp { get; private set; }
+    /// <summary>
+    /// 蓝量
+    /// </summary>
+    public int Mp { get; private set; }
     /// <summary>
     /// 价格
     /// </summary>
@@ -121,6 +139,9 @@ public sealed partial class Player :  Bright.Config.BeanBase
         + "Id:" + Id + ","
         + "Name:" + Name + ","
         + "Desc:" + Desc + ","
+        + "Atk:" + Atk + ","
+        + "Hp:" + Hp + ","
+        + "Mp:" + Mp + ","
         + "Price:" + Price + ","
         + "UpgradeToItemId:" + UpgradeToItemId + ","
         + "ExpireTime:" + ExpireTime + ","

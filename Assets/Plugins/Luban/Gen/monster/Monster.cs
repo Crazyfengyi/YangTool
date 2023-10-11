@@ -26,7 +26,7 @@ public sealed partial class Monster :  Bright.Config.BeanBase
         { if(!_json["atk"].IsNumber) { throw new SerializationException(); }  Atk = _json["atk"]; }
         { if(!_json["def"].IsNumber) { throw new SerializationException(); }  Def = _json["def"]; }
         { if(!_json["guardRang"].IsNumber) { throw new SerializationException(); }  GuardRang = _json["guardRang"]; }
-        { var __json0 = _json["skillList"]; if(!__json0.IsArray) { throw new SerializationException(); } SkillList = new System.Collections.Generic.List<int>(__json0.Count); foreach(JSONNode __e0 in __json0.Children) { int __v0;  { if(!__e0.IsNumber) { throw new SerializationException(); }  __v0 = __e0; }  SkillList.Add(__v0); }   }
+        { var __json0 = _json["skillList"]; if(!__json0.IsArray) { throw new SerializationException(); } SkillList = new System.Collections.Generic.List<skill.SkillWeight>(__json0.Count); foreach(JSONNode __e0 in __json0.Children) { skill.SkillWeight __v0;  { if(!__e0.IsObject) { throw new SerializationException(); }  __v0 = skill.SkillWeight.DeserializeSkillWeight(__e0);  }  SkillList.Add(__v0); }   }
         { var _j = _json["expire_time"]; if (_j.Tag != JSONNodeType.None && _j.Tag != JSONNodeType.NullValue) { { if(!_j.IsNumber) { throw new SerializationException(); }  ExpireTime = _j; } } else { ExpireTime = null; } }
         { if(!_json["batch_useable"].IsBoolean) { throw new SerializationException(); }  BatchUseable = _json["batch_useable"]; }
         { if(!_json["quality"].IsNumber) { throw new SerializationException(); }  Quality = (item.EQuality)_json["quality"].AsInt; }
@@ -36,7 +36,7 @@ public sealed partial class Monster :  Bright.Config.BeanBase
         PostInit();
     }
 
-    public Monster(int id, string name, string desc, int hp, int mp, int atk, int def, int guardRang, System.Collections.Generic.List<int> skillList, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
+    public Monster(int id, string name, string desc, int hp, int mp, int atk, int def, int guardRang, System.Collections.Generic.List<skill.SkillWeight> skillList, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
     {
         this.Id = id;
         this.Name = name;
@@ -96,7 +96,7 @@ public sealed partial class Monster :  Bright.Config.BeanBase
     /// <summary>
     /// -
     /// </summary>
-    public System.Collections.Generic.List<int> SkillList { get; private set; }
+    public System.Collections.Generic.List<skill.SkillWeight> SkillList { get; private set; }
     /// <summary>
     /// 过期时间
     /// </summary>
@@ -124,6 +124,7 @@ public sealed partial class Monster :  Bright.Config.BeanBase
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        foreach(var _e in SkillList) { _e?.Resolve(_tables); }
         ExchangeStream?.Resolve(_tables);
         foreach(var _e in ExchangeList) { _e?.Resolve(_tables); }
         ExchangeColumn?.Resolve(_tables);
@@ -132,6 +133,7 @@ public sealed partial class Monster :  Bright.Config.BeanBase
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        foreach(var _e in SkillList) { _e?.TranslateText(translator); }
         ExchangeStream?.TranslateText(translator);
         foreach(var _e in ExchangeList) { _e?.TranslateText(translator); }
         ExchangeColumn?.TranslateText(translator);

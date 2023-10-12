@@ -71,6 +71,10 @@ public class AIFindTarget : Action
             }
             monster.Animator.SetFloat("Speed", AIPath.velocity.magnitude);
         }
+        else
+        {
+            return TaskStatus.Failure;
+        }
 
         return TaskStatus.Running;
     }

@@ -124,6 +124,7 @@ namespace YangTools
             // 设置加载完成后不能自动跳转场景
             async.allowSceneActivation = isAutoSkip;
             yield return async;
+            async.allowSceneActivation = true;
             OnProgressEvent?.OnEndLoad?.Invoke(sceneName);
             async = null;
         }

@@ -209,14 +209,22 @@ public class Monster : RoleBase
         Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
+            bool haveTarget = false;
             for (int i = 0; i < temp.Length; i++)
             {
                 GameActor tempTarget = temp[i].gameObject.GetComponentInParent<GameActor>();
                 if (tempTarget && findCampType.HasFlag(tempTarget.campType))
                 {
+                    haveTarget = true;
                     target = tempTarget.gameObject;
                     targetPos = tempTarget.transform.position;
                 }
+            }
+
+            if (!haveTarget)
+            {
+                target = null;
+                targetPos = null;
             }
         }
         else
@@ -282,4 +290,16 @@ public class Monster : RoleBase
         return false;
     }
     #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+
+#if UNITY_EDITOR
+        if (Application.isPlaying)
+        {
+            Gizmos.DrawWireSphere(transform.position, GetRoleAttribute(RoleAttribute.GuardRang));
+        }
+#endif
+
+    }
 }

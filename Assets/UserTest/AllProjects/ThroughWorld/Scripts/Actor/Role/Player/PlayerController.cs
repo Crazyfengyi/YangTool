@@ -150,14 +150,22 @@ public class PlayerController : RoleBase
         Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
+            bool haveTarget = false;
             for (int i = 0; i < temp.Length; i++)
             {
                 GameActor tempTarget = temp[i].gameObject.GetComponentInParent<GameActor>();
                 if (tempTarget && canAtkCamp.HasFlag(tempTarget.campType))
                 {
+                    haveTarget = true;
                     target = tempTarget.gameObject;
                     targetPos = tempTarget.transform.position;
                 }
+            }
+
+            if (!haveTarget)
+            {
+                target = null;
+                targetPos = null;
             }
         }
         else

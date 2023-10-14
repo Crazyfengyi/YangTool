@@ -16,6 +16,7 @@ using BehaviorDesigner.Runtime;
 using UnityEngine.Playables;
 using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
 using System.Resources;
+using System.Collections.Generic;
 
 [Serializable]
 /// <summary>
@@ -23,6 +24,7 @@ using System.Resources;
 /// </summary>
 public class SkillControl
 {
+    private RoleBase m_role;
     private BehaviorTree skillTree;//技能行为树
     private PlayableDirector skillTimeLine;//技能时间线
 
@@ -36,8 +38,9 @@ public class SkillControl
     /// </summary>
     public bool IsTimeLine { get; set; }
 
-    public SkillControl(BehaviorTree _skillTree, PlayableDirector _timeLine)
+    public SkillControl(RoleBase role,BehaviorTree _skillTree, PlayableDirector _timeLine)
     {
+        m_role = role;
         skillTree = _skillTree;
         skillTimeLine = _timeLine;
     }
@@ -55,6 +58,17 @@ public class SkillControl
             //TODO:资源加载
             //行为树里正式执行
             skillTimeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{CurrentRunTimeSkillData.skill.ResName}");
+
+            Dictionary<string, PlayableBinding> bindingDict = new Dictionary<string, PlayableBinding>();
+            foreach (var at in skillTimeLine.playableAsset.outputs)
+            {
+                if (!bindingDict.ContainsKey(at.streamName))
+                {
+                    bindingDict.Add(at.streamName, at);
+                }
+            }
+
+            skillTimeLine.SetGenericBinding(bindingDict["Animation Track"].sourceObject, m_role.Animator);
         }
     }
     /// <summary>

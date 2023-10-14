@@ -297,7 +297,7 @@ public class Monster : RoleBase
 #if UNITY_EDITOR
         if (Application.isPlaying)
         {
-            Gizmos.DrawWireSphere(transform.position, GetRoleAttribute(RoleAttribute.GuardRang));
+            Gizmos.DrawWireSphere(transform.position, GetRoleAttributeValue(RoleAttribute.GuardRang));
         }
 #endif
 

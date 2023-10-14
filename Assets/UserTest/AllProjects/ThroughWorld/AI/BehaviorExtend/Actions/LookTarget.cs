@@ -46,7 +46,7 @@ public class LookTarget : Action
 
         if (roleBase.Target)
         {
-            targetDirection = (roleBase.Target.transform.position - gameObject.transform.position).SetYValue(roleBase.Target.transform.position.y).normalized;
+            targetDirection = (roleBase.Target.transform.position - gameObject.transform.position).SetYValue(gameObject.transform.position.y).normalized;
         }
         else
         {

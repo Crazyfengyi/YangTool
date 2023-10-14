@@ -113,7 +113,7 @@ public abstract class RoleBase : GameActor
             ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
 
-        if (aiBehavior) skillControl = new SkillControl(aiBehavior, timeLine);
+        if (aiBehavior) skillControl = new SkillControl(this,aiBehavior, timeLine);
 
         InitRecord();
     }
@@ -146,7 +146,15 @@ public abstract class RoleBase : GameActor
     /// 获得角色属性
     /// </summary>
     /// <param name="roleAttribute">属性枚举</param>
-    public float GetRoleAttribute(RoleAttribute roleAttribute)
+    public ValueTotal GetRoleAttribute(RoleAttribute roleAttribute)
+    {
+        return roleAttributeControl.GetAttribute(roleAttribute);
+    }
+    /// <summary>
+    /// 获得角色属性值
+    /// </summary>
+    /// <param name="roleAttribute">属性枚举</param>
+    public float GetRoleAttributeValue(RoleAttribute roleAttribute)
     {
         return roleAttributeControl.GetAttribute(roleAttribute).Value;
     }
@@ -320,7 +328,7 @@ public abstract class RoleBase : GameActor
     {
         //伤害信息
         var result = new DamageInfo();
-        result.damage = SkillControl.CurrentRunTimeSkillData.skill.Atk.Percent * GetRoleAttribute(RoleAttribute.Atk);
+        result.damage = SkillControl.CurrentRunTimeSkillData.skill.Atk.Percent * GetRoleAttributeValue(RoleAttribute.Atk);
         result.damage += SkillControl.CurrentRunTimeSkillData.skill.Atk.Num;
 
         return result; 

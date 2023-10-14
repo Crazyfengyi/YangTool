@@ -179,7 +179,8 @@ public enum RoleAttribute
     MP,
     Atk,
     Def,
-    GuardRang
+    GuardRang,
+    AtkSpeed
 }
 /// <summary>
 /// 角色标记

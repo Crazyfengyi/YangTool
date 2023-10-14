@@ -42,7 +42,7 @@ public class AIFindTarget : Action
         AIPath.isStopped = false;
         if (UseGuardRang)
         {
-            distance = monster.GetRoleAttribute(RoleAttribute.GuardRang);
+            distance = monster.GetRoleAttributeValue(RoleAttribute.GuardRang);
         }
         else
         {

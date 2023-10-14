@@ -18,14 +18,17 @@ public class ValueTotal
 {
     //第一层时Core（核心层）。
     //Core层是玩家各个其他模块的属性总和
+    [ShowInInspector]
+    private float value;//当前值
     public float Value
     {
         get => value;
         private set => this.value = value;
     }
-    [ShowInInspector]
-    private float value;//当前值
+
     private float baseValue = 0;//基础值 
+    public float BaseValue => baseValue;
+
     private float addValue = 0;//增加值
     private float addPercent = 0;//百分比增加值
     private float finalAdd = 0;//最终增加

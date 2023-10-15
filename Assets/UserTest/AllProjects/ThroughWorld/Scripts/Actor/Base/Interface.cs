@@ -105,7 +105,7 @@ public interface IInteractive
         return float.MaxValue;
     }
     /// <summary>
-    /// 覆盖范围(物体需要的范围)
+    /// 交互范围
     /// </summary>
     public float GetOverideMaxDistance()
     {

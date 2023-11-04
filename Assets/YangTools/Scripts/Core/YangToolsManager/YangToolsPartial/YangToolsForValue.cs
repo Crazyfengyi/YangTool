@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace YangTools
 {
@@ -254,7 +255,7 @@ namespace YangTools
         /// <summary>
         /// 返回相机在Z=0时的实际视口大小
         /// </summary>
-        public static Bounds GetCameraView(Transform transform,Camera useCamera)
+        public static Bounds GetCameraView(Transform transform, Camera useCamera)
         {
             float width, height;
             if (useCamera == null)
@@ -272,5 +273,29 @@ namespace YangTools
 
             return new Bounds(transform.position, new Vector3(Mathf.Abs(width), Mathf.Abs(height), 0));
         }
+
+
+        private static PointerEventData _eventDataCurrentPosition;
+        private static List<RaycastResult> _results;
+        /// <summary>
+        /// 鼠标是否在UI上
+        /// </summary>
+        public static bool IsOverUI()
+        {
+            _eventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            _results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(_eventDataCurrentPosition, _results);
+            return _results.Count > 0;
+        }
+        /// <summary>
+        /// 获得tran的世界坐标
+        /// </summary>
+        public static Vector3 GetWorldPosOfCanvasRectTransfom(RectTransform trans, Camera camera = null)
+        {
+            if (camera == null) camera = Camera.main;
+            RectTransformUtility.ScreenPointToWorldPointInRectangle(trans, trans.position, camera, out Vector3 result);
+            return result;
+        }
+      
     }
 }

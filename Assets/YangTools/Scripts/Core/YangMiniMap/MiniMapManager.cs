@@ -37,7 +37,7 @@ namespace YangTools.MiniMap
 
         [BoxGroup("基础设置")]
         [LabelText("按键代码切换地图大小模式(世界地图和迷你地图)")]
-        public KeyCode toogleKey = KeyCode.E;
+        public KeyCode toogleKey = KeyCode.M;
 
         [BoxGroup("基础设置")]
         [LabelText("渲染类型")]

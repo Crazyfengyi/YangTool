@@ -5,12 +5,16 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-09-04 
 */
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using UnityEngine;
 
 public class Apple : GameActor
 {
+    private Vector3 startPos;
+    private float timer;
     public override void IInit()
     {
+        startPos = transform.position;
     }
     public override void IFixedUpdate()
     {
@@ -20,6 +24,8 @@ public class Apple : GameActor
     }
     public override void IUpdate()
     {
+        timer += Time.deltaTime;
+        transform.position = startPos + new Vector3(0, Mathf.Abs(Mathf.Sin(timer) * 0.3f), 0);
     }
     public override void IDie()
     {
@@ -77,6 +83,7 @@ public class Apple : GameActor
     public override void Interact(RoleBase role)
     {
         GameUIManager.Instance.AddTipsShow("获得苹果");
+        GameActorManager.Instance.RemoveActor(this);
         Destroy(gameObject);
     }
     #endregion

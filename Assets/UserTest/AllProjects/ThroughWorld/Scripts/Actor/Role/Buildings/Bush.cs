@@ -5,6 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-09-04 
 */
+using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using YangTools.Extend;
 
@@ -73,7 +75,13 @@ public class Bush : GameActor
     {
         if (haveEnterEffect)
         {
+            //树叶特效
             GameEffectManager.Instance.PlayEffect("BushEnter", transform.position);
+
+            //抖动
+            DOTween.Kill(gameObject);
+            gameObject.transform.DOShakePosition(0.36f,0.06f,30)
+                .SetTarget(gameObject);
         }
     }
     /// <summary>
@@ -88,11 +96,11 @@ public class Bush : GameActor
     /// </summary>
     public override void Interact(RoleBase role)
     {
-        //float size = GetSize(RoleSizeType.ColliderSize);
-        //Vector3 temp = Random.onUnitSphere;
-        //temp = temp.SetYValue();
-        //temp = temp.normalized;
-        //GameObject obj = GameActorManager.Instance.CreateItem("Apple", transform.position + temp * size);
+        float size = GetSize(RoleSizeType.ColliderSize);
+        Vector3 temp = Random.onUnitSphere;
+        temp = temp.SetYValue();
+        temp = temp.normalized;
+        GameObject obj = GameActorManager.Instance.CreateItem("Apple", transform.position + temp * size);
     }
     #endregion
 }

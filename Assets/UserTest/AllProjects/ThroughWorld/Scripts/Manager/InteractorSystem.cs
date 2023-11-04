@@ -9,6 +9,7 @@
 using System.Collections;
 using UnityEngine;
 using YangTools;
+using YangTools.Extend;
 
 /// <summary>
 /// 交互系统
@@ -67,7 +68,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             if (currentInteractive != null && !currentInteractive.Equals(null) && currentInteractive.IsValid())
             {
                 currentInteractive.OnEnterRang(target);
-                ShowCircle.transform.position = currentInteractive.GetPos();
+                ShowCircle.transform.position = currentInteractive.GetPos().SetYValue();
             }
             //退出范围
             if (lastInteractive != null && !lastInteractive.Equals(null) && lastInteractive.IsValid())
@@ -84,7 +85,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
         if (currentInteractive != null && !currentInteractive.Equals(null) && currentInteractive.IsValid())
         {
             interActiveType = currentInteractive.GetInterActiveType();
-            ShowCircle.transform.position = currentInteractive.GetPos();
+            ShowCircle.transform.position = currentInteractive.GetPos().SetYValue();
             ShowCircle.transform.localScale = Vector3.one * currentInteractive.GetSize(RoleSizeType.ColliderSize);
         }
         ShowCircle.SetActive(currentInteractive != null);

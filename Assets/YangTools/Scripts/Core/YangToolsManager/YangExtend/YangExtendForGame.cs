@@ -13,6 +13,16 @@ namespace YangTools.Extend
     {
         #region GameObject扩展
         /// <summary>
+        /// 删除所有子节点
+        /// </summary>
+        public static void DeleteChildren(this Transform trans)
+        {
+            foreach (Transform item in trans)
+            {
+                UnityEngine.Object.Destroy(item);
+            }
+        }
+        /// <summary>
         /// 在物体世界坐标播放声音
         /// </summary>
         /// <param name="clipName">音效名称</param>

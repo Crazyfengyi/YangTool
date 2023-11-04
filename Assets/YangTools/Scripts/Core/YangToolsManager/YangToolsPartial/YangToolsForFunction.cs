@@ -169,9 +169,9 @@ namespace YangTools
             CheckDirectionType directionType = CheckDirectionType.None;
             //点乘--判断前后 >0:前 <0:后 
             /*
-             * 小于0:表示两向量角度大于90度
-             * 等于0:表示两向量垂直
              * 大于0:表示两向量角度小于90度
+             * 等于0:表示两向量垂直
+             * 小于0:表示两向量角度大于90度
              */
             float dotVaule = Vector3.Dot(Forward.normalized, SecondValue.normalized);
             //叉乘--判断左右 y>0:左 y<0:右

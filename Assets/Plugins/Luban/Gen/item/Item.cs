@@ -23,8 +23,6 @@ public sealed partial class Item :  Bright.Config.BeanBase
         { if(!_json["desc"].IsString) { throw new SerializationException(); }  Desc = _json["desc"]; }
         { if(!_json["price"].IsNumber) { throw new SerializationException(); }  Price = _json["price"]; }
         { if(!_json["upgrade_to_item_id"].IsNumber) { throw new SerializationException(); }  UpgradeToItemId = _json["upgrade_to_item_id"]; }
-        { var _j = _json["expire_time"]; if (_j.Tag != JSONNodeType.None && _j.Tag != JSONNodeType.NullValue) { { if(!_j.IsNumber) { throw new SerializationException(); }  ExpireTime = _j; } } else { ExpireTime = null; } }
-        { if(!_json["batch_useable"].IsBoolean) { throw new SerializationException(); }  BatchUseable = _json["batch_useable"]; }
         { if(!_json["quality"].IsNumber) { throw new SerializationException(); }  Quality = (item.EQuality)_json["quality"].AsInt; }
         { if(!_json["exchange_stream"].IsObject) { throw new SerializationException(); }  ExchangeStream = item.ItemExchange.DeserializeItemExchange(_json["exchange_stream"]);  }
         { var __json0 = _json["exchange_list"]; if(!__json0.IsArray) { throw new SerializationException(); } ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(__json0.Count); foreach(JSONNode __e0 in __json0.Children) { item.ItemExchange __v0;  { if(!__e0.IsObject) { throw new SerializationException(); }  __v0 = item.ItemExchange.DeserializeItemExchange(__e0);  }  ExchangeList.Add(__v0); }   }
@@ -32,15 +30,13 @@ public sealed partial class Item :  Bright.Config.BeanBase
         PostInit();
     }
 
-    public Item(int id, string name, string desc, int price, int upgrade_to_item_id, long? expire_time, bool batch_useable, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
+    public Item(int id, string name, string desc, int price, int upgrade_to_item_id, item.EQuality quality, item.ItemExchange exchange_stream, System.Collections.Generic.List<item.ItemExchange> exchange_list, item.ItemExchange exchange_column ) 
     {
         this.Id = id;
         this.Name = name;
         this.Desc = desc;
         this.Price = price;
         this.UpgradeToItemId = upgrade_to_item_id;
-        this.ExpireTime = expire_time;
-        this.BatchUseable = batch_useable;
         this.Quality = quality;
         this.ExchangeStream = exchange_stream;
         this.ExchangeList = exchange_list;
@@ -74,14 +70,6 @@ public sealed partial class Item :  Bright.Config.BeanBase
     /// </summary>
     public int UpgradeToItemId { get; private set; }
     public item.Item UpgradeToItemId_Ref { get; private set; }
-    /// <summary>
-    /// 过期时间
-    /// </summary>
-    public long? ExpireTime { get; private set; }
-    /// <summary>
-    /// 能否批量使用
-    /// </summary>
-    public bool BatchUseable { get; private set; }
     /// <summary>
     /// 品质
     /// </summary>
@@ -123,8 +111,6 @@ public sealed partial class Item :  Bright.Config.BeanBase
         + "Desc:" + Desc + ","
         + "Price:" + Price + ","
         + "UpgradeToItemId:" + UpgradeToItemId + ","
-        + "ExpireTime:" + ExpireTime + ","
-        + "BatchUseable:" + BatchUseable + ","
         + "Quality:" + Quality + ","
         + "ExchangeStream:" + ExchangeStream + ","
         + "ExchangeList:" + Bright.Common.StringUtil.CollectionToString(ExchangeList) + ","

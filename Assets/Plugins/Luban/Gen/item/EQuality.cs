@@ -12,21 +12,25 @@ namespace cfg.item
     public enum EQuality
     {
         /// <summary>
-        /// 最差品质
+        /// 普通
         /// </summary>
         WHITE = 1,
         /// <summary>
-        /// 蓝色的
+        /// 稀有
         /// </summary>
         BLUE = 2,
         /// <summary>
-        /// 紫色的
+        /// 史诗
         /// </summary>
         PURPLE = 3,
         /// <summary>
-        /// 最高品质
+        /// 传说
         /// </summary>
-        RED = 4,
+        GOLD = 4,
+        /// <summary>
+        /// 神话
+        /// </summary>
+        BLACK = 5,
     }
 
 } 

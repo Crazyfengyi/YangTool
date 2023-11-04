@@ -1,11 +1,10 @@
 [
   {
     "id": 10000,
-    "name": "发型",
-    "desc": "初始发型",
+    "name": "测试物品",
+    "desc": "测试用物品",
     "price": 100,
     "upgrade_to_item_id": 10001,
-    "batch_useable": false,
     "quality": 1,
     "exchange_stream": {
       "id": 10001,
@@ -28,11 +27,10 @@
   },
   {
     "id": 10001,
-    "name": "外套",
-    "desc": "初始外套",
+    "name": "苹果",
+    "desc": "红彤彤的上好苹果",
     "price": 100,
-    "upgrade_to_item_id": 10002,
-    "batch_useable": false,
+    "upgrade_to_item_id": 10001,
     "quality": 1,
     "exchange_stream": {
       "id": 10002,
@@ -55,14 +53,13 @@
   },
   {
     "id": 10002,
-    "name": "上衣",
-    "desc": "初始上衣",
+    "name": "木薯",
+    "desc": "有轻微毒素,需经处理后方可食用.",
     "price": 100,
-    "upgrade_to_item_id": 10003,
-    "batch_useable": true,
-    "quality": 2,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10003,
+      "id": 10001,
       "num": 3
     },
     "exchange_list": [
@@ -82,14 +79,13 @@
   },
   {
     "id": 10003,
-    "name": "裙子",
-    "desc": "初始下装",
+    "name": "荔枝",
+    "desc": "一骑红尘妃子笑,无人知是荔枝来.",
     "price": 100,
-    "upgrade_to_item_id": 10004,
-    "batch_useable": true,
-    "quality": 2,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10004,
+      "id": 10002,
       "num": 3
     },
     "exchange_list": [
@@ -109,14 +105,13 @@
   },
   {
     "id": 10004,
-    "name": "袜子",
-    "desc": "初始袜子",
+    "name": "龙眼",
+    "desc": "开胃健脾,补虚益智.",
     "price": 100,
-    "upgrade_to_item_id": 10005,
-    "batch_useable": false,
-    "quality": 2,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10005,
+      "id": 10001,
       "num": 4
     },
     "exchange_list": [
@@ -136,14 +131,13 @@
   },
   {
     "id": 10005,
-    "name": "鞋子",
-    "desc": "初始鞋子",
+    "name": "辣椒",
+    "desc": "太辣了!太辣了!",
     "price": 100,
-    "upgrade_to_item_id": 10006,
-    "batch_useable": true,
-    "quality": 3,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10006,
+      "id": 10002,
       "num": 4
     },
     "exchange_list": [
@@ -163,14 +157,13 @@
   },
   {
     "id": 10006,
-    "name": "发饰",
-    "desc": "初始发饰",
+    "name": "蜜桃",
+    "desc": "个头硕大,色泽鲜艳,皮薄肉嫩,果肉细腻,汁甜如蜜.",
     "price": 100,
-    "upgrade_to_item_id": 10007,
-    "batch_useable": false,
-    "quality": 3,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10007,
+      "id": 10001,
       "num": 5
     },
     "exchange_list": [
@@ -190,15 +183,13 @@
   },
   {
     "id": 10007,
-    "name": "中秋节发饰",
-    "desc": "中秋节发饰",
-    "price": 200,
-    "upgrade_to_item_id": 10008,
-    "expire_time": 1633881599,
-    "batch_useable": false,
-    "quality": 2,
+    "name": "香蕉",
+    "desc": "猴子的最爱",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10008,
+      "id": 10002,
       "num": 5
     },
     "exchange_list": [
@@ -218,15 +209,13 @@
   },
   {
     "id": 10008,
-    "name": "中秋节鞋子",
-    "desc": "中秋节鞋子",
-    "price": 300,
-    "upgrade_to_item_id": 10009,
-    "expire_time": 1633967999,
-    "batch_useable": false,
-    "quality": 3,
+    "name": "土豆",
+    "desc": "产量极高.",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10009,
+      "id": 10001,
       "num": 6
     },
     "exchange_list": [
@@ -246,14 +235,13 @@
   },
   {
     "id": 10009,
-    "name": "礼包",
-    "desc": "中秋节礼包",
+    "name": "火龙果",
+    "desc": "花果兼赏，赏食兼用.",
     "price": 100,
-    "upgrade_to_item_id": 10000,
-    "batch_useable": true,
-    "quality": 4,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
     "exchange_stream": {
-      "id": 10000,
+      "id": 10002,
       "num": 6
     },
     "exchange_list": [
@@ -269,6 +257,136 @@
     "exchange_column": {
       "id": 10001,
       "num": 11
+    }
+  },
+  {
+    "id": 10010,
+    "name": "果梅",
+    "desc": "营养丰富",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 7
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 13
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 12
+    }
+  },
+  {
+    "id": 10011,
+    "name": "鸡蛋",
+    "desc": "营养丰富",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10002,
+      "num": 7
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 14
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 13
+    }
+  },
+  {
+    "id": 10012,
+    "name": "鸭蛋",
+    "desc": "营养丰富",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 8
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 15
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 14
+    }
+  },
+  {
+    "id": 10013,
+    "name": "核桃",
+    "desc": "营养丰富",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10002,
+      "num": 8
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 16
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 15
+    }
+  },
+  {
+    "id": 10014,
+    "name": "包子",
+    "desc": "营养丰富",
+    "price": 100,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 9
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 17
+      }
+    ],
+    "exchange_column": {
+      "id": 10001,
+      "num": 16
     }
   }
 ]

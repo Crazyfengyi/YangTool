@@ -29,17 +29,24 @@ namespace YangToolMageEngineer
             List<Spells> allWordList = new List<Spells>();
             allWordList.Add(new Spells()
             {
-                name = "BUFF1",
+                name = "常驻BUFF",
                 type = SpellsType.LongBuff
             });
             allWordList.Add(new Spells()
             {
-                name = "BUFF2",
+                name = "一次性BUFF1",
                 type = SpellsType.OnceBuff
             });
             allWordList.Add(new Spells()
             {
-                name = "子弹1",
+                name = "多重施法",
+                type = SpellsType.OnceBuff,
+                buffType = BuffType.MultipleCast,
+                MultipleCastCount = 1,
+            });
+            allWordList.Add(new Spells()
+            {
+                name = "包装器",
                 type = SpellsType.Bullet,
                 buttleType = BuletsType.Wrapper
             });
@@ -53,7 +60,16 @@ namespace YangToolMageEngineer
                 name = "子弹3",
                 type = SpellsType.Bullet
             });
-
+            allWordList.Add(new Spells()
+            {
+                name = "一次性BUFF2",
+                type = SpellsType.OnceBuff
+            });
+            allWordList.Add(new Spells()
+            {
+                name = "子弹4",
+                type = SpellsType.Bullet
+            });
             shooter.Init(allWordList);
         }
 
@@ -81,6 +97,10 @@ namespace YangToolMageEngineer
             bullet.OnStart();
             return bullet;
         }
+
+        //多重施法
+        int MultipleCast = 0;
+
         /// <summary>
         /// 发射
         /// </summary>
@@ -106,6 +126,11 @@ namespace YangToolMageEngineer
                         {
                             item.Use();
                             onceBuff.Add(item);
+                            //多重施法
+                            if (item.buffType == BuffType.MultipleCast)
+                            {
+                                MultipleCast = item.MultipleCastCount;
+                            }
                         }
                         break;
                     case SpellsType.Bullet:
@@ -120,34 +145,38 @@ namespace YangToolMageEngineer
                                 temp.name = item.name;
                                 temp.buffList = new List<Spells>(longBuff);
                                 temp.buffList.AddRange(onceBuff);
-
-                                temp.buttleType = temp.buttleType;
+                                temp.buttleType = item.buttleType;
                                 temp.subBullet = GetBullet();
 
                                 bool isLast = CheckIsLast(i);
                                 if (isLast)
                                 {
-                                    return temp;
+                                    MultipleCast = 0;
                                 }
+                                else
+                                {
+                                    //多重施法检测
+                                    Multiple();
+                                }
+                                return temp;
                             }
                             else
                             {
-                                CheckIsLast(i);
-                                return temp;
-                            }
+                                temp.name = item.name;
+                                temp.buttleType = item.buttleType;
 
-                            //每次只使用一个子弹.
-                            return temp;
-
-                            bool CheckIsLast(int index)
-                            {
-                                //最后一个重置--TODO:进入冷却
-                                if (index == AllWordList.Count - 1)
+                                //每次只使用一个子弹.
+                                bool isLast = CheckIsLast(i);
+                                if (isLast)
                                 {
-                                    Reset();
-                                    return true;
+                                    MultipleCast = 0;
                                 }
-                                return false;
+                                else
+                                {
+                                    //多重施法检测
+                                    Multiple();
+                                }
+                                return temp;
                             }
                         }
                         break;
@@ -155,12 +184,48 @@ namespace YangToolMageEngineer
             }
 
             Reset();
+            MultipleCast = 0;
             return null;
+
+            //重置检测
+            bool CheckIsLast(int index)
+            {
+                //最后一个重置--TODO:进入冷却
+                if (index == AllWordList.Count - 1)
+                {
+                    Reset();
+                    return true;
+                }
+
+                //预测下一次使用--确保后面有子弹类型的法术
+                (List<Spells> allSpells, List<Spells> bulletList) list = Forecast();
+                if (list.bulletList.Count <= 0)
+                {
+                    Reset();
+                    return true;
+                }
+
+                return false;
+            }
+
+            //多重施法检测
+            void Multiple()
+            {
+                if (MultipleCast > 0)
+                {
+                    MultipleCast--;
+                    var bullet = GetBullet();
+                    bullet.OnStart();
+                }
+            }
         }
+
+        private int TempMultipleCast = 0;
+
         /// <summary>
         /// 预测下一次使用
         /// </summary>
-        public List<Spells> Forecast()
+        public (List<Spells> allSpells, List<Spells> bulletList) Forecast()
         {
             List<Spells> allWord = new List<Spells>();
             List<Spells> longBuff = new List<Spells>();
@@ -197,16 +262,18 @@ namespace YangToolMageEngineer
                             }
                             else
                             {
-                                //每次只使用一个子弹.
-                                return allWord;
+                                bulletList.Add(item);
+                                //每次只使用一个子弹
+                                return (allWord, bulletList);
                             }
                         }
                         break;
                 }
             }
 
-            return allWord;
+            return (allWord, bulletList);
         }
+
         /// <summary>
         /// 重置
         /// </summary>
@@ -230,9 +297,11 @@ namespace YangToolMageEngineer
         public virtual void OnStart()
         {
         }
+
         public virtual void OnUpdate()
         {
         }
+
         public virtual void OnEnd()
         {
         }
@@ -240,7 +309,6 @@ namespace YangToolMageEngineer
 
     public class Bullet1 : Bullet
     {
-
     }
 
     /// <summary>
@@ -252,9 +320,14 @@ namespace YangToolMageEngineer
         public SpellsType type;
 
         public BuffType buffType;
+
         public BuletsType buttleType;
 
+        //多重施法次数
+        public int MultipleCastCount;
+
         private bool isUsed;
+
         public bool CanUse
         {
             get
@@ -272,9 +345,11 @@ namespace YangToolMageEngineer
                         result = !isUsed;
                         break;
                 }
+
                 return result;
             }
         }
+
         public void Use()
         {
             switch (type)
@@ -289,13 +364,16 @@ namespace YangToolMageEngineer
                     isUsed = true;
                     break;
             }
+
             Debug.LogError($"法术使用:{name}");
         }
+
         public void ResetUse()
         {
             isUsed = false;
         }
     }
+
     /// <summary>
     /// 法术类型
     /// </summary>
@@ -313,7 +391,13 @@ namespace YangToolMageEngineer
     {
         None,
         Buff1,
+
+        /// <summary>
+        /// 多重施法
+        /// </summary>
+        MultipleCast
     }
+
     /// <summary>
     /// 子弹类型
     /// </summary>
@@ -321,6 +405,7 @@ namespace YangToolMageEngineer
     {
         None,
         Bullet1,
+
         /// <summary>
         /// 包装器
         /// </summary>

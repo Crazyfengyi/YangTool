@@ -78,6 +78,7 @@ namespace YangToolMageEngineer
             Debug.LogError("使用法术");
             shooter.Shoot();
         }
+
     }
 
     public class ShooterSystem

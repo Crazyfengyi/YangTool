@@ -54,7 +54,7 @@ public class GizmosManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// 园形
+    /// 圆形
     /// </summary>
     public void GizmosDrawCircle(Vector3 pos, float radius, float time = 2f)
     {
@@ -66,7 +66,7 @@ public class GizmosManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// 园环
+    /// 圆环
     /// </summary>
     public void GizmosDrawRing(Vector3 pos, float insideRadius, float outsideRadius, float time = 2f)
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
+//using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,7 +24,7 @@ public class GizmosManager : MonoBehaviour
         }
      */
     /// <summary>
-    /// æÿ–Œ
+    /// Áü©ÂΩ¢
     /// </summary>
     /// <param name="center"></param>
     /// <param name="size"></param>
@@ -40,7 +40,7 @@ public class GizmosManager : MonoBehaviour
         }); ; ;
     }
     /// <summary>
-    /// …»–Œ
+    /// ÊâáÂΩ¢
     /// </summary>
     public void GizmosDrawSector(Vector3 pos, Vector3 direction, float length, float angle, float time = 2f)
     {
@@ -54,7 +54,7 @@ public class GizmosManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// ‘≤–Œ
+    /// ÂúÜÂΩ¢
     /// </summary>
     public void GizmosDrawCircle(Vector3 pos, float radius, float time = 2f)
     {
@@ -66,7 +66,7 @@ public class GizmosManager : MonoBehaviour
         });
     }
     /// <summary>
-    /// ‘≤ª∑
+    /// ÂúÜÁéØ
     /// </summary>
     public void GizmosDrawRing(Vector3 pos, float insideRadius, float outsideRadius, float time = 2f)
     {
@@ -80,7 +80,7 @@ public class GizmosManager : MonoBehaviour
     }
 
     /// <summary>
-    /// «Ú–Œ…‰œﬂ
+    /// ÁêÉÂΩ¢Â∞ÑÁ∫ø
     /// </summary>
     public void GizmosDrawSphereRay(Vector3 pos, Vector3 direction, float distance, float radius, float time = 2f)
     {
@@ -95,7 +95,7 @@ public class GizmosManager : MonoBehaviour
     }
 
     /// <summary>
-    /// …‰œﬂ
+    /// Â∞ÑÁ∫ø
     /// </summary>
     public void GizmosDrawRay(Vector3 pos, Vector3 direction, float distance, float time = 2f)
     {
@@ -117,8 +117,8 @@ public class GizmosManager : MonoBehaviour
             {
                 case DrawCubeInfo temp:
                     {
-                        #region ª≠æÿ–Œ
-                        //÷––ƒ
+                        #region ÁîªÁü©ÂΩ¢
+                        //‰∏≠ÂøÉ
                         Gizmos.DrawSphere(temp.center, 0.1f);
                         var size = temp.size;
                         var center = temp.center;
@@ -129,7 +129,7 @@ public class GizmosManager : MonoBehaviour
                         var halfz = size.z / 2;
 
                         var movedis = new Vector3(center.x, center.y, center.z);
-                        //4∏ˆ∂•µ„◊¯±Í
+                        //4‰∏™È°∂ÁÇπÂùêÊ†á
                         var leftDownUpPos = rotation * new Vector3(-halfx, -halfy, halfz) + movedis;
                         var leftDownDowns = rotation * new Vector3(-halfx, -halfy, -halfz) + movedis;
 
@@ -142,7 +142,7 @@ public class GizmosManager : MonoBehaviour
                         var rightUpUpPos = rotation * new Vector3(halfx, halfy, halfz) + movedis;
                         var rightUpDownPos = rotation * new Vector3(halfx, halfy, -halfz) + movedis;
           
-                        //8∏ˆµ„
+                        //8‰∏™ÁÇπ
                         Gizmos.DrawSphere(leftDownUpPos, 0.1f);
                         Gizmos.DrawSphere(rightDownUpPos, 0.1f);
                         Gizmos.DrawSphere(leftUpUpPos, 0.1f);
@@ -152,7 +152,7 @@ public class GizmosManager : MonoBehaviour
                         Gizmos.DrawSphere(leftUpDownPos, 0.1f);
                         Gizmos.DrawSphere(rightUpDownPos, 0.1f);
 
-                        //œﬂ∂Œ
+                        //Á∫øÊÆµ
                         Gizmos.DrawLine(leftDownUpPos, leftDownDowns);
                         Gizmos.DrawLine(leftDownUpPos, leftUpUpPos);
                         Gizmos.DrawLine(leftDownUpPos, rightDownUpPos);
@@ -228,7 +228,7 @@ public class DrawInfo
     public float time;
 }
 /// <summary>
-/// æÿ–Œ
+/// Áü©ÂΩ¢
 /// </summary>
 public class DrawCubeInfo : DrawInfo
 {
@@ -237,7 +237,7 @@ public class DrawCubeInfo : DrawInfo
     public Vector3 size;
 }
 /// <summary>
-/// …»–Œ
+/// ÊâáÂΩ¢
 /// </summary>
 public class DrawSectorInfo : DrawInfo
 {
@@ -247,7 +247,7 @@ public class DrawSectorInfo : DrawInfo
     public float angle;
 }
 /// <summary>
-/// ‘∞–Œ
+/// Âõ≠ÂΩ¢
 /// </summary>
 public class DrawCircleInfo : DrawInfo
 {
@@ -256,7 +256,7 @@ public class DrawCircleInfo : DrawInfo
 }
 
 /// <summary>
-/// ‘∞ª∑
+/// Âõ≠ÁéØ
 /// </summary>
 public class DrawRingInfo : DrawInfo
 {
@@ -266,7 +266,7 @@ public class DrawRingInfo : DrawInfo
 }
 
 /// <summary>
-/// «Ú–Œ…‰œﬂ
+/// ÁêÉÂΩ¢Â∞ÑÁ∫ø
 /// </summary>
 public class DrawSphereRayInfo : DrawInfo
 {
@@ -276,7 +276,7 @@ public class DrawSphereRayInfo : DrawInfo
     public float radius;
 }
 /// <summary>
-/// …‰œﬂ
+/// Â∞ÑÁ∫ø
 /// </summary>
 public class DrawRayInfo : DrawInfo
 {

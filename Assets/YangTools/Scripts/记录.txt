@@ -257,4 +257,270 @@ public class YangToolDebugLog : MonoBehaviour
     #endregion
 }
 
+
+//参考 拷贝生成
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UI;
+
+public static class CopyToTarget
+{
+    static string currentFloder = "Assets/Resources/Prefabs/Monster";
+    static string targetFloder = "Assets/Resources/UI/Monster/New";
+
+    [MenuItem("YangTool/CopyToFolder")]
+    public static void CopyToTargetFolder()
+    {
+        //读id文件
+        TextAsset idList = AssetDatabase.LoadAssetAtPath<TextAsset>($"{targetFloder}/ID.txt");
+        string idListStr = idList.text;
+        string[] tempList = idListStr.Split('\n', '\r');
+
+        List<string> newList = new List<string>();
+
+        for (int i = 0; i < tempList.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(tempList[i]))
+            {
+                newList.Add(tempList[i]);
+            }
+        }
+
+
+        for (int i = 0; i < newList.Count; i++)
+        {
+
+            try
+            {
+                string name = newList[i];
+
+                var ss = $"{currentFloder}/Monster_{name}";
+                // 加载资源
+                GameObject obj = AssetDatabase.LoadAssetAtPath($"{currentFloder}/Monster_{name}.prefab", typeof(GameObject)) as GameObject;
+                // 以模板创建
+                //Object obj2 = Object.Instantiate(obj);
+
+                Object obj2 = PrefabUtility.InstantiatePrefab(obj);
+
+                // 创建资源
+                //AssetDatabase.CreateAsset(obj2, $"{targetFloder}/{name}.prefab");
+                PrefabUtility.SaveAsPrefabAsset((GameObject)obj2, $"{targetFloder}/{name}.prefab", out bool success);
+
+                Resources.UnloadAsset(obj);
+                Resources.UnloadAsset(obj2);
+            }
+            catch (System.Exception)
+            {
+                Debug.LogError($"{newList[i]}:复制失败");
+            }
+        }
+
+        // 刷新编辑器，使刚创建的资源立刻被导入，才能接下来立刻使用上该资源
+        AssetDatabase.Refresh();
+        Debug.LogError("Copy完成");
+    }
+
+    [MenuItem("YangTool/RemoveScript")]
+    public static void RemoveScript()
+    {
+        //读id文件
+        TextAsset idList = AssetDatabase.LoadAssetAtPath<TextAsset>($"{targetFloder}/ID.txt");
+        string idListStr = idList.text;
+        string[] tempList = idListStr.Split('\n', '\r');
+
+        List<string> newList = new List<string>();
+
+        for (int i = 0; i < tempList.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(tempList[i]))
+            {
+                newList.Add(tempList[i]);
+            }
+        }
+
+        for (int i = 0; i < newList.Count; i++)
+        {
+
+            try
+            {
+                string name = newList[i];
+
+                var ss = $"{currentFloder}/Monster_{name}";
+                // 加载资源
+                GameObject obj = AssetDatabase.LoadAssetAtPath($"{targetFloder}/{name}.prefab", typeof(GameObject)) as GameObject;
+
+                //修改资源
+                var script1List = obj.GetComponents<MonsterBase>();
+
+                for (int j = 0; j < script1List.Length; j++)
+                {
+                    GameObject.DestroyImmediate(script1List[j], true);
+                }
+
+                var script2List = obj.GetComponents<SkillBase>();
+
+                for (int j = 0; j < script2List.Length; j++)
+                {
+                    GameObject.DestroyImmediate(script2List[j], true);
+                }
+
+                // 通知编辑器有资源被修改了
+                EditorUtility.SetDirty(obj);
+            }
+            catch (System.Exception)
+            {
+                Debug.LogError($"{newList[i]}:修改失败");
+            }
+        }
+
+        //保存所有修改
+        AssetDatabase.SaveAssets();
+        //// 刷新编辑器，使刚创建的资源立刻被导入，才能接下来立刻使用上该资源
+        //AssetDatabase.Refresh();
+        Debug.LogError("修改完成");
+    }
+}
+
+//参考 APK里下载安装APK
+using Mse;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using UnityEngine.Networking;
+using Version = System.Version;
+
+public class UpdateGame : MonoBehaviour
+{
+
+    const string apkUrl = "http://appdown.7723.cn/bigfiles/apk/15/20191224/b8e5e9b21a72650dfe7367082248cc3e1577165842.apk"; //apk下载路径
+    const string versionsUrl = ""; //版本文件下载路径
+    static string path = "";
+    static string pathApk = ""; //文件路径
+
+    static UpdateGame()
+    {
+
+    }
+
+    public void Start()
+    {
+        path = Application.persistentDataPath; //写入路径
+        pathApk = Application.persistentDataPath + "/TalesRush_0001.apk"; //文件路径
+
+        //AdsManager.CheckServerUpdateAppInfo((canUpdate, version, path) =>
+        //{
+        //    needUpdate = canUpdate;
+        //    updateVersion = version;
+        //    updatePath = path;
+        //    if (needUpdate)
+        //    {
+        //        Debug.Log(canUpdate + updateVersion + updatePath);
+        //    }
+        //}, 7);
+    }
+
+    /// <summary>
+    /// 单例
+    /// </summary>
+    public static UpdateGame instance = new UpdateGame();
+
+    /// <summary>
+    /// 下载游戏apk包
+    /// </summary>
+    public void LoadGameApk()
+    {
+        Action<byte[]> downloadSucceed = (data) =>
+        {
+            //找到当前路径
+            FileInfo file = new FileInfo(path);
+            //判断有没有文件，有则打开文件，，没有创建后打开文件
+            bool flagFile = File.Exists(pathApk);
+            //文件存在
+            if (flagFile)
+            {
+                File.Delete(pathApk);
+            }
+            //创建文件写入对象
+            FileStream nFile = new FileStream(pathApk, FileMode.Create);
+            //写入数据
+            nFile.Write(data, 0, data.Length);
+            nFile.Close();
+            Debug.Log($"测试：下载成功：写入成功");
+            InstallApk();
+        };
+
+        Action<string> downloadFailed = (error) =>
+        {
+            Debug.Log($"更新apk下载错误:{error}");
+        };
+
+        Action<byte[]> succeed = (data) =>
+        {
+            //版本比较
+            try
+            {
+                string str = System.Text.Encoding.Default.GetString(data);
+                if (string.IsNullOrEmpty(str.ToString()) || string.IsNullOrEmpty(Application.version))
+                {
+                    Debug.Log("网络版本号或本地版本号为空");
+                    return;
+                }
+
+                Version versionNetwork = new Version(str.ToString());
+                Version versionLocal = new Version(Application.version);
+                if (versionNetwork > versionLocal)
+                {
+                    GameManager.instance.StartCoroutine(DownLoad(apkUrl, downloadSucceed, downloadFailed));
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+
+        };
+
+        Action<string> failed = (error) =>
+        {
+            Debug.Log($"版本文档下载错误:{error}");
+        };
+
+        GameManager.instance.StartCoroutine(DownLoad(versionsUrl, succeed, failed));
+    }
+
+    /// <summary>
+    /// 下载
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator DownLoad(string url, Action<Byte[]> succeed, Action<string> failed)
+    {
+        UnityWebRequest webRequest = UnityWebRequest.Get($"{url}");
+
+        yield return webRequest.SendWebRequest();
+        //异常处理，很多博文用了error!=null这是错误的
+        if (webRequest.isHttpError || webRequest.isNetworkError)
+        {
+            failed?.Invoke(webRequest.error);
+        }
+        else
+        {
+            succeed?.Invoke(webRequest.downloadHandler.data);
+        }
+    }
+
+    /// <summary>
+    /// 安装APK
+    /// </summary>
+    private void InstallApk()
+    {
+        AndroidJavaClass jc = new AndroidJavaClass("com.xchange.mse.MseSDKManager");   //固定的，获取UnityPlayer类
+        jc.CallStatic("InstallApk", pathApk);
+    }
+
+}
+
 ———— THE END ————

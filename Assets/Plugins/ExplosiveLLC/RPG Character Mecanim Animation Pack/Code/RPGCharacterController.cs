@@ -476,7 +476,7 @@ namespace RPGCharacterAnims
             }
 
             animator.gameObject.AddComponent<RPGCharacterAnimatorEvents>();
-            animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+            animator.updateMode = AnimatorUpdateMode.Fixed;
             animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
             animator.SetInteger("Weapon", 0);
             animator.SetInteger("WeaponSwitch", 0);

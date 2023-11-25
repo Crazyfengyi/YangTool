@@ -37,7 +37,7 @@ public class GizmosManager : MonoBehaviour
             rotate = quaternion,
             size = size,
             time = time
-        }); ; ;
+        });
     }
     /// <summary>
     /// 扇形

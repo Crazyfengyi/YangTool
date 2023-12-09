@@ -52,5 +52,15 @@ namespace YangTools
             return isPhone;
 
         }
+        /// <summary>
+        /// copy到粘贴板
+        /// </summary>
+        public static void CopyStringToClipboard(string str)
+        {
+            var te = new TextEditor();
+            te.text = str; 
+            te.SelectAll();
+            te.Copy();
+        }
     }
 }

@@ -147,11 +147,11 @@ namespace YangTools
                 Debug.LogError("取消task");
             }
 
-            //bool cancelled = await UniTask.Delay(1000).SuppressCancellationThrow();//忽略取消task的异常抛出
-            //if (cancelled)
-            //{
-            //    Debug.LogError("取消task");
-            //}
+            bool cancelled = await UniTask.Delay(1000).SuppressCancellationThrow();//忽略取消task的异常抛出
+            if (cancelled)
+            {
+                Debug.LogError("取消task");
+            }
         }
         public static async UniTask TestUni2(CancellationToken token)
         {
@@ -177,24 +177,24 @@ namespace YangTools
                 callBack?.Invoke();
                 source.TrySetResult();
                 //失败
-                //source.TrySetException(new SystemException());
+                source.TrySetException(new SystemException());
                 //取消
-                //source.TrySetCanceled();
+                source.TrySetCanceled();
             }
         }
         public static async UniTask TestUni5()
         {
             //线程切换
-            //int result = 0;
-            //await UniTask.RunOnThreadPool(() => { result = 1; });
-            //await UniTask.SwitchToMainThread();
-            //Debug.LogError($"测试:{result}");
+            int result = 0;
+            await UniTask.RunOnThreadPool(() => { result = 1; });
+            await UniTask.SwitchToMainThread();
+            Debug.LogError($"测试:{result}");
 
-            //string fileNeme = "url";
-            //await UniTask.SwitchToThreadPool();
-            //string fileContent = await File.ReadAllTextAsync(fileNeme);
-            //await UniTask.Yield(PlayerLoopTiming.Update);//只要调用yield就会回到主线程
-            //Debug.LogError($"测试:{fileContent}");
+            string fileNeme = "url";
+            await UniTask.SwitchToThreadPool();
+            string fileContent = await File.ReadAllTextAsync(fileNeme);
+            await UniTask.Yield(PlayerLoopTiming.Update);//只要调用yield就会回到主线程
+            Debug.LogError($"测试:{fileContent}");
         }
         #endregion
 

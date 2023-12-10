@@ -13,6 +13,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using YangTools.Translate;
 
 namespace YangTools
 {
@@ -308,6 +309,63 @@ namespace YangTools
             AssetDatabase.Refresh();
             Debug.LogError("移除动画事件结束!");
         }
+        #endregion
+
+        #region 文件夹下图片重命名
+
+        [MenuItem(SettingInfo.YongToolsFunctionPath + "文件夹下图片重命名")]
+        public static void ResetName()
+        {
+            string path = SelectFolder();
+
+            BaiduTranslate baiduTranslate = new BaiduTranslate("", "");
+            try
+            {
+                string[] imageExtensions = new string[] { ".jpg", ".png" }; // 这里列举了常见的图像格式作为示例
+
+                string[] filesInFolder = Directory.GetFiles(path);
+                foreach (string file in filesInFolder)
+                {
+                    if (imageExtensions.Contains(Path.GetExtension(file).ToLower()))
+                    {
+                        //Debug.LogError("发现图像文件: " + Path.GetFileName(file));
+
+                        string oldFileName = Path.GetFileNameWithoutExtension(file);// 原始文件名
+                        string newFileName = baiduTranslate.Translate(oldFileName, LanguageType.Zh, LanguageType.En); // 新文件名
+                        newFileName = newFileName.Replace(" ", "");
+
+                        var newFile = file.Replace(oldFileName, newFileName);
+                        //Debug.LogError("图片" + file + "|" + newFile);
+                        Thread.Sleep(1002);
+                        try
+                        {
+                            File.Move(file, newFile); // 调用File.Move()函数进行重命名操作
+                            //Debug.LogError("图片已经被重命名为" + newFileName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError("发生错误：" + e.Message);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("错误信息: " + e.Message);
+            }
+
+        }
+
+        //选择文件夹
+        private static string SelectFolder()
+        {
+            string pathKey = $"SelectFolder";
+            var path = EditorPrefs.GetString(pathKey);
+            path = EditorUtility.SaveFolderPanel("选择文件夹", path, "");
+            EditorPrefs.SetString(pathKey, path);
+            return path;
+        }
+
         #endregion
     }
 

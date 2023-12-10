@@ -46,8 +46,6 @@ public static class BuildTool
         //PlayerSettings.Android.keystorePass = "x";
         //PlayerSettings.Android.keyaliasName = "x";
         //PlayerSettings.Android.keyaliasPass = "x";
-
-
     }
     /// <summary>
     /// 开始打包

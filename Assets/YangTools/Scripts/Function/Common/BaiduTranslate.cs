@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using UnityEngine;
 
 namespace YangTools.Translate
@@ -61,11 +62,10 @@ namespace YangTools.Translate
             System.Random rd = new System.Random();
             string salt = rd.Next(100000).ToString();
             string sign = EncryptString(appID + q + salt + secretkey);
-            string url = "http://api.fanyi.baidu.com/api/trans/vip/translate?";
-            url += "q=" + q;
-            //url += "q=" + HttpUtility.UrlEncode(q);
-            url += "&from=" + from.ToString();
-            url += "&to=" + to.ToString();
+            string url = "https://fanyi-api.baidu.com/api/trans/vip/translate?";
+            url += "q=" + HttpUtility.UrlEncode(q);
+            url += "&from=" + from.ToString().ToLower();
+            url += "&to=" + to.ToString().ToLower();
             url += "&appid=" + appID;
             url += "&salt=" + salt;
             url += "&sign=" + sign;

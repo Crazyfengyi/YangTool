@@ -420,8 +420,6 @@ namespace YangTools.Extend
         /// <summary>
         /// 物体下所有图片材质还原(材质置空)(包含显示为false的)
         /// </summary>
-        /// <param name="gameObject"></param>
-        /// <param name="color"></param>
         public static void SetAllImageDefault(this GameObject gameObject)
         {
             var images = gameObject.GetComponentsInChildren<Image>(true);

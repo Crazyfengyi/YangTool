@@ -10,10 +10,10 @@ using UnityEngine;
 
 namespace YangTools
 {
-    [CreateAssetMenu(fileName = "YangSettingSO", menuName = "YangTool/YangSettingSO")]
     /// <summary>
     /// 工具设置开关
     /// </summary>
+    [CreateAssetMenu(fileName = "YangSettingSO", menuName = "YangTool/YangSettingSO")]
     public class YangSettingSO : ScriptableObject
     {
         [LabelText("开关Hierarchy面板设置")]

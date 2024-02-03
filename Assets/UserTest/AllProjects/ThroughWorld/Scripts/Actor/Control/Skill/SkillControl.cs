@@ -17,6 +17,7 @@ using UnityEngine.Playables;
 using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
 using System.Resources;
 using System.Collections.Generic;
+using DataStruct;
 
 [Serializable]
 /// <summary>

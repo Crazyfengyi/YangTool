@@ -7,6 +7,7 @@
 */
 using System;
 using System.Collections;
+using DataStruct;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;

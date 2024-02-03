@@ -5,6 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-10-15 
 */
+
+using DataStruct;
 using UnityEngine;
 using YangTools;
 using YangTools.Log;

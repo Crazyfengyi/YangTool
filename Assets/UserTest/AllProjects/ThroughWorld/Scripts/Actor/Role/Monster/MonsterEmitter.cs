@@ -7,6 +7,7 @@
 */
 using UnityEngine;
 using System.Collections;
+using DataStruct;
 using YangTools.Extend;
 using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 /// <summary>

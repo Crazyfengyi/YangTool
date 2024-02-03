@@ -6,7 +6,8 @@
  *创建时间:         2023-07-16 
 */  
 using System;
-using System.Collections;  
+using System.Collections;
+using DataStruct;
 using UnityEngine;  
 using UnityEngine.UI;
 using TMPro;

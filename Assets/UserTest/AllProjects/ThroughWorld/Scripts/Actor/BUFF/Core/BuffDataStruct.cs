@@ -7,6 +7,7 @@
 */
 using Sirenix.OdinInspector;
 using System;
+using DataStruct;
 
 /// <summary>
 /// buff状态

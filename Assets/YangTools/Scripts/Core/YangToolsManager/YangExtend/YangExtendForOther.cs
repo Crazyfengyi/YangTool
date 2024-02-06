@@ -235,7 +235,7 @@ namespace YangTools.Extend
         /// <summary>
         /// 获得按键
         /// </summary>
-        public static bool GetKeyDown(KeyCode _code)
+        public static bool EditorGetKeyDown(KeyCode _code)
         {
 #if UNITY_EDITOR
             return Input.GetKeyDown(_code);
@@ -246,7 +246,6 @@ namespace YangTools.Extend
         /// <summary>
         /// 获取时间戳
         /// </summary>
-        /// <returns></returns>
         public static string GetTimeStamp()
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);

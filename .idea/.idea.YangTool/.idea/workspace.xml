@@ -6,6 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="88770cd2-51d9-4e0e-815c-9d20d90ebf66" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.YangTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.YangTool/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/FileContentIndex/81e28aaa-1f31-40e0-af0a-8d9415484947.vsidx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/FileContentIndex/95b5b7ea-4745-4ece-ba68-e9847e7b7268.vsidx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/FileContentIndex/967f20c4-6d8a-4a46-8973-9bdbcbcda0b3.vsidx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/FileContentIndex/c45e61ff-59c8-42c6-aa6a-26836180553c.vsidx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/FileContentIndex/f22dc8d2-1910-4fce-ac6d-98cffdfe10a1.vsidx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/YangTool/v17/.suo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/YangTool/v17/fileList.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/YangTool/v17/fileList.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/DefaultVolumeProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/DefaultVolumeProfile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/YangTools/Scripts/Core/YangToolsManager/YangExtend/YangExtendForTool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/YangTools/Scripts/Core/YangToolsManager/YangExtend/YangExtendForTool.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-Editor-firstpass.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-Editor-firstpass.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-Editor.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-Editor.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-firstpass.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp-firstpass.csproj.AssemblyReference.cache" afterDir="false" />
@@ -33,41 +42,67 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5580a85131d6485c8bcaf178996ed0c01d3200/37/56f008ce/MonoBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UserTest/AllProjects/ThroughWorld/Scripts/Actor/Bullet/PhysicsBullet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/YangTools/Scripts/Function/GizmosManager/GizmosManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/YangTools/Scripts/Function/UICustom/CustomButton.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2YFMC5Cc7fNzfeeBgqTbPB52n1i" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\enuna\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\enuna\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\enuna\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\Administrator\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Administrator\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\Administrator\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
-  <component name="RunManager" selected="附加到 Unity 编辑器.附加到 Unity 编辑器">
+}]]></component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="启动 Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="G:\Program Files\Unity\2023.3.0a15\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath F:\UnityProject\YangTool -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="F:\UnityProject\YangTool" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="F:\Unity\2023.2.0b16\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath D:\YANG\YangTool -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="D:\YANG\YangTool" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="F:\Unity\2023.2.0b16\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath D:\YANG\YangTool -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="D:\YANG\YangTool" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <method v="2" />
@@ -80,7 +115,7 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <method v="2" />
     </configuration>
-    <configuration name="附加到 Unity 编辑器" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -90,7 +125,7 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="附加到 Unity 编辑器并运行" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -115,6 +150,8 @@
       <workItem from="1701681091822" duration="8000" />
       <workItem from="1702260363891" duration="2133000" />
       <workItem from="1704183841573" duration="300000" />
+      <workItem from="1706965647870" duration="192000" />
+      <workItem from="1706965875409" duration="3737000" />
     </task>
     <servers />
   </component>
@@ -125,5 +162,9 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

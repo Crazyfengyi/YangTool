@@ -12,6 +12,7 @@ using System.Collections;
 using UnityEngine.AI;
 using Pathfinding;
 using cfg.monster;
+using DataStruct;
 using YangTools.Extend;
 using Sirenix.OdinInspector;
 

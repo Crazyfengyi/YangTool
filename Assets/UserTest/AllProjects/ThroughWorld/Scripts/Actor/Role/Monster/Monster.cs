@@ -7,6 +7,7 @@
 */
 using System.Collections.Generic;
 using cfg.skill;
+using DataStruct;
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;

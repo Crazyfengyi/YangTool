@@ -5,6 +5,8 @@
  *UnityVersion：2022.1.0f1c1 
  *创建时间:         2022-11-13 
 */
+
+using DataStruct;
 using UnityEngine;
 
 /// <summary>

@@ -5,6 +5,8 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
+
+using DataStruct;
 using UnityEngine;
 
 /// <summary>

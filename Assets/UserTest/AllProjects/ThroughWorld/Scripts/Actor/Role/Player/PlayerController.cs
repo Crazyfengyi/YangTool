@@ -9,6 +9,7 @@
 using System;
 using cfg.player;
 using CMF;
+using DataStruct;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;

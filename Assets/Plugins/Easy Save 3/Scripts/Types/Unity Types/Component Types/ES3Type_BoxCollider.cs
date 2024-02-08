@@ -47,7 +47,7 @@ namespace ES3Types
                         instance.contactOffset = reader.Read<System.Single>();
                         break;
                     case "material":
-                        instance.sharedMaterial = reader.Read<UnityEngine.PhysicsMaterial>();
+                        instance.sharedMaterial = reader.Read<UnityEngine.PhysicMaterial>();
                         break;
                     default:
                         reader.Skip();

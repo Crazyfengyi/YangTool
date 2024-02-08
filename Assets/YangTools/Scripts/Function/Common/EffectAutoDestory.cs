@@ -3,7 +3,7 @@
 namespace YangTools
 {
     /// <summary>
-    /// 自动删除特效--放在粒子父节点上
+    /// 自动删除特效(放在粒子父节点上)
     /// </summary>
     public class EffectAutoDestory : MonoBehaviour
     {

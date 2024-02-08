@@ -6,10 +6,10 @@ using YangTools.Extend;
 
 namespace YangTools
 {
-    [RequireComponent(typeof(Image), typeof(RectMask2D))]
     /// <summary>
     /// 文本走马灯效果
     /// </summary>
+    [RequireComponent(typeof(Image), typeof(RectMask2D))]
     public class TextWalkingLantern : MonoBehaviour
     {
         /// <summary>

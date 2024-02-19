@@ -9,15 +9,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 /// <summary>
 /// 对话框容器
 /// </summary>
+[Serializable]
 public class DialogContainer : ScriptableObject
 {
     public List<DialogNodeData> DialogNodeData = new List<DialogNodeData>();
     public List<NodeLinkData> NodeLinks = new List<NodeLinkData>();
-
-
-
 }

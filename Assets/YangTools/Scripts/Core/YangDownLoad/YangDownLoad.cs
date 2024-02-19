@@ -48,9 +48,9 @@ namespace YangTools
 
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.result == UnityWebRequest.Result.ProtocolError ||
-                webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                webRequest.result == UnityWebRequest.Result.DataProcessingError)
+            if (webRequest.result is UnityWebRequest.Result.ProtocolError or
+                UnityWebRequest.Result.ConnectionError or 
+                UnityWebRequest.Result.DataProcessingError)
             {
                 failed?.Invoke(webRequest.error);
             }

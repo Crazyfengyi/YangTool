@@ -11,7 +11,7 @@ namespace YangTools.Extend
     /// </summary>
     public static partial class YangExtend
     {
-        //TODO 读表，时间，通用范型类，多语言，SDKManager,/*事件系统*/，/*定时器*/，广告，支付
+        //TODO /*读表 LuBan*/，时间，/*通用范型类*/，多语言，SDKManager,/*事件系统*/，/*定时器*/，广告，支付
 
         #region 事件系统扩展
         /// <summary>

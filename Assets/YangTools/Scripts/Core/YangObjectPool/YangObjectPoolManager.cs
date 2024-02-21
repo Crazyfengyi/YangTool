@@ -23,10 +23,10 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
         /// </summary>
-        public static bool IsCheckRecyle { get; set; } = true;
+        public static bool IsCheckRecycle { get; set; } = true;
 
         //所有对象池
-        private static readonly Dictionary<string, PoolPackage> m_allPools = new Dictionary<string, PoolPackage>();
+        private static readonly Dictionary<string, PoolPackage> AllPools = new Dictionary<string, PoolPackage>();
 
         #region 生命周期
 
@@ -36,7 +36,7 @@ namespace YangTools.ObjectPool
 
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            foreach (KeyValuePair<string, PoolPackage> item in m_allPools)
+            foreach (KeyValuePair<string, PoolPackage> item in AllPools)
             {
                 item.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
@@ -44,7 +44,7 @@ namespace YangTools.ObjectPool
 
         internal override void CloseModule()
         {
-            m_allPools.Clear();
+            AllPools.Clear();
         }
 
         #endregion 生命周期
@@ -59,14 +59,14 @@ namespace YangTools.ObjectPool
         {
             string resultKey = GetTypeKey<T>(poolKey);
 
-            if (m_allPools.ContainsKey(resultKey))
+            if (AllPools.TryGetValue(resultKey, out var pool))
             {
-                return m_allPools[resultKey].GetPool<T>().Get(args);
+                return pool.GetPool<T>().Get(args);
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return m_allPools[resultKey].GetPool<T>().Get(args);
+                return AllPools[resultKey].GetPool<T>().Get(args);
             }
         }
 
@@ -78,14 +78,14 @@ namespace YangTools.ObjectPool
             item = null;
             string resultKey = GetTypeKey<T>(poolKey);
 
-            if (m_allPools.ContainsKey(resultKey))
+            if (AllPools.TryGetValue(resultKey, out var pool))
             {
-                return m_allPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+                return pool.GetPool<T>().GetAutoRecycleItem();
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return m_allPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+                return AllPools[resultKey].GetPool<T>().GetAutoRecycleItem();
             }
         }
 
@@ -99,12 +99,12 @@ namespace YangTools.ObjectPool
 
             //包裹类-为了将对象池放进字典统一管理
             PoolPackage package = new PoolPackage();
-            package.objectPool = pool;
-            package.T_type = typeof(T);
-            package.Pool_type = pool.GetType();
+            package.ObjectPool = pool;
+            package.Type = typeof(T);
+            package.PoolType = pool.GetType();
             package.Binding<T>();
 
-            m_allPools.Add(key, package);
+            AllPools.Add(key, package);
         }
 
         /// <summary>
@@ -119,24 +119,24 @@ namespace YangTools.ObjectPool
             {
                 key = typeof(T).FullName;
             }
-            if (m_allPools.ContainsKey(key))
+            if (AllPools.ContainsKey(key))
             {
-                m_allPools[key].GetPool<T>().Recycle(item);
+                AllPools[key].GetPool<T>().Recycle(item);
                 return true;
             }
             else
             {
-                if (IsCheckRecyle)
+                if (IsCheckRecycle)
                 {
                     ObjectPool<T> pool = new ObjectPool<T>();
                     pool.PoolKey = item.PoolKey;
                     PoolPackage package = new PoolPackage();
-                    package.objectPool = pool;
-                    package.T_type = item.GetType();
-                    package.Pool_type = pool.GetType();
+                    package.ObjectPool = pool;
+                    package.Type = item.GetType();
+                    package.PoolType = pool.GetType();
                     package.Binding<T>();
-                    m_allPools.Add(key, package);
-                    m_allPools[key].GetPool<T>().Recycle(item);
+                    AllPools.Add(key, package);
+                    AllPools[key].GetPool<T>().Recycle(item);
                     return true;
                 }
             }
@@ -151,9 +151,9 @@ namespace YangTools.ObjectPool
         public static bool Clear<T>() where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
-            if (m_allPools.ContainsKey(key))
+            if (AllPools.ContainsKey(key))
             {
-                m_allPools[key].GetPool<T>().Clear();
+                AllPools[key].GetPool<T>().Clear();
                 return true;
             }
             return false;
@@ -185,14 +185,14 @@ namespace YangTools.ObjectPool
     /// </summary>
     internal class PoolPackage
     {
-        public object objectPool;
-        public Type Pool_type;
-        public Type T_type;
+        public object ObjectPool;
+        public Type PoolType;
+        public Type Type;
         private ReflectionInfo updateAction;//轮询方法
 
         public ObjectPool<T> GetPool<T>() where T : class, IPoolItem<T>, new()
         {
-            return (ObjectPool<T>)(object)objectPool;
+            return (ObjectPool<T>)(object)ObjectPool;
         }
 
         /// <summary>
@@ -200,9 +200,9 @@ namespace YangTools.ObjectPool
         /// </summary>
         public void Binding<T>()
         {
-            Type type = Pool_type;
+            Type type = PoolType;
             System.Reflection.MethodInfo createFunc = type.GetMethod("Update");
-            updateAction = new ReflectionInfo(objectPool, createFunc);
+            updateAction = new ReflectionInfo(ObjectPool, createFunc);
         }
 
         public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
@@ -229,11 +229,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 所有对象数
         /// </summary>
-        public int AllCount
-        {
-            get;
-            private set;
-        }
+        public int AllCount { get; private set; }
 
         /// <summary>
         /// 使用数量
@@ -412,10 +408,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 不活跃的数量
         /// </summary>
-        int InactiveCount
-        {
-            get;
-        }
+        int InactiveCount { get; }
 
         /// <summary>
         /// 自动回收间隔
@@ -621,8 +614,8 @@ namespace YangTools.ObjectPool
     /// </summary>
     public static class ReferencePool
     {
-        private static Dictionary<Type, object> poolDictionary = new Dictionary<Type, object>();
-        private static readonly UnityEngine.Object lockObject = new UnityEngine.Object();
+        private static readonly Dictionary<Type, object> PoolDictionary = new Dictionary<Type, object>();
+        private static readonly UnityEngine.Object LockObject = new UnityEngine.Object();
 
         /// <summary>
         /// 获取
@@ -630,12 +623,11 @@ namespace YangTools.ObjectPool
         public static T Get<T>()
         {
             T newObject;
-            lock (lockObject)
+            lock (LockObject)
             {
-                if (poolDictionary.ContainsKey(typeof(T)))
+                if (PoolDictionary.ContainsKey(typeof(T)))
                 {
-                    var pooledObjects = poolDictionary[typeof(T)] as Stack<T>;
-                    if (pooledObjects.Count > 0)
+                    if (PoolDictionary[typeof(T)] is Stack<T> pooledObjects && pooledObjects.Count > 0)
                     {
                         return pooledObjects.Pop();
                     }
@@ -657,19 +649,17 @@ namespace YangTools.ObjectPool
                 return;
             }
 
-            lock (lockObject)
+            lock (LockObject)
             {
-                object value;
-                if (poolDictionary.TryGetValue(typeof(T), out value))
+                if (PoolDictionary.TryGetValue(typeof(T), out var value))
                 {
-                    var pooledObjects = value as Stack<T>;
-                    pooledObjects.Push(obj);
+                    if (value is Stack<T> pooledObjects) pooledObjects.Push(obj);
                 }
                 else
                 {
                     var pooledObjects = new Stack<T>();
                     pooledObjects.Push(obj);
-                    poolDictionary.Add(typeof(T), pooledObjects);
+                    PoolDictionary.Add(typeof(T), pooledObjects);
                 }
             }
         }
@@ -679,16 +669,16 @@ namespace YangTools.ObjectPool
         /// </summary>
         public static void Clear()
         {
-            lock (lockObject)
+            lock (LockObject)
             {
-                poolDictionary.Clear();
+                PoolDictionary.Clear();
             }
         }
 
         /// <summary>
         /// 创建实例
         /// </summary>
-        public static object CreateInstance(Type t)
+        private static object CreateInstance(Type t)
         {
 #if NETFX_CORE && !UNITY_EDITOR//微软VR
             if (t.IsGenericType() && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {

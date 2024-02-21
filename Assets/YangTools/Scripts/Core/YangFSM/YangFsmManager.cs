@@ -77,6 +77,7 @@ public class YangFsmManager : GameModuleBase
         Fsms.Add(keyName, fsm);
         return fsm;
     }
+
     /// <summary>
     /// 获得状态机
     /// </summary>
@@ -86,7 +87,7 @@ public class YangFsmManager : GameModuleBase
         {
             return fsm;
         }
-        
+
         return null;
     }
 }
@@ -99,7 +100,7 @@ public abstract class FsmStateBase<T>
     /// <summary>
     /// 状态机
     /// </summary>
-    public YangFsm<T> Fsm { get; set; }
+    public YangFsm<T> Fsm { get; protected set; }
 
     /// <summary>
     /// 状态初始化
@@ -147,12 +148,12 @@ public abstract class YangFsm
     /// <summary>
     /// 状态机名字
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; protected set; }
 
     /// <summary>
     /// 状态机全名字
     /// </summary>
-    public string FullName { get; set; }
+    public string FullName { get; protected set; }
 
     public virtual void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
     {
@@ -171,7 +172,7 @@ public class YangFsm<T> : YangFsm
     /// <summary>
     /// 持有者
     /// </summary>
-    public T Handle { get; set; }
+    public T Handle { get; protected set; }
 
     //所有状态
     private List<FsmStateBase<T>> allStateList;

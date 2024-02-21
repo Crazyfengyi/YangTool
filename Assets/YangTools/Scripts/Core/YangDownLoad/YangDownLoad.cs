@@ -41,7 +41,6 @@ namespace YangTools
         /// <summary>
         /// 标准下载
         /// </summary>
-        /// <returns></returns>
         public static IEnumerator DownLoad(string url, Action<byte[]> succeed, Action<string> failed)
         {
             UnityWebRequest webRequest = UnityWebRequest.Get($"{url}");
@@ -60,5 +59,4 @@ namespace YangTools
             }
         }
     }
-
 }

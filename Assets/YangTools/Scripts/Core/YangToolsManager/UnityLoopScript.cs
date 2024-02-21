@@ -15,22 +15,10 @@ namespace YangTools
     public class UnityLoopScript : MonoBehaviour
     {
         #region 生命周期
-        /// <summary>
-        /// 游戏组件初始化。
-        /// </summary>
-        private void Awake()
-        {
-        }
-        private void Start()
-        {
-        }
         private void Update()
         {
             YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
             YangCoroutineManager.Instance.UpdateCorountine();
-        }
-        private void OnDestroy()
-        {
         }
         private void OnApplicationQuit()
         {

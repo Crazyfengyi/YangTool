@@ -239,7 +239,7 @@ namespace YangTools
         public object[] args { get; private set; }
 
         /// <summary>
-        ///构造方法
+        /// 构造方法
         /// </summary>
         /// <param name="_name">事件名称</param>
         /// <param name="_args">事件参数</param>

@@ -36,6 +36,5 @@ namespace YangTools
                 enabled = false;
             }
         }
-
     }
 }

@@ -9,20 +9,22 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using DataStruct;
+using UnityEngine;
 
-[Serializable]
 /// <summary>
 /// 角色属性控制器
 /// </summary>
+[Serializable]
 public class RoleAttributeControl
 {
     private RoleBase handle;
     //血量
     public ValueTotal Attack => GetAttribute(RoleAttribute.HP);
-    [ShowInInspector]
     /// <summary>
     /// 所有属性
     /// </summary>
+    [ShowInInspector]
+    [SerializeField]
     public Dictionary<RoleAttribute, ValueTotal> attributesDic = new Dictionary<RoleAttribute, ValueTotal>();
     public RoleAttributeControl(RoleBase _handle)
     {

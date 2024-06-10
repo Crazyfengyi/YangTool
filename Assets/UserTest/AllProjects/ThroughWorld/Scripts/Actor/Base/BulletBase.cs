@@ -59,7 +59,6 @@ public class BulletBase
         this.data = data;
         bulletObj = obj;
         bulletObj.transform.forward = data.direction;
-
         decorator = new List<BulletDecoratorBase>();
 
         OnStartEvent?.Invoke();

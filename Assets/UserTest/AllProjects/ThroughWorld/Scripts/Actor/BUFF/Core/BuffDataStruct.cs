@@ -129,6 +129,8 @@ public enum BuffEndType
 {
     None,
     TimeOver,
+    CountOver,
+    TimeOrCountOver
 }
 public enum BuffFlagType
 {

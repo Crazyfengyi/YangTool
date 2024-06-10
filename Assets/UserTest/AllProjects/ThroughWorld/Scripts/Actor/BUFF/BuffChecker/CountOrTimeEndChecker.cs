@@ -1,26 +1,27 @@
 /** 
- *Copyright(C) 2020 by DefaultCompany 
+ *Copyright(C) 2020 by Test 
  *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-08-14 
-*/
+ *Author:       WIN-VJ19D9AB7HB 
+ *UnityVersion：2023.2.0b16 
+ *创建时间:         2024-06-10 
+*/  
 using System;
-
+  
 /// <summary>
-/// 时间结束检测
+/// 次数或时间结束检测
 /// </summary>
 [Serializable]
-public class TimeEndChecker : BuffEndChecker
+public class CountOrTimeEndChecker : BuffEndChecker 
 {
     /// <summary>
     /// 结束时间
     /// </summary>
     public RefreshValue timeValue;
-    public TimeEndChecker(BuffConfig buffConfig) : base(buffConfig)
+    public CountOrTimeEndChecker(BuffConfig buffConfig) : base(buffConfig)
     {
         timeValue = new RefreshValue(buffConfig.time, true);
     }
+    
     public override void Update(float tickTime)
     {
         base.Update(tickTime);
@@ -43,4 +44,4 @@ public class TimeEndChecker : BuffEndChecker
         base.Refresh();
         timeValue.RefreshToMax();
     }
-}
+} 

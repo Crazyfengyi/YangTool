@@ -12,27 +12,29 @@ using DataStruct;
 using UnityEngine;
 using YangTools.Log;
 
-[Serializable]
 /// <summary>
 /// BUFF控制器
 /// </summary>
+[Serializable]
 public class BuffControl : ICustomLife
 {
-    [SerializeField]
     /// <summary>
     /// 持有者
     /// </summary>
+    [SerializeField]
     protected RoleBase handle;
     /// <summary>
     /// 事件关联器
     /// </summary>
     protected BuffEventRelation buffEventRelation = new BuffEventRelation();
-    [ShowInInspector]
-    [SerializeField]
     /// <summary>
     /// buff列表
     /// </summary>
+    [ShowInInspector]
     private readonly List<BuffBase> buffList = new List<BuffBase>();
+
+    public Action<BuffBase> OnBuffAddCallBack;
+    public Action<BuffBase> OnBuffRemoveCallBack;
     /// <summary>
     /// 初始化
     /// </summary>
@@ -91,6 +93,7 @@ public class BuffControl : ICustomLife
         //创建BUFF
         BuffBase buffBase = CreateBuff(creator == null ? handle : creator, handle, buffId);
         buffBase = AddBuff(buffBase);
+        OnBuffAddCallBack?.Invoke(buffBase);
         return buffBase;
     }
     /// <summary>
@@ -150,6 +153,7 @@ public class BuffControl : ICustomLife
         {
             OnRemoveOtherBuff(handle, buffBase.id);
         }
+        OnBuffRemoveCallBack?.Invoke(buffBase);
     }
     /// <summary>
     /// 创建BUFF
@@ -552,10 +556,10 @@ public abstract class BuffEventListenerBase
 
 }
 
-[Serializable]
 /// <summary>
 /// BUFF结束检测器
 /// </summary>
+[Serializable]
 public class BuffEndChecker
 {
     /// <summary>
@@ -572,11 +576,11 @@ public class BuffEndChecker
     /// <returns></returns>
     public bool IsCanEffective()
     {
-        return CDTimer.curValue <= 0 && !IsEnd();
+        return CDTimer.currentValue <= 0 && !IsEnd();
     }
     public virtual void Update(float tickTime)
     {
-        CDTimer.Update(tickTime);
+        CDTimer.CutDown(tickTime);
     }
     /// <summary>
     /// 是否生效
@@ -597,14 +601,14 @@ public class BuffEndChecker
     /// </summary>
     public virtual void OnActive()
     {
-        CDTimer.Refresh();
+        CDTimer.RefreshToMax();
     }
     /// <summary>
     /// 重置为最大值(倒计时)
     /// </summary>
     public virtual void Refresh()
     {
-        CDTimer.Refresh();
+        CDTimer.RefreshToMax();
     }
     public static BuffEndChecker Create(BuffConfig buffConfig)
     {
@@ -612,42 +616,41 @@ public class BuffEndChecker
         {
             case BuffEndType.TimeOver:
                 return new TimeEndChecker(buffConfig);
-                //case BuffEndType.可使用次数结束:
-                //    return new CountEndCheck(buffConfig);
-                //case BuffEndType.次数时间任意结束:
-                //    return new CountOrTimeEndCheck(buffConfig);
-                //case BuffEndType.间隔时间生效_时间结束:
-                //    return new IntervalEndCheck(buffConfig);
+            case BuffEndType.CountOver:
+                return new CountEndChecker(buffConfig);
+            case BuffEndType.TimeOrCountOver:
+                return new CountOrTimeEndChecker(buffConfig);
         }
         return null;
     }
 }
 
-[Serializable]
 /// <summary>
-/// 刷新值(倒计时)
+/// 刷新值
 /// </summary>
+[Serializable]
 public class RefreshValue
 {
     private float maxValue;//最大值
-    public float curValue;//当前值
-    public RefreshValue(float value, bool setMax)
+    public float currentValue;//当前值
+    public RefreshValue(float value, bool isSetMax)
     {
         maxValue = value;
-        curValue = setMax ? maxValue : 0;
+        currentValue = isSetMax ? maxValue : 0;
     }
     /// <summary>
-    /// 更新
+    /// 值减少
     /// </summary>
-    public void Update(float tickTime)
+    public void CutDown(float value)
     {
-        curValue -= tickTime;
+        currentValue -= value;
     }
+    
     /// <summary>
-    ///重置为最大值
+    /// 重置为最大值
     /// </summary>
-    public void Refresh()
+    public void RefreshToMax()
     {
-        curValue = maxValue;
+        currentValue = maxValue;
     }
 }

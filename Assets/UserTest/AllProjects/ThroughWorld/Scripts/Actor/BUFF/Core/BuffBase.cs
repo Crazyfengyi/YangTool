@@ -10,10 +10,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 /// <summary>
 /// buff基类
 /// </summary>
+[Serializable]
 public abstract class BuffBase
 {
     /// <summary>
@@ -30,25 +30,25 @@ public abstract class BuffBase
     /// 挂载的目标
     /// </summary>
     public GameActor target;
-    [BoxGroup("基础数据")]
     /// <summary>
     /// buffID
     /// </summary>
-    public BuffID id;
     [BoxGroup("基础数据")]
+    public BuffID id;
     /// <summary>
     /// 图标
     /// </summary>
-    public Texture2D icon;
     [BoxGroup("基础数据")]
+    public Sprite icon;
     /// <summary>
     /// BUFF类型
     /// </summary>
-    public BuffFlagType buffFlagType;
     [BoxGroup("基础数据")]
+    public BuffFlagType buffFlagType;
     /// <summary>
     /// 分组设置
     /// </summary>
+    [BoxGroup("基础数据")]
     public BuffGroupSetting groupSetting;
     /// <summary>
     /// 生效事件
@@ -62,10 +62,10 @@ public abstract class BuffBase
     /// 是否可以生效回调
     /// </summary>
     public Func<bool> IsCanActive;
-    [SerializeField]
     /// <summary>
     /// 结束检查
     /// </summary>
+    [SerializeField]
     public BuffEndChecker buffEndChecker;
 
     #region 运行时用
@@ -146,7 +146,7 @@ public abstract class BuffBase
     {
         buffEndChecker = BuffEndChecker.Create(buffConfig);
         groupSetting = buffConfig.buffGroupSetting;
-        skillDescribe = buffConfig.des;
+        skillDescribe = buffConfig.des; 
     }
 
     #region 生命周期

@@ -10,15 +10,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 /// <summary>
 /// 总值
 /// </summary>
+[Serializable]
 public class ValueTotal
 {
     //第一层时Core（核心层）。
     //Core层是玩家各个其他模块的属性总和
     [ShowInInspector]
+    [SerializeField]
     private float value;//当前值
     public float Value
     {

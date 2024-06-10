@@ -14,7 +14,7 @@ using UnityEngine;
 public class AttributeChange : BuffBase
 {
     //角色属性更改列表
-    public List<BuffAttributeChangeInfo> buffAttributeChangeInfo;
+    private List<BuffAttributeChangeInfo> buffAttributeChangeInfo;
 
     public AttributeChange(GameActor _creator, GameActor _target, int configId) : base(_creator, _target, configId)
     {

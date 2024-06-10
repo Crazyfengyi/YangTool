@@ -19,10 +19,10 @@ public abstract class RoleBase : GameActor
 {
     [HideInEditorMode]
     [ShowInInspector]
-    protected BuffControl roleBuffControl;
+    public BuffControl roleBuffControl;
     [HideInEditorMode]
     [ShowInInspector]
-    protected RoleAttributeControl roleAttributeControl;
+    public RoleAttributeControl roleAttributeControl;
     [HideInEditorMode]
     [ShowInInspector]
     protected HealthControl healthControl;
@@ -82,6 +82,7 @@ public abstract class RoleBase : GameActor
     #endregion
 
     #region 初始化记录
+    
     private Vector3 startPos;
     /// <summary>
     /// 初始点
@@ -92,7 +93,7 @@ public abstract class RoleBase : GameActor
     {
         startPos = transform.position;
     }
-
+    
     #endregion
 
     #region 生命周期接口实现
@@ -207,6 +208,7 @@ public abstract class RoleBase : GameActor
     #endregion
 
     #region 标记值操作
+    
     public float GetFlag(RoleFlag roleFlag, float defaultValue = 0)
     {
         if (flagkeyValue.TryGetValue(roleFlag, out var flagvalue))
@@ -230,9 +232,11 @@ public abstract class RoleBase : GameActor
             flagkeyValue.Add(roleFlag, value);
         }
     }
+    
     #endregion
 
     #region 特效
+    
     /// <summary>
     /// 播放特效--挂载到身上
     /// </summary>
@@ -304,6 +308,7 @@ public abstract class RoleBase : GameActor
 
         return effect;
     }
+    
     #endregion
 
     #region 攻击和被击接口实现
@@ -328,8 +333,15 @@ public abstract class RoleBase : GameActor
     {
         //伤害信息
         var result = new DamageInfo();
-        result.damage = SkillControl.CurrentRunTimeSkillData.skill.Atk.Percent * GetRoleAttributeValue(RoleAttribute.Atk);
-        result.damage += SkillControl.CurrentRunTimeSkillData.skill.Atk.Num;
+        if (SkillControl != null && SkillControl.CurrentRunTimeSkillData != null)
+        {
+            result.damage = SkillControl.CurrentRunTimeSkillData.skill.Atk.Percent * GetRoleAttributeValue(RoleAttribute.Atk);
+            result.damage += SkillControl.CurrentRunTimeSkillData.skill.Atk.Num;
+        }
+        else
+        {
+            Debug.LogError($"技能数据为null:{SkillControl == null}:{SkillControl?.CurrentRunTimeSkillData == null}");
+        }
 
         return result; 
     }

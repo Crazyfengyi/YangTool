@@ -142,10 +142,10 @@ public enum BuffID
     None,
     buff_10001,
 }
-[Serializable]
 /// <summary>
 /// buff属性改变信息
 /// </summary>
+[Serializable]
 public struct BuffAttributeChangeInfo
 {
     [LabelText("角色属性")]

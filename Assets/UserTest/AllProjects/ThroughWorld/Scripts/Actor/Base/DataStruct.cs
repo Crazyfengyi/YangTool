@@ -55,8 +55,10 @@ namespace DataStruct
     /// <summary>
     /// 特效信息
     /// </summary>
+    [Serializable]
     public class EffectInfo
     {
+        public string name;
     }
 
     /// <summary>

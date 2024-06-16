@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using DataStruct;
 using UnityEngine;
+using UnityEngine.Serialization;
 using YangTools.Log;
 
 /// <summary>
@@ -565,10 +566,10 @@ public class BuffEndChecker
     /// <summary>
     /// 生效冷却时间
     /// </summary>
-    public RefreshValue CDTimer;
+    public RefreshValue cdTimer;
     protected BuffEndChecker(BuffConfig buffConfig)
     {
-        CDTimer = new RefreshValue(buffConfig.CD, false);
+        cdTimer = new RefreshValue(buffConfig.cd, false);
     }
     /// <summary>
     /// 能否生效
@@ -576,11 +577,11 @@ public class BuffEndChecker
     /// <returns></returns>
     public bool IsCanEffective()
     {
-        return CDTimer.currentValue <= 0 && !IsEnd();
+        return cdTimer.currentValue <= 0 && !IsEnd();
     }
     public virtual void Update(float tickTime)
     {
-        CDTimer.CutDown(tickTime);
+        cdTimer.CutDown(tickTime);
     }
     /// <summary>
     /// 是否生效
@@ -601,14 +602,14 @@ public class BuffEndChecker
     /// </summary>
     public virtual void OnActive()
     {
-        CDTimer.RefreshToMax();
+        cdTimer.RefreshToMax();
     }
     /// <summary>
     /// 重置为最大值(倒计时)
     /// </summary>
     public virtual void Refresh()
     {
-        CDTimer.RefreshToMax();
+        cdTimer.RefreshToMax();
     }
     public static BuffEndChecker Create(BuffConfig buffConfig)
     {

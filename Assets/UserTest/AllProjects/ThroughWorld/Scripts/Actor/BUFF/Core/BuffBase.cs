@@ -144,6 +144,7 @@ public abstract class BuffBase
     /// </summary>
     public virtual void Init(BuffConfig buffConfig)
     {
+        icon = buffConfig.icon;
         buffEndChecker = BuffEndChecker.Create(buffConfig);
         groupSetting = buffConfig.buffGroupSetting;
         skillDescribe = buffConfig.des; 

@@ -29,20 +29,20 @@ public class GizmosManager : MonoBehaviour
     /// <param name="center"></param>
     /// <param name="size"></param>
     /// <param name="time"></param>
-    public void GizmosDrawCube(Vector3 center, Quaternion quaternion, Vector3 size, float time = 2f)
+    public void GizmosDrawCube(Vector3 center, Quaternion quaternion, Vector3 size, float time = 5f)
     {
         drawInfos.Add(new DrawCubeInfo
         {
             center = center,
             rotate = quaternion,
             size = size,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
     /// <summary>
     /// 扇形
     /// </summary>
-    public void GizmosDrawSector(Vector3 pos, Vector3 direction, float length, float angle, float time = 2f)
+    public void GizmosDrawSector(Vector3 pos, Vector3 direction, float length, float angle, float time = 5f)
     {
         drawInfos.Add(new DrawSectorInfo
         {
@@ -50,39 +50,39 @@ public class GizmosManager : MonoBehaviour
             direction = direction,
             length = length,
             angle = angle,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
     /// <summary>
     /// 圆形
     /// </summary>
-    public void GizmosDrawCircle(Vector3 pos, float radius, float time = 2f)
+    public void GizmosDrawCircle(Vector3 pos, float radius, float time = 5f)
     {
         drawInfos.Add(new DrawCircleInfo
         {
             pos = pos,
             radius = radius,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
     /// <summary>
     /// 圆环
     /// </summary>
-    public void GizmosDrawRing(Vector3 pos, float insideRadius, float outsideRadius, float time = 2f)
+    public void GizmosDrawRing(Vector3 pos, float insideRadius, float outsideRadius, float time = 5f)
     {
         drawInfos.Add(new DrawRingInfo
         {
             pos = pos,
             insideRadius = insideRadius,
             outsideRadius = outsideRadius,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
 
     /// <summary>
     /// 球形射线
     /// </summary>
-    public void GizmosDrawSphereRay(Vector3 pos, Vector3 direction, float distance, float radius, float time = 2f)
+    public void GizmosDrawSphereRay(Vector3 pos, Vector3 direction, float distance, float radius, float time = 5f)
     {
         drawInfos.Add(new DrawSphereRayInfo
         {
@@ -90,21 +90,21 @@ public class GizmosManager : MonoBehaviour
             direction = direction,
             distance = distance,
             radius = radius,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
 
     /// <summary>
     /// 射线
     /// </summary>
-    public void GizmosDrawRay(Vector3 pos, Vector3 direction, float distance, float time = 2f)
+    public void GizmosDrawRay(Vector3 pos, Vector3 direction, float distance, float time = 5f)
     {
         drawInfos.Add(new DrawRayInfo
         {
             pos = pos,
             direction = direction,
             distance = distance,
-            time = time
+            overTime = Time.unscaledTime + time
         });
     }
 
@@ -208,13 +208,11 @@ public class GizmosManager : MonoBehaviour
                     }
                     break;
             }
-
-            item.time -= Time.deltaTime;
         }
 
         for (int i = drawInfos.Count - 1; i >= 0; i--)
         {
-            if (drawInfos[i].time <= 0f)
+            if (Time.unscaledTime >= drawInfos[i].overTime)
             {
                 drawInfos.RemoveAt(i);
             }
@@ -225,7 +223,7 @@ public class GizmosManager : MonoBehaviour
 
 public class DrawInfo
 {
-    public float time;
+    public float overTime;
 }
 /// <summary>
 /// 矩形

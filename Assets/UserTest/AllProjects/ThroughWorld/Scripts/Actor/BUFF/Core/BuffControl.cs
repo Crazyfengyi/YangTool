@@ -300,10 +300,10 @@ public class BuffControl : ICustomLife
     #endregion
 }
 
-[Serializable]
 /// <summary>
 /// buff事件关联
 /// </summary>
+[Serializable]
 public class BuffEventRelation
 {
     /// <summary>
@@ -311,7 +311,6 @@ public class BuffEventRelation
     /// </summary>
     /// <param name="buffEventArg">触发时传递的参数</param>
     public delegate void BuffEventDelegate(BuffEventArgBase buffEventArg);
-    [HideInInspector]
     /// <summary>
     /// 全部事件点
     /// </summary>
@@ -382,10 +381,10 @@ public enum BuffEventTriggerPoint
     AddOtherBuff,
     RemoveOtherBuff,
 }
-[Serializable]
 /// <summary>
 /// BUFF分组设置(为了区分优先级和处理排异)
 /// </summary>
+[Serializable]
 public class BuffGroupSetting
 {
     /// <summary>

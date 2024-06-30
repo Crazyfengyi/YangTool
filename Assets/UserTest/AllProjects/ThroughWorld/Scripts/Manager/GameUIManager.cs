@@ -69,12 +69,6 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         base.Awake();
         Debuger.IsForceLog = true;
-
-        returnBtn.gameObject.SetActive(false);
-        returnBtn.onClick.AddListener(() =>
-        {
-            GameManager.Instance.SceneLoad("GameMain");
-        });
     }
     public void Update()
     {
@@ -125,7 +119,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     public void OnSceneChangeStart(string sceneName)
     {
-        returnBtn.gameObject.SetActive(sceneName != "GameMain");
+        
     }
     #endregion
 

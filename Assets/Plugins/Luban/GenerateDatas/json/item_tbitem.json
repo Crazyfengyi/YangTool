@@ -2,7 +2,7 @@
   {
     "id": 10000,
     "name": "测试物品",
-    "desc": "测试用物品",
+    "desc": "测试物品",
     "price": 100,
     "upgrade_to_item_id": 10001,
     "quality": 1,
@@ -27,6 +27,162 @@
   },
   {
     "id": 10001,
+    "name": "金币",
+    "desc": "通用货币",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 3
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 4
+      }
+    ],
+    "exchange_column": {
+      "id": 10002,
+      "num": 3
+    }
+  },
+  {
+    "id": 10002,
+    "name": "金币2",
+    "desc": "通用货币2",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 4
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 5
+      }
+    ],
+    "exchange_column": {
+      "id": 10003,
+      "num": 4
+    }
+  },
+  {
+    "id": 10003,
+    "name": "金币3",
+    "desc": "通用货币3",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 5
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 6
+      }
+    ],
+    "exchange_column": {
+      "id": 10004,
+      "num": 5
+    }
+  },
+  {
+    "id": 10004,
+    "name": "金币4",
+    "desc": "通用货币4",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 6
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 7
+      }
+    ],
+    "exchange_column": {
+      "id": 10005,
+      "num": 6
+    }
+  },
+  {
+    "id": 10005,
+    "name": "金币5",
+    "desc": "通用货币5",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 7
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 8
+      }
+    ],
+    "exchange_column": {
+      "id": 10006,
+      "num": 7
+    }
+  },
+  {
+    "id": 10006,
+    "name": "金币6",
+    "desc": "通用货币6",
+    "price": 0,
+    "upgrade_to_item_id": 10001,
+    "quality": 1,
+    "exchange_stream": {
+      "id": 10001,
+      "num": 8
+    },
+    "exchange_list": [
+      {
+        "id": 10001,
+        "num": 2
+      },
+      {
+        "id": 10002,
+        "num": 9
+      }
+    ],
+    "exchange_column": {
+      "id": 10007,
+      "num": 8
+    }
+  },
+  {
+    "id": 10101,
     "name": "苹果",
     "desc": "红彤彤的上好苹果",
     "price": 100,
@@ -52,7 +208,7 @@
     }
   },
   {
-    "id": 10002,
+    "id": 10102,
     "name": "木薯",
     "desc": "有轻微毒素,需经处理后方可食用.",
     "price": 100,
@@ -78,7 +234,7 @@
     }
   },
   {
-    "id": 10003,
+    "id": 10103,
     "name": "荔枝",
     "desc": "一骑红尘妃子笑,无人知是荔枝来.",
     "price": 100,
@@ -104,7 +260,7 @@
     }
   },
   {
-    "id": 10004,
+    "id": 10104,
     "name": "龙眼",
     "desc": "开胃健脾,补虚益智.",
     "price": 100,
@@ -130,7 +286,7 @@
     }
   },
   {
-    "id": 10005,
+    "id": 10105,
     "name": "辣椒",
     "desc": "太辣了!太辣了!",
     "price": 100,
@@ -156,7 +312,7 @@
     }
   },
   {
-    "id": 10006,
+    "id": 10106,
     "name": "蜜桃",
     "desc": "个头硕大,色泽鲜艳,皮薄肉嫩,果肉细腻,汁甜如蜜.",
     "price": 100,
@@ -182,7 +338,7 @@
     }
   },
   {
-    "id": 10007,
+    "id": 10107,
     "name": "香蕉",
     "desc": "猴子的最爱",
     "price": 100,
@@ -208,7 +364,7 @@
     }
   },
   {
-    "id": 10008,
+    "id": 10108,
     "name": "土豆",
     "desc": "产量极高.",
     "price": 100,
@@ -234,7 +390,7 @@
     }
   },
   {
-    "id": 10009,
+    "id": 10109,
     "name": "火龙果",
     "desc": "花果兼赏，赏食兼用.",
     "price": 100,
@@ -260,7 +416,7 @@
     }
   },
   {
-    "id": 10010,
+    "id": 10110,
     "name": "果梅",
     "desc": "营养丰富",
     "price": 100,
@@ -286,7 +442,7 @@
     }
   },
   {
-    "id": 10011,
+    "id": 10111,
     "name": "鸡蛋",
     "desc": "营养丰富",
     "price": 100,
@@ -312,7 +468,7 @@
     }
   },
   {
-    "id": 10012,
+    "id": 10112,
     "name": "鸭蛋",
     "desc": "营养丰富",
     "price": 100,
@@ -338,7 +494,7 @@
     }
   },
   {
-    "id": 10013,
+    "id": 10113,
     "name": "核桃",
     "desc": "营养丰富",
     "price": 100,
@@ -364,7 +520,7 @@
     }
   },
   {
-    "id": 10014,
+    "id": 10114,
     "name": "包子",
     "desc": "营养丰富",
     "price": 100,

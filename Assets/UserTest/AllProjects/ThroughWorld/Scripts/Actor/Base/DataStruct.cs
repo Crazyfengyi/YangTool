@@ -1,3 +1,11 @@
+/**
+   *Copyright(C) 2020 by DefaultCompany
+   *All rights reserved.
+   *Author:       DESKTOP-AJS8G4U
+   *UnityVersion：2021.2.1f1c1
+   *创建时间:         2021-12-23
+  */
+
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -8,13 +16,6 @@ using static YangTools.Extend.YangExtend;
 
 namespace DataStruct
 {
-    /**
-     *Copyright(C) 2020 by DefaultCompany
-     *All rights reserved.
-     *Author:       DESKTOP-AJS8G4U
-     *UnityVersion：2021.2.1f1c1
-     *创建时间:         2021-12-23
-    */
     /// <summary>
     /// 阵营
     /// </summary>
@@ -24,7 +25,7 @@ namespace DataStruct
         [LabelText("未知的")] None = 0,
         [LabelText("玩家")] Player = 1 << 1,
         [LabelText("怪物")] Monster = 1 << 2,
-        [LabelText("NPC")] Npc = 1 << 3,
+        [LabelText("Npc")] Npc = 1 << 3,
         [LabelText("建筑")] Building = 1 << 4,
         [LabelText("怪物+建筑")] MonsterAndBuilding = Monster + Building,
         [LabelText("玩家+建筑")] PlayerAndBuilding = Player + Building,
@@ -100,7 +101,6 @@ namespace DataStruct
         None,
         物理伤害 = 1,
         魔法伤害,
-        精神伤害,
         真实伤害,
 
         金属性伤害 = 1000,
@@ -110,8 +110,6 @@ namespace DataStruct
         土属性伤害,
 
         普通治疗 = 2000,
-        护盾减少,
-        攻击吸血,
     }
 
     /// <summary>
@@ -241,10 +239,10 @@ namespace DataStruct
         球形射线 = 6,
     }
 
-    [Serializable]
     /// <summary>
     /// 检测信息
     /// </summary>
+    [Serializable]
     public class CheckConfig
     {
         [LabelText("检测类型")] public HitCheckType checkType = HitCheckType.圆形;
@@ -305,7 +303,6 @@ namespace DataStruct
         }
     }
 
-    
     /// <summary>
     /// 怪物等级
     /// </summary>
@@ -313,18 +310,22 @@ namespace DataStruct
     public enum MonsterLevel
     {
         None,
+
         /// <summary>
         /// 士兵
         /// </summary>
         Soldier,
+
         /// <summary>
         /// 勇士
         /// </summary>
         Warrior,
+
         /// <summary>
         /// 将领
         /// </summary>
         General,
+
         /// <summary>
         /// 统帅
         /// </summary>
@@ -336,253 +337,123 @@ namespace DataStruct
     /// </summary>
     public enum RolePropertyType
     {
+        #region 基础
+
         /// <summary>
         /// 血量
         /// </summary>
         Hp = 10000,
 
         /// <summary>
+        /// 魔法值
+        /// </summary>
+        Mp = 10001,
+
+        /// <summary>
         /// 攻击力
         /// </summary>
-        Atk = 10001,
+        Atk = 10002,
 
         /// <summary>
         /// 护盾
         /// </summary>
-        护盾值 = 10002,
+        护盾值 = 10003,
 
         /// <summary>
-        /// 耐力(体力)
+        /// 体力
         /// </summary>
-        Stamina = 10003,
+        Stamina = 10004,
 
         /// <summary>
-        /// 耐力恢复
+        /// 体力恢复
         /// </summary>
-        StaminaRecovery = 10004,
+        StaminaRecovery = 10005,
 
         /// <summary>
         /// 闪避率
         /// </summary>
-        Dodge = 10005,
+        Dodge = 10006,
 
         /// <summary>
         /// 暴击率
         /// </summary>
-        CritPro = 10006,
+        CritPro = 10007,
 
         /// <summary>
-        /// 暴击伤害倍数增加
+        /// 暴击倍数
         /// </summary>
-        CritValue = 10007,
+        CritValue = 10008,
 
         /// <summary>
-        /// 暴击伤害抵抗
+        /// 暴击抗性
         /// </summary>
-        CritResistance = 10008,
+        CritResistance = 10009,
+
+        /// <summary>
+        /// 视野
+        /// </summary>
+        ViewRang = 10031,
 
         /// <summary>
         /// 攻击距离
         /// </summary>
-        AtkRange = 10031,
+        AtkRange = 10032,
 
         /// <summary>
         /// 攻击速度
         /// </summary>
-        AtkSpeed = 10032,
+        AtkSpeed = 10033,
 
         /// <summary>
         /// 移动速度
         /// </summary>
-        MoveSpeed = 10033,
+        MoveSpeed = 10034,
 
         /// <summary>
         /// 冷却缩减
         /// </summary>
-        CoolingDown = 10034,
+        CoolingDown = 10035,
 
         /// <summary>
         /// 技能伤害
         /// </summary>
-        SkillDamage = 10035,
+        SkillDamage = 10036,
 
         /// <summary>
-        /// 检测距离
+        /// 减伤
         /// </summary>
-        CheckRang = 10036,
+        ExtraMinus = 10037,
+
+        #endregion
+
+        #region 属性
 
         /// <summary>
-        /// 击退时间
+        /// 金--导电
         /// </summary>
-        Knockback_time = 10037,
+        Metal = 30010,
 
         /// <summary>
-        /// 击退速度
+        /// 木--缠绕
         /// </summary>
-        Knockback_speed = 10038,
+        Wood = 30020,
 
         /// <summary>
-        /// 击退时间抗性
+        /// 水--冰冻
         /// </summary>
-        KnockbackTime_resistance = 10039,
-        击退抗性 = 10040,
-        击退值 = 10041,
-
-        //==============额外增加===============
-        /// <summary>
-        /// 额外减伤
-        /// </summary>
-        ExtraMinus = 20011,
-
-        /// 最终伤害
-        /// </summary>
-        AtLastHurt = 20021,
+        Water = 30030,
 
         /// <summary>
-        /// 最终增伤
+        /// 火--燃烧
         /// </summary>
-        ExternalAtk_F = 20023,
+        Fire = 30040,
 
         /// <summary>
-        /// 最终减伤
+        /// 土--石化
         /// </summary>
-        ExternalDef_F = 20024,
+        Earth = 30050,
 
-        //===============属性相关===============
-        /// <summary>
-        /// 物理攻击(固定值)
-        /// </summary>
-        PhysicsAtk = 30000,
-
-        /// <summary>
-        /// 物理攻击增加(百分比)
-        /// </summary>
-        PhysicsAtkAdd = 30001,
-
-        /// <summary>
-        /// 物理防御
-        /// </summary>
-        PhysicsDef = 30002,
-
-        /// <summary>
-        /// 无视物理防御(百分比)
-        /// </summary>
-        IgnorePhysicsDef = 30003,
-
-        /// <summary>
-        /// 物理防御减伤(百分比)
-        /// </summary>
-        PhysicsDefMinus = 30004,
-
-        //===========================
-        /// <summary>
-        /// 火属性攻击(固定值)
-        /// </summary>
-        FireAtk = 30011,
-
-        /// <summary>
-        /// 火属性攻击增加(百分比)
-        /// </summary>
-        FireAtkAdd = 30012,
-
-        /// <summary>
-        /// 火属性防御
-        /// </summary>
-        FireDef = 30013,
-
-        /// <summary>
-        /// 无视火属性防御(百分比)
-        /// </summary>
-        IgnoreFireDef = 30014,
-
-        /// <summary>
-        /// 火属性防御减伤(百分比)
-        /// </summary>
-        FireDefMinus = 30015,
-
-        //===========================
-        /// <summary>
-        /// 冰属性(固定值)
-        /// </summary>
-        IceAtk = 30021,
-
-        /// <summary>
-        /// 冰属性攻击增加(百分比)
-        /// </summary>
-        IceAtkAdd = 30022,
-
-        /// <summary>
-        /// 冰属性防御
-        /// </summary>
-        IceDef = 30023,
-
-        /// <summary>
-        /// 无视冰属性防御(百分比)
-        /// </summary>
-        IgnoreIceDef = 30024,
-
-        /// <summary>
-        /// 火属性防御减伤(百分比)
-        /// </summary>
-        IceDefMinus = 30025,
-
-        //===========================
-        /// <summary>
-        /// 雷属性攻击(固定值)
-        /// </summary>
-        ThunderAtk = 30031,
-
-        /// <summary>
-        /// 雷属性攻击增加(百分比)
-        /// </summary>
-        ThunderAtkAdd = 30032,
-
-        /// <summary>
-        /// 雷属性防御
-        /// </summary>
-        ThunderDef = 30033,
-
-        /// <summary>
-        /// 无视雷属性防御(百分比)
-        /// </summary>
-        IgnoreThunderDef = 30034,
-
-        /// <summary>
-        /// 火属性防御减伤(百分比)
-        /// </summary>
-        ThunderDefMinus = 30035,
-
-        //===========================
-        /// <summary>
-        /// 全元素防御
-        /// </summary>
-        ElementResist = 30100,
-
-        /// <summary>
-        /// 全元素伤害(固定值)
-        /// </summary>
-        ElementAtk = 30101,
-
-        /// <summary>
-        /// 全元素伤害(百分比)
-        /// </summary>
-        ElementAtkAdd = 30102,
-
-        //============附加信息============
-        击中吸血百分比 = 30200,
-        击中吸血固定值 = 30201,
-        生命恢复效果增加百分比 = 30202,
-        生命恢复时额外恢复最大生命值百分比 = 30203,
-        普通攻击力增加固定值 = 30204,
-        普通攻击力增加百分比 = 30205,
-        特殊攻击力增加固定值 = 30206,
-        特殊攻击力增加百分比 = 30207,
-        最终物理伤害增加百分比 = 30208,
-        最终元素伤害增加百分比 = 30209,
-        造成基于目标生命百分比的额外伤害 = 30210,
-        造成基于目标生命最大值百分比的额外伤害 = 30211,
-        根据目标受到的减益BUFF数量增加伤害百分比 = 30212,
-        根据目标受到的减益BUFF数量增加暴击几率 = 30213,
+        #endregion
     }
 
     /// <summary>
@@ -604,11 +475,10 @@ namespace DataStruct
         /// 无法回血
         /// </summary>
         NoRecoverHp = 2,
-        击倒起身中,
     }
 
     /// <summary>
-    /// 角色正面状态
+    /// 角色状态
     /// </summary>
     public enum ControlStateType
     {
@@ -617,241 +487,55 @@ namespace DataStruct
         /// <summary>
         /// 正常状态
         /// </summary>
-        NoBeHit = 5,
+        Normal = 1,
+        倒地 = 2,
+        禁锢 = 5,
+        击飞 = 6,
+        眩晕 = 7,
+        冰冻 = 8,
+        导电 = 9,
+        燃烧 = 10,
 
         /// <summary>
         /// 翻滚
         /// </summary>
-        Roll = 39,
+        Roll = 10,
 
         /// <summary>
         /// 霸体
         /// </summary>
-        SuperArmor = 40,
+        SuperArmor = 20,
+        嘲讽 = 21,
 
         /// <summary>
         /// 无敌
         /// </summary>
-        Invincible = 60
+        Invincible = 30,
     }
 
     /// <summary>
-    /// 角色负面状态
+    /// 技能触发类型
     /// </summary>
-    public enum DeControlStateType
-    {
-        None = 0,
-        受击 = 1,
-        击倒 = 6,
-        击退 = 7,
-        减速 = 8,
-        拉动 = 9,
-        沉默 = 21,
-        禁锢 = 22,
-        击飞 = 23,
-        麻痹 = 24,
-        魅惑 = 26,
-        眩晕 = 41,
-        冰冻 = 42,
-        感电 = 43,
-        燃烧 = 44,
-        致盲 = 45,
-        嘲讽 = 46,
-
-        //下面是程序用
-        击倒起身 = 1000,
-    }
-
-    /// <summary>
-    /// 技能类型
-    /// </summary>
-    public enum SkillType
+    public enum SkillTriggerType
     {
         None,
-        [LabelText("普通攻击")] NormalAttack = 1,
+        [LabelText("普通攻击")] NormalAtk = 1,
         [LabelText("主动技能")] ActiveSkill = 2,
         [LabelText("被动技能")] PassiveSkill = 3,
-        [LabelText("技能")] Skill = 4,
-        [LabelText("躲避")] Flee = 5,
-        [LabelText("其他")] Other = 6,
-        [LabelText("死亡技能")] DieSkill = 7,
-    }
-
-    /// <summary>
-    /// buffID
-    /// </summary>
-    public enum BuffID
-    {
-        None,
-        出血固定值 = 10001,
-        出血百分比 = 10002,
-        中毒固定值 = 10003,
-        中毒百分比 = 10004,
-        冰冻固定值 = 10005,
-        冰冻百分比 = 10006,
-        感电固定值 = 10007,
-        感电百分比 = 10008,
-        燃烧固定值 = 10009,
-        燃烧百分比 = 10010,
-        致盲 = 10011,
-        晕眩 = 10012,
-        沉默 = 10013,
-        加速 = 10014,
-        减速 = 10015,
-        击退 = 10016,
-        即死 = 10017,
-        技能击退 = 10301,
-        技能嘲讽 = 10302,
-        技能霸体 = 10303,
-        永久霸体 = 10313,
-        受击 = 10314,
-        击倒 = 10315,
-        无敌 = 10316,
-        净化 = 20001,
-        暴走 = 20002,
-        丢臭臭 = 20003,
-        角色固定生命攻击防御元素防御 = 20004,
-        角色百分比生命攻击防御元素防御 = 20005,
-        角色体能上限固定 = 20006,
-        角色体能上限百分比 = 20007,
-        角色额外生命百分比 = 20008,
-        恢复已损生命值 = 30001,
-        持续回血百分比 = 30002,
-        恢复已损能量 = 30003,
-        能量恢复提速 = 30004,
-        冷却减少1 = 30005,
-        冷却加速1 = 30006,
-        血量损失1 = 30007,
-        暴击率增加1 = 30008,
-        攻速增加1 = 30009,
-        强制右位移 = 30010,
-        非战斗加速 = 16000001
-    }
-
-    /// <summary>
-    /// 技能作用目标
-    /// </summary>
-    public enum SkillTarget
-    {
-        None,
-        敌人,
-        中立,
-        友军,
+        [LabelText("其他")] Other = 4,
     }
 
     /// <summary>
     /// 技能释放目标
     /// </summary>
-    public enum SkillUseTarget
+    public enum SkillTargetType
     {
         None,
-        自身中心,
-        指定点中心
-    }
-
-    /// <summary>
-    /// Bool标签(角色用字典统一管理)
-    /// </summary>
-    public enum BoolUseEnum
-    {
-        None,
-
-        /// <summary>
-        /// 是否死亡
-        /// </summary>
-        IsDie,
-
-        /// <summary>
-        /// 是否初始化
-        /// </summary>
-        IsInit,
-
-        /// <summary>
-        /// 是否发现目标
-        /// </summary>
-        IsDiscoveryRole,
-
-        /// <summary>
-        /// 是否可以被选中
-        /// </summary>
-        IsCanSelect,
-        是否强制跟随主人中,
-
-        /// <summary>
-        /// 攻击冷却中
-        /// </summary>
-        IsAttackCooling,
-
-        /// <summary>
-        /// 使用技能中
-        /// </summary>
-        IsUseSkilling,
-
-        /// <summary>
-        /// 是否击倒过
-        /// </summary>
-        HaveBeHitDown,
-
-        /// <summary>
-        /// 弃用
-        /// </summary>
-        NUll_占位,
-
-        /// <summary>
-        /// 放回武器中
-        /// </summary>
-        是否需要播放切换武器动画,
-
-        /// <summary>
-        /// 拿出武器中
-        /// </summary>
-        IsTakeWeapon,
-        滑步打断值,
-        强制跟随主人中,
-
-        /// <summary>
-        /// 是否是巡逻状态
-        /// </summary>
-        IsPatrol,
-        是否要走发现目标流程,
-        IsPatrolIdle,
-        是否攻击时丢失目标,
-        是否移动中,
-        是否需要切换职业,
-        主角专用_角色是否在战斗中,
-        是否需要记录音效和特效,
-        怪物是否激活,
-        是否潜地中,
-        Null占位_11
-    }
-
-    /// <summary>
-    /// Float标签(角色用字典统一管理)
-    /// </summary>
-    public enum FloatUseEnum
-    {
-        None,
-        普攻中百分比,
-        普攻前摇百分比,
-        普攻后摇百分比,
-        巡逻待机,
-        角色技能公共CD,
-        动画斧头特殊动作前固定时间,
-        动画斧头特殊动作中固定时间,
-        动画斧头特殊动作后固定时间,
-        体力恢复_恢复间隔最大值,
-        体力恢复_恢复间隔计算值,
-        体力恢复_每秒恢复,
-        武器拿出动画时间,
-        角色技能公共CD最大值,
-        战斗中人宠之间的最大距离,
-        非战斗中人宠之间的最大距离,
-        动画爪子特殊动作前固定时间,
-        动画爪子特殊动作中固定时间,
-        动画爪子特殊动作后固定时间,
-        依赖攻速但手动输入百分比,
-
-        //====下面是特殊用法====不用作float只用作枚举
-        使用自定义动画时间 = 99999999,
+        [LabelText("自身")] Self,
+        [LabelText("敌人")] Enemy,
+        [LabelText("中立")] Neutrality,
+        [LabelText("友军")] Teammate,
+        [LabelText("目标点")] Point,
+        [LabelText("目标范围")] Rang,
     }
 }

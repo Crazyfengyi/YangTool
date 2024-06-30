@@ -19,6 +19,7 @@ public sealed partial class Tables
     public monster.TbMonster TbMonster {get; }
     public skill.TbSkill TbSkill {get; }
     public tips.TBTips TBTips {get; }
+    public area.TBArea TBArea {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
@@ -33,6 +34,8 @@ public sealed partial class Tables
         tables.Add("skill.TbSkill", TbSkill);
         TBTips = new tips.TBTips(loader("tips_tbtips")); 
         tables.Add("tips.TBTips", TBTips);
+        TBArea = new area.TBArea(loader("area_tbarea")); 
+        tables.Add("area.TBArea", TBArea);
         PostInit();
 
         TbItem.Resolve(tables); 
@@ -40,6 +43,7 @@ public sealed partial class Tables
         TbMonster.Resolve(tables); 
         TbSkill.Resolve(tables); 
         TBTips.Resolve(tables); 
+        TBArea.Resolve(tables); 
         PostResolve();
     }
 
@@ -50,6 +54,7 @@ public sealed partial class Tables
         TbMonster.TranslateText(translator); 
         TbSkill.TranslateText(translator); 
         TBTips.TranslateText(translator); 
+        TBArea.TranslateText(translator); 
     }
     
     partial void PostInit();

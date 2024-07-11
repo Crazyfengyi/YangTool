@@ -33,7 +33,7 @@ namespace YangTools
                     if (instance == null)
                     {
                         instance = new T();
-                        ////支持非公共的无参构造函数，new T()不支持非公共的无参构造函数
+                        //支持非公共的无参构造函数，new T()不支持非公共的无参构造函数
                         //instance = (T)Activator.CreateInstance(typeof(T), true);
                     }
                     return instance;
@@ -62,17 +62,17 @@ namespace YangTools
                 {
                     if (instance == null)
                     {
-                        instance = FindObjectOfType<T>();
-                        if (FindObjectsOfType<T>().Length > 1)
+                        instance = FindFirstObjectByType<T>();
+                        if (FindObjectsByType<T>(FindObjectsSortMode.InstanceID).Length > 1)
                         {
-                            Debug.LogError($"不应该存在多个:{typeof(T)}单例！");
+                            Debug.LogError($"不应该存在多个{typeof(T)}单例！");
                             return instance;
                         }
                         if (instance == null)
                         {
                             GameObject singleton = new GameObject();
                             instance = singleton.AddComponent<T>();
-                            singleton.name = "(Singleton)" + typeof(T);
+                            singleton.name = typeof(T) + "(Singleton)";
                             singleton.hideFlags = HideFlags.None;
                             DontDestroyOnLoad(singleton);
                         }
@@ -80,11 +80,11 @@ namespace YangTools
                         {
                             if (Application.isPlaying)
                             {
+                                instance.hideFlags = HideFlags.None;
                                 DontDestroyOnLoad(instance.gameObject);
                             }
                         }
                     }
-                    instance.hideFlags = HideFlags.None;
                     return instance;
                 }
             }
@@ -96,6 +96,38 @@ namespace YangTools
         protected virtual void OnDestroy()
         {
             isInstanceDestory = true;
+        }
+    }
+    /// <summary>
+    /// Mono注册性单例
+    /// </summary>
+    /// public class Example : MonoBehaviour
+    /// {
+    ///     public static Example Instance => MonoSingletonRegister<Example>.Instance;
+    /// }
+    public static class MonoSingletonRegister<T> where T : MonoBehaviour
+    {
+        private static T instance;
+        private static readonly object locker = new object();
+        public static T Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (locker)
+                    {
+                        if (instance == null)
+                        {
+                            GameObject gameObject = new GameObject(typeof(T).Name + "(SingletonRegister)");
+                            Object.DontDestroyOnLoad(gameObject);
+                            instance = gameObject.AddComponent<T>();
+                        }
+                    }
+                }
+
+                return instance;
+            }
         }
     }
 }

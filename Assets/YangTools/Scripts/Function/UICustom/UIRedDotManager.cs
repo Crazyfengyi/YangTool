@@ -17,34 +17,34 @@ using System.Collections.Generic;
 
 public class UIRedDotManager : MonoBehaviour
 {
-    private static UIRedDotManager m_Instance;
-    public static UIRedDotManager DirectInstance => m_Instance;
+    private static UIRedDotManager instance;
     public static UIRedDotManager Instance
     {
         get
         {
-            if (m_Instance == null)
+            if (instance == null)
             {
-                var obj = new GameObject("[UIRedDotManager]")
+                GameObject obj = new GameObject("[UIRedDotManager]")
                 {
                     hideFlags = HideFlags.HideAndDontSave
                 };
                 DontDestroyOnLoad(obj);
-                m_Instance = obj.AddComponent<UIRedDotManager>();
+                instance = obj.AddComponent<UIRedDotManager>();
             }
 
-            return m_Instance;
+            return instance;
         }
     }
+    public static UIRedDotManager DirectInstance => instance;
 
-    private int[] _redDotSystemCounters;//红点系统计数器
-    private HashSet<long> _redDotDetailCounters;//红点细节计数器
+    private int[] redDotSystemCounters;//红点系统计数器
+    private HashSet<long> redDotDetailCounters;//红点细节计数器
     
     private void Awake()
     {
         const int maxCapacity = 1024; //1024个系统差不多就是极限了.自己去定义枚举
-        _redDotSystemCounters = new int[maxCapacity];
-        _redDotDetailCounters = new HashSet<long>();
+        redDotSystemCounters = new int[maxCapacity];
+        redDotDetailCounters = new HashSet<long>();
     }
     /// <summary>
     /// 添加未读消息
@@ -56,14 +56,15 @@ public class UIRedDotManager : MonoBehaviour
         //不允许重复添加，最终一定对应到特定某个原件
         foreach (var i in path)
         {
-            ref var a = ref _redDotSystemCounters[i];
+            ref var a = ref redDotSystemCounters[i];
             a++;
         }
 
         if (dataIndex >= 0 && !path.IsNullOrEmpty())
         {
-            var longKey = ((long)path[^1] << 32) | (long)(dataIndex);
-            _redDotDetailCounters.Add(longKey);
+            //最后一位
+            long longKey = ((long)path[^1] << 32) | (long)(dataIndex);
+            redDotDetailCounters.Add(longKey);
         }
     }
     /// <summary>
@@ -76,15 +77,16 @@ public class UIRedDotManager : MonoBehaviour
         //不允许重复移除，最终一定对应到特定某个原件
         foreach (var i in path)
         {
-            ref var a = ref _redDotSystemCounters[i];
+            ref var a = ref redDotSystemCounters[i];
             a--;
             if (a < 0) a = 0;
         }
 
         if (dataIndex >= 0 && !path.IsNullOrEmpty())
         {
-            var longKey = ((long)path[^1] << 32) | (long)(dataIndex);
-            _redDotDetailCounters.Remove(longKey);
+            //最后一位
+            long longKey = ((long)path[^1] << 32) | (long)(dataIndex);
+            redDotDetailCounters.Remove(longKey);
         }
     }
     /// <summary>
@@ -96,11 +98,12 @@ public class UIRedDotManager : MonoBehaviour
 
         if (dataIndex >= 0)
         {
-            var longKey = ((long)path[^1] << 32) | (long)(dataIndex);
-            return _redDotDetailCounters.Contains(longKey);
+            //最后一位
+            long longKey = ((long)path[^1] << 32) | (long)(dataIndex);
+            return redDotDetailCounters.Contains(longKey);
         }
         //数组最后一个
-        return _redDotSystemCounters[path[^1]] > 0;
+        return redDotSystemCounters[path[^1]] > 0;
     }
     /// <summary>
     /// 获得未读消息数量
@@ -111,11 +114,12 @@ public class UIRedDotManager : MonoBehaviour
 
         if (dataIndex >= 0)
         {
-            var longKey = ((long)path[^1] << 32) | (long)(dataIndex);
-            return _redDotDetailCounters.Contains(longKey) ? 1 : 0;
+            //最后一位
+            long longKey = ((long)path[^1] << 32) | (long)(dataIndex);
+            return redDotDetailCounters.Contains(longKey) ? 1 : 0;
         }
 
-        return _redDotSystemCounters[path[^1]];
+        return redDotSystemCounters[path[^1]];
     }
     
     //事例:

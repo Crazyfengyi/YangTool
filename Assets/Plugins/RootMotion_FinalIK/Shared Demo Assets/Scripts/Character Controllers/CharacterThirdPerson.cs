@@ -126,7 +126,7 @@ namespace RootMotion.Demos
         {
             gravity = GetGravity();
 
-            verticalVelocity = V3Tools.ExtractVertical(r.velocity, gravity, 1f);
+            verticalVelocity = V3Tools.ExtractVertical(r.linearVelocity, gravity, 1f);
             velocityY = verticalVelocity.magnitude;
             if (Vector3.Dot(verticalVelocity, gravity) > 0f) velocityY = -velocityY;
 
@@ -156,7 +156,7 @@ namespace RootMotion.Demos
             if (userControl.state.move == Vector3.zero && groundDistance < airborneThreshold * 0.5f) HighFriction();
             else ZeroFriction();
 
-            bool stopSlide = onGround && userControl.state.move == Vector3.zero && r.velocity.magnitude < 0.5f && groundDistance < airborneThreshold * 0.5f;
+            bool stopSlide = onGround && userControl.state.move == Vector3.zero && r.linearVelocity.magnitude < 0.5f && groundDistance < airborneThreshold * 0.5f;
 
             // Individual gravity
             if (gravityTarget != null)
@@ -169,7 +169,7 @@ namespace RootMotion.Demos
             if (stopSlide)
             {
                 r.useGravity = false;
-                r.velocity = Vector3.zero;
+                r.linearVelocity = Vector3.zero;
             }
             else if (gravityTarget == null) r.useGravity = true;
 
@@ -191,8 +191,8 @@ namespace RootMotion.Demos
                     animState.doubleJump = true;
 
                     Vector3 jumpVelocity = userControl.state.move * airSpeed;
-                    r.velocity = jumpVelocity;
-                    r.velocity += transform.up * jumpPower * doubleJumpPowerMlp;
+                    r.linearVelocity = jumpVelocity;
+                    r.linearVelocity += transform.up * jumpPower * doubleJumpPowerMlp;
                     doubleJumped = true;
                 }
             }
@@ -251,16 +251,16 @@ namespace RootMotion.Demos
                 // Air move
                 //Vector3 airMove = new Vector3 (userControl.state.move.x * airSpeed, 0f, userControl.state.move.z * airSpeed);
                 Vector3 airMove = V3Tools.ExtractHorizontal(userControl.state.move * airSpeed, gravity, 1f);
-                velocity = Vector3.Lerp(r.velocity, airMove, Time.deltaTime * airControl);
+                velocity = Vector3.Lerp(r.linearVelocity, airMove, Time.deltaTime * airControl);
             }
 
             if (onGround && Time.time > jumpEndTime)
             {
-                r.velocity = r.velocity - transform.up * stickyForce * Time.deltaTime;
+                r.linearVelocity = r.linearVelocity - transform.up * stickyForce * Time.deltaTime;
             }
 
             // Vertical velocity
-            Vector3 verticalVelocity = V3Tools.ExtractVertical(r.velocity, gravity, 1f);
+            Vector3 verticalVelocity = V3Tools.ExtractVertical(r.linearVelocity, gravity, 1f);
             Vector3 horizontalVelocity = V3Tools.ExtractHorizontal(velocity, gravity, 1f);
 
             if (onGround)
@@ -271,7 +271,7 @@ namespace RootMotion.Demos
                 }
             }
 
-            r.velocity = horizontalVelocity + verticalVelocity;
+            r.linearVelocity = horizontalVelocity + verticalVelocity;
 
             // Dampering forward speed on the slopes (Not working since Unity 2017.2)
             //float slopeDamper = !onGround? 1f: GetSlopeDamper(-deltaPosition / Time.deltaTime, normal);
@@ -306,7 +306,7 @@ namespace RootMotion.Demos
             if (wallRunWeight <= 0f) return;
 
             // Make sure the character won't fall down
-            if (onGround && velocityY < 0f) r.velocity = V3Tools.ExtractHorizontal(r.velocity, gravity, 1f);
+            if (onGround && velocityY < 0f) r.linearVelocity = V3Tools.ExtractHorizontal(r.linearVelocity, gravity, 1f);
 
             // transform.forward flattened
             Vector3 f = V3Tools.ExtractHorizontal(transform.forward, gravity, 1f);
@@ -410,11 +410,11 @@ namespace RootMotion.Demos
             if (smoothJump)
             {
                 StopAllCoroutines();
-                StartCoroutine(JumpSmooth(jumpVelocity - r.velocity));
+                StartCoroutine(JumpSmooth(jumpVelocity - r.linearVelocity));
             }
             else
             {
-                r.velocity = jumpVelocity;
+                r.linearVelocity = jumpVelocity;
             }
 
             return true;
@@ -460,7 +460,7 @@ namespace RootMotion.Demos
                 float groundHeight = !g ? airborneThreshold * 0.5f : airborneThreshold;
 
                 //Vector3 horizontalVelocity = r.velocity;
-                Vector3 horizontalVelocity = V3Tools.ExtractHorizontal(r.velocity, gravity, 1f);
+                Vector3 horizontalVelocity = V3Tools.ExtractHorizontal(r.linearVelocity, gravity, 1f);
 
                 float velocityF = horizontalVelocity.magnitude;
 

@@ -61,8 +61,8 @@ public class TestV : MonoBehaviour
             Vector3 globalVelocity = transform.TransformDirection(localVelocity);
 
             //通过设置物体的初始速度和翻转物体的状态来发射物体
-            rigidbody.velocity = globalVelocity;
-            transform.rotation = Quaternion.LookRotation(rigidbody.velocity);
+            rigidbody.linearVelocity = globalVelocity;
+            transform.rotation = Quaternion.LookRotation(rigidbody.linearVelocity);
         }
     }
 }

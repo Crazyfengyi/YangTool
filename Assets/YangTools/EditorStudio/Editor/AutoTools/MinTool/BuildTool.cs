@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer;
 using UnityEditor;
 using UnityEngine;
 

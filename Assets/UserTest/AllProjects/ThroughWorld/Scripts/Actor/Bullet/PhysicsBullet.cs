@@ -37,7 +37,7 @@ public class PhysicsBullet : BulletBase
     {
         body.useGravity = true;
         h = targetPos.y + 2;
-        body.velocity = CalculateLaunchVelocity().initVelocity;
+        body.linearVelocity = CalculateLaunchVelocity().initVelocity;
         DrawPath();
     }
     public override void OnUpdate()
@@ -46,7 +46,7 @@ public class PhysicsBullet : BulletBase
         if (Data == null || bulletObj == null) return;
         if (isDie) return;
 
-        bulletObj.transform.LookAt(bulletObj.transform.position + body.velocity.normalized);
+        bulletObj.transform.LookAt(bulletObj.transform.position + body.linearVelocity.normalized);
 
         CheckAllCollision();
     }

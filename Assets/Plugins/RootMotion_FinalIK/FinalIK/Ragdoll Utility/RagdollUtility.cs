@@ -127,7 +127,7 @@ namespace RootMotion.FinalIK
                 // Transfer velocity from animation
                 if (velocityWeight != 0f)
                 {
-                    r.velocity = (deltaPosition / deltaTime) * velocityWeight;
+                    r.linearVelocity = (deltaPosition / deltaTime) * velocityWeight;
                 }
 
                 // Transfer angular velocity from animation

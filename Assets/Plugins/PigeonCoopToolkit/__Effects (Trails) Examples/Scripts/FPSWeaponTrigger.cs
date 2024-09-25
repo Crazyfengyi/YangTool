@@ -42,7 +42,7 @@ public class FPSWeaponTrigger : MonoBehaviour
             (Instantiate(Shell.gameObject, ShellEjectionTransform.position, ShellEjectionTransform.rotation) as
              GameObject).GetComponent<Rigidbody>();
 
-        r.velocity = (ShellEjectionTransform.right * EjectionForce) + Random.onUnitSphere * 0.25f;
+        r.linearVelocity = (ShellEjectionTransform.right * EjectionForce) + Random.onUnitSphere * 0.25f;
         r.angularVelocity = Random.onUnitSphere * EjectionForce;
 
         Instantiate(Bullet, Muzzle.transform.position, Muzzle.rotation);

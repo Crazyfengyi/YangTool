@@ -23,13 +23,14 @@ namespace YangTools.Extend
         /// </summary>
         public static int GetWeekOfYear(DateTime dateTime)
         {
-           return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek,
+                DayOfWeek.Monday);
         }
-        
+
         //测试值占内存大小
-        /* * 1字节(byte)=8位(bit) * 1024字节=1K * 1024k=1M *///如果为空也要占用1字节,不为空则为实际数据大小
+        /* * 1字节(byte)=8位(bit) * 1024字节=1K * 1024k=1M */ //如果为空也要占用1字节,不为空则为实际数据大小
         public struct TestStruct
-        {  
+        {
             //public Int32 a;//4字节
             //public Int64 a;//8字节
             //public long a;//8字节
@@ -43,7 +44,7 @@ namespace YangTools.Extend
                 Debug.LogError($"测试大小:{Marshal.SizeOf(testStruct)}");
             }
         }
-    
+
         /*
          *权重取值
             var max = list.Sum(y => y.Weight);

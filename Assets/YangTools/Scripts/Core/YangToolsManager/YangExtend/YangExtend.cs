@@ -14,13 +14,15 @@ namespace YangTools.Extend
         //TODO /*读表 LuBan*/，时间，/*通用范型类*/，多语言，SDKManager,/*事件系统*/，/*定时器*/，广告，支付
 
         #region 事件系统扩展
+
         /// <summary>
         /// 添加事件监听
         /// </summary>
         /// <param name="_object">绑定物体</param>
         /// <param name="_eventName">事件名称</param>
         /// <param name="_eventCallback">事件回调</param>
-        public static EventInspector AddEventListener(this UnityEngine.Object _object, string _eventName, EventCallback<EventInfo> _eventCallback)
+        public static EventInspector AddEventListener(this UnityEngine.Object _object, string _eventName,
+            EventCallback<EventInfo> _eventCallback)
         {
             var ret = new EventInspector(_object, _eventName, _eventCallback);
             YangToolEventManager.Instance.Add(ret);
@@ -54,6 +56,7 @@ namespace YangTools.Extend
         {
             YangToolEventManager.Instance.Send(_eventName, _args);
         }
+
         #endregion
     }
 

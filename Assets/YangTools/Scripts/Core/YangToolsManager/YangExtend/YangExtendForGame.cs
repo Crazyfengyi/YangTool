@@ -12,6 +12,7 @@ namespace YangTools.Extend
     public partial class YangExtend
     {
         #region GameObject扩展
+
         /// <summary>
         /// 删除所有子节点
         /// </summary>
@@ -22,6 +23,7 @@ namespace YangTools.Extend
                 UnityEngine.Object.Destroy(item);
             }
         }
+
         /// <summary>
         /// 在物体世界坐标播放声音
         /// </summary>
@@ -30,6 +32,7 @@ namespace YangTools.Extend
         {
             AudioSource.PlayClipAtPoint(clipName, obj.transform.position);
         }
+
         /// <summary>
         /// 刷新自己和子节点的ContentSizeFitter(倒序刷新)
         /// </summary>
@@ -44,6 +47,7 @@ namespace YangTools.Extend
                 LayoutRebuilder.ForceRebuildLayoutImmediate(rectTrans);
             }
         }
+
         /// <summary>
         /// 刷新自身和父节点ContentSizeFitter(直至根节点)
         /// </summary>
@@ -58,9 +62,11 @@ namespace YangTools.Extend
                     RectTransform rectTrans = content.GetComponent<RectTransform>();
                     LayoutRebuilder.ForceRebuildLayoutImmediate(rectTrans);
                 }
+
                 content = content.parent;
             }
         }
+
         /// <summary>
         /// 获取或增加组件。
         /// </summary>
@@ -79,6 +85,7 @@ namespace YangTools.Extend
         }
 
         private static readonly List<Transform> cachedTransforms = new List<Transform>();
+
         /// <summary>
         /// 递归设置游戏对象的层次
         /// </summary>
@@ -91,8 +98,10 @@ namespace YangTools.Extend
             {
                 cachedTransforms[i].gameObject.layer = layer;
             }
+
             cachedTransforms.Clear();
         }
+
         /// <summary>
         /// 获得某物体的bounds中心点
         /// </summary>
@@ -100,6 +109,7 @@ namespace YangTools.Extend
         {
             return GetBounds(target).center;
         }
+
         /// <summary>
         /// 获得某物体的bounds
         /// </summary>
@@ -111,16 +121,20 @@ namespace YangTools.Extend
             {
                 bounds = mrs[0].bounds;
             }
+
             for (int i = 0; i < mrs.Length; i++)
             {
                 bounds.Encapsulate(mrs[i].bounds);
             }
+
             return bounds;
         }
+
         /// <summary>
         /// 自动设置显隐--会先判断是否已经是目标状态
         /// </summary>
-        public static void AutoSetActive(this GameObject gameObject, bool isActive, [CallerMemberNameAttribute] string callName = "")
+        public static void AutoSetActive(this GameObject gameObject, bool isActive,
+            [CallerMemberNameAttribute] string callName = "")
         {
             if (gameObject == null)
             {
@@ -138,14 +152,16 @@ namespace YangTools.Extend
         #endregion
 
         #region 对象池扩展
+
         /// <summary>
         /// 对象池默认Get
         /// </summary>
-        public static void DefualtGameObjectOnGet(this GameObject gameObject,Transform parent)
+        public static void DefualtGameObjectOnGet(this GameObject gameObject, Transform parent)
         {
             gameObject.SetActive(true);
             gameObject.transform.SetParent(parent);
         }
+
         /// <summary>
         /// 对象池默认Recycle
         /// </summary>
@@ -154,6 +170,7 @@ namespace YangTools.Extend
             gameObject.SetActive(false);
             gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
         }
+
         /// <summary>
         /// 对象池默认Destory
         /// </summary>
@@ -161,9 +178,11 @@ namespace YangTools.Extend
         {
             GameObject.Destroy(gameObject);
         }
+
         #endregion
 
         #region 射线和网格合并
+
         /// <summary>
         /// 合并蒙皮网格，刷新骨骼
         /// 注意：合并后的网格会使用同一个Material
@@ -198,6 +217,7 @@ namespace YangTools.Extend
                         ci.subMeshIndex = sub;
                         combineInstances.Add(ci);
                     }
+
                     uvList.Add(smr.sharedMesh.uv);
                     uvCount += smr.sharedMesh.uv.Length;
                     if (smr.material.mainTexture != null)
@@ -206,6 +226,7 @@ namespace YangTools.Extend
                         width += smr.GetComponent<Renderer>().material.mainTexture.width;
                         height += smr.GetComponent<Renderer>().material.mainTexture.height;
                     }
+
                     for (int j = 0; j < smr.bones.Length; j++)
                     {
                         Transform bone = smr.bones[j];
@@ -223,21 +244,23 @@ namespace YangTools.Extend
                     Debug.LogError("" + smr.name);
                     throw;
                 }
-
             }
+
             // 获取并配置角色所有的SkinnedMeshRenderer
             SkinnedMeshRenderer tempRenderer = root.gameObject.GetComponent<SkinnedMeshRenderer>();
             if (!tempRenderer)
             {
                 tempRenderer = root.gameObject.AddComponent<SkinnedMeshRenderer>();
             }
+
             tempRenderer.sharedMesh = new Mesh();
             // 合并网格，刷新骨骼，附加材质
             tempRenderer.sharedMesh.CombineMeshes(combineInstances.ToArray(), true, false);
             tempRenderer.bones = boneList.ToArray();
             tempRenderer.material = material;
 
-            Texture2D skinnedMeshAtlas = new Texture2D(YangTools.Extend.YangExtend.GetThanPowerOfTwo(width), YangTools.Extend.YangExtend.GetThanPowerOfTwo(height));
+            Texture2D skinnedMeshAtlas = new Texture2D(YangTools.Extend.YangExtend.GetThanPowerOfTwo(width),
+                YangTools.Extend.YangExtend.GetThanPowerOfTwo(height));
             Rect[] packingResult = skinnedMeshAtlas.PackTextures(textures.ToArray(), 0);
             Vector2[] atlasUVs = new Vector2[uvCount];
             // 因为将贴图都整合到了一张图片上，所以需要重新计算UV
@@ -252,6 +275,7 @@ namespace YangTools.Extend
                     count++;
                 }
             }
+
             // 设置贴图和UV
             tempRenderer.material.mainTexture = skinnedMeshAtlas;
             tempRenderer.sharedMesh.uv = atlasUVs;
@@ -263,8 +287,10 @@ namespace YangTools.Extend
                     GameObject.DestroyImmediate(targetParts[i]);
                 }
             }
+
             Debug.Log("合并耗时 : " + (Time.realtimeSinceStartup - startTime) * 1000 + " ms");
         }
+
         /// <summary>
         /// 合并网格
         /// </summary>
@@ -272,13 +298,15 @@ namespace YangTools.Extend
         /// <param name="layMask"></param>
         public static void CombineMeshByLayer(this GameObject self, int layMask = ~0)
         {
-            MeshFilter[] meshFilters = self.GetComponentsInChildren<MeshFilter>(true);       //获取自身和所有子物体中所有MeshFilter组件
+            MeshFilter[] meshFilters = self.GetComponentsInChildren<MeshFilter>(true); //获取自身和所有子物体中所有MeshFilter组件
             Dictionary<string, List<MeshFilter>> combineDic = new Dictionary<string, List<MeshFilter>>();
             for (int i = 0; i < meshFilters.Length; i++)
             {
-                if (!meshFilters[i].gameObject.activeSelf || !meshFilters[i].transform.parent.gameObject.activeSelf || !meshFilters[i].GetComponent<MeshRenderer>() || !meshFilters[i].GetComponent<MeshRenderer>().enabled)//若网格被隐藏或者物体被隐藏，直接跳过
+                if (!meshFilters[i].gameObject.activeSelf || !meshFilters[i].transform.parent.gameObject.activeSelf ||
+                    !meshFilters[i].GetComponent<MeshRenderer>() ||
+                    !meshFilters[i].GetComponent<MeshRenderer>().enabled) //若网格被隐藏或者物体被隐藏，直接跳过
                     continue;
-                if ((1 << meshFilters[i].gameObject.layer & layMask) == 0)//如果该层被屏蔽则跳过
+                if ((1 << meshFilters[i].gameObject.layer & layMask) == 0) //如果该层被屏蔽则跳过
                     continue;
                 var MR = meshFilters[i].GetComponent<MeshRenderer>();
                 for (int j = 0; j < MR.materials.Length; j++)
@@ -286,17 +314,19 @@ namespace YangTools.Extend
                     var matName = MR.materials[j];
                     if (combineDic.ContainsKey(LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName))
                     {
-                        combineDic[LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName].Add(meshFilters[i]);
+                        combineDic[LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName]
+                            .Add(meshFilters[i]);
                     }
                     else
                     {
                         List<MeshFilter> values = new List<MeshFilter>();
                         values.Add(meshFilters[i]);
-                        combineDic.Add(LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName, values);//用名字和材质球来分组
+                        combineDic.Add(LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName,
+                            values); //用名字和材质球来分组
                     }
                 }
-
             }
+
             foreach (var comb in combineDic.Keys)
             {
                 var meshFs = combineDic[comb];
@@ -311,13 +341,14 @@ namespace YangTools.Extend
 
                     if (vertexCout >= UInt16.MaxValue || i == (meshFs.Count - 1))
                     {
-                        CombineInstance[] combine = new CombineInstance[combineCount];    //新建CombineInstance数组
+                        CombineInstance[] combine = new CombineInstance[combineCount]; //新建CombineInstance数组
 
                         for (int j = 0; j < meshList.Count; j++)
                         {
                             combine[j].mesh = meshList[j];
                             combine[j].transform = matrixList[j];
                         }
+
                         GameObject go = new GameObject(comb);
                         go.layer = LayerMask.NameToLayer(go.name.Split('_')[0]);
                         if (self.transform.Find(comb.Split('_')[0]))
@@ -334,10 +365,11 @@ namespace YangTools.Extend
                             go.transform.SetParent(layerParent.transform);
                             go.transform.position = Vector3.zero;
                         }
+
                         var goMesh = go.AddComponent<MeshFilter>();
                         var goMeshRenderer = go.AddComponent<MeshRenderer>();
                         goMesh.mesh = new Mesh();
-                        goMesh.sharedMesh.CombineMeshes(combine);//合并
+                        goMesh.sharedMesh.CombineMeshes(combine); //合并
                         goMeshRenderer.material = mat;
 
                         meshList.Clear();
@@ -360,10 +392,12 @@ namespace YangTools.Extend
                     }
                 }
             }
+
             Debug.Log("合并了" + meshFilters.Length + "个网格");
         }
 
         private static List<Collider> colliders = new List<Collider>();
+
         /// <summary>
         /// 在一定宽度区间内绘制一定精度条的射线
         /// </summary>
@@ -371,7 +405,8 @@ namespace YangTools.Extend
         /// <param name="endPot">终点</param>
         /// <param name="width">宽度</param>
         /// <param name="precision">精度（必须是单数）</param>
-        private static List<Collider> DrawRays(Vector3 beginPot, Vector3 endPot, float width, int precision, LayerMask layerMask)
+        private static List<Collider> DrawRays(Vector3 beginPot, Vector3 endPot, float width, int precision,
+            LayerMask layerMask)
         {
             var offsetDir = Quaternion.Euler(0, 90, 0) * (endPot - beginPot).normalized;
             var perWidthOffset = width / (precision - 1);
@@ -379,7 +414,10 @@ namespace YangTools.Extend
             for (int i = 0; i < (precision + 1) / 2; i++)
             {
                 Vector3 offset = perWidthOffset * i * offsetDir;
-                Ray[] rays = new Ray[] { new Ray((beginPot + offset), endPot - beginPot), new Ray((beginPot - offset), endPot - beginPot) };
+                Ray[] rays = new Ray[]
+                {
+                    new Ray((beginPot + offset), endPot - beginPot), new Ray((beginPot - offset), endPot - beginPot)
+                };
                 float length = Vector3.Distance(beginPot, endPot);
                 for (int j = 0; j < rays.Length; j++)
                 {
@@ -392,8 +430,10 @@ namespace YangTools.Extend
                     }
                 }
             }
+
             return colliders;
         }
+
         /// <summary>
         /// 进行一次扇形射线检测
         /// </summary>
@@ -404,16 +444,22 @@ namespace YangTools.Extend
         /// <param name="mask">mask层</param>
         /// <param name="flipRayDir">是否翻转射线方向,如果是,则射线由终点向起点发射</param>
         /// <returns>符合的碰撞信息</returns>
-        public static List<Collider> SectorRayCast(Vector3 pot, Quaternion rotate, float castRange, int precision, float length, LayerMask mask, bool flipRayDir = false)
+        public static List<Collider> SectorRayCast(Vector3 pot, Quaternion rotate, float castRange, int precision,
+            float length, LayerMask mask, bool flipRayDir = false)
         {
-            float spacing = castRange * 2 / precision;//每条线之间的间隔
+            float spacing = castRange * 2 / precision; //每条线之间的间隔
             List<Collider> colliders = new List<Collider>();
-            for (int i = 0; i < precision + 1; i++)//中间有一条对称轴，所以条数为精度+1
+            for (int i = 0; i < precision + 1; i++) //中间有一条对称轴，所以条数为精度+1
             {
-                Debug.DrawRay(pot, (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length, Color.red, 5f);
+                Debug.DrawRay(pot,
+                    (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length, Color.red,
+                    5f);
                 if (flipRayDir)
                 {
-                    RaycastHit[] hits = Physics.RaycastAll(pot + (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length, (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * -1f, length, mask);
+                    RaycastHit[] hits = Physics.RaycastAll(
+                        pot + (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length,
+                        (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * -1f, length,
+                        mask);
                     for (int j = 0; j < hits.Length; j++)
                     {
                         if (!colliders.Contains(hits[j].collider))
@@ -422,7 +468,8 @@ namespace YangTools.Extend
                 }
                 else
                 {
-                    RaycastHit[] hits = Physics.RaycastAll(pot, (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward, length, mask);
+                    RaycastHit[] hits = Physics.RaycastAll(pot,
+                        (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward, length, mask);
                     for (int j = 0; j < hits.Length; j++)
                     {
                         if (!colliders.Contains(hits[j].collider))
@@ -430,8 +477,10 @@ namespace YangTools.Extend
                     }
                 }
             }
+
             return colliders;
         }
+
         /// <summary>
         /// 获取模型大概大小
         /// </summary>
@@ -459,13 +508,16 @@ namespace YangTools.Extend
                     minPot.z = Mathf.Min(smrBones[j].position.z, minPot.z);
                 }
             }
+
             size = maxPot - minPot;
 
-            return Mathf.Min(size.y, size.z);//只需要包裹核心部分
+            return Mathf.Min(size.y, size.z); //只需要包裹核心部分
         }
+
         #endregion
 
         #region 动画相关
+
         /// <summary>
         /// 获取状态机中动画长度
         /// </summary>
@@ -490,6 +542,7 @@ namespace YangTools.Extend
 
             return null;
         }
+
         /// <summary>
         /// 获取状态机中的动画Clip
         /// </summary>
@@ -500,6 +553,7 @@ namespace YangTools.Extend
             {
                 return null;
             }
+
             RuntimeAnimatorController runtimeAniController = anim.runtimeAnimatorController;
             AnimationClip[] clips = runtimeAniController.animationClips;
             for (int i = 0; i < clips.Length; i++)
@@ -512,9 +566,11 @@ namespace YangTools.Extend
 
             return null;
         }
+
         #endregion
 
         #region 计算角度和克隆
+
         /// <summary>
         /// 计算两个向量的夹角
         /// </summary>
@@ -522,15 +578,17 @@ namespace YangTools.Extend
         public static float GetAngle(Vector3 formDir, Vector3 toDir, Vector3 normal)
         {
             float angle = Vector3.Angle(formDir, toDir); //求出两向量之间的夹角 
-            Vector3 dirsNormal = Vector3.Cross(formDir, toDir);//叉乘求出法线向量 
+            Vector3 dirsNormal = Vector3.Cross(formDir, toDir); //叉乘求出法线向量 
             //求法线向量与物体上方向向量点乘，结果为1或-1，修正旋转方向 
-            angle *= Mathf.Sign(Vector3.Dot(dirsNormal, normal));  //int rotateSymbol = angle >= 0 ? 1 : -1;
-                                                                   
+            angle *= Mathf.Sign(Vector3.Dot(dirsNormal, normal)); //int rotateSymbol = angle >= 0 ? 1 : -1;
+
             return angle;
         }
+
         #endregion
 
         #region 坐标转换
+
         /// <summary>
         /// 获取自身的世界坐标(父节点不能为空-通过父节点坐标系转)
         /// </summary>
@@ -539,6 +597,7 @@ namespace YangTools.Extend
         {
             return tran.parent.TransformPoint(tran.localPosition);
         }
+
         /// <summary>
         /// 世界坐标转局部坐标
         /// </summary>
@@ -548,6 +607,7 @@ namespace YangTools.Extend
         {
             return tran.InverseTransformPoint(wordSpace);
         }
+
         /// <summary>
         /// 局部坐标转局部坐标(父节点不能为空-通过父节点坐标系转)
         /// </summary>
@@ -561,8 +621,10 @@ namespace YangTools.Extend
                 Vector3 _wordSpace = _parent.TransformPoint(localTran.localPosition);
                 return targetTran.InverseTransformPoint(_wordSpace);
             }
+
             return default;
         }
+
         /// <summary>
         /// 世界坐标转UI的局部坐标
         /// </summary>
@@ -570,17 +632,21 @@ namespace YangTools.Extend
         /// <param name="UICamara">UI相机</param>
         /// <param name="worldPos">世界坐标</param>
         /// <param name="targetParent">目标节点</param>
-        public static Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos, Transform targetParent)
+        public static Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos,
+            Transform targetParent)
         {
             //世界坐标转屏幕坐标
             Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
             //屏幕坐标转局部坐标
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(), screenPoint, UICamara, out Vector2 localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(),
+                    screenPoint, UICamara, out Vector2 localPoint))
             {
                 return localPoint;
             }
+
             return default;
         }
+
         /// <summary>
         /// 屏幕坐标转成UI坐标
         /// </summary>
@@ -589,12 +655,15 @@ namespace YangTools.Extend
         /// <param name="uiCamera">UI相机</param>
         public static Vector3 ScreenPostionToUIPostion(RectTransform parent, Vector2 screenPos, Camera uiCamera)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, uiCamera, out Vector2 localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, uiCamera,
+                    out Vector2 localPoint))
             {
                 return localPoint;
             }
+
             return Vector3.zero;
         }
+
         /// <summary>
         /// 屏幕点是否在矩形中
         /// </summary>
@@ -609,9 +678,11 @@ namespace YangTools.Extend
                 return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint);
             }
         }
+
         #endregion
 
         #region 通用UI动画
+
         /// <summary>
         /// UGUI通用动画
         /// </summary>
@@ -636,9 +707,10 @@ namespace YangTools.Extend
                 })
                 .SetTarget(rectTrans);
         }
-        #endregion
 
+        #endregion
     }
+
     /// <summary>
     /// 范围检测类
     /// </summary>
@@ -656,10 +728,12 @@ namespace YangTools.Extend
         {
             return CurveRange(self, target, 0, maxDistance, maxAngle);
         }
+
         /// <summary>
         /// 扇形
         /// </summary>
-        public static bool CurveRange(Transform self, Transform target, float minDistance, float maxDistance, float maxAngle)
+        public static bool CurveRange(Transform self, Transform target, float minDistance, float maxDistance,
+            float maxAngle)
         {
             Vector3 playerDir = self.forward;
             Vector3 enemydir = (target.position - self.position).normalized;
@@ -668,13 +742,16 @@ namespace YangTools.Extend
             {
                 return false;
             }
+
             float distance = Vector3.Distance(target.position, self.position);
             if (distance <= maxDistance && distance >= minDistance)
             {
                 return true;
             }
+
             return false;
         }
+
         /// <summary>
         /// 圆形检测
         /// </summary>
@@ -686,6 +763,7 @@ namespace YangTools.Extend
         {
             return CircleRange(self, target, 0, maxDistance);
         }
+
         /// <summary>
         /// 圆形
         /// </summary>
@@ -701,6 +779,7 @@ namespace YangTools.Extend
                 return false;
             }
         }
+
         /// <summary>
         /// 矩形检测
         /// </summary>
@@ -713,10 +792,12 @@ namespace YangTools.Extend
         {
             return SquareRange(self, target, maxWidth, 0, maxHeight);
         }
+
         /// <summary>
         /// 矩形
         /// </summary>
-        public static bool SquareRange(Transform self, Transform target, float maxWidth, float minHeight, float maxHeight)
+        public static bool SquareRange(Transform self, Transform target, float maxWidth, float minHeight,
+            float maxHeight)
         {
             Vector3 enemyDir = (target.position - self.position).normalized;
             float angle = Vector3.Angle(enemyDir, self.forward);
@@ -724,6 +805,7 @@ namespace YangTools.Extend
             {
                 return false;
             }
+
             float distance = Vector3.Distance(target.position, self.position);
             float z = distance * Mathf.Cos(angle * Mathf.Deg2Rad);
             float x = distance * Mathf.Sin(angle * Mathf.Deg2Rad);
@@ -731,8 +813,10 @@ namespace YangTools.Extend
             {
                 return true;
             }
+
             return false;
         }
+
         /// <summary>
         /// 等腰三角形检测
         /// </summary>
@@ -750,12 +834,15 @@ namespace YangTools.Extend
             {
                 return false;
             }
-            float angleDistance = maxDistance * Mathf.Cos(maxAngle * 0.5f * Mathf.Deg2Rad) / Mathf.Cos(angle * Mathf.Deg2Rad);
+
+            float angleDistance = maxDistance * Mathf.Cos(maxAngle * 0.5f * Mathf.Deg2Rad) /
+                                  Mathf.Cos(angle * Mathf.Deg2Rad);
             float distance = Vector3.Distance(target.position, self.position);
             if (distance <= angleDistance)
             {
                 return true;
             }
+
             return false;
         }
     }

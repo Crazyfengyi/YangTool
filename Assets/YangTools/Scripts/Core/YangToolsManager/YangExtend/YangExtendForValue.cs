@@ -15,7 +15,6 @@ namespace YangTools.Extend
         /// <summary>
         /// 检查字段是否包含某个特性
         /// </summary>
-        /// <param name="fieldInfo">字段信息</param>
         public static bool HasAttribute<T>(this FieldInfo fieldInfo) where T : System.Attribute
         {
             try
@@ -28,16 +27,17 @@ namespace YangTools.Extend
                 return false;
             }
         }
+
         /// <summary>
         /// 是否为2的N次幂
         /// </summary>
         /// <param name="num">自身(int)</param>
-        /// <returns></returns>
         public static bool IsPowerOfTwo(this int num)
         {
             //这些数减1后与自身进行按位与，如果结果为0，表示这个数是2的n次幂
             return num > 0 && (num & (num - 1)) == 0;
         }
+
         /// <summary>
         /// 获取大于N的最小的2的N次方(如果本身是2的N次幂就返回)
         /// </summary>
@@ -54,9 +54,10 @@ namespace YangTools.Extend
             n |= n >> 8;
             n |= n >> 16;
 
-            n += 1;  //大于N的最小的2的N次方
+            n += 1; //大于N的最小的2的N次方
             return n;
         }
+
         /// <summary>
         /// 获取小于于N的最大的2的N次方(如果本身是2的N次幂就返回)
         /// </summary>
@@ -73,11 +74,12 @@ namespace YangTools.Extend
             n |= n >> 8;
             n |= n >> 16;
 
-            n += 1;  //大于N的最小的2的N次方
+            n += 1; //大于N的最小的2的N次方
             n = n >> 1; //小于N的最大的2的N次方
 
             return n;
         }
+
         /// <summary>
         /// 判断字符串是否为空
         /// </summary> 
@@ -86,6 +88,7 @@ namespace YangTools.Extend
             //extendName.Lengh效率最高，但必须判断有初始化---string str; 或者 string str = null 会报错;
             return str == null || str?.Length == 0 || string.IsNullOrEmpty(str) || str == string.Empty;
         }
+
         /// <summary>
         /// 随机返回bool值
         /// </summary>
@@ -95,6 +98,7 @@ namespace YangTools.Extend
         {
             return random.NextDouble() > 0.5d;
         }
+
         /// <summary>
         /// 随机返回+-1
         /// </summary>
@@ -104,6 +108,7 @@ namespace YangTools.Extend
         {
             return random.NextDouble() > 0.5d ? 1 : -1;
         }
+
         /// <summary>
         /// 随机返回枚举--不知道手动枚举值是否有效，需验证
         /// </summary>
@@ -116,6 +121,7 @@ namespace YangTools.Extend
             int index = random.Next(array.GetLowerBound(0), array.GetUpperBound(0) + 1);
             return (T)array.GetValue(index);
         }
+
         /// <summary>
         /// 随机一个int32
         /// </summary>
@@ -125,6 +131,7 @@ namespace YangTools.Extend
         {
             return BitConverter.ToInt32(random.NextBytes(4), 0);
         }
+
         /// <summary>
         /// 随机一个float
         /// </summary>
@@ -134,6 +141,7 @@ namespace YangTools.Extend
         {
             return BitConverter.ToSingle(random.NextBytes(4), 0);
         }
+
         /// <summary>
         /// 生成一个Byte[]，用随机数填充
         /// </summary>
@@ -146,6 +154,7 @@ namespace YangTools.Extend
             random.NextBytes(data);
             return data;
         }
+
         /// <summary>
         /// 去除富文本--去掉字符串的html标签
         /// </summary>
@@ -174,6 +183,7 @@ namespace YangTools.Extend
             input = Regex.Replace(input.Trim(), "\\s+", " ");
             return input;
         }
+
         /// <summary>
         /// 克隆List
         /// </summary>
@@ -184,8 +194,10 @@ namespace YangTools.Extend
             {
                 newList.Add(list[i]);
             }
+
             return newList;
         }
+
         /// <summary>
         /// 克隆类对象
         /// </summary>
@@ -205,6 +217,7 @@ namespace YangTools.Extend
         }
 
         #region Unity相关
+
         /// <summary>
         /// vector3转vector2
         /// </summary>
@@ -213,6 +226,7 @@ namespace YangTools.Extend
         {
             return new Vector2(vector3.x, vector3.z);
         }
+
         /// <summary>
         /// vector2转vector3
         /// </summary>
@@ -221,6 +235,7 @@ namespace YangTools.Extend
         {
             return new Vector3(vector2.x, y, vector2.y);
         }
+
         /// <summary>
         /// 设置Y值
         /// </summary>
@@ -229,6 +244,7 @@ namespace YangTools.Extend
             vector3.y = y;
             return vector3;
         }
+
         /// <summary>
         /// 设置绝对位置的x坐标。
         /// </summary>
@@ -239,6 +255,7 @@ namespace YangTools.Extend
             v.x = newValue;
             transform.position = v;
         }
+
         /// <summary>
         /// 设置绝对位置的y坐标。
         /// </summary>
@@ -249,6 +266,7 @@ namespace YangTools.Extend
             v.y = newValue;
             transform.position = v;
         }
+
         /// <summary>
         /// 设置绝对位置的z坐标。
         /// </summary>
@@ -259,6 +277,7 @@ namespace YangTools.Extend
             v.z = newValue;
             transform.position = v;
         }
+
         /// <summary>
         /// 增加绝对位置的x坐标。
         /// </summary>
@@ -269,6 +288,7 @@ namespace YangTools.Extend
             v.x += deltaValue;
             transform.position = v;
         }
+
         /// <summary>
         /// 增加绝对位置的y坐标。
         /// </summary>
@@ -279,6 +299,7 @@ namespace YangTools.Extend
             v.y += deltaValue;
             transform.position = v;
         }
+
         /// <summary>
         /// 增加绝对位置的 z 坐标。
         /// </summary>
@@ -300,6 +321,7 @@ namespace YangTools.Extend
             v.x = newValue;
             transform.localPosition = v;
         }
+
         /// <summary>
         /// 设置相对位置的y坐标。
         /// </summary>
@@ -310,6 +332,7 @@ namespace YangTools.Extend
             v.y = newValue;
             transform.localPosition = v;
         }
+
         /// <summary>
         /// 设置相对位置的z坐标。
         /// </summary>
@@ -320,6 +343,7 @@ namespace YangTools.Extend
             v.z = newValue;
             transform.localPosition = v;
         }
+
         /// <summary>
         /// 增加相对位置的x坐标。
         /// </summary>
@@ -330,6 +354,7 @@ namespace YangTools.Extend
             v.x += deltaValue;
             transform.localPosition = v;
         }
+
         /// <summary>
         /// 增加相对位置的y坐标。
         /// </summary>
@@ -340,6 +365,7 @@ namespace YangTools.Extend
             v.y += deltaValue;
             transform.localPosition = v;
         }
+
         /// <summary>
         /// 增加相对位置的z坐标。
         /// </summary>
@@ -361,6 +387,7 @@ namespace YangTools.Extend
             v.x = newValue;
             transform.localScale = v;
         }
+
         /// <summary>
         /// 设置相对尺寸的y分量。
         /// </summary>
@@ -371,6 +398,7 @@ namespace YangTools.Extend
             v.y = newValue;
             transform.localScale = v;
         }
+
         /// <summary>
         /// 设置相对尺寸的z分量。
         /// </summary>
@@ -380,8 +408,8 @@ namespace YangTools.Extend
             Vector3 v = transform.localScale;
             v.z = newValue;
             transform.localScale = v;
-
         }
+
         /// <summary>
         /// 增加相对尺寸的x分量。
         /// </summary>
@@ -392,6 +420,7 @@ namespace YangTools.Extend
             v.x += deltaValue;
             transform.localScale = v;
         }
+
         /// <summary>
         /// 增加相对尺寸的y分量。
         /// </summary>
@@ -402,6 +431,7 @@ namespace YangTools.Extend
             v.y += deltaValue;
             transform.localScale = v;
         }
+
         /// <summary>
         /// 增加相对尺寸的z分量。
         /// </summary>
@@ -422,12 +452,14 @@ namespace YangTools.Extend
             long ticks = minValue.Ticks + (long)((maxValue.Ticks - minValue.Ticks) * random.NextDouble());
             return new DateTime(ticks);
         }
+
         public static DateTime NextDateTime(this System.Random random)
         {
             return NextDateTime(random, DateTime.MinValue, DateTime.MaxValue);
         }
 
         #region 根据权重获取
+
         /// <summary>
         /// 从权重信息组里根据权重随机一个
         /// </summary>
@@ -439,7 +471,7 @@ namespace YangTools.Extend
         {
             T ret = default;
 
-            int totalWeight = 0;//总权重值
+            int totalWeight = 0; //总权重值
             foreach (T i in weightInfos)
             {
                 totalWeight += i.GetWeight();
@@ -460,6 +492,7 @@ namespace YangTools.Extend
                         ICollection<T> collection = weightInfos as ICollection<T>;
                         collection?.Remove(item);
                     }
+
                     break;
                 }
             }
@@ -477,12 +510,14 @@ namespace YangTools.Extend
             /// </summary>
             /// <returns>权重值</returns>
             public int GetWeight();
+
             /// <summary>
             /// 获得类型
             /// </summary>
             /// <returns>类型</returns>
             public T GetItem();
         }
+
         #endregion
     }
 }

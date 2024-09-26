@@ -365,8 +365,7 @@ namespace YangTools.Extend
             Font myFont = tex.font;
             myFont.RequestCharactersInTexture(message, tex.fontSize, tex.fontStyle);
 
-            CharacterInfo characterInfo = new CharacterInfo();
-
+            CharacterInfo characterInfo;
             char[] arr = message.ToCharArray();
             foreach (char c in arr)
             {
@@ -395,8 +394,6 @@ namespace YangTools.Extend
         /// <summary>
         /// 图片材质还原(材质置空)
         /// </summary>
-        /// <param name="image"></param>
-        /// <param name="color"></param>
         public static void SetImageDefault(this Image image)
         {
             image.material = null;
@@ -436,7 +433,6 @@ namespace YangTools.Extend
         public bool value;
         public BoolBridge()
         {
-
         }
     }
 }

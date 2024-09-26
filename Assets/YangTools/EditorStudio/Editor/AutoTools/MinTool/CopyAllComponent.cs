@@ -8,6 +8,7 @@
 */
 using UnityEditor;
 using UnityEngine;
+
 namespace YangTools
 {
     public static class CopyAllComponent

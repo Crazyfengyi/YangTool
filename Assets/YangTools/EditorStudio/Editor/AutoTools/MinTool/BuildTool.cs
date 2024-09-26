@@ -1,16 +1,18 @@
-/** 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2022.1.0f1c1 
- *创建时间:         2022-11-16 
+/**
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2022.1.0f1c1
+ *创建时间:         2022-11-16
 */
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using YangTools;
 
 /// <summary>
 /// 打包工具
@@ -22,7 +24,7 @@ public static class BuildTool
     /// </summary>
     private static int APK_FLAG = 0;
 
-    [MenuItem("YangTools/BuildTool/一键输出APK(Android打包)", priority = 9999)]
+    [MenuItem(SettingInfo.YongToolsBuildToolPath + "一键输出APK(Android打包)", priority = 9999)]
     public static void BuildAPK()
     {
         if (!EditorUtility.DisplayDialog("重要提示", "是否确认打[Android包]", "确认", "取消"))
@@ -35,6 +37,7 @@ public static class BuildTool
         //打包APK
         BuildOutputAPK();
     }
+
     /// <summary>
     /// 打包设置
     /// </summary>
@@ -46,6 +49,7 @@ public static class BuildTool
         //PlayerSettings.Android.keyaliasName = "x";
         //PlayerSettings.Android.keyaliasPass = "x";
     }
+
     /// <summary>
     /// 开始打包
     /// </summary>
@@ -58,6 +62,7 @@ public static class BuildTool
             PlayerPrefs.SetString("BuildTime_Flag", DateTime.Now.Day.ToString());
             PlayerPrefs.SetInt("APK_FLAG", 0);
         }
+
         APK_FLAG = PlayerPrefs.GetInt("APK_FLAG");
         APK_FLAG++;
         PlayerPrefs.SetInt("APK_FLAG", APK_FLAG);
@@ -70,7 +75,7 @@ public static class BuildTool
         string apkFullName = Path.Combine(apkRootPath, apkName);
         //所有场景名
         string[] buildScenes = EditorBuildSettingsScene.GetActiveSceneList(EditorBuildSettings.scenes);
-        
+
         //打包设置
         BuildPlayerOptions options = new BuildPlayerOptions();
         options.options = BuildOptions.None;
@@ -105,6 +110,7 @@ public static class BuildTool
         if (!Directory.Exists(desPath)) Directory.CreateDirectory(desPath);
         CopyDirectory(srcPath, desPath);
     }
+
     /// <summary>
     /// 删除目录
     /// </summary>
@@ -113,6 +119,7 @@ public static class BuildTool
         string deletePath = Path.Combine(Application.dataPath, "StreamingAssets/Assets");
         DeleteDirectory(deletePath);
     }
+
     /// <summary>
     /// 删除文件夹
     /// </summary>
@@ -122,6 +129,7 @@ public static class BuildTool
         Directory.Delete(path, true);
         AssetDatabase.Refresh();
     }
+
     /// <summary>
     /// 复制文件夹
     /// </summary>
@@ -134,21 +142,23 @@ public static class BuildTool
             {
                 System.IO.Directory.CreateDirectory(targetFolder);
             }
+
             //得到原文件根目录下的所有文件
             string[] files = System.IO.Directory.GetFiles(sourceFolder);
             foreach (string file in files)
             {
                 string name = System.IO.Path.GetFileName(file);
                 string dest = System.IO.Path.Combine(targetFolder, name);
-                System.IO.File.Copy(file, dest);//复制文件
+                System.IO.File.Copy(file, dest); //复制文件
             }
+
             //得到原文件根目录下的所有文件夹
             string[] folders = System.IO.Directory.GetDirectories(sourceFolder);
             foreach (string folder in folders)
             {
                 string name = System.IO.Path.GetFileName(folder);
                 string dest = System.IO.Path.Combine(targetFolder, name);
-                CopyDirectory(folder, dest);//构建目标路径,递归复制文件
+                CopyDirectory(folder, dest); //构建目标路径,递归复制文件
             }
         }
         catch (Exception e)
@@ -156,6 +166,7 @@ public static class BuildTool
             UnityEngine.Debug.LogError("复制文件夹出错:" + e.Message);
         }
     }
+
     /// <summary>
     /// 获取所有需要打包场景名
     /// </summary>
@@ -167,6 +178,7 @@ public static class BuildTool
         {
             if (scene.enabled) sceneNames.Add(scene.path);
         }
+
         return sceneNames;
     }
 }

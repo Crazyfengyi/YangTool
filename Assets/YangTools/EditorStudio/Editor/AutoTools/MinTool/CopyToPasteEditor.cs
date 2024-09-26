@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace YangTools.EditorStudio
+namespace YangTools
 {
     public class CopyToPasteEditor
     {

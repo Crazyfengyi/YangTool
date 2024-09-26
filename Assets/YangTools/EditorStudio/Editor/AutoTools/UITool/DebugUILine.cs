@@ -7,6 +7,7 @@ namespace YangTools
     public class DebugUILine : MonoBehaviour
     {
         static Vector3[] fourCorners = new Vector3[4];
+
         void OnDrawGizmos()
         {
             foreach (MaskableGraphic g in GameObject.FindObjectsOfType<MaskableGraphic>())
@@ -24,6 +25,5 @@ namespace YangTools
             }
         }
     }
-
 }
 #endif

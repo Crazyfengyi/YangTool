@@ -321,7 +321,7 @@ namespace YangTools.Extend
         }
     }
 
-    //跟资源有关---张艺洪那边移过来
+    //跟资源有关---其他人那边移过来
     public partial class YangExtend
     {
         /// <summary>
@@ -424,6 +424,262 @@ namespace YangTools.Extend
                 images[i].SetImageDefault();
             }
         }
+        
+        /// <summary>
+        /// 当同一方向有多个箭时，箭的偏移
+        /// </summary>
+        public static float[] Offset(int count)
+        {
+            float scale = 0.65f;
+            float[] offsetVec3 = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                // 奇数根
+                if (count % 2 != 0)
+                {
+                    // 第一根不偏移
+                    if (i == 0)
+                    {
+                        offsetVec3[i] = 0;
+                    }
+                    else
+                    {
+                        if (i % 2 != 0)
+                        {
+                            offsetVec3[i] = (1f + (i - 1) / 2) * scale;
+                        }
+                        else
+                        {
+                            offsetVec3[i] = -(1f + (i - 1) / 2) * scale;
+                        }
+                    }
+                }
+                else
+                {
+                    // 偶数箭
+                    if (i % 2 != 0)
+                    {
+                        offsetVec3[i] = (0.5f + (i / 2)) * scale;
+                    }
+                    else
+                    {
+                        offsetVec3[i] = -(0.5f + (i / 2)) * scale;
+                    }
+                }
+            }
+            return offsetVec3;
+        }
+        
+        /* 多语言参考写法--自动回调
+         *
+         *     public static void AutoToText(this TextMeshPro text, string textId)
+    {
+        var id = text.gameObject.GetInstanceID();
+        System.Action act = () =>
+        {
+            text.text = textId.ToText();
+        };
+        if (PlayerSettingManager.ChangeleLanguageTextDic.ContainsKey(id))
+        {
+            PlayerSettingManager.ChangeleLanguageTextDic[id] = act;
+        }
+        else
+        {
+            PlayerSettingManager.ChangeleLanguageTextDic.Add(id, act);
+        }
+        act();
+    }
+         */
+        
+        /*
+            ---------参考编辑器update ----
+         *	/// <summary>
+	/// 查找引用
+	/// </summary>
+	[MenuItem("SceneTools/删除未引用资源")]
+	static private void FindAndDelete()
+	{
+		Dictionary<string, string> guidAndPaths = new Dictionary<string, string>();
+		List<string> deletePaths = new List<string>();
+		var obj = Selection.objects[0];
+		string dire = AssetDatabase.GetAssetPath(obj);
+		DirectoryInfo directory = new DirectoryInfo(Application.dataPath + "/" + dire.Replace("Assets/", ""));
+		DirectoryInfo[] dirs = directory.GetDirectories();
+		for (int i = 0; i < dirs.Length; i++)
+		{
+			if (dirs[i].FullName.Contains("Spine")) continue;//Spine不做处理
+			FileInfo[] dFiles = dirs[i].GetFiles("*.png");
+			for (int j = 0; j < dFiles.Length; j++)
+			{
+				string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
+				if (string.IsNullOrEmpty(filePath)) continue;
+				guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
+				deletePaths.Add(filePath);
+			}
+			dFiles = dirs[i].GetFiles("*.tga");
+			for (int j = 0; j < dFiles.Length; j++)
+			{
+				string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
+				if (string.IsNullOrEmpty(filePath)) continue;
+				guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
+				deletePaths.Add(filePath);
+			}
+			dFiles = dirs[i].GetFiles("*.jpg");
+			for (int j = 0; j < dFiles.Length; j++)
+			{
+				string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
+				if (string.IsNullOrEmpty(filePath)) continue;
+				guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
+				deletePaths.Add(filePath);
+			}
+		}
+		List<string> withoutExtensions = new List<string>() { ".prefab", ".unity", ".mat", ".asset" };
+		string[] files = Directory.GetFiles(Application.dataPath, "*.*", SearchOption.AllDirectories)
+			.Where(s => withoutExtensions.Contains(Path.GetExtension(s).ToLower())).ToArray();
+		int startIndex = 0;
+
+		EditorApplication.update = delegate ()
+		{
+			string file = files[startIndex];
+
+			bool isCancel = EditorUtility.DisplayCancelableProgressBar("匹配资源中", file, (float)startIndex / (float)files.Length);
+			foreach (var guid in guidAndPaths.Keys)
+			{
+				if (Regex.IsMatch(File.ReadAllText(file), guid))//找到引用则不删除
+				{
+					deletePaths.Remove(guidAndPaths[guid]);
+				}
+			}
+			startIndex++;
+			if (isCancel || startIndex >= files.Length)
+			{
+				EditorUtility.ClearProgressBar();
+				EditorApplication.update = null;
+				startIndex = 0;
+				for (int i = 0; i < deletePaths.Count; i++)
+				{
+					AssetDatabase.DeleteAsset(deletePaths[i]);
+					Debug.Log("删除了" + deletePaths[i]);
+				}
+				AssetDatabase.SaveAssets();
+				AssetDatabase.Refresh();
+				Debug.Log($"删除了{deletePaths.Count}个文件");
+			}
+		};
+	}
+         *
+         *
+         * 
+         */
+        
+        /*---参考移除动画事件-----
+         *	[MenuItem("SceneTools/删除所有动画事件")]
+	public static void RemoveAllAnimationEvent()
+	{
+		var obj = Selection.activeObject;
+		string dire = AssetDatabase.GetAssetPath(obj);
+		DirectoryInfo directory = new DirectoryInfo(Application.dataPath + "/" + dire.Replace("Assets/",""));
+		DirectoryInfo[] dirs = directory.GetDirectories();
+		for (int i = 0; i < dirs.Length; i++)
+		{
+			FileInfo[] files = dirs[i].GetFiles("*.fbx");
+			for (int j = 0; j < files.Length; j++)
+			{
+				string modelPath = files[j].FullName.Substring(files[j].FullName.IndexOf("Assets")).Replace("\\","/");
+				ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+				ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
+				for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
+				{
+					tempModelClips[k] = modelImporter.clipAnimations[k];
+					tempModelClips[k].events = new AnimationEvent[0];
+				}
+				modelImporter.clipAnimations = tempModelClips;
+				modelImporter.SaveAndReimport();
+			}
+		}
+		AssetDatabase.SaveAssets();
+		AssetDatabase.Refresh();
+		Debug.Log("删除动画事件成功!");
+	}
+         *
+         *
+         *
+         * 
+         */
+        
+        /*
+         ---------参考子弹对称发射--------
+         *int bulletCount = 2;//子弹数量
+        int atkCount = 2;//攻击次数
+
+        if (Random.Range(0f, 1f) < finnalValue[GameAttribute.散射箭概率])
+        {
+            //触发散射
+            bulletCount += 1;
+        }
+
+        if (Random.Range(0f, 1f) < finnalValue[GameAttribute.连射箭概率])
+        {
+            //连射箭
+            atkCount += 1;
+        }
+
+        if (Random.Range(0f, 1f) < finnalValue[GameAttribute.贯穿箭概率])
+        {
+            //贯穿箭
+            AddBattleTempAttribute(-1, (int)GameAttribute.子弹穿透障碍物, 1, 0);
+        }
+
+        for (int i = 0; i < atkCount; i++)
+        {
+            //Wait(-1, 0.2f * i);
+            //连射间隔
+            skillTimerId.AddTimePot(0.2f * i, () =>
+             {
+                 //偶数
+                 if (bulletCount % 2 == 0)
+                 {
+                     var lastOffSet = 0;//上一根箭位置偏移
+
+                     for (int j = 0; j < bulletCount; j++)
+                     {
+                         int OffSet = 30 * j  * (j % 2 == 0 ? 1 : -1);//临时偏移  (j % 2 == 1 ? 1 : -1)是区分上下的
+
+                         //第一根特殊处理--向上偏移15度，其他按规则来
+                         if (j == 0)
+                         {
+                             OffSet = 15;
+                         }
+
+                         int realityOffset = OffSet + lastOffSet;//实际偏移
+
+                         Shot(-1, "Bullet_101_1", true, euler: realityOffset);
+
+                         lastOffSet = realityOffset;//记录偏移
+                     }
+
+
+                 }
+                 else//奇数
+                 {
+                     var lastOffSet = 0;//上一根箭位置偏移
+                     for (int j = 0; j < bulletCount; j++)
+                     {
+                         int OffSet = 30 * j * (j % 2 == 1 ? 1 : -1);//临时偏移  (j % 2 == 1 ? 1 : -1)是区分上下的
+                         int realityOffset = OffSet + lastOffSet;//实际偏移
+
+                         Shot(-1, "Bullet_101_1", true, euler: realityOffset);
+
+                         lastOffSet = realityOffset;//记录偏移
+                     }
+                 }
+             });
+        }
+         * 
+         *
+         *
+         * 
+         */
     }
     /// <summary>
     /// bool值桥

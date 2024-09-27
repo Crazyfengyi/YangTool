@@ -566,6 +566,32 @@ namespace YangTools.Extend
 
             return null;
         }
+        
+        /// <summary>
+        /// 动态插入事件,失败则返回false
+        /// </summary>
+        /// <param name="anim"></param>
+        /// <param name="clipName">动画片段名</param>
+        /// <param name="function">事件函数名</param>
+        /// <param name="time">插入的时间点</param>
+        /// <returns></returns>
+        public static bool AddEventToAnimtionClip(this Animator anim, string clipName, string function, float time)
+        {
+            if (anim == null || string.IsNullOrEmpty(clipName) || anim.runtimeAnimatorController == null)
+                return false;
+            var animLength = anim.GetAnimLength(clipName);
+            if (animLength <= 0)
+                return false;
+            RuntimeAnimatorController ac = anim.runtimeAnimatorController;
+            AnimationEvent newEvent = new AnimationEvent();
+            newEvent.functionName = function;
+            if (time > animLength)
+                return false;
+            newEvent.time = time;
+            anim.GetAnimClipByName(clipName).AddEvent(newEvent);
+            anim.Rebind();
+            return true;
+        }
 
         #endregion
 

@@ -197,7 +197,7 @@ namespace YangTools.Extend
 
             return newList;
         }
-
+        
         /// <summary>
         /// 克隆类对象
         /// </summary>

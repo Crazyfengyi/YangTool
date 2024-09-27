@@ -60,7 +60,7 @@ namespace YangTools
         /// <param name="controlPoint"></param>控制点
         /// <param name="endPoint"></param>目标点
         /// <param name="segmentNum"></param>采样点的数量
-        /// <returns></returns>存储贝塞尔曲线点的数组
+        /// <returns>存储贝塞尔曲线点的数组</returns>
         public static Vector3 [] GetBeizerList(Vector3 startPoint, Vector3 controlPoint, Vector3 endPoint,int segmentNum)
         {
             Vector3 [] path = new Vector3[segmentNum];
@@ -77,11 +77,11 @@ namespace YangTools
         /// <summary>
         /// 根据T值，计算贝塞尔曲线上面相对应的点
         /// </summary>
-        /// <param name="t"></param>T值
-        /// <param name="p0"></param>起始点
-        /// <param name="p1"></param>控制点
-        /// <param name="p2"></param>目标点
-        /// <returns></returns>根据T值计算出来的贝赛尔曲线点
+        /// <param name="t">T值</param>
+        /// <param name="p0">起始点</param>
+        /// <param name="p1">控制点</param>
+        /// <param name="p2">目标点</param>
+        /// <returns>根据T值计算出来的贝赛尔曲线点</returns>
         private static  Vector3 CalculateCubicBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
         {
             float u = 1 - t;

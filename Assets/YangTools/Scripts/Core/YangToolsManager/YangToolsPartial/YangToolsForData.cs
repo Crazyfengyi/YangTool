@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using YangTools.ObjectPool;
 
 namespace YangTools
@@ -80,63 +79,39 @@ namespace YangTools
 
             return (T) retval;
         }
-
+        
         /// <summary>
-        /// 利用DataContractSerializer序列化和反序列化实现
+        /// 表达式树深拷贝---其原理是反射和表达式树相结合，先用反射获取字段然后缓存起来，再用表达式树赋值 https://www.cnblogs.com/SF8588/p/16152078.html
         /// </summary>
-        public static T DeepCopy<T>(T obj)
+        /// <typeparam name="TIn"></typeparam>
+        /// <typeparam name="TOut"></typeparam>
+        public static class TransExp<TIn, TOut>
         {
-            object retval;
-            using (MemoryStream ms = new MemoryStream())
+            private static readonly Func<TIn, TOut> cache = GetFunc();
+            private static Func<TIn, TOut> GetFunc()
             {
-                DataContractSerializer ser = new DataContractSerializer(typeof(T));
-                ser.WriteObject(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                retval = ser.ReadObject(ms);
-                ms.Close();
+                ParameterExpression parameterExpression = Expression.Parameter(typeof(TIn), "p");
+                List<MemberBinding> memberBindingList = new List<MemberBinding>();
+
+                foreach (var item in typeof(TOut).GetProperties())
+                {
+                    if (!item.CanWrite) continue;
+                    MemberExpression property = Expression.Property(parameterExpression, typeof(TIn).GetProperty(item.Name));
+                    MemberBinding memberBinding = Expression.Bind(item, property);
+                    memberBindingList.Add(memberBinding);
+                }
+
+                MemberInitExpression memberInitExpression = Expression.MemberInit(Expression.New(typeof(TOut)), memberBindingList.ToArray());
+                Expression<Func<TIn, TOut>> lambda = Expression.Lambda<Func<TIn, TOut>>(memberInitExpression, new ParameterExpression[] { parameterExpression });
+
+                return lambda.Compile();
             }
 
-            return (T) retval;
-        }
-
-        /// <summary>
-        /// 利用二进制序列化和反序列实现
-        /// </summary>
-        public static T DeepCopyWithBinarySerialize<T>(T obj)
-        {
-            object retval;
-            using (MemoryStream ms = new MemoryStream())
+            public static TOut Trans(TIn tIn)
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                // 序列化成流
-                bf.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                // 反序列化成对象
-                retval = bf.Deserialize(ms);
-                ms.Close();
+                return cache(tIn);
             }
-
-            return (T) retval;
         }
-
-        /// <summary>
-        /// 利用XML序列化和反序列化实现
-        /// </summary>
-        public static T DeepCopyWithXmlSerializer<T>(T obj)
-        {
-            object retval;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                XmlSerializer xml = new XmlSerializer(typeof(T));
-                xml.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                retval = xml.Deserialize(ms);
-                ms.Close();
-            }
-
-            return (T) retval;
-        }
-
         #endregion
     }
 }

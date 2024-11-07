@@ -9,32 +9,9 @@ namespace YangTools.Timer
     public class YangTimerManager : GameModuleBase
     {
         #region 内部调用
-        ///// 单例
-        ///// </summary>
-        //private static YangTimerManager instance;
-        ///// <summary>
-        ///// 设备线程锁
-        ///// </summary>
-        //private static readonly object padlock = new object();
-        ///// <summary>
-        ///// 对外单例
-        ///// </summary>
-        //public static YangTimerManager Instacne
-        //{
-        //    get
-        //    {
-        //        lock (padlock)
-        //        {
-        //            if (instance == null)
-        //            {
-        //                GameObject timerObject = new GameObject("TimerManager");
-        //                timerObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
-        //            }
 
-        //            return instance;
-        //        }
-        //    }
-        //}
+        #region 属性
+        
         /// <summary>
         /// 计时器列表
         /// </summary>
@@ -48,13 +25,15 @@ namespace YangTools.Timer
         /// </summary>
         private static readonly List<YangTimer> CallDestoryList = new List<YangTimer>();
 
+        #endregion
+   
         #region 生命周期
         /// <summary>
         /// 初始化
         /// </summary>
         internal override void InitModule()
         {
-            //throw new NotImplementedException();
+          
         }
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
@@ -86,10 +65,11 @@ namespace YangTools.Timer
         }
         internal override void CloseModule()
         {
-            //throw new NotImplementedException();
+       
         }
         #endregion
 
+        #region 辅助方法
         /// <summary>
         /// 将计时器加入自动删除列表
         /// </summary>
@@ -101,7 +81,8 @@ namespace YangTools.Timer
                 AutoDestoryList.Add(timer);
             }
         }
-
+        #endregion
+     
         #endregion
 
         #region 对外调用

@@ -3,6 +3,50 @@ using UnityEngine;
 
 namespace YangTools.Timer
 {
+    #region 计时器
+    /// <summary>
+    /// 计时器
+    /// </summary>
+    public class YangTimer
+    {
+        /// <summary>
+        /// 计时信息
+        /// </summary>
+        public readonly TimerInfo timerInfo;
+        /// <summary>
+        /// 设置自动删除--告诉管理类这个计时器需要删除
+        /// </summary>
+        public Action<YangTimer> setAutoDestory;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public YangTimer(TimerInfo _timerInfo, Action<YangTimer> manager)
+        {
+            setAutoDestory = manager;
+            timerInfo = _timerInfo;
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public void MyUpdate()
+        {
+            timerInfo.Update();
+            //更新完后检查是否需要销毁
+            if (timerInfo.needDeatory)
+            {
+                Destroy();
+            }
+        }
+        /// <summary>
+        /// 销毁
+        /// </summary>
+        public void Destroy()
+        {
+            setAutoDestory?.Invoke(this);
+        }
+    }
+    #endregion
+    
     #region 计时信息
     /// <summary>
     /// 计时器信息
@@ -269,50 +313,6 @@ namespace YangTools.Timer
         public bool IsTimerComplete()
         {
             return currentSecond <= 0f;
-        }
-    }
-    #endregion
-
-    #region 计时器
-    /// <summary>
-    /// 计时器
-    /// </summary>
-    public class YangTimer
-    {
-        /// <summary>
-        /// 计时信息
-        /// </summary>
-        public TimerInfo timerInfo;
-        /// <summary>
-        /// 设置自动删除--告诉管理类这个计时器需要删除
-        /// </summary>
-        public Action<YangTimer> setAutoDestory;
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public YangTimer(TimerInfo _timerInfo, Action<YangTimer> manager)
-        {
-            setAutoDestory = manager;
-            timerInfo = _timerInfo;
-        }
-        /// <summary>
-        /// 更新
-        /// </summary>
-        public void MyUpdate()
-        {
-            timerInfo.Update();
-            //更新完后检查是否需要销毁
-            if (timerInfo.needDeatory)
-            {
-                Destroy();
-            }
-        }
-        /// <summary>
-        /// 销毁
-        /// </summary>
-        public void Destroy()
-        {
-            setAutoDestory?.Invoke(this);
         }
     }
     #endregion

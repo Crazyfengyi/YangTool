@@ -13,6 +13,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using YooAsset;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
@@ -124,13 +125,10 @@ public class RescoreManager
         return subAsset;
     }
 
-    public async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location,
-        LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, uint priority = 100)
+    public async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
     {
-        // Debugger.Log($"YooAssets 场景加载 ---{location}---", Debugger.ELogColor.Orange);
-
-        var handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode, suspendLoad, priority);
-
+        Debug.Log($"YooAssets 场景加载 ---{location}---");
+        SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode, localPhysicsMode,suspendLoad, priority);
         await handler.ToUniTask();
 
         return handler;

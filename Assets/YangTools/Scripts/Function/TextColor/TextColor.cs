@@ -6,12 +6,8 @@
  *创建时间:         2023-12-09 
 */
 using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using YangTools;
-using YangTools.UGUI;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -31,21 +27,15 @@ public class TextColor : MonoBehaviour
 
     public void SetText(string str)
     {
-        var colorArray = colors.Select(item =>
-        {
-            return ColorUtility.ToHtmlStringRGB(item);
-        }).ToArray();
-
-
+        string[] colorArray = colors.Select(ColorUtility.ToHtmlStringRGB).ToArray();
+        
         StringBuilder stringBuilder = new StringBuilder();
-
         int index = 0;
         foreach (char c in str)
         {
             stringBuilder.Append($"<color=#{colorArray[index % colorArray.Length]}>{c}</color>");
             index++;
         }
-
         textMesh.text = stringBuilder.ToString();
     }
 }

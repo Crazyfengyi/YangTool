@@ -19,13 +19,13 @@ using System.Resources;
 using System.Collections.Generic;
 using DataStruct;
 
-[Serializable]
 /// <summary>
 /// 技能控制器
 /// </summary>
+[Serializable]
 public class SkillControl
 {
-    private RoleBase m_role;
+    private RoleBase role;
     private BehaviorTree skillTree;//技能行为树
     private PlayableDirector skillTimeLine;//技能时间线
 
@@ -39,9 +39,9 @@ public class SkillControl
     /// </summary>
     public bool IsTimeLine { get; set; }
 
-    public SkillControl(RoleBase role,BehaviorTree _skillTree, PlayableDirector _timeLine)
+    public SkillControl(RoleBase _role,BehaviorTree _skillTree, PlayableDirector _timeLine)
     {
-        m_role = role;
+        role = _role;
         skillTree = _skillTree;
         skillTimeLine = _timeLine;
     }
@@ -63,13 +63,10 @@ public class SkillControl
             Dictionary<string, PlayableBinding> bindingDict = new Dictionary<string, PlayableBinding>();
             foreach (var at in skillTimeLine.playableAsset.outputs)
             {
-                if (!bindingDict.ContainsKey(at.streamName))
-                {
-                    bindingDict.Add(at.streamName, at);
-                }
+                bindingDict.TryAdd(at.streamName, at);
             }
 
-            skillTimeLine.SetGenericBinding(bindingDict["Animation Track"].sourceObject, m_role.Animator);
+            skillTimeLine.SetGenericBinding(bindingDict["Animation Track"].sourceObject, role.Animator);
         }
     }
     /// <summary>

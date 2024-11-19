@@ -19,7 +19,7 @@ public class RoleAttributeControl
 {
     private RoleBase handle;
     //血量
-    public ValueTotal Attack => GetAttribute(RoleAttribute.HP);
+    public ValueTotal Attack => GetAttribute(RoleAttribute.Hp);
     /// <summary>
     /// 所有属性
     /// </summary>

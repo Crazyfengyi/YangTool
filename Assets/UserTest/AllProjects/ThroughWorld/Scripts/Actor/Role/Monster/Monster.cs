@@ -84,8 +84,8 @@ public class Monster : RoleBase
         AIPath = GetComponent<AIPath>();
         emitter = new MonsterEmitter(this);
 
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TableData.Hp);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TableData.Mp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Hp, TableData.Hp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Mp, TableData.Mp);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, TableData.Atk);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Def, TableData.Def);
 
@@ -118,7 +118,7 @@ public class Monster : RoleBase
         {
             for (int i = 0; i < SkillsList.Count; i++)
             {
-                SkillsList[i].UpdateCD(Time.deltaTime);
+                SkillsList[i].UpdateCd(Time.deltaTime);
             }
 
             if (SkillsList != null && SkillControl.NeedUseSkill == false && skillCommonCDTimer <= 0)
@@ -135,7 +135,7 @@ public class Monster : RoleBase
                 RunTimeSkillData target = YangExtend.GetRandomInfo(canUseSkills);
                 if (target != null)
                 {
-                    target.ToCD();
+                    target.ToCd();
                     AIFindTargetDistance = target.skill.AtkRang;
                     SkillControl.UseSkill(target);
                     skillCommonCDTimer = skillCommonCDInterval;

@@ -81,8 +81,8 @@ public class PlayerController : RoleBase
 
         roleAttributeControl.ChangeAttribute(RoleAttribute.GuardRang, 20);
         roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, TBdata.Atk);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.HP, TBdata.Hp);
-        roleAttributeControl.ChangeAttribute(RoleAttribute.MP, TBdata.Mp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Hp, TBdata.Hp);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Mp, TBdata.Mp);
     }
 
     public override void IUpdate()

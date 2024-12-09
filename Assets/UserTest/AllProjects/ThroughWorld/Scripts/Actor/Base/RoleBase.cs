@@ -102,7 +102,7 @@ public abstract class RoleBase : GameActor
         aniControl = new AniControl(Animator);
         roleBuffControl = new BuffControl(this);
         roleAttributeControl = new RoleAttributeControl(this);
-        healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.HP), () =>
+        healthControl = new HealthControl(this, roleAttributeControl.GetAttribute(RoleAttribute.Hp), () =>
         {
             GameActorManager.Instance.RemoveActor(this);
         });
@@ -166,7 +166,7 @@ public abstract class RoleBase : GameActor
     {
         roleAttributeControl.ChangeAttribute(roleAttribute, value, attributeValueType);
         //可以考虑去掉限制
-        if (roleAttribute == RoleAttribute.HP)
+        if (roleAttribute == RoleAttribute.Hp)
         {
             healthControl?.healthBar?.UpdateData(this);
         }

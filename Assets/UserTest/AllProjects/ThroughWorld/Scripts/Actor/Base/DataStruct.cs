@@ -71,12 +71,12 @@ namespace DataStruct
         public int weight;
         public float currentCD;
 
-        public void ToCD()
+        public void ToCd()
         {
             currentCD = skill.Cd;
         }
 
-        public void UpdateCD(float timer)
+        public void UpdateCd(float timer)
         {
             currentCD -= timer;
             currentCD = Mathf.Max(currentCD, 0);
@@ -175,8 +175,8 @@ namespace DataStruct
     public enum RoleAttribute
     {
         None,
-        HP,
-        MP,
+        Hp,
+        Mp,
         Atk,
         Def,
         GuardRang,

@@ -128,7 +128,7 @@ public class RescoreManager
     public async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
     {
         Debug.Log($"YooAssets 场景加载 ---{location}---");
-        SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode,suspendLoad, priority);
+        SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode,localPhysicsMode,suspendLoad, priority);
         await handler.ToUniTask();
 
         return handler;

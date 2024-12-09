@@ -119,7 +119,7 @@ namespace YangTools.Extend
 
             Array array = Enum.GetValues(type);
             int index = random.Next(array.GetLowerBound(0), array.GetUpperBound(0) + 1);
-            return (T)array.GetValue(index);
+            return (T) array.GetValue(index);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace YangTools.Extend
 
             return newList;
         }
-        
+
         /// <summary>
         /// 克隆类对象
         /// </summary>
@@ -212,7 +212,7 @@ namespace YangTools.Extend
                 IFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(objStream, RealObject);
                 objStream.Seek(0, SeekOrigin.Begin);
-                return (T)formatter.Deserialize(objStream);
+                return (T) formatter.Deserialize(objStream);
             }
         }
 
@@ -449,7 +449,7 @@ namespace YangTools.Extend
         //随机时间
         public static DateTime NextDateTime(this System.Random random, DateTime minValue, DateTime maxValue)
         {
-            long ticks = minValue.Ticks + (long)((maxValue.Ticks - minValue.Ticks) * random.NextDouble());
+            long ticks = minValue.Ticks + (long) ((maxValue.Ticks - minValue.Ticks) * random.NextDouble());
             return new DateTime(ticks);
         }
 
@@ -516,6 +516,45 @@ namespace YangTools.Extend
             /// </summary>
             /// <returns>类型</returns>
             public T GetItem();
+        }
+
+        #endregion
+
+        #region 列表扩展
+
+        /// <summary>
+        /// 随机获取列表中的count个元素
+        /// </summary>
+        public static List<T> RandomItems<T>(this List<T> list, int count)
+        {
+            var result = new List<T>();
+            var tempList = new List<T>(list);
+            for (var i = 0; i < count && tempList.Count > 0; i++)
+            {
+                var randomInt = UnityEngine.Random.Range(0, tempList.Count);
+                result.Add(tempList[randomInt]);
+                tempList.RemoveAt(randomInt);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 随机获取列表中的count个元素(从原列表剔除元素)
+        /// </summary>
+        /// <returns></returns>
+        public static List<T> RandomItemsAndRemove<T>(this List<T> list, int count)
+        {
+            var result = new List<T>();
+
+            for (var i = 0; i < count && list.Count > 0; i++)
+            {
+                var randomInt = UnityEngine.Random.Range(0, list.Count);
+                result.Add(list[randomInt]);
+                list.RemoveAt(randomInt);
+            }
+
+            return result;
         }
 
         #endregion

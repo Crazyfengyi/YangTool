@@ -18,7 +18,7 @@ public class DialogGraph : EditorWindow
     private DialogGraphView m_GraphView;
     private string _fileName = "New Narrative";
 
-    [MenuItem("Graph/Dialog Graph")]
+    [MenuItem("YangTools/Graph/Dialog Graph")]
     public static void OpenDialogGraphWindow()
     {
         var window = GetWindow<DialogGraph>();

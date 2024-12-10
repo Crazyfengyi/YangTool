@@ -46,7 +46,7 @@ public class DataChange : EditorWindow
     //选中的导出路径
     private static string _m_sExportPath = @"D:\Document\ETG_Text2Excel\Assets\DataExport\Resources\Result";
 
-    [MenuItem("DataTool/DataChange")]
+    [MenuItem("YangTools/DataTool/DataChange")]
     static void CreateBaseData()
     {
         Init();

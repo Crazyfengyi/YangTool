@@ -42,7 +42,7 @@ public class DataExportTool : EditorWindow
     //选中的导出路径
     private static string _m_sExportPath;
 
-    [MenuItem("DataTool/CreateBaseData")]
+    [MenuItem("YangTools/DataTool/CreateBaseData")]
     static void CreateBaseData()
     {
         Init();

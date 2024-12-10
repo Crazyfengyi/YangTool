@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using YangTools;
 
 namespace GameMain
 {
@@ -12,7 +13,7 @@ namespace GameMain
 
         private SearchField _searchField;
 
-        [MenuItem("工具/红点树可视化窗口")]
+        [MenuItem(SettingInfo.YongToolsGameToolPath + "红点树可视化窗口")]
         private static void OpenWindow()
         {
             if (Application.isPlaying == false)

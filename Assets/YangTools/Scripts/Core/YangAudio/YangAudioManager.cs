@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace YangTools
 {
@@ -13,30 +14,23 @@ namespace YangTools
     {
         private static YangAudioManager instance;
 
-        public static YangAudioManager Instance
-        {
-            get => instance;
-            private set { }
-        }
+        public static YangAudioManager Instance => instance;
 
         #region 属性
 
         //设备一般最多允许32个音源同时播放,优先级参数决定了在超出音源数目时，需要暂时关闭一些不重要的音源，优先播放更重要的音源
         /// <summary>
-        /// 背景音乐优先级
+        /// 背景优先级
         /// </summary>
         private static readonly int BackgroundPriorityDefault = 0;
-
         /// <summary>
-        /// 单通道音效优先级
+        /// 对话优先级
         /// </summary>
         private static readonly int SinglePriorityDefault = 10;
-
         /// <summary>
-        /// 多通道音效优先级
+        /// 声音优先级
         /// </summary>
         private static readonly int MultiplePriorityDefault = 20;
-
         /// <summary>
         /// 世界音效优先级
         /// </summary>
@@ -45,79 +39,79 @@ namespace YangTools
         /// <summary>
         /// 声音的物体
         /// </summary>
-        public static GameObject audioObject;
-
+        public static GameObject managerObject;
         /// <summary>
         /// 背景
         /// </summary>
-        private static AudioSource backgroundAudio;
-
+        private static AudioSource bgmAudio;
         /// <summary>
-        /// 对话--单通道
+        /// 对话
         /// </summary>
         private static AudioSource singleAudio;
-
-        /// <summary>1
+        /// <summary>
         /// 音效列表
         /// </summary>
         private static List<AudioSource> soundAudios = new List<AudioSource>();
-
         /// <summary>
         /// 世界声音
         /// </summary>
         private Dictionary<GameObject, AudioSource> worldAudios = new Dictionary<GameObject, AudioSource>();
-
+        
         /// <summary>
         /// 声音列表
         /// </summary>
-        public static Dictionary<string, AudioClip> audioClipDictionary = new Dictionary<string, AudioClip>();
-
+        private static Dictionary<string, AudioClip> allAudioClipsDic = new Dictionary<string, AudioClip>();
+        
+        /// <summary>
+        /// 声音混合器
+        /// </summary>
+        private AudioMixer mixer;
         #endregion
 
         #region 声音管理
 
-        private bool _isMute = false; //是否静音
-
+        private bool isMute = false; //是否静音
+        private float backgroundVolume = 0.6f; //背景音乐声音大小
+        private float singleVolume = 1f; //声音大小
+        private float soundVolume = 1f; //声音大小
+        private float worldVolume = 1f; //声音大小
+        
         /// <summary>
         /// 静音
         /// </summary>
         public bool Mute
         {
-            get => _isMute;
+            get => isMute;
             set
             {
-                if (_isMute == value) return;
-                _isMute = value;
-                backgroundAudio.mute = _isMute;
-                singleAudio.mute = _isMute;
+                if (isMute == value) return;
+                isMute = value;
+                bgmAudio.mute = isMute;
+                singleAudio.mute = isMute;
                 foreach (var t in soundAudios)
                 {
-                    t.mute = _isMute;
+                    t.mute = isMute;
                 }
 
                 foreach (var audio in worldAudios)
                 {
-                    audio.Value.mute = _isMute;
+                    audio.Value.mute = isMute;
                 }
             }
         }
 
-        private float _backgroundVolume = 0.6f; //背景音乐声音大小
-        private float _singleVolume = 1f; //声音大小
-        private float _soundVolume = 1f; //声音大小
-        private float _worldVolume = 1f; //声音大小
 
         /// <summary>
         /// 背景音乐音量
         /// </summary>
         public float BackgroundVolume
         {
-            get => _backgroundVolume;
+            get => backgroundVolume;
             set
             {
-                if (Mathf.Approximately(_backgroundVolume, value)) return;
-                _backgroundVolume = value;
-                backgroundAudio.volume = _backgroundVolume;
+                if (Mathf.Approximately(backgroundVolume, value)) return;
+                backgroundVolume = value;
+                bgmAudio.volume = backgroundVolume;
             }
         }
 
@@ -126,12 +120,12 @@ namespace YangTools
         /// </summary>
         public float SingleVolume
         {
-            get => _singleVolume;
+            get => singleVolume;
             set
             {
-                if (Mathf.Approximately(_singleVolume, value)) return;
-                _singleVolume = value;
-                singleAudio.volume = _singleVolume;
+                if (Mathf.Approximately(singleVolume, value)) return;
+                singleVolume = value;
+                singleAudio.volume = singleVolume;
             }
         }
 
@@ -140,14 +134,14 @@ namespace YangTools
         /// </summary>
         public float SoundVolume
         {
-            get => _soundVolume;
+            get => soundVolume;
             set
             {
-                if (Mathf.Approximately(_soundVolume, value)) return;
-                _soundVolume = value;
+                if (Mathf.Approximately(soundVolume, value)) return;
+                soundVolume = value;
                 foreach (var t in soundAudios)
                 {
-                    t.volume = _soundVolume;
+                    t.volume = soundVolume;
                 }
             }
         }
@@ -157,14 +151,14 @@ namespace YangTools
         /// </summary>
         public float WorldVolume
         {
-            get => _worldVolume;
+            get => worldVolume;
             set
             {
-                if (Mathf.Approximately(_worldVolume, value)) return;
-                _worldVolume = value;
+                if (Mathf.Approximately(worldVolume, value)) return;
+                worldVolume = value;
                 foreach (var audio in worldAudios)
                 {
-                    audio.Value.volume = _worldVolume;
+                    audio.Value.volume = worldVolume;
                 }
             }
         }
@@ -178,25 +172,25 @@ namespace YangTools
 
         #endregion
 
-        #region 初始化
-
+        #region 生命周期
         /// <summary>
-        /// 构造函数，为保证顺序必须有
+        /// 构造函数,为保证顺序必须有
         /// </summary>
         static YangAudioManager()
         {
         }
 
         /// <summary>
-        /// 初始化，会生成一个物体挂载在工具类不可删除物体下
+        /// 模块初始化
         /// </summary>
         internal override void InitModule()
         {
             instance = new YangAudioManager();
-            audioObject = new GameObject("AudioManagerObject");
-            audioObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
+            mixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
+            managerObject = new GameObject("AudioManagerObject");
+            managerObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
 
-            backgroundAudio = CreateAudioSource("BGMusic", BackgroundPriorityDefault, 0.6f, 1f, 0);
+            bgmAudio = CreateAudioSource("BGMusic", BackgroundPriorityDefault, 0.6f, 1f, 0);
             singleAudio = CreateAudioSource("singleMusic", SinglePriorityDefault, 1f, 1f, 0);
             for (int i = 0; i < 10; i++)
             {
@@ -212,7 +206,7 @@ namespace YangTools
         /// </summary>
         public static void LoadAllAudio()
         {
-            audioClipDictionary.Clear();
+            allAudioClipsDic.Clear();
             //本地加载 
             AudioClip[] BGAudioArray = Resources.LoadAll<AudioClip>("AudioBG");
             AudioClip[] SoundAudioArray = Resources.LoadAll<AudioClip>("AudioSound");
@@ -222,40 +216,9 @@ namespace YangTools
             //存放到字典
             foreach (AudioClip item in tempArray)
             {
-                audioClipDictionary.Add(item.name, item);
+                allAudioClipsDic.Add(item.name, item);
             }
         }
-
-        /// <summary>
-        /// 创建一个音源
-        /// </summary>
-        /// <param name="name">物体名称</param>
-        /// <param name="priority">声音优先度</param>
-        /// <param name="volume">声音大小</param>
-        /// <param name="speed">声音速度</param>
-        /// <param name="spatialBlend">混合 0:2d声音 1:3d声音</param>
-        /// <returns></returns>
-        private static AudioSource CreateAudioSource(string name, int priority, float volume, float speed,
-            float spatialBlend)
-        {
-            GameObject audioObj = new GameObject(name);
-            audioObj.transform.SetParent(audioObject.transform);
-            audioObj.transform.localPosition = Vector3.zero;
-            audioObj.transform.localRotation = Quaternion.identity;
-            audioObj.transform.localScale = Vector3.one;
-            AudioSource audio = audioObj.AddComponent<AudioSource>();
-            audio.playOnAwake = false;
-            audio.priority = priority;
-            audio.volume = volume;
-            audio.pitch = speed;
-            audio.spatialBlend = spatialBlend;
-            audio.mute = false;
-            return audio;
-        }
-
-        #endregion
-
-        #region 生命周期
 
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
@@ -281,7 +244,6 @@ namespace YangTools
 
         #region 背景音乐
 
-        //==================背景音乐=====================
         /// <summary>
         /// 播放背景音乐
         /// </summary>
@@ -293,15 +255,15 @@ namespace YangTools
             AudioClip clip = GetClipFromDic(audioName);
             if (clip == null) return;
 
-            if (backgroundAudio.isPlaying)
+            if (bgmAudio.isPlaying)
             {
-                backgroundAudio.Stop();
+                bgmAudio.Stop();
             }
 
-            backgroundAudio.clip = clip;
-            backgroundAudio.loop = isLoop;
-            backgroundAudio.pitch = speed;
-            backgroundAudio.Play();
+            bgmAudio.clip = clip;
+            bgmAudio.loop = isLoop;
+            bgmAudio.pitch = speed;
+            bgmAudio.Play();
         }
 
         /// <summary>
@@ -312,17 +274,17 @@ namespace YangTools
         {
             if (isGradual)
             {
-                backgroundAudio.DOFade(0, 2)
+                bgmAudio.DOFade(0, 2)
                     .SetUpdate(true)
                     .OnComplete(() =>
                     {
-                        backgroundAudio.volume = BackgroundVolume;
-                        backgroundAudio.Pause();
+                        bgmAudio.volume = BackgroundVolume;
+                        bgmAudio.Pause();
                     });
             }
             else
             {
-                backgroundAudio.Pause();
+                bgmAudio.Pause();
             }
         }
 
@@ -334,13 +296,13 @@ namespace YangTools
         {
             if (isGradual)
             {
-                backgroundAudio.UnPause();
-                backgroundAudio.volume = 0;
-                backgroundAudio.DOFade(BackgroundVolume, 2).SetUpdate(true);
+                bgmAudio.UnPause();
+                bgmAudio.volume = 0;
+                bgmAudio.DOFade(BackgroundVolume, 2).SetUpdate(true);
             }
             else
             {
-                backgroundAudio.UnPause();
+                bgmAudio.UnPause();
             }
         }
 
@@ -349,19 +311,15 @@ namespace YangTools
         /// </summary>
         public void StopBackgroundMusic()
         {
-            if (backgroundAudio.isPlaying)
+            if (bgmAudio.isPlaying)
             {
-                backgroundAudio.Stop();
+                bgmAudio.Stop();
             }
         }
-
-        //==================背景音乐END=====================
-
         #endregion
 
         #region 对话音效
 
-        //==================对话音效=====================
         /// <summary>
         /// 播放对话--单通道音效
         /// </summary>
@@ -446,13 +404,10 @@ namespace YangTools
             }
         }
 
-        //==================对话END=====================
-
         #endregion
 
         #region 音效
 
-        //==================音效=====================
         /// <summary>
         /// 播放音效
         /// </summary>
@@ -557,13 +512,10 @@ namespace YangTools
             }
         }
 
-        //==================音效END=====================
-
         #endregion
 
         #region 世界音效
 
-        //==================世界音效=====================
         /// <summary>
         /// 播放世界音效
         /// </summary>
@@ -585,7 +537,7 @@ namespace YangTools
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlayWorldSound(GameObject attachTarget, AudioClip clip, bool isLoop = false, float speed = 1)
+        private void PlayWorldSound(GameObject attachTarget, AudioClip clip, bool isLoop = false, float speed = 1)
         {
             if (worldAudios.TryGetValue(attachTarget, out var worldAudio))
             {
@@ -704,22 +656,46 @@ namespace YangTools
             audio.volume = volume;
             audio.pitch = speed;
             audio.spatialBlend = spatialBlend;
-            audio.mute = _isMute;
+            audio.mute = isMute;
             return audio;
         }
-
-        //=================世界音效END====================
-
         #endregion
 
-        #region 获得声音Clip
+        #region 方法
 
+        /// <summary>
+        /// 创建一个音源
+        /// </summary>
+        /// <param name="name">物体名称</param>
+        /// <param name="priority">声音优先度</param>
+        /// <param name="volume">声音大小</param>
+        /// <param name="speed">声音速度</param>
+        /// <param name="spatialBlend">混合 0:2d声音 1:3d声音</param>
+        /// <returns></returns>
+        private static AudioSource CreateAudioSource(string name, int priority, float volume, float speed,
+            float spatialBlend)
+        {
+            GameObject audioObj = new GameObject(name);
+            audioObj.transform.SetParent(managerObject.transform);
+            audioObj.transform.localPosition = Vector3.zero;
+            audioObj.transform.localRotation = Quaternion.identity;
+            audioObj.transform.localScale = Vector3.one;
+            AudioSource audio = audioObj.AddComponent<AudioSource>();
+            audio.playOnAwake = false;
+            audio.priority = priority;
+            audio.volume = volume;
+            audio.pitch = speed;
+            audio.spatialBlend = spatialBlend;
+            audio.mute = false;
+            return audio;
+        }
+        
         /// <summary>
         /// 从字典里获取声音
         /// </summary>
         public static AudioClip GetClipFromDic(string audioName)
         {
-            if (audioClipDictionary.TryGetValue(audioName, out var dic))
+            if (allAudioClipsDic.TryGetValue(audioName, out var dic))
             {
                 return dic;
             }
@@ -729,7 +705,6 @@ namespace YangTools
                 return null;
             }
         }
-
         #endregion
     }
 }

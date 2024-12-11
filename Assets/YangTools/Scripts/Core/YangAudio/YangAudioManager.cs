@@ -51,16 +51,16 @@ namespace YangTools
         /// <summary>
         /// 音效列表
         /// </summary>
-        private static List<AudioSource> soundAudios = new List<AudioSource>();
+        private static List<AudioSource> soundAudios = new();
         /// <summary>
         /// 世界声音
         /// </summary>
-        private Dictionary<GameObject, AudioSource> worldAudios = new Dictionary<GameObject, AudioSource>();
+        private Dictionary<GameObject, AudioSource> worldAudios = new();
         
         /// <summary>
         /// 声音列表
         /// </summary>
-        private static Dictionary<string, AudioClip> allAudioClipsDic = new Dictionary<string, AudioClip>();
+        private static Dictionary<string, AudioClip> allAudioClipsDic = new();
         
         /// <summary>
         /// 声音混合器
@@ -70,11 +70,11 @@ namespace YangTools
 
         #region 声音管理
 
-        private bool isMute = false; //是否静音
-        private float backgroundVolume = 0.6f; //背景音乐声音大小
-        private float singleVolume = 1f; //声音大小
-        private float soundVolume = 1f; //声音大小
-        private float worldVolume = 1f; //声音大小
+        private bool isMute; //是否静音
+        private float bgmValue = 0.6f;
+        private float singleValue = 1f;
+        private float soundValue = 1f;
+        private float worldValue = 1f;
         
         /// <summary>
         /// 静音
@@ -86,46 +86,35 @@ namespace YangTools
             {
                 if (isMute == value) return;
                 isMute = value;
-                bgmAudio.mute = isMute;
-                singleAudio.mute = isMute;
-                foreach (var t in soundAudios)
-                {
-                    t.mute = isMute;
-                }
-
-                foreach (var audio in worldAudios)
-                {
-                    audio.Value.mute = isMute;
-                }
+                mixer.SetFloat("Master", isMute ? 0 : 1);
             }
         }
 
-
         /// <summary>
-        /// 背景音乐音量
+        /// 背景音量
         /// </summary>
-        public float BackgroundVolume
+        public float BGMValue
         {
-            get => backgroundVolume;
+            get => bgmValue;
             set
             {
-                if (Mathf.Approximately(backgroundVolume, value)) return;
-                backgroundVolume = value;
-                bgmAudio.volume = backgroundVolume;
+                if (Mathf.Approximately(bgmValue, value)) return;
+                bgmValue = value;
+                mixer.SetFloat("BGM", bgmValue);
             }
         }
 
         /// <summary>
-        /// 对话-单通道音效音量
+        /// 对话音量
         /// </summary>
         public float SingleVolume
         {
-            get => singleVolume;
+            get => singleValue;
             set
             {
-                if (Mathf.Approximately(singleVolume, value)) return;
-                singleVolume = value;
-                singleAudio.volume = singleVolume;
+                if (Mathf.Approximately(singleValue, value)) return;
+                singleValue = value;
+                mixer.SetFloat("Dialogue", singleValue);
             }
         }
 
@@ -134,41 +123,35 @@ namespace YangTools
         /// </summary>
         public float SoundVolume
         {
-            get => soundVolume;
+            get => soundValue;
             set
             {
-                if (Mathf.Approximately(soundVolume, value)) return;
-                soundVolume = value;
-                foreach (var t in soundAudios)
-                {
-                    t.volume = soundVolume;
-                }
+                if (Mathf.Approximately(soundValue, value)) return;
+                soundValue = value;
+                mixer.SetFloat("Sound", soundValue);
             }
         }
 
         /// <summary>
-        /// 世界音效音量
+        /// 世界音量
         /// </summary>
         public float WorldVolume
         {
-            get => worldVolume;
+            get => worldValue;
             set
             {
-                if (Mathf.Approximately(worldVolume, value)) return;
-                worldVolume = value;
-                foreach (var audio in worldAudios)
-                {
-                    audio.Value.volume = worldVolume;
-                }
+                if (Mathf.Approximately(worldValue, value)) return;
+                worldValue = value;
+                mixer.SetFloat("World", worldValue);
             }
         }
 
         /// <summary>
-        /// 单通道音效播放结束事件
+        /// 对话结束事件
         /// </summary>
         public event Action singleSoundEndOfPlayEvent;
 
-        private bool _singleSoundPlayDetector = false; //检查是否开启
+        private bool singleSoundPlayDetector; //检查是否开启
 
         #endregion
 
@@ -222,11 +205,11 @@ namespace YangTools
 
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            if (_singleSoundPlayDetector)
+            if (singleSoundPlayDetector)
             {
                 if (!singleAudio.isPlaying)
                 {
-                    _singleSoundPlayDetector = false;
+                    singleSoundPlayDetector = false;
                     singleSoundEndOfPlayEvent?.Invoke();
                 }
             }
@@ -260,6 +243,7 @@ namespace YangTools
                 bgmAudio.Stop();
             }
 
+            bgmAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("BGM")[0];
             bgmAudio.clip = clip;
             bgmAudio.loop = isLoop;
             bgmAudio.pitch = speed;
@@ -278,7 +262,7 @@ namespace YangTools
                     .SetUpdate(true)
                     .OnComplete(() =>
                     {
-                        bgmAudio.volume = BackgroundVolume;
+                        bgmAudio.volume = BGMValue;
                         bgmAudio.Pause();
                     });
             }
@@ -298,7 +282,7 @@ namespace YangTools
             {
                 bgmAudio.UnPause();
                 bgmAudio.volume = 0;
-                bgmAudio.DOFade(BackgroundVolume, 2).SetUpdate(true);
+                bgmAudio.DOFade(BGMValue, 2).SetUpdate(true);
             }
             else
             {
@@ -321,7 +305,7 @@ namespace YangTools
         #region 对话音效
 
         /// <summary>
-        /// 播放对话--单通道音效
+        /// 播放对话音效
         /// </summary>
         /// <param name="audioName">声音名字</param>
         /// <param name="isLoop">是否循环</param>
@@ -334,23 +318,23 @@ namespace YangTools
         }
 
         /// <summary>
-        /// 播放对话--单通道音效
+        /// 播放对话音效
         /// </summary>
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlaySingleSound(AudioClip clip, bool isLoop = false, float speed = 1f)
+        private void PlaySingleSound(AudioClip clip, bool isLoop = false, float speed = 1f)
         {
             if (singleAudio.isPlaying)
             {
                 singleAudio.Stop();
             }
-
+            singleAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("Dialogue")[0];
             singleAudio.clip = clip;
             singleAudio.loop = isLoop;
             singleAudio.pitch = speed;
             singleAudio.Play();
-            _singleSoundPlayDetector = true;
+            singleSoundPlayDetector = true;
         }
 
         /// <summary>
@@ -427,9 +411,10 @@ namespace YangTools
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlaySoundAudio(AudioClip clip, bool isLoop = false, float speed = 1)
+        private void PlaySoundAudio(AudioClip clip, bool isLoop = false, float speed = 1)
         {
             AudioSource audio = ExtractIdleSoundAudioSource();
+            audio.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
             audio.clip = clip;
             audio.loop = isLoop;
             audio.pitch = speed;
@@ -451,7 +436,7 @@ namespace YangTools
         /// 停止播放指定的音效
         /// </summary>
         /// <param name="clip">音乐剪辑</param>
-        public void StopSoundAudio(AudioClip clip)
+        private void StopSoundAudio(AudioClip clip)
         {
             for (int i = 0; i < soundAudios.Count; i++)
             {
@@ -545,7 +530,7 @@ namespace YangTools
                 {
                     worldAudio.Stop();
                 }
-
+                worldAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
                 worldAudio.clip = clip;
                 worldAudio.loop = isLoop;
                 worldAudio.pitch = speed;
@@ -555,6 +540,7 @@ namespace YangTools
             {
                 AudioSource audio = AttachAudioSource(attachTarget, WorldPriorityDefault, WorldVolume, 1, 1);
                 worldAudios.Add(attachTarget, audio);
+                audio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
                 audio.clip = clip;
                 audio.loop = isLoop;
                 audio.pitch = speed;

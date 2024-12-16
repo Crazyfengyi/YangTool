@@ -17,25 +17,20 @@ namespace YangTools.TaskExtend
     {
         #region 属性
         private readonly LinkedList<TaskBase> allTasksList;//所有任务列表
-        private int m_Serial;//序列号
+        private int serial;//序列号
         /// <summary>
         /// 初始化任务管理器的新实例。
         /// </summary>
         public YangTaskManager()
         {
             allTasksList = new LinkedList<TaskBase>();
-            m_Serial = 0;
+            serial = 0;
         }
         /// <summary>
         /// 获取任务数量。
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return allTasksList.Count;
-            }
-        }
+        public int Count => allTasksList.Count;
+
         #endregion
 
         #region  生命周期
@@ -43,10 +38,10 @@ namespace YangTools.TaskExtend
         {
         }
         /// <summary>
-        /// 任务管理器轮询。
+        /// 任务管理器轮询
         /// </summary>
-        /// <param name="delaTimeSeconds">逻辑流逝时间，以秒为单位。</param>
-        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间，以秒为单位。</param>
+        /// <param name="delaTimeSeconds">逻辑流逝时间,以秒为单位</param>
+        /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
             LinkedListNode<TaskBase> current = allTasksList.First;
@@ -75,7 +70,7 @@ namespace YangTools.TaskExtend
             }
         }
         /// <summary>
-        /// 关闭并清理任务管理器。
+        /// 关闭并清理任务管理器
         /// </summary>
         internal override void CloseModule()
         {
@@ -88,22 +83,22 @@ namespace YangTools.TaskExtend
         /// <summary>
         /// 生成任务
         /// </summary>
-        /// <typeparam name="T">任务的类型。</typeparam>
-        /// <returns>生成的指定类型的任务。</returns>
+        /// <typeparam name="T">任务的类型</typeparam>
+        /// <returns>生成的指定类型的任务</returns>
         public T CreateTask<T>() where T : TaskBase, new()
         {
             return CreateTask<T>(TaskBase.DefaultPriority);
         }
         /// <summary>
-        /// 生成任务。
+        /// 生成任务
         /// </summary>
-        /// <typeparam name="T">任务的类型。</typeparam>
-        /// <param name="priority">任务的优先级。</param>
-        /// <returns>生成的指定类型的任务。</returns>
+        /// <typeparam name="T">任务的类型</typeparam>
+        /// <param name="priority">任务的优先级</param>
+        /// <returns>生成的指定类型的任务</returns>
         public T CreateTask<T>(int priority) where T : TaskBase, new()
         {
             T task = (T)Activator.CreateInstance(typeof(T));
-            task.Initialize(++m_Serial, priority);
+            task.Initialize(++serial, priority);
             task.OnCreate();
             LinkedListNode<TaskBase> current = allTasksList.First;
             while (current != null)
@@ -129,10 +124,10 @@ namespace YangTools.TaskExtend
 
         #region 取消任务
         /// <summary>
-        /// 取消任务。
+        /// 取消任务
         /// </summary>
-        /// <param name="task">要取消的任务。</param>
-        /// <returns>是否取消任务成功。</returns>
+        /// <param name="task">要取消的任务</param>
+        /// <returns>是否取消任务成功</returns>
         public bool CancelTask(TaskBase task)
         {
             if (task == null)
@@ -142,11 +137,11 @@ namespace YangTools.TaskExtend
             return CancelTask(task.SerialId, null);
         }
         /// <summary>
-        /// 取消任务。
+        /// 取消任务
         /// </summary>
-        /// <param name="task">要取消的任务。</param>
-        /// <param name="reason">任务取消的原因。</param>
-        /// <returns>是否取消任务成功。</returns>
+        /// <param name="task">要取消的任务</param>
+        /// <param name="reason">任务取消的原因</param>
+        /// <returns>是否取消任务成功</returns>
         public bool CancelTask(TaskBase task, string reason)
         {
             if (task == null)
@@ -156,20 +151,20 @@ namespace YangTools.TaskExtend
             return CancelTask(task.SerialId, reason);
         }
         /// <summary>
-        /// 取消任务。
+        /// 取消任务
         /// </summary>
-        /// <param name="serialId">要取消的任务的序列编号。</param>
-        /// <returns>是否取消任务成功。</returns>
+        /// <param name="serialId">要取消的任务的序列编号</param>
+        /// <returns>是否取消任务成功</returns>
         public bool CancelTask(int serialId)
         {
             return CancelTask(serialId, null);
         }
         /// <summary>
-        /// 取消任务。
+        /// 取消任务
         /// </summary>
-        /// <param name="serialId">要取消的任务的序列编号。</param>
-        /// <param name="reason">任务取消的原因。</param>
-        /// <returns>是否取消任务成功。</returns>
+        /// <param name="serialId">要取消的任务的序列编号</param>
+        /// <param name="reason">任务取消的原因</param>
+        /// <returns>是否取消任务成功</returns>
         public bool CancelTask(int serialId, string reason)
         {
             foreach (TaskBase task in allTasksList)
@@ -188,9 +183,9 @@ namespace YangTools.TaskExtend
             return false;
         }
         /// <summary>
-        /// 取消所有任务。
+        /// 取消所有任务
         /// </summary>
-        /// <param name="reason">任务取消的原因。</param>
+        /// <param name="reason">任务取消的原因</param>
         public void CancelAllTasks(string reason)
         {
             foreach (TaskBase task in allTasksList)
@@ -203,62 +198,5 @@ namespace YangTools.TaskExtend
             }
         }
         #endregion
-    }
-    /// <summary>
-    /// 任务管理器。
-    /// </summary>
-    public interface ITaskManager
-    {
-        /// <summary>
-        /// 获取任务数量。
-        /// </summary>
-        int Count
-        {
-            get;
-        }
-        /// <summary>
-        /// 生成任务。
-        /// </summary>
-        /// <typeparam name="T">任务的类型。</typeparam>
-        /// <returns>生成的指定类型的任务。</returns>
-        T CreateTask<T>() where T : TaskBase, new();
-        /// <summary>
-        /// 生成任务。
-        /// </summary>
-        /// <typeparam name="T">任务的类型。</typeparam>
-        /// <param name="priority">任务的优先级。</param>
-        /// <returns>生成的指定类型的任务。</returns>
-        T CreateTask<T>(int priority) where T : TaskBase, new();
-        /// <summary>
-        /// 取消任务。
-        /// </summary>
-        /// <param name="task">要取消的任务。</param>
-        /// <returns>是否取消任务成功。</returns>
-        bool CancelTask(TaskBase task);
-        /// <summary>
-        /// 取消任务。
-        /// </summary>
-        /// <param name="task">要取消的任务。</param>
-        /// <param name="reason">任务取消的原因。</param>
-        /// <returns>是否取消任务成功。</returns>
-        bool CancelTask(TaskBase task, string reason);
-        /// <summary>
-        /// 取消任务。
-        /// </summary>
-        /// <param name="serialId">要取消的任务的序列编号。</param>
-        /// <returns>是否取消任务成功。</returns>
-        bool CancelTask(int serialId);
-        /// <summary>
-        /// 取消任务。
-        /// </summary>
-        /// <param name="serialId">要取消的任务的序列编号。</param>
-        /// <param name="reason">任务取消的原因。</param>
-        /// <returns>是否取消任务成功。</returns>
-        bool CancelTask(int serialId, string reason);
-        /// <summary>
-        /// 取消所有任务。
-        /// </summary>
-        /// <param name="reason">任务取消的原因。</param>
-        void CancelAllTasks(string reason);
     }
 }

@@ -125,9 +125,9 @@ public abstract class FsmStateBase<T>
     }
 
     /// <summary>
-    /// 状态关闭
+    /// 状态结束
     /// </summary>
-    public virtual void StateClose()
+    public virtual void StateEnd()
     {
     }
 
@@ -183,9 +183,9 @@ public class YangFsm<T> : YangFsm
     //当前状态
     private FsmStateBase<T> currentState;
 
-    private YangFsm(string _Name, T _handle, List<FsmStateBase<T>> stateList)
+    private YangFsm(string _name, T _handle, List<FsmStateBase<T>> stateList)
     {
-        Name = _Name;
+        Name = _name;
         FullName = typeof(T).Name + Name;
         Handle = _handle;
         allStateList = stateList;
@@ -206,7 +206,7 @@ public class YangFsm<T> : YangFsm
     /// <typeparam name="TStateType">目标状态</typeparam>
     public void ChangeStateTo<TStateType>() where TStateType : FsmStateBase<T>
     {
-        currentState?.StateClose();
+        currentState?.StateEnd();
         FsmStateBase<T> toState = null;
         foreach (var item in allStateList)
         {

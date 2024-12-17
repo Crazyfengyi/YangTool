@@ -47,18 +47,18 @@ namespace YangTools.TaskExtend
             LinkedListNode<TaskBase> current = allTasksList.First;
             while (current != null)
             {
-                TaskBase task = current.Value;
-                if (task.Status == TaskStatus.None)
+                TaskBase taskBase = current.Value;
+                if (taskBase.Status == TaskStatus.None)
                 {
                     throw new Exception("Task status is invalid. this None");
                 }
-                if (task.Status == TaskStatus.Waiting)
+                if (taskBase.Status == TaskStatus.Waiting)
                 {
-                    task.OnStart();
+                    taskBase.OnStart();
                 }
-                if (task.Status == TaskStatus.Running)
+                if (taskBase.Status == TaskStatus.Running)
                 {
-                    task.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
+                    taskBase.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
                     current = current.Next;
                 }
                 else
@@ -126,29 +126,29 @@ namespace YangTools.TaskExtend
         /// <summary>
         /// 取消任务
         /// </summary>
-        /// <param name="task">要取消的任务</param>
+        /// <param name="taskBase">要取消的任务</param>
         /// <returns>是否取消任务成功</returns>
-        public bool CancelTask(TaskBase task)
+        public bool CancelTask(TaskBase taskBase)
         {
-            if (task == null)
+            if (taskBase == null)
             {
                 throw new Exception("Task is invalid.");
             }
-            return CancelTask(task.SerialId, null);
+            return CancelTask(taskBase.SerialId, null);
         }
         /// <summary>
         /// 取消任务
         /// </summary>
-        /// <param name="task">要取消的任务</param>
+        /// <param name="taskBase">要取消的任务</param>
         /// <param name="reason">任务取消的原因</param>
         /// <returns>是否取消任务成功</returns>
-        public bool CancelTask(TaskBase task, string reason)
+        public bool CancelTask(TaskBase taskBase, string reason)
         {
-            if (task == null)
+            if (taskBase == null)
             {
                 throw new Exception("Task is invalid.");
             }
-            return CancelTask(task.SerialId, reason);
+            return CancelTask(taskBase.SerialId, reason);
         }
         /// <summary>
         /// 取消任务

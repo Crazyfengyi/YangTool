@@ -12,16 +12,16 @@ namespace YangTools.TaskExtend
     /// <summary>
     /// 条件任务。
     /// </summary>
-    public sealed class ConditionalTask : TaskBase
+    public sealed class ConditionalTaskBase : TaskBase
     {
-        private Predicate<ConditionalTask> condition;//条件-返回bool
-        private Action<ConditionalTask, string> completeAction;//完成回调
-        private Action<ConditionalTask, string> failureAction;//失败回调
-        private Action<ConditionalTask, string> cancelAction;//关闭回调
+        private Predicate<ConditionalTaskBase> condition;//条件-返回bool
+        private Action<ConditionalTaskBase, string> completeAction;//完成回调
+        private Action<ConditionalTaskBase, string> failureAction;//失败回调
+        private Action<ConditionalTaskBase, string> cancelAction;//关闭回调
         /// <summary>
         /// 初始化条件任务的新实例。
         /// </summary>
-        public ConditionalTask()
+        public ConditionalTaskBase()
         {
             condition = null;
             completeAction = null;
@@ -32,7 +32,7 @@ namespace YangTools.TaskExtend
         /// 设置任务完成的条件
         /// </summary>
         /// <param name="condition">任务完成的条件</param>
-        public void SetCondition(Predicate<ConditionalTask> condition)
+        public void SetCondition(Predicate<ConditionalTaskBase> condition)
         {
             this.condition = condition;
         }
@@ -40,7 +40,7 @@ namespace YangTools.TaskExtend
         /// 设置任务完成时的行为
         /// </summary>
         /// <param name="completeAction">任务完成时的行为</param>
-        public void SetCompleteAction(Action<ConditionalTask, string> completeAction)
+        public void SetCompleteAction(Action<ConditionalTaskBase, string> completeAction)
         {
             this.completeAction = completeAction;
         }
@@ -48,7 +48,7 @@ namespace YangTools.TaskExtend
         /// 设置任务失败时的行为
         /// </summary>
         /// <param name="failureAction">任务失败时的行为</param>
-        public void SetFailureAction(Action<ConditionalTask, string> failureAction)
+        public void SetFailureAction(Action<ConditionalTaskBase, string> failureAction)
         {
             this.failureAction = failureAction;
         }
@@ -56,7 +56,7 @@ namespace YangTools.TaskExtend
         /// 设置任务取消时的行为
         /// </summary>
         /// <param name="cancelAction">任务取消时的行为</param>
-        public void SetCancelAction(Action<ConditionalTask, string> cancelAction)
+        public void SetCancelAction(Action<ConditionalTaskBase, string> cancelAction)
         {
             this.cancelAction = cancelAction;
         }

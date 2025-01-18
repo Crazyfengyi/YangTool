@@ -17,7 +17,7 @@ namespace YangTools
         #region 生命周期
         private void Update()
         {
-            YangTools.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
             YangCoroutineManager.Instance.UpdateCorountine();
         }
         private void OnApplicationQuit()

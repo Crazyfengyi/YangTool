@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 namespace YangTools
 {
     [ExecuteInEditMode]
-    [CustomEditor(typeof(Animator), true)]//bool 子类是否可用
+    [CustomEditor(typeof(Animator), true)]//bool子类是否可用
     public class AniEditor : Editor
     {
         //目标组件
@@ -129,3 +130,4 @@ namespace YangTools
         }
     }
 }
+#endif

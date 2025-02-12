@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -20,10 +21,6 @@ namespace YangTools
     /// </summary>
     public class SplitAni : EditorWindow
     {
-        public class monsterInfo
-        {
-            public string id;
-        }
         private static GameObject model;
         //动画文件
         public static UnityEngine.Object aniObj;
@@ -218,4 +215,10 @@ namespace YangTools
             return frameInfos;
         }
     }
+    
+    public class monsterInfo
+    {
+        public string id;
+    }
 }
+#endif

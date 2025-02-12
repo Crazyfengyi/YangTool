@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       YangWork 
@@ -13,7 +13,7 @@ namespace YangTools
     ///  use [Autohook] to modify Component
     ///  use [Autohook(AutohookAttribute.HookType.Prefab)] to modify Prefab
     /// </summary>
-    public class AutohookAttribute : PropertyAttribute
+    public class AutoHookAttribute : PropertyAttribute
     {
         /// <summary>
         /// 用默认模式(根据名字查找)
@@ -31,7 +31,7 @@ namespace YangTools
             Prefab
         }
 
-        public AutohookAttribute()
+        public AutoHookAttribute()
         {
             hookType = HookType.Component;
             useDefault = true;
@@ -44,7 +44,7 @@ namespace YangTools
         /// <param name="_path">子物体:相对路径 预制体:文件路径</param>
         /// <param name="_prefabName">预制体名称(子物体填null)</param>
         /// <param name="_usdefault">是否用默认寻找方式(找字段名称对应的物体)</param>
-        public AutohookAttribute(HookType _hookType = HookType.Component, string _path = "Assets", string _prefabName = "", bool _usdefault = true)
+        public AutoHookAttribute(HookType _hookType = HookType.Component, string _path = "Assets", string _prefabName = "", bool _usdefault = true)
         {
             hookType = _hookType;
             useDefault = _usdefault;

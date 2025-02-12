@@ -1,4 +1,5 @@
-/**
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by Test
  *All rights reserved.
  *Author:       WIN-VJ19D9AB7HB
@@ -90,3 +91,4 @@ public class CommonTool : MonoBehaviour
         PlayerSettings.SetScriptingDefineSymbols(target, s);
     }
 }
+#endif

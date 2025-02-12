@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
@@ -158,3 +159,4 @@ namespace YangTools
         }
     }
 }
+#endif

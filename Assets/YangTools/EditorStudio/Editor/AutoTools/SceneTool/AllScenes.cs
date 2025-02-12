@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 // Generated file
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -351,3 +352,4 @@ public static class ScenesMenu
     [MenuItem("YangTools/AllSecnes/VRIK (Twist Relaxers)", priority = 10)]
     public static void Assets_YangTools_Plugins_RootMotion_FinalIK_FinalIK__DEMOS_VRIK_VRIK__Twist_Relaxers__unity() { ScenesChange.OpenScene("Assets/YangTools/Plugins/RootMotion_FinalIK/FinalIK/_DEMOS/VRIK/VRIK (Twist Relaxers).unity"); }
 }
+#endif

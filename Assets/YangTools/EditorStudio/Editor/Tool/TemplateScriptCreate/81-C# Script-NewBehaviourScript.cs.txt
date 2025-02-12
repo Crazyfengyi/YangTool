@@ -1,10 +1,10 @@
-/** 
+/*
  *Copyright(C) 2020 by #COMPANY# 
- *All rights reserved. 
- *Author:       #AUTHOR# 
+ *All rights reserved.
+ *Author:#AUTHOR# 
  *UnityVersion：#UNITYVERSION# 
- *创建时间:         #DATE# 
-*/  
+ *创建时间:#DATE# 
+ */  
 using System;
 using System.Collections;  
 using UnityEngine;  
@@ -16,11 +16,14 @@ using YangTools.UGUI;
 public class #SCRIPTNAME# : MonoBehaviour 
 {  
 	#region 变量
+	
 	#endregion
 	
 	#region 生命周期
+	
 	#endregion
 	
 	#region 方法
+	
 	#endregion
 } 

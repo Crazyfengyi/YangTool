@@ -172,7 +172,7 @@ public class LoopList : MonoBehaviour
        {
            itemList[i].UpdateData();
        }
-   }
+     }
        /// <summary>
        /// 还原
        /// </summary>
@@ -205,7 +205,7 @@ public class LoopList : MonoBehaviour
             }
             itemList[i].UpdateData();
         }
-    }
+      }
     /// <summary>
     /// 更新按钮状态
     /// </summary>

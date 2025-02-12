@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 
@@ -23,4 +24,4 @@ namespace YangTools
         }
     }
 }
-
+#endif

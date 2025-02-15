@@ -217,14 +217,14 @@ namespace YangTools.ObjectPool
     public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         public string PoolKey { get; set; }
-        internal readonly Stack<T> m_Stack;//栈
+        private readonly Stack<T> stack;//栈
         private readonly MethodInfo createFunc;//创建方法
         private readonly MethodInfo createFunc2;//有参创建方法
 
-        private readonly int m_MaxSize;//最大数量
-        internal bool m_CollectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
+        private readonly int maxSize;//最大数量
+        private bool collectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
 
-        internal int m_defaultCapacity;//默认对象池大小
+        private int defaultCapacity;//默认对象池大小
 
         /// <summary>
         /// 所有对象数
@@ -239,7 +239,7 @@ namespace YangTools.ObjectPool
         /// <summary>
         /// 未使用数量
         /// </summary>
-        public int InactiveCount => m_Stack.Count;
+        public int InactiveCount => stack.Count;
 
         /// <summary>
         /// 自动回收间隔时间
@@ -270,13 +270,13 @@ namespace YangTools.ObjectPool
             {
                 throw new ArgumentException("Max Size must be greater than 0", "maxSize");
             }
-            m_Stack = new Stack<T>(defaultCapacity);
-            m_defaultCapacity = defaultCapacity;
-            m_MaxSize = maxSize;
+            stack = new Stack<T>(defaultCapacity);
+            this.defaultCapacity = defaultCapacity;
+            this.maxSize = maxSize;
             AutoRecycleInterval = autoRecycleTime;
             AutoRecycleTime = AutoRecycleInterval;
             Priority = priority;
-            m_CollectionCheck = collectionCheck;
+            this.collectionCheck = collectionCheck;
 
             #region 反射获取方法
 
@@ -317,7 +317,7 @@ namespace YangTools.ObjectPool
         public T Get(params object[] args)
         {
             T item;
-            if (m_Stack.Count == 0)
+            if (stack.Count == 0)
             {
                 if (args.Length > 0)
                 {
@@ -336,7 +336,7 @@ namespace YangTools.ObjectPool
             }
             else
             {
-                item = m_Stack.Pop();
+                item = stack.Pop();
             }
             item.IsInPool = false;
             item.OnGet();
@@ -351,26 +351,26 @@ namespace YangTools.ObjectPool
         public void RecycleToDefaultCount()
         {
             AutoRecycleTime = 0f;
-            while (m_Stack.Count > m_defaultCapacity)
+            while (stack.Count > defaultCapacity)
             {
-                T item = m_Stack.Peek();
+                T item = stack.Peek();
                 Recycle(item);
             }
         }
 
         public void Recycle(T item)
         {
-            if (m_CollectionCheck && m_Stack.Count > 0 && m_Stack.Contains(item))
+            if (collectionCheck && stack.Count > 0 && stack.Contains(item))
             {
                 Debug.LogError($"试图回收一个已经在池中里的对象:{item}");
                 return;
             }
 
             item.OnRecycle();
-            if (InactiveCount < m_MaxSize)
+            if (InactiveCount < maxSize)
             {
                 item.IsInPool = true;
-                m_Stack.Push(item);
+                stack.Push(item);
             }
             else
             {
@@ -380,12 +380,12 @@ namespace YangTools.ObjectPool
 
         public void Clear()
         {
-            foreach (T item in m_Stack)
+            foreach (T item in stack)
             {
                 item.IsInPool = false;
                 item.OnDestroy();
             }
-            m_Stack.Clear();
+            stack.Clear();
             AllCount = 0;
         }
 

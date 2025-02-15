@@ -4,6 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using YangTools;
 
 namespace GameMain.Editor
 {
@@ -66,12 +67,18 @@ namespace GameMain.Editor
         //     return path;
         // }
 
-        [MenuItem("工具/打开 DataPath")]
+        [MenuItem(SettingInfo.YongToolsGameToolPath + "打开DataPath")]
         public static void OpenDataPath()
         {
             Application.OpenURL(Application.dataPath);
         }
 
+        [MenuItem(SettingInfo.YongToolsGameToolPath + "打开PersistentDataPath")]
+        public static void OpenPersistentDataPath()
+        {
+            Application.OpenURL(Application.persistentDataPath);
+        }
+        
         // [MenuItem("工具/打开Excel目录")]
         // public static void OpenExcelFolder()
         // {

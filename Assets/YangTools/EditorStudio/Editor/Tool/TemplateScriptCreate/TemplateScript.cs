@@ -18,7 +18,7 @@ namespace YangTools
 {
     public static class TemplateScript
     {
-        private const string MyScriptDefault = SettingInfo.YangToolAssetPath + "TemplateScriptCreate/81-C# Script-NewBehaviourScript.cs.txt";
+        private const string MyScriptDefault = SettingInfo.YangToolAssetPath + "Tool/TemplateScriptCreate/81-C# Script-NewBehaviourScript.cs.txt";
 
         [MenuItem("Assets/Create/C# TemplateScript", false, 80)]
         public static void CreateMyScript()

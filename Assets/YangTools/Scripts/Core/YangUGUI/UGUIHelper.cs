@@ -1,9 +1,9 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
- *Author:       DESKTOP-AJS8G4U
+ *Author:DESKTOP-AJS8G4U
  *UnityVersion：2021.2.1f1c1
- *创建时间:         2022-02-20
+ *创建时间:2022-02-20
 */
 
 using UnityEngine;
@@ -18,8 +18,8 @@ namespace YangTools.UGUI
     public class UGUIGroupHelper : MonoBehaviour, IUIGroupHelper
     {
         public const int DepthFactor = 200;
-        private int depth = 0;//深度
-        private Canvas cachedCanvas = null;//缓存的canvas
+        private int depth;//深度
+        private Canvas cachedCanvas;//缓存的canvas
 
         private void Awake()
         {
@@ -32,11 +32,11 @@ namespace YangTools.UGUI
             cachedCanvas.overrideSorting = true;
             cachedCanvas.sortingOrder = DepthFactor * depth;
 
-            RectTransform transform = GetComponent<RectTransform>();
-            transform.anchorMin = Vector2.zero;
-            transform.anchorMax = Vector2.one;
-            transform.anchoredPosition = Vector2.zero;
-            transform.sizeDelta = Vector2.zero;
+            RectTransform tempTransform = GetComponent<RectTransform>();
+            tempTransform.anchorMin = Vector2.zero;
+            tempTransform.anchorMax = Vector2.one;
+            tempTransform.anchoredPosition = Vector2.zero;
+            tempTransform.sizeDelta = Vector2.zero;
         }
 
         /// <summary>
@@ -47,42 +47,42 @@ namespace YangTools.UGUI
         {
             this.depth = depth;
             cachedCanvas.overrideSorting = true;
-            cachedCanvas.sortingOrder = DepthFactor * depth;
+            cachedCanvas.sortingOrder = DepthFactor * this.depth;
         }
     }
 
     /// <summary>
     /// UGUI界面辅助器
     /// </summary>
-    public class UGUIPanelHelper : MonoBehaviour, IUIPanelHelper
+    public class UGUIPanelCreateHelper : MonoBehaviour, IUICreateHelper 
     {
         /// <summary>
         /// 实例化UI界面
         /// </summary>
-        /// <param name="uiPanelAsset">要实例化的界面资源</param>
+        /// <param name="panelAsset">要实例化的界面资源</param>
         /// <returns>实例化后的界面</returns>
-        public object InstantiateUIPanel(object uiPanelAsset)
+        public object InstantiatePanel(object panelAsset)
         {
-            return Instantiate((Object)uiPanelAsset,Vector3.zero,Quaternion.identity);
+            return Instantiate((Object)panelAsset,Vector3.zero,Quaternion.identity);
         }
 
         /// <summary>
         /// 创建UI界面
         /// </summary>
-        /// <param name="uiPanelInstance">界面实例</param>
-        /// <param name="uiGroup">界面所属的界面组</param>
+        /// <param name="panelInstance">界面实例</param>
+        /// <param name="group">界面所属的界面组</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>界面</returns>
-        public IUIPanel CreateUIPanel(object uiPanelInstance, IUIGroup uiGroup, object userData)
+        public IUIPanel CreatePanel(object panelInstance, IUIGroup group, object userData)
         {
-            GameObject gameObject = uiPanelInstance as GameObject;
+            GameObject gameObject = panelInstance as GameObject;
             if (gameObject == null)
             {
                 Debug.LogError("UI form instance is invalid.");
                 return null;
             }
             Transform transform = gameObject.transform;
-            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
+            transform.SetParent(((MonoBehaviour)group.Helper).transform);
             transform.localPosition = Vector3.zero;
             transform.localScale = Vector3.one;
             return gameObject.GetOrAddComponent<UIPanel>();
@@ -91,11 +91,11 @@ namespace YangTools.UGUI
         /// <summary>
         /// 释放UI界面
         /// </summary>
-        /// <param name="uiPanelAsset">要释放的界面资源</param>
-        /// <param name="uiPanelInstance">要释放的界面实例</param>
-        public void ReleaseUIPanel(object uiPanelAsset, object uiPanelInstance)
+        /// <param name="panelAsset">要释放的界面资源</param>
+        /// <param name="panelInstance">要释放的界面实例</param>
+        public void ReleasePanel(object panelAsset, object panelInstance)
         {
-            Destroy((Object)uiPanelInstance);
+            Destroy((Object)panelInstance);
         }
     }
 }

@@ -33,10 +33,10 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
         cancelBtn.onClick.AddListener(Cancel_OnClick);
     }
 
-    public override void OnInit(ConfirmData _confirmData)
+    public override void OnInit(ConfirmData pConfirmData)
     {
-        base.OnInit(_confirmData);
-        confirmData = _confirmData;
+        base.OnInit(pConfirmData);
+        confirmData = pConfirmData;
         Init();
     }
 
@@ -93,12 +93,12 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
     public void OK_OnClick()
     {
         confirmData?.okCallBack?.Invoke();
-        ClosePanel();
+        CloseSelfPanel(); 
     }
 
     public void Cancel_OnClick()
     {
         confirmData?.cancelCallBack?.Invoke();
-        ClosePanel();
+        CloseSelfPanel();
     }
 }

@@ -20,7 +20,7 @@ public class UICommonTool : Singleton<UICommonTool>
         TipsPanel panel = null;
         if (!info.have)
         {
-            UIMonoInstance.Instance.OpenUIPanel("TipsPanel", "Top");
+            UIMonoInstance.Instance.OpenPanel("TipsPanel", "Top");
             panel = UIMonoInstance.Instance.GetUIPanel<TipsPanel>("TipsPanel");
         }
         else
@@ -41,7 +41,7 @@ public class UICommonTool : Singleton<UICommonTool>
         LoadingPanel panel = null;
         if (!info.have)
         {
-            UIMonoInstance.Instance.OpenUIPanel("LoadingPanel", "Top");
+            UIMonoInstance.Instance.OpenPanel("LoadingPanel", "Top");
             panel = UIMonoInstance.Instance.GetUIPanel<LoadingPanel>("LoadingPanel");
         }
         else

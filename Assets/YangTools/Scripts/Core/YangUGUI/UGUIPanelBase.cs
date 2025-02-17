@@ -8,6 +8,7 @@
 
 using DG.Tweening;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools.Extend;
@@ -16,71 +17,60 @@ using Debug = UnityEngine.Debug;
 namespace YangTools.UGUI
 {
     /// <summary>
-    /// UGUI界面逻辑基类
+    /// UGUI Panel逻辑基类
     /// </summary>
     public abstract class UGUIPanelBase<T> : MonoBehaviour, IUGUIPanel where T : UGUIDataBase
     {
-        public const int DepthFactor = 10;//UI界面深度系数
+        private const int DepthFactor = 10; //UI界面深度系数
 
-        private bool available = false;//是否可用的
-        private bool visible = false;//是否显示
-        private UIPanel uiPanel;//UI界面
-        private Transform cachedTransform;//缓存的Transform
-        private CanvasGroup canvasGroup;//缓存的CanvasGroup
-        private Canvas cachedCanvas;//缓存的Canvas
-        private List<Canvas> cachedCanvasList = new List<Canvas>();//缓存的Canvas列表
+        private readonly List<Canvas> cachedCanvasList = new(); //缓存的Canvas列表
+        private CanvasGroup canvasGroup; //缓存的CanvasGroup
+        private Canvas cachedCanvas; //缓存的Canvas
+        private bool visible; //是否显示
 
-        private Transform Node;//页面表现节点(动画节点)
-
-        private int originalLayer = 0;//原始层级
+        private Transform node; //页面表现节点(动画节点)
+        private int originalLayer; //原始层级
 
         #region 对外属性
 
         /// <summary>
         /// 获取界面
         /// </summary>
-        public UIPanel UIPanel => uiPanel;
+        private UIPanel UIPanel { get; set; }
 
         /// <summary>
         /// 获取或设置界面名称
         /// </summary>
         public string Name
         {
-            get
-            {
-                return gameObject.name;
-            }
-            set
-            {
-                gameObject.name = value;
-            }
+            get => gameObject.name;
+            set => gameObject.name = value;
         }
 
         /// <summary>
         /// 获取界面是否可用
         /// </summary>
-        public bool Available => available;
+        public bool Available { get; private set; } = false;
 
         /// <summary>
         /// 获取或设置界面是否可见
         /// </summary>
         public bool Visible
         {
-            get
-            {
-                return available && visible;
-            }
+            get => Available && visible;
             set
             {
-                if (!available)
+                if (!Available)
                 {
                     Debug.LogWarning(string.Format("UI form '{0}' is not available.", Name));
                     return;
                 }
+
                 if (visible == value)
                 {
                     return;
                 }
+
                 visible = value;
                 SetVisible(value);
             }
@@ -89,51 +79,41 @@ namespace YangTools.UGUI
         /// <summary>
         /// 获取已缓存的Transform
         /// </summary>
-        public Transform CachedTransform => cachedTransform;
+        public Transform CachedTransform { get; private set; }
 
         /// <summary>
         /// 原始深度
         /// </summary>
-        public int OriginalDepth
-        {
-            get;
-            private set;
-        }
+        public int OriginalDepth { get; private set; }
 
         /// <summary>
         /// 深度
         /// </summary>
         public int Depth => cachedCanvas.sortingOrder;
 
-        public int SerialId => throw new System.NotImplementedException();
-
-        public string UIPanelAssetName => throw new System.NotImplementedException();
-
-        public object Handle { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-        public IUIGroup UIGroup => throw new System.NotImplementedException();
-
-        public int DepthInUIGroup => throw new System.NotImplementedException();
-
-        public bool IsOpening => throw new System.NotImplementedException();
-
-        public bool PauseCoveredUIPanel => throw new System.NotImplementedException();
-
         #endregion 对外属性
 
-        #region 静态方法
-        public static int OpenPanel(T userData, string assetName, string groupName)
-        {
-            return UIMonoInstance.Instance.OpenUIPanel(assetName, groupName, (object)userData);
-        }
-        #endregion
+        #region 功能方法
 
-        #region 父类设置
+        /// <summary>
+        /// 关闭自身
+        /// </summary>
+        public void CloseSelfPanel(bool ignoreFade = true)
+        {
+            StopAllCoroutines();
+            if (ignoreFade)
+            {
+                UIMonoInstance.Instance.ClosePanel(this.UIPanel);
+            }
+            else
+            {
+                //StartCoroutine(CloseCo(FadeTime));//动画
+            }
+        }
 
         /// <summary>
         /// 设置字体
         /// </summary>
-        /// <param name="mainFont"></param>
         public static void SetMainFont(Font mainFont)
         {
             if (mainFont == null)
@@ -141,7 +121,8 @@ namespace YangTools.UGUI
                 Debug.LogError("Main font is invalid.");
                 return;
             }
-            YangUIManager.mainFont = mainFont;
+
+            YangUIManager.MainFont = mainFont;
         }
 
         /// <summary>
@@ -154,30 +135,14 @@ namespace YangTools.UGUI
         }
 
         /// <summary>
-        /// 关闭页面
-        /// </summary>
-        public void ClosePanel(bool ignoreFade = true)
-        {
-            StopAllCoroutines();
-            if (ignoreFade)
-            {
-                UIMonoInstance.Instance.CloseUIPanel(this.UIPanel);
-            }
-            else
-            {
-                //StartCoroutine(CloseCo(FadeTime));//动画
-            }
-        }
-
-        /// <summary>
         /// 设置界面的可见性
         /// </summary>
-        protected virtual void SetVisible(bool visible)
+        public virtual void SetVisible(bool isVisible)
         {
-            gameObject.SetActive(visible);
+            gameObject.SetActive(isVisible);
         }
 
-        #endregion 父类设置
+        #endregion
 
         #region 生命周期
 
@@ -185,15 +150,16 @@ namespace YangTools.UGUI
         {
             OnInit(userData as T);
         }
+
         /// <summary>
         /// 界面初始化
         /// </summary>
-        /// <param name="userData">用户自定义数据</param>
-        public virtual void OnInit(T userData)
+        /// <param name="pConfirmData">用户自定义数据</param>
+        public virtual void OnInit(T pConfirmData)
         {
-            if (cachedTransform == null) cachedTransform = transform;
+            if (CachedTransform == null) CachedTransform = transform;
 
-            uiPanel = GetComponent<UIPanel>();
+            UIPanel = GetComponent<UIPanel>();
             originalLayer = gameObject.layer;
 
             cachedCanvas = gameObject.GetOrAddComponent<Canvas>();
@@ -201,7 +167,7 @@ namespace YangTools.UGUI
             OriginalDepth = cachedCanvas.sortingOrder;
 
             canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-            Node = transform.Find("Node");
+            node = transform.Find("Node");
 
             RectTransform trans = GetComponent<RectTransform>();
             trans.anchorMin = Vector2.zero;
@@ -215,10 +181,10 @@ namespace YangTools.UGUI
             Text[] texts = GetComponentsInChildren<Text>(true);
             for (int i = 0; i < texts.Length; i++)
             {
-                texts[i].font = YangUIManager.mainFont;
+                if (YangUIManager.MainFont) texts[i].font = YangUIManager.MainFont;
                 if (!string.IsNullOrEmpty(texts[i].text))
                 {
-                    texts[i].text = texts[i].text.ToString();//多语言
+                    texts[i].text = texts[i].text.ToString(); //多语言
                 }
             }
         }
@@ -229,25 +195,25 @@ namespace YangTools.UGUI
         /// <param name="userData">用户自定义数据</param>
         public virtual void OnOpen(object userData)
         {
-            available = true;
+            Available = true;
             Visible = true;
 
             DOTween.Kill(this);
             //默认动画
-            if (Node)
+            if (node)
             {
                 DOTween.Sequence()
                     .AppendCallback(() =>
                     {
                         canvasGroup.alpha = 0.6f;
-                        Node.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+                        node.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
                     })
-                    .Append(Node.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutElastic))
+                    .Append(node.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutElastic))
                     .Join(canvasGroup.DOFade(1f, 0.2f))
                     .OnComplete(() =>
                     {
                         canvasGroup.alpha = 1f;
-                        Node.transform.localScale = Vector3.one;
+                        node.transform.localScale = Vector3.one;
                     })
                     .SetTarget(this);
             }
@@ -262,7 +228,7 @@ namespace YangTools.UGUI
         {
             gameObject.SetLayerRecursively(originalLayer);
             Visible = false;
-            available = false;
+            Available = false;
         }
 
         /// <summary>
@@ -284,14 +250,14 @@ namespace YangTools.UGUI
         /// <summary>
         /// 界面遮挡
         /// </summary>
-        public virtual void OnCover()
+        public virtual void OnLostFocus()
         {
         }
 
         /// <summary>
         /// 界面遮挡恢复
         /// </summary>
-        public virtual void OnReveal()
+        public virtual void OnReFocus()
         {
         }
 
@@ -313,34 +279,44 @@ namespace YangTools.UGUI
         }
 
         /// <summary>
+        /// 界面深度改变
+        /// </summary>
+        /// <param name="groupDepth">界面组深度</param>
+        /// <param name="depthInUIGroup">界面在界面组中的深度</param>
+        public virtual void OnDepthChanged(int groupDepth, int depthInUIGroup)
+        {
+            int oldDepth = Depth;
+            int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup - oldDepth +
+                             OriginalDepth;
+            GetComponentsInChildren(true, cachedCanvasList);
+            foreach (var item in cachedCanvasList)
+            {
+                item.sortingOrder += deltaDepth;
+            }
+
+            cachedCanvasList.Clear();
+        }
+
+        /// <summary>
         /// 界面回收
         /// </summary>
         public virtual void OnRecycle()
         {
         }
 
-        /// <summary>
-        /// 界面深度改变
-        /// </summary>
-        /// <param name="uiGroupDepth">界面组深度</param>
-        /// <param name="depthInUIGroup">界面在界面组中的深度</param>
-        public virtual void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
-        {
-            int oldDepth = Depth;
-            int deltaDepth = UGUIGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
-            GetComponentsInChildren(true, cachedCanvasList);
-            for (int i = 0; i < cachedCanvasList.Count; i++)
-            {
-                cachedCanvasList[i].sortingOrder += deltaDepth;
-            }
-            cachedCanvasList.Clear();
-        }
-
-        public void OnInit(int serialId, string uiPanelAssetName, IUIGroup uiGroup, bool pauseCovereduiPanel, bool isNewInstance, object userData)
-        {
-            throw new System.NotImplementedException();
-        }
-
         #endregion 生命周期
+
+        /// <summary>
+        /// 静态打开方法
+        /// </summary>
+        /// <param name="userData"></param>
+        /// <param name="assetName"></param>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
+        public static async UniTask<(int id, IUGUIPanel panel)> OpenPanel(T userData, string assetName,
+            string groupName)
+        {
+            return await UIMonoInstance.Instance.OpenPanel(assetName, groupName, userData: (object) userData);
+        }
     }
 }

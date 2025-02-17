@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools.Log;
+using Object = UnityEngine.Object;
 
 namespace YangTools.Extend
 {
@@ -76,7 +77,7 @@ namespace YangTools.Extend
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             T component = gameObject.GetComponent<T>();
-            if (component == null)
+            if (!component)
             {
                 component = gameObject.AddComponent<T>();
             }
@@ -84,7 +85,7 @@ namespace YangTools.Extend
             return component;
         }
 
-        private static readonly List<Transform> cachedTransforms = new List<Transform>();
+        private static readonly List<Transform> CachedTransforms = new List<Transform>();
 
         /// <summary>
         /// 递归设置游戏对象的层次
@@ -93,13 +94,13 @@ namespace YangTools.Extend
         /// <param name="layer">目标层次的编号</param>
         public static void SetLayerRecursively(this GameObject gameObject, int layer)
         {
-            gameObject.GetComponentsInChildren(true, cachedTransforms);
-            for (int i = 0; i < cachedTransforms.Count; i++)
+            gameObject.GetComponentsInChildren(true, CachedTransforms);
+            for (int i = 0; i < CachedTransforms.Count; i++)
             {
-                cachedTransforms[i].gameObject.layer = layer;
+                CachedTransforms[i].gameObject.layer = layer;
             }
 
-            cachedTransforms.Clear();
+            CachedTransforms.Clear();
         }
 
         /// <summary>
@@ -133,10 +134,9 @@ namespace YangTools.Extend
         /// <summary>
         /// 自动设置显隐--会先判断是否已经是目标状态
         /// </summary>
-        public static void AutoSetActive(this GameObject gameObject, bool isActive,
-            [CallerMemberNameAttribute] string callName = "")
+        public static void AutoSetActive(this GameObject gameObject, bool isActive, [CallerMemberNameAttribute] string callName = "")
         {
-            if (gameObject == null)
+            if (!gameObject)
             {
                 Debuger.ToError($"尝试对null对象设置显隐:调用来源{callName}");
                 return;
@@ -156,7 +156,7 @@ namespace YangTools.Extend
         /// <summary>
         /// 对象池默认Get
         /// </summary>
-        public static void DefualtGameObjectOnGet(this GameObject gameObject, Transform parent)
+        public static void DefaultGameObjectOnGet(this GameObject gameObject, Transform parent)
         {
             gameObject.SetActive(true);
             gameObject.transform.SetParent(parent);
@@ -165,18 +165,18 @@ namespace YangTools.Extend
         /// <summary>
         /// 对象池默认Recycle
         /// </summary>
-        public static void DefualtGameObjectRecycle(this GameObject gameObject)
+        public static void DefaultGameObjectRecycle(this GameObject gameObject)
         {
             gameObject.SetActive(false);
             gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
         }
 
         /// <summary>
-        /// 对象池默认Destory
+        /// 对象池默认Destroy
         /// </summary>
-        public static void DefualtGameObjectDestory(this GameObject gameObject)
+        public static void DefaultGameObjectDestroy(this GameObject gameObject)
         {
-            GameObject.Destroy(gameObject);
+            Object.Destroy(gameObject);
         }
 
         #endregion
@@ -191,7 +191,7 @@ namespace YangTools.Extend
         public static void Combine(Transform root, Material material, string ignoreTag = null)
         {
             // 遍历所有蒙皮网格渲染器，以计算出所有需要合并的网格、UV、骨骼的信息
-            var allSMR = root.GetComponentsInChildren<SkinnedMeshRenderer>();
+            var allSmr = root.GetComponentsInChildren<SkinnedMeshRenderer>();
             List<GameObject> targetParts = new List<GameObject>();
             float startTime = Time.realtimeSinceStartup;
             List<CombineInstance> combineInstances = new List<CombineInstance>();
@@ -202,9 +202,9 @@ namespace YangTools.Extend
             int height = 0;
             int uvCount = 0;
             List<Vector2[]> uvList = new List<Vector2[]>();
-            for (int i = 0; i < allSMR.Length; i++)
+            for (int i = 0; i < allSmr.Length; i++)
             {
-                SkinnedMeshRenderer smr = allSMR[i];
+                SkinnedMeshRenderer smr = allSmr[i];
 
                 try
                 {
@@ -405,6 +405,7 @@ namespace YangTools.Extend
         /// <param name="endPot">终点</param>
         /// <param name="width">宽度</param>
         /// <param name="precision">精度（必须是单数）</param>
+        /// <param name="layerMask"></param>
         private static List<Collider> DrawRays(Vector3 beginPot, Vector3 endPot, float width, int precision,
             LayerMask layerMask)
         {

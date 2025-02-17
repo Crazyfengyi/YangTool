@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,3 +64,4 @@ namespace YangTools
         }
     }
 }
+#endif

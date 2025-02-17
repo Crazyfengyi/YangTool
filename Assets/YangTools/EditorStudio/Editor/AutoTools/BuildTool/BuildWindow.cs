@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -508,3 +509,4 @@ public class EditorStyle
         // saveIconUnselected = AssetDatabase.LoadAssetAtPath<Texture2D>(ES3Settings.PathToEasySaveFolder() + "Editor/es3Logo16x16-bw.png");
     }
 }
+#endif

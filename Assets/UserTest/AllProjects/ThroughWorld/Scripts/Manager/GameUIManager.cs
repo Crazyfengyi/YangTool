@@ -380,15 +380,15 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(GameUIManager.Instance.tipsParent.transform);
+        obj.DefaultGameObjectOnGet(GameUIManager.Instance.tipsParent.transform);
     }
     public void OnRecycle()
     {
-        obj.DefualtGameObjectRecycle();
+        obj.DefaultGameObjectRecycle();
     }
     public void OnDestroy()
     {
-        obj.DefualtGameObjectDestory();
+        obj.DefaultGameObjectDestroy();
     }
 }
 /// <summary>
@@ -439,16 +439,16 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(GameUIManager.Instance.scoreParent);
+        obj.DefaultGameObjectOnGet(GameUIManager.Instance.scoreParent);
 
     }
     public void OnRecycle()
     {
-        obj.DefualtGameObjectRecycle();
+        obj.DefaultGameObjectRecycle();
     }
     public void OnDestroy()
     {
-        obj.DefualtGameObjectDestory();
+        obj.DefaultGameObjectDestroy();
     }
 }
 /// <summary>
@@ -541,15 +541,15 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     }
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(GameUIManager.Instance.hpBarParent);
+        obj.DefaultGameObjectOnGet(GameUIManager.Instance.hpBarParent);
     }
     public void OnRecycle()
     {
-        obj.DefualtGameObjectRecycle();
+        obj.DefaultGameObjectRecycle();
     }
     public void OnDestroy()
     {
-        obj.DefualtGameObjectDestory();
+        obj.DefaultGameObjectDestroy();
     }
 }
 /// <summary>

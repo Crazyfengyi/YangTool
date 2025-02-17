@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
-#endif
 
 namespace YangTools
 {
@@ -21,7 +20,6 @@ namespace YangTools
             }
         }
 
-#if UNITY_EDITOR
         [MenuItem(SettingInfo.YongToolsFunctionPath + "CombineMesh")]
         static void StartCombineMesh()
         {
@@ -101,7 +99,6 @@ namespace YangTools
             }
 
         }
-#endif
-
     }
 }
+#endif

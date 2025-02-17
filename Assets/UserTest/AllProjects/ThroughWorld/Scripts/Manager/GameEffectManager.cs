@@ -100,17 +100,17 @@ public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
 
     public void OnGet()
     {
-        obj.DefualtGameObjectOnGet(null);
+        obj.DefaultGameObjectOnGet(null);
     }
 
     public void OnRecycle()
     {
-        obj.DefualtGameObjectRecycle();
+        obj.DefaultGameObjectRecycle();
     }
 
     public void OnDestroy()
     {
-        obj.DefualtGameObjectDestory();
+        obj.DefaultGameObjectDestroy();
     }
 }
 

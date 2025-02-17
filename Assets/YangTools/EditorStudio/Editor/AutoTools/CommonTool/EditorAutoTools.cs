@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -792,3 +793,4 @@ namespace YangTools
     }
      */
 }
+#endif

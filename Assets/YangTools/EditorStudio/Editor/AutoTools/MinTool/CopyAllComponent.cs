@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
  *脚本功能:     #FUNCTION# 
@@ -37,3 +38,4 @@ namespace YangTools
         }
     }
 }
+#endif

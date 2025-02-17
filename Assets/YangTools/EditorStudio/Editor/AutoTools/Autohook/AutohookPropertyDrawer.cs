@@ -1,18 +1,18 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       YangWork 
  *UnityVersion：2020.3.1f1c1 
  *创建时间:         2021-04-16 
 */
-// NOTE put in a Editor folder
 using UnityEditor;
 using UnityEngine;
 
 namespace YangTools
 {
-    [CustomPropertyDrawer(typeof(AutohookAttribute))]
-    public class AutohookPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(AutoHookAttribute))]
+    public class AutoHookPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -35,8 +35,8 @@ namespace YangTools
                 }
             }
 
-            AutohookAttribute autohookAttribute = (AutohookAttribute)attribute;
-            if (autohookAttribute.hookType == AutohookAttribute.HookType.Component)
+            AutoHookAttribute autoHookAttribute = (AutoHookAttribute)attribute;
+            if (autoHookAttribute.hookType == AutoHookAttribute.HookType.Component)
             {
                 //property是单个序列化的属性
                 Component component = FindAutohookTarget(property);
@@ -46,10 +46,10 @@ namespace YangTools
                 }
                 else
                 {
-                    Debug.LogError($"{property.name}:没有找到对应组件--子节点路径:{autohookAttribute.relativePath}");
+                    Debug.LogError($"{property.name}:没有找到对应组件--子节点路径:{autoHookAttribute.relativePath}");
                 }
             }
-            else if (autohookAttribute.hookType == AutohookAttribute.HookType.Prefab)
+            else if (autoHookAttribute.hookType == AutoHookAttribute.HookType.Prefab)
             {
                 string name = property.name;
                 if (name.EndsWith("Prefab"))
@@ -58,13 +58,13 @@ namespace YangTools
                 }
 
                 GameObject prefab = null;
-                if (autohookAttribute.useDefault)
+                if (autoHookAttribute.useDefault)
                 {
-                    prefab = FindPrefab(property, name, autohookAttribute.prefabPath);
+                    prefab = FindPrefab(property, name, autoHookAttribute.prefabPath);
                 }
                 else
                 {
-                    prefab = FindPrefab(property, autohookAttribute.prefabName, autohookAttribute.prefabPath);
+                    prefab = FindPrefab(property, autoHookAttribute.prefabName, autoHookAttribute.prefabPath);
                 }
 
                 if (prefab != null)
@@ -73,7 +73,7 @@ namespace YangTools
                 }
                 else
                 {
-                    Debug.LogError($"{property.name}:没有找到对应预制物体--预制体路径:{autohookAttribute.prefabPath}");
+                    Debug.LogError($"{property.name}:没有找到对应预制物体--预制体路径:{autoHookAttribute.prefabPath}");
                 }
             }
 
@@ -118,10 +118,10 @@ namespace YangTools
                 Component[] components = component.GetComponentsInChildren(type);
                 foreach (var item in components)
                 {
-                    AutohookAttribute autohookAttribute = (AutohookAttribute)attribute;
+                    AutoHookAttribute autoHookAttribute = (AutoHookAttribute)attribute;
 
                     //默认物体根据名字搜索
-                    if (autohookAttribute.useDefault)
+                    if (autoHookAttribute.useDefault)
                     {
                         //确保GameObject不要有重名的
                         if (item.gameObject.name == property.name)
@@ -134,7 +134,7 @@ namespace YangTools
                         //获得路径
                         string resultPath = CommonEditorTool.GetPath(item.gameObject);
 
-                        if (resultPath == autohookAttribute.relativePath)
+                        if (resultPath == autoHookAttribute.relativePath)
                         {
                             return item.gameObject.GetComponent(type);
                         }
@@ -172,3 +172,4 @@ namespace YangTools
         }
     }
 }
+#endif

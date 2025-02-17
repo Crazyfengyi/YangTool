@@ -138,7 +138,7 @@ public class PlayerController : RoleBase
         GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
-        UIMonoInstance.Instance.OpenUIPanel("GameOverPanel", "One");
+        UIMonoInstance.Instance.OpenPanel("GameOverPanel", "One");
         YangToolsManager.SetCursorLock(false);
     }
 

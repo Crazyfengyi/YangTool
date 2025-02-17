@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by Test 
  *All rights reserved. 
  *Author:       WIN-VJ19D9AB7HB 
@@ -68,3 +69,4 @@ public class BuildPostProcess : IPostprocessBuildWithReport
         Process.Start(@"D:\Program Files\7-Zip\7z.exe", cmd);
     }
 }
+#endif

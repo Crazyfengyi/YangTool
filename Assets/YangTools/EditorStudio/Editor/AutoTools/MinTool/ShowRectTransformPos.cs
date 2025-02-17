@@ -16,10 +16,10 @@ using UnityEngine;
 namespace YangTools
 {
     [ExecuteInEditMode]
-    [CustomEditor(typeof(Transform), true)]//子类是否可用 TODO:未知原因导致RectTransformEditor无法使用,暂时复制了一份
-    public class ShowTransformPos : Editor
+    [CustomEditor(typeof(RectTransform), false)]//子类是否可用
+    public class ShowRectTransformPos : Editor
     {
-        Transform targetTransform;//自身
+        RectTransform targetTransform;//自身
         SerializedObject projectile;
 
         private bool isRectTransform;
@@ -27,7 +27,7 @@ namespace YangTools
         private MethodInfo onSceneGUI;
         private void OnEnable()
         {
-            targetTransform = target as Transform;
+            targetTransform = target as RectTransform;
             
             isRectTransform = target as RectTransform;
             projectile = new SerializedObject(target);

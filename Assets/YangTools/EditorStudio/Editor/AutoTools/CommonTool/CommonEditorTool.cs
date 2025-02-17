@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       YangWork 
@@ -287,3 +288,4 @@ namespace YangTools
     }
     #endregion
 }
+#endif

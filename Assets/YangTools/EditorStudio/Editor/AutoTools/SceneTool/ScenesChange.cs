@@ -1,10 +1,12 @@
-/** 
+#if UNITY_EDITOR
+/* 
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
  *Author:       陈春洋 
  *UnityVersion：2019.4.17f1c1 
  *创建时间:         2021-03-31 
 */
+using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -22,13 +24,15 @@ namespace YangTools
         /// <summary>
         /// 场景计数(暂时未操作计数)
         /// </summary>
-        static int secensCount = 0;//TODO 设置成可以自己控制开关
+        private static int SceneCount = 0;//TODO 设置成可以自己控制开关
 
         [MenuItem(SettingInfo.MenuPath + "自动写入所有场景到快捷切换列表")]
         public static void UpdateList()
         {
             string scenesMenuPath = Path.Combine(Application.dataPath, ScenesMenuPath);
             var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("#if UNITY_EDITOR");
             stringBuilder.AppendLine("// Generated file");
             stringBuilder.AppendLine("using UnityEditor;");
             stringBuilder.AppendLine("using UnityEditor.SceneManagement;");
@@ -37,18 +41,19 @@ namespace YangTools
             stringBuilder.AppendLine("public static class ScenesMenu");
             stringBuilder.AppendLine("{");
 
-            foreach (string sceneGuid in AssetDatabase.FindAssets("t:Scene", new string[] { "Assets" }))
+            foreach (var sceneGuid in AssetDatabase.FindAssets("t:Scene", new string[] { "Assets" }))
             {
-                string sceneFilename = AssetDatabase.GUIDToAssetPath(sceneGuid);
-                string sceneName = Path.GetFileNameWithoutExtension(sceneFilename);
-                string methodName = sceneFilename.Replace('/', '_').Replace('\\', '_').Replace('.', '_').Replace('-', '_').Replace(' ', '_').Replace('(', '_').Replace(')', '_');
+                var sceneFilename = AssetDatabase.GUIDToAssetPath(sceneGuid);
+                var sceneName = Path.GetFileNameWithoutExtension(sceneFilename);
+                var methodName = sceneFilename.Replace('/', '_').Replace('\\', '_').Replace('.', '_').Replace('-', '_').Replace(' ', '_').Replace('(', '_').Replace(')', '_');
                 stringBuilder.AppendLine();
-                stringBuilder.AppendLine(string.Format("    [MenuItem(\"YangTools/AllSecnes/{0}\", priority = 10)]", sceneName));
-                stringBuilder.AppendLine(string.Format("    public static void {0}() {{ ScenesChange.OpenScene(\"{1}\"); }}", methodName, sceneFilename));
+                stringBuilder.AppendLine($"    [MenuItem(\"YangTools/AllScenes/{sceneName}\", priority = 10)]");
+                stringBuilder.AppendLine($"    public static void {methodName}() {{ ScenesChange.OpenScene(\"{sceneFilename}\"); }}");
             }
             stringBuilder.AppendLine("}");
-            Debug.LogError("所有场景自动生成快速切换代码到：" + Path.GetDirectoryName(scenesMenuPath) + "完成");
-            Directory.CreateDirectory(Path.GetDirectoryName(scenesMenuPath));
+            stringBuilder.AppendLine("#endif");
+            Debug.LogError("所有场景自动生成快速切换代码到:" + Path.GetDirectoryName(scenesMenuPath) + "完成");
+            Directory.CreateDirectory(Path.GetDirectoryName(scenesMenuPath) ?? throw new InvalidOperationException());
             File.WriteAllText(scenesMenuPath, stringBuilder.ToString());
             AssetDatabase.Refresh();
         }
@@ -80,13 +85,14 @@ namespace YangTools
                 EditorSceneManager.OpenScene(filename, OpenSceneMode.Additive);
                 EditorSceneManager.CloseScene(oldScene, false);
 
-                secensCount++;
-                if (secensCount >= 5)
+                SceneCount++;
+                if (SceneCount >= 5)
                 {
-                    secensCount = 0;
+                    SceneCount = 0;
                     ReomveAllNotActiveScene();
                 }
             }
         }
     }
 }
+#endif

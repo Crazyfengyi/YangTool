@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -36,11 +37,11 @@ namespace YangTools
             var att = (EnumLabelAttribute)attribute;
             var type = property.serializedObject.targetObject.GetType();
             var field = type.GetField(property.name);
-            var enumtype = field.FieldType;
+            var enumType = field.FieldType;
             foreach (var enumName in property.enumNames)
             {
-                var enumfield = enumtype.GetField(enumName);
-                var hds = enumfield.GetCustomAttributes(typeof(HeaderAttribute), false);
+                var enumField = enumType.GetField(enumName);
+                var hds = enumField.GetCustomAttributes(typeof(HeaderAttribute), false);
                 m_displayNames.Add(hds.Length <= 0 ? enumName : ((HeaderAttribute)hds[0]).header);
             }
             EditorGUI.BeginChangeCheck();
@@ -65,3 +66,4 @@ namespace YangTools
     // }
     #endregion
 }
+#endif

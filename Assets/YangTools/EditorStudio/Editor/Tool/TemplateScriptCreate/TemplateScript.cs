@@ -1,4 +1,5 @@
-/** 
+#if UNITY_EDITOR
+/*
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
  *脚本功能:     #FUNCTION# 
@@ -15,19 +16,19 @@ using UnityEngine;
 
 namespace YangTools
 {
-    public class TemplateScript
+    public static class TemplateScript
     {
-        public static readonly string MY_SCRIPT_DEFAULT = SettingInfo.YangToolAssetPath + "TemplateScriptCreate/81-C# Script-NewBehaviourScript.cs.txt";
+        private const string MyScriptDefault = SettingInfo.YangToolAssetPath + "Tool/TemplateScriptCreate/81-C# Script-NewBehaviourScript.cs.txt";
 
         [MenuItem("Assets/Create/C# TemplateScript", false, 80)]
         public static void CreateMyScript()
         {
-            string locationPath = GetSelectPathOrFallback();
-            Texture2D icon = EditorGUIUtility.FindTexture("cs Script Icon");
-            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<CreatScriptableObject>(), locationPath + "/NewBehaviourScript.cs", icon, MY_SCRIPT_DEFAULT);
+            var locationPath = GetSelectPathOrFallback();
+            var icon = EditorGUIUtility.FindTexture("cs Script Icon");
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<CreatScriptableObject>(), locationPath + "/NewBehaviourScript.cs", icon, MyScriptDefault);
         }
-
-        public static string GetSelectPathOrFallback()
+        
+        private static string GetSelectPathOrFallback()
         {
             string path = "Assets";
             foreach (Object item in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
@@ -53,31 +54,26 @@ namespace YangTools
             {
                 //pathName:Assets/YangTools/Editor/AutoScriptCreate/we.cs
                 //resourceFile:Assets/YangTools/Editor/AutoScriptCreate/81-C# Script-NewBehaviourScript.cs.txt
-                UnityEngine.Object obj = CreateScriptAssetFormTemplats(pathName, resourceFile);
+                var obj = CreateScriptAssetFormTemplate(pathName, resourceFile);
                 ProjectWindowUtil.ShowCreatedAsset(obj);
             }
 
-            //内部方法--更改模板类容
-            internal static Object CreateScriptAssetFormTemplats(string pathName, string resourceFile)
+            //更改模板内容
+            private static Object CreateScriptAssetFormTemplate(string pathName, string resourceFile)
             {
-                string newfullPath = Path.GetFullPath(pathName);
+                string newFullPath = Path.GetFullPath(pathName);
                 string oldFullPath = Path.GetFullPath(resourceFile);
 
                 string text = File.ReadAllText(oldFullPath);
                 //获取没有扩展名的文件名
                 string fileName = Path.GetFileNameWithoutExtension(pathName);
                 text = Regex.Replace(text, "#SCRIPTNAME#", fileName);
-                //unity设置里的公司名
-                text = text.Replace("#COMPANY#", PlayerSettings.companyName);
-                //电脑主机名称
-                string computerName = Dns.GetHostName();
-                text = text.Replace("#AUTHOR#", $"{computerName}");
-                //unity版本
-                text = text.Replace("#UNITYVERSION#", Application.unityVersion);
-                //创建时间
-                text = text.Replace("#DATE#", System.DateTime.Now.ToString("yyyy-MM-dd"));
-
-                File.WriteAllText(newfullPath, text);
+                text = text.Replace("#COMPANY#", PlayerSettings.companyName);//unity设置里的公司名
+                var computerName = Dns.GetHostName();
+                text = text.Replace("#AUTHOR#", $"{computerName}");//电脑主机名称
+                text = text.Replace("#UNITYVERSION#", Application.unityVersion); //unity版本
+                text = text.Replace("#DATE#", System.DateTime.Now.ToString("yyyy-MM-dd"));//创建时间
+                File.WriteAllText(newFullPath, text);
 
                 AssetDatabase.ImportAsset(pathName);
                 return AssetDatabase.LoadAssetAtPath(pathName, typeof(Object));
@@ -85,3 +81,4 @@ namespace YangTools
         }
     }
 }
+#endif

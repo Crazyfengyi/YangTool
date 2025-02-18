@@ -89,7 +89,7 @@ public class RescoreManager
             return obj;
         }
 
-        Debug.LogError($"类型转换失败 location:{location} 资源类型:{handler.AssetObject.GetType()} 加载类型:{typeof(T)}");
+        Debug.LogError($"类型转换失败location:{location}资源类型:{handler.AssetObject.GetType()}加载类型:{typeof(T)}");
         return null;
     }
 
@@ -119,7 +119,7 @@ public class RescoreManager
 
         if (subAsset == null)
         {
-            Debug.LogError($"不存在的资源类型 location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
+            Debug.LogError($"不存在的资源类型location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
         }
 
         return subAsset;
@@ -127,7 +127,7 @@ public class RescoreManager
 
     public async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
     {
-        Debug.Log($"YooAssets 场景加载 ---{location}---");
+        Debug.Log($"YooAssets场景加载---{location}---"); 
         SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode,localPhysicsMode,suspendLoad, priority);
         await handler.ToUniTask();
 
@@ -160,7 +160,7 @@ public class RescoreManager
 
         var sprite = await LoadSprite(spriteLocation);
 
-        if (image != null)
+      if (image != null)
         {
             image.sprite = sprite;
             success?.Invoke(image);

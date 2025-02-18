@@ -12,7 +12,7 @@ using UnityEngine;
 namespace YangTools
 {
     /// <summary>
-    /// 协程管理器---利用迭代器实现携程
+    /// 协程管理器(利用迭代器实现携程)
     /// </summary>
     public class YangCoroutineManager
     {
@@ -69,7 +69,7 @@ namespace YangTools
                         result = ie.MoveNext();
                     }
                 }
-                else
+                else//// 
                 {
                     result = ie.MoveNext();
                 }

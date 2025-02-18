@@ -28,19 +28,19 @@ namespace YangTools
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
         }
 
-        static List<Type> types = new List<Type>();
+        private static readonly List<Type> Types = new List<Type>();
         private static void HierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
-            GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+            var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (go == null) return;
-            types.Clear();
-            Component[] components = go.GetComponents<Component>();
-            for (int i = 0; i < components.Length; i++)
+            Types.Clear();
+            var components = go.GetComponents<Component>();
+            for (var i = 0; i < components.Length; i++)
             {
-                Component component = components[i];
+                var component = components[i];
                 if (component == null) continue;
-                if (types.Contains(component.GetType())) return;
-                types.Add(component.GetType());
+                if (Types.Contains(component.GetType())) return;
+                Types.Add(component.GetType());
                 
                 Texture texture = AssetPreview.GetMiniTypeThumbnail(component.GetType()) ??
                                   AssetPreview.GetMiniThumbnail(component);

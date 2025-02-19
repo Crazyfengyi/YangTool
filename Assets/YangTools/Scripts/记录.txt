@@ -1,6 +1,8 @@
 
  EditorUtility.DisplayDialog("提示", "打包AssetBundle完毕", "确定");
 
+//unity异步方法 Awaitable.MainThreadAsync ---回调主线程
+
  private static void TagImage(string path, string bundleName, System.Func<Object, bool> shouldTag = null)
     {
         string[] pathList = AssetDatabase.FindAssets("", new string[] { "Assets" + path });

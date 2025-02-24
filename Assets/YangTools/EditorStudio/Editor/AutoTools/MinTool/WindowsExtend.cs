@@ -66,6 +66,7 @@ namespace YangTools
         private static void OnProjectWindowItemOnGUI(string guid, Rect selectionRect)
         {
             string asstPath = AssetDatabase.GUIDToAssetPath(guid);
+            //TODO: EditorUtility.CollectDependencies()//游戏对象的依赖
             string[] dependencies = AssetDatabase.GetDependencies(asstPath);
             if(dependencies.Length == 0)return;
             Rect rect = selectionRect;

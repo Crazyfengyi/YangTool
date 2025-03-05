@@ -37,7 +37,7 @@ namespace GameMain
         {
             _id = 0;
 
-            _root = PreOrder(RedDotMgr.Instance.Root);
+            _root = PreOrder(RedDotMgr.Instance.RootNode);
             _root.depth = -1;
 
             SetupDepthsFromParentsAndChildren(_root);

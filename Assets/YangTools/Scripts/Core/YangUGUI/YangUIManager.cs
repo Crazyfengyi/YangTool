@@ -27,9 +27,7 @@ namespace YangTools.UGUI
         public IUICreateHelper UICreateHelper;//UI界面辅助类
 
         public event EventHandler<UIPanelOpenSucceedEventArgs> OpenUIPanelSuccess;//打开页面成功事件
-
         public event EventHandler<UIPanelOpenFailedEventArgs> OpenUIPanelFailure;//打开页面失败事件
-
         public event EventHandler<UIPanelClosedEventArgs> CloseUIPanelComplete;//关闭界面时
 
         /// <summary>

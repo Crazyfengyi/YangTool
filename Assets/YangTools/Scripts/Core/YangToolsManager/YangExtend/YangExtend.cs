@@ -21,10 +21,10 @@ namespace YangTools.Extend
         /// <param name="thisObject">绑定物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventCallback">事件回调</param>
-        public static EventInspector AddEventListener(this UnityEngine.Object thisObject, string eventName,
-            EventCallback<EventInfo> eventCallback)
+        public static EventInfo AddEventListener(this UnityEngine.Object thisObject, string eventName,
+            EventCallback<EventData> eventCallback)
         {
-            var ret = new EventInspector(thisObject, eventName, eventCallback);
+            var ret = new EventInfo(thisObject, eventName, eventCallback);
             YangEventManager.Instance.Add(ret);
             return ret;
         }
@@ -34,9 +34,9 @@ namespace YangTools.Extend
         /// </summary>
         /// <param name="thisObject"></param>
         /// <param name="listener">事件监听器实例</param>
-        public static void RemoveEventListener(this UnityEngine.Object thisObject, EventInspector listener)
+        public static void RemoveEventListener(this UnityEngine.Object thisObject, EventInfo listener)
         {
-            YangEventManager.Instance.Remove(listener);
+            YangEventManager.Instance.Remove(listener); 
         }
 
         /// <summary>

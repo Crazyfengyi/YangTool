@@ -9,14 +9,12 @@ using UnityEngine.UIElements;
 public class GizmosManager : MonoBehaviour
 {
     public static GizmosManager Instance;
-
     private void Awake()
     {
         Instance = this;
     }
 
-    private List<DrawInfo> drawInfos = new List<DrawInfo>();
-
+    private readonly List<DrawInfo> drawInfos = new List<DrawInfo>();
     /*
      * if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -27,6 +25,7 @@ public class GizmosManager : MonoBehaviour
     /// 矩形
     /// </summary>
     /// <param name="center"></param>
+    /// <param name="quaternion"></param>
     /// <param name="size"></param>
     /// <param name="time"></param>
     public void GizmosDrawCube(Vector3 center, Quaternion quaternion, Vector3 size, float time = 5f)

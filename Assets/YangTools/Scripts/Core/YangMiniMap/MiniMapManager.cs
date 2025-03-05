@@ -11,6 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace YangTools.MiniMap
@@ -51,9 +52,10 @@ namespace YangTools.MiniMap
         [LabelText("地图类型")]
         public MapType mapType = MapType.Target;
 
+        [FormerlySerializedAs("Ortographic2D")]
         [BoxGroup("基础设置")]
         [LabelText("是否正交视图")]
-        public bool Ortographic2D = false;
+        public bool ortographic2D = false;
 
         #endregion 基础设置
 
@@ -603,7 +605,7 @@ namespace YangTools.MiniMap
                 Vector3 tempPos = m_Transform.position;
                 //根据主角位置更新相机变换。
                 tempPos.x = Target.position.x;
-                if (!Ortographic2D)
+                if (!ortographic2D)
                 {
                     tempPos.z = Target.position.z;
                 }
@@ -621,7 +623,7 @@ namespace YangTools.MiniMap
                 }
 
                 //为此，我们添加预定义的(但变量，见下文)height var。
-                if (!Ortographic2D)
+                if (!ortographic2D)
                 {
                     tempPos.y = (maxHeight + minHeight / 2) + (Target.position.y * 2);
                 }

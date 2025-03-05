@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 public enum SelectMode
 {
     /// <summary>
     /// 顶点
     /// </summary>
-    Vertice,
+    Vertex,
     /// <summary>
     /// 三角面
     /// </summary>
@@ -25,7 +26,8 @@ public class SceneEditor : MonoBehaviour
 
     public SelectMode selectMode;
 
-    public Material SelectedFace;
+    [FormerlySerializedAs("SelectedFace")] 
+    public Material selectedFace;
 
     private GameObject verticeObj;
 
@@ -45,7 +47,7 @@ public class SceneEditor : MonoBehaviour
     {
         verticeSelect.onClick.AddListener(() =>
         {
-            selectMode = SelectMode.Vertice;
+            selectMode = SelectMode.Vertex;
 
         });
         PlaneSelect.onClick.AddListener(() =>
@@ -82,7 +84,7 @@ public class SceneEditor : MonoBehaviour
                         return;
                     }
 
-                    if (selectMode == SelectMode.Vertice)
+                    if (selectMode == SelectMode.Vertex)
                     {
                         Debug.LogError("模型顶点吸附物体");
                         EditorHelper.AttachTwoGameObjectByVertice(from, to, fromVertice, toVertice);
@@ -106,7 +108,7 @@ public class SceneEditor : MonoBehaviour
 
     void DrawSelectedArea()
     {
-        SelectedFace.SetPass(0);
+        selectedFace.SetPass(0);
         Ray TouchRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         MeshCollider collider;
@@ -180,7 +182,7 @@ public class SceneEditor : MonoBehaviour
                 currentSelectVertice = EditorHelper.GetMeshLocalCenter(mesh, hsIndex);
             }
         }
-        else if (selectMode == SelectMode.Vertice)
+        else if (selectMode == SelectMode.Vertex)
         {
 
             if (EditorHelper.TryPickTriangleVertice(TouchRay, out collider, out Vector3 vertice))
@@ -188,7 +190,7 @@ public class SceneEditor : MonoBehaviour
                 if (verticeObj == null)
                 {
                     verticeObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    verticeObj.GetComponent<MeshRenderer>().material = SelectedFace;
+                    verticeObj.GetComponent<MeshRenderer>().material = selectedFace;
                     verticeObj.transform.localScale = Vector3.one * 0.05f;
                 }
 

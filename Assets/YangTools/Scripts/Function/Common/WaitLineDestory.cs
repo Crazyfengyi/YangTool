@@ -5,7 +5,7 @@ namespace YangTools
     /// <summary>
     /// 延时删除TrailRender
     /// </summary>
-    public class WaitLineDestory : MonoBehaviour
+    public class WaitLineDestroy : MonoBehaviour
     {
         private TrailRenderer[] trailRenderers;
 

@@ -11,12 +11,14 @@ namespace YangTools
         public Transform target;        // 目标
         public float height = 16f;      // 高度
         public float gravity = -9.8f;   // 重力加速度
-        public ParabolaPath path;      // 抛物线运动轨迹
+        private ParabolaPath path;      // 抛物线运动轨迹
 
         private void Start()
         {
-            path = new ParabolaPath(transform.position, target.position, Random.Range(10, 16), gravity);
-            path.isClampStartEnd = true;
+            path = new ParabolaPath(transform.position, target.position, Random.Range(10, 16), gravity)
+                {
+                    isClampStartEnd = true
+                };
             transform.LookAt(path.GetPosition(path.Time + Time.deltaTime));
         }
 
@@ -26,10 +28,8 @@ namespace YangTools
             float t = Time.deltaTime;
             path.Time += t;
             transform.position = path.Position;
-
             // 计算转向
             transform.LookAt(path.GetPosition(path.Time + t));
-
             // 简单模拟一下碰撞检测
             if (path.Time >= path.TotalTime)
             {

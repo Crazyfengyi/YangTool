@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using System;
 
-public class EditorHelper
+public abstract class EditorHelper
 {
     /// <summary>
     /// 获取边界中心

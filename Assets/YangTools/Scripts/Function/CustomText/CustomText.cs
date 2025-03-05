@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -19,9 +19,9 @@ namespace YangTools
     /// </summary>
     public class CustomText : TextMeshProUGUI
     {
-        private List<GameObject> rubyList = new List<GameObject>();//注音列表
+        private readonly List<GameObject> rubyList = new List<GameObject>();//注音列表
         private int typingIndex;//打字进度下标
-        private float defaultInterval = 0.02f;//默认间隔
+        private readonly float defaultInterval = 0.02f;//默认间隔
         private Action endCallBack;//结束回调
         private CustomTextPreprocessor SelfPreprocessor => (CustomTextPreprocessor)textPreprocessor;
         public CustomText()
@@ -111,7 +111,7 @@ namespace YangTools
             while (typingIndex < m_characterCount)
             {
                 StartCoroutine(FadeInCharacter(typingIndex));
-                if (SelfPreprocessor.intervalDic.TryGetValue(typingIndex, out float result))
+                if (SelfPreprocessor.IntervalDic.TryGetValue(typingIndex, out float result))
                 {
                     yield return new WaitForSecondsRealtime(result);
                 }
@@ -181,9 +181,9 @@ namespace YangTools
     public class CustomTextPreprocessor : ITextPreprocessor
     {
         //间隔字典(第几个下标,间隔时间)
-        public Dictionary<int, float> intervalDic = new Dictionary<int, float>();
+        public readonly Dictionary<int, float> IntervalDic = new Dictionary<int, float>();
         //注音列表
-        public List<RubyData> rubyList = new List<RubyData>();
+        public readonly List<RubyData> RubyList = new List<RubyData>();
         /// <summary>
         /// 获得注音
         /// </summary>
@@ -192,7 +192,7 @@ namespace YangTools
         public bool TryGetRubyStartFrom(int index, out RubyData data)
         {
             data = new RubyData(0, "");
-            foreach (var item in rubyList)
+            foreach (var item in RubyList)
             {
                 if (item.StartIndex == index)
                 {
@@ -209,8 +209,8 @@ namespace YangTools
         /// <param name="text">文本</param>
         public string PreprocessText(string text)
         {
-            intervalDic.Clear();
-            rubyList.Clear();
+            IntervalDic.Clear();
+            RubyList.Clear();
 
             if (string.IsNullOrEmpty(text)) return "";
 
@@ -225,17 +225,17 @@ namespace YangTools
                 string label = match.Value.Substring(1, match.Length - 2);
                 if (float.TryParse(label, out float result))
                 {
-                    intervalDic[match.Index - 1] = result;
+                    IntervalDic[match.Index - 1] = result;
                 }
                 else if (Regex.IsMatch(label, "^r=.*"))//注音
                 {
-                    rubyList.Add(new RubyData(match.Index, label.Substring(2)));
+                    RubyList.Add(new RubyData(match.Index, label.Substring(2)));
                 }
                 else if (label == "/r")
                 {
-                    if (rubyList.Count > 0)
+                    if (RubyList.Count > 0)
                     {
-                        rubyList[rubyList.Count - 1].EndIndex = match.Index - 1;
+                        RubyList[RubyList.Count - 1].EndIndex = match.Index - 1;
                     }
                 }
 

@@ -11,76 +11,85 @@ namespace YangTools
         /// <summary>
         /// 是否夹紧起点和终点
         /// </summary>
-        public bool isClampStartEnd;
-        private Vector3 m_start;//起点
-        private Vector3 m_end;//终点
-        private float m_height;//高度
-        private float m_gravity;// 重力加速度
-        private float m_upTime;//上升时间
-        private float m_downTime;//下降时间
-        private float m_totalTime;//总运动时间
-        private Vector3 m_velocityStart;//初始速度
-        private Vector3 m_position;//根据时间的当前位置
-        private float m_time;//当前时间
+        public bool IsClampStartEnd;
+
+        private float mHeight;//高度
+        private float mGravity;// 重力加速度
+        private float mUpTime;//上升时间
+        private float mDownTime;//下降时间
+        private float mTotalTime;//总运动时间
+        private Vector3 mVelocityStart;//初始速度
+        private Vector3 mPosition;//根据时间的当前位置
+        private float mTime;//当前时间
         #endregion
 
         #region 属性
         /// <summary> 
         /// 起点 
         /// </summary>
-        public Vector3 Start { get { return m_start; } }
+        public Vector3 Start { get; private set; }
+
         /// <summary>
         /// 终点 
         /// </summary>
-        public Vector3 End { get { return m_end; } }
+        public Vector3 End { get; private set; }
+
         /// <summary> 
         /// 目标高度 
         /// </summary>
-        public float Height { get { return m_height; } }
+        public float Height => mHeight;
+
         /// <summary> 
         /// 重力加速度 
         /// </summary>
-        public float Gravity { get { return m_gravity; } }
+        public float Gravity => mGravity;
+
         /// <summary> 
         /// 上升时间 
         /// </summary>
-        public float UpTime { get { return m_upTime; } }
+        public float UpTime => mUpTime;
+
         /// <summary> 
         /// 下降时间 
         /// </summary>
-        public float DownTime { get { return m_downTime; } }
+        public float DownTime => mDownTime;
+
         /// <summary> 
         /// 总运动时间 
         /// </summary>
-        public float TotalTime { get { return m_totalTime; } }
+        public float TotalTime => mTotalTime;
+
         /// <summary> 
         /// 顶点 
         /// </summary>
-        public Vector3 Top { get { return GetPosition(m_upTime); } }
+        public Vector3 Top => GetPosition(mUpTime);
+
         /// <summary> 
         /// 初始速度 
         /// </summary>
-        public Vector3 VelocityStart { get { return m_velocityStart; } }
+        public Vector3 VelocityStart => mVelocityStart;
+
         /// <summary>
         /// 当前位置 
         /// </summary>
-        public Vector3 Position { get { return m_position; } }
+        public Vector3 Position => mPosition;
+
         /// <summary> 
         /// 当前速度 
         /// </summary>
-        public Vector3 Velocity { get { return GetVelocity(m_time); } }
+        public Vector3 Velocity => GetVelocity(mTime);
 
         /// <summary> 
         /// 当前时间 
         /// </summary>
         public float Time
         {
-            get { return m_time; }
+            get => mTime;
             set
             {
-                if (isClampStartEnd) value = Mathf.Clamp(value, 0, m_totalTime);
-                m_time = value;
-                m_position = GetPosition(value);
+                if (IsClampStartEnd) value = Mathf.Clamp(value, 0, mTotalTime);
+                mTime = value;
+                mPosition = GetPosition(value);
             }
         }
         #endregion
@@ -125,35 +134,35 @@ namespace YangTools
             //Y方向初速度
             float vY = -gravity * t1;
 
-            m_start = start;
-            m_end = end;
-            m_height = height;
-            m_gravity = gravity;
-            m_upTime = t1;
-            m_downTime = t2;
-            m_totalTime = t;
-            m_velocityStart = new Vector3(vX, vY, vZ);
-            m_position = m_start;
-            m_time = 0;
+            Start = start;
+            End = end;
+            mHeight = height;
+            mGravity = gravity;
+            mUpTime = t1;
+            mDownTime = t2;
+            mTotalTime = t;
+            mVelocityStart = new Vector3(vX, vY, vZ);
+            mPosition = Start;
+            mTime = 0;
         }
         /// <summary> 
         /// 获取某个时间点的位置 
         /// </summary>
         public Vector3 GetPosition(float time)
         {
-            if (time == 0) return m_start;
-            if (time == m_totalTime) return m_end;
-            float dY = 0.5f * m_gravity * time * time;//自由落体运动---h=1/2*g*t*t
-            return m_start + m_velocityStart * time + new Vector3(0, dY, 0);
+            if (time == 0) return Start;
+            if (Mathf.Approximately(time, mTotalTime)) return End;
+            float dY = 0.5f * mGravity * time * time;//自由落体运动---h=1/2*g*t*t
+            return Start + mVelocityStart * time + new Vector3(0, dY, 0);
         }
         /// <summary> 
         /// 获取某个时间点的速度 
         /// </summary>
         public Vector3 GetVelocity(float time)
         {
-            if (time == 0) return m_velocityStart;
+            if (time == 0) return mVelocityStart;
             //抛物线运动--只有y方向受重力影响力,x方向受力不变(初速度)
-            return m_velocityStart + new Vector3(0, m_velocityStart.y + m_gravity * time, 0);
+            return mVelocityStart + new Vector3(0, mVelocityStart.y + mGravity * time, 0);
         }
         /// <summary>
         /// 获得抛物线位置数组
@@ -165,7 +174,7 @@ namespace YangTools
             for (int i = 0; i <= segmentNum; i++)
             {
                 float ratio = i / (float)segmentNum;
-                float time = ratio * m_totalTime;
+                float time = ratio * mTotalTime;
                 Vector3 pos = GetPosition(time);
                 path[i] = pos;
             }

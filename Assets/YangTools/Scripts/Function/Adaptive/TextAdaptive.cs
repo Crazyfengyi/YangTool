@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace YangTools
@@ -21,22 +22,22 @@ namespace YangTools
         Vertical
     }
 
-    [TypeInfoBox("文字适配")]
-    [RequireComponent(typeof(Text))]
-    [AddComponentMenu(SettingInfo.MenuPath + "TextAdaptive", 20)]
     /// <summary>
     /// Text文本自动适配
     /// </summary>
+    [TypeInfoBox("文字适配")]
+    [RequireComponent(typeof(Text))]
+    [AddComponentMenu(SettingInfo.MenuPath + "TextAdaptive", 20)]
     public class TextAdaptive : MonoBehaviour
     {
         /// <summary>
         /// Android/iOS通用空格格式(不自动换行的空格)---space(0x0020)替换为No-break-space(0x00A0)，避免中文使用半角空格导致的提前换行问题
         /// </summary>
-        public static readonly string no_breaking_space = "\u00A0";
+        public static readonly string NoBreakingSpace = "\u00A0";
         /// <summary>
         /// 防止while死循环设置的上限
         /// </summary>
-        private static readonly int whileMax = 10000;
+        private const int WhileMax = 10000;
 
         #region 属性
         /// <summary>
@@ -47,25 +48,25 @@ namespace YangTools
         /// <summary>
         /// 是否适配
         /// </summary>
-        [HideInInspector]
-        public bool m_AdaptiveSize = true;
+        [FormerlySerializedAs("m_AdaptiveSize")] [HideInInspector]
+        public bool mAdaptiveSize = true;
         /// <summary>
         /// 适配模式：默认纵向适配
         /// </summary>
-        [Header("适配模式")]
-        public StartAxisType m_StartAxis = StartAxisType.Vertical;
+        [FormerlySerializedAs("m_StartAxis")] [Header("适配模式")]
+        public StartAxisType mStartAxis = StartAxisType.Vertical;
         /// <summary>
         /// 最开始字体大小
         /// </summary>
-        private int m_BeginFontSize;
+        private int mBeginFontSize;
         /// <summary>
         /// 文字框的大小
         /// </summary>
-        private Rect m_RectSize;
+        private Rect mRectSize;
         /// <summary>
         /// 适配的文字
         /// </summary>
-        private Text m_Text;
+        private Text mText;
         /// <summary>
         /// 是否已经完成适配
         /// </summary>
@@ -75,15 +76,15 @@ namespace YangTools
         #region 生命周期
         void Awake()
         {
-            m_Text = transform.GetComponent<Text>();
-            m_Text.alignByGeometry = false;
-            m_Text.resizeTextForBestFit = false;
-            m_BeginFontSize = m_Text.fontSize;
+            mText = transform.GetComponent<Text>();
+            mText.alignByGeometry = false;
+            mText.resizeTextForBestFit = false;
+            mBeginFontSize = mText.fontSize;
         }
 
         void OnEnable()
         {
-            m_Text.RegisterDirtyVerticesCallback(OnTextChange);
+            mText.RegisterDirtyVerticesCallback(OnTextChange);
 
             if (isReuse)
             {
@@ -94,30 +95,30 @@ namespace YangTools
         void LateUpdate()
         {
             //不适配直接return
-            if (!m_AdaptiveSize) return;
+            if (!mAdaptiveSize) return;
             //如果已经适配return
             if (isAdaptiveOver) return;
 
-            m_RectSize = transform.GetComponent<RectTransform>().rect;
-            switch (m_StartAxis)
+            mRectSize = transform.GetComponent<RectTransform>().rect;
+            switch (mStartAxis)
             {
                 case StartAxisType.Horizontal:
                     {
-                        m_Text.fontSize = m_BeginFontSize;
-                        int time = whileMax;
-                        while (m_Text.preferredWidth > m_RectSize.width)
+                        mText.fontSize = mBeginFontSize;
+                        int time = WhileMax;
+                        while (mText.preferredWidth > mRectSize.width)
                         {
-                            m_Text.fontSize -= 1;
+                            mText.fontSize -= 1;
 
-                            if (m_Text.fontSize < 1)
+                            if (mText.fontSize < 1)
                             {
-                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{m_Text.text}");
+                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{mText.text}");
                                 break;
                             }
                             time--;
                             if (time <= 0)
                             {
-                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{m_Text.text}");
+                                Debug.LogError($"TextAdaptive:超过上限{WhileMax}循环次数==>{mText.text}");
                                 break;
                             }
                         }
@@ -125,21 +126,21 @@ namespace YangTools
                     }
                 case StartAxisType.Vertical:
                     {
-                        m_Text.fontSize = m_BeginFontSize;
-                        int time = whileMax;
-                        while (m_Text.preferredHeight > m_RectSize.height)
+                        mText.fontSize = mBeginFontSize;
+                        int time = WhileMax;
+                        while (mText.preferredHeight > mRectSize.height)
                         {
-                            m_Text.fontSize -= 1;
+                            mText.fontSize -= 1;
 
-                            if (m_Text.fontSize < 1)
+                            if (mText.fontSize < 1)
                             {
-                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{m_Text.text}");
+                                Debug.LogError($"TextAdaptive:字体大小缩小到1依然无法适配==>{mText.text}");
                                 break;
                             }
                             time--;
                             if (time <= 0)
                             {
-                                Debug.LogError($"TextAdaptive:超过上限{whileMax}循环次数==>{m_Text.text}");
+                                Debug.LogError($"TextAdaptive:超过上限{WhileMax}循环次数==>{mText.text}");
                                 break;
                             }
                         }
@@ -152,7 +153,7 @@ namespace YangTools
 
         private void OnDisable()
         {
-            m_Text.UnregisterDirtyVerticesCallback(OnTextChange);
+            mText.UnregisterDirtyVerticesCallback(OnTextChange);
         }
         #endregion
 
@@ -167,7 +168,6 @@ namespace YangTools
             //{
             //    mText.text = mText.text.Replace(" ", no_breaking_space);
             //}
-
             isAdaptiveOver = false;
         }
         #endregion

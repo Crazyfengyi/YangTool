@@ -39,8 +39,8 @@ namespace YangTools
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj == null) return;
             
-            PrefabType prefabType = PrefabUtility.GetPrefabType(obj);
-            if (prefabType == PrefabType.PrefabInstance)
+            PrefabAssetType prefabType = PrefabUtility.GetPrefabAssetType(obj);
+            if (prefabType == PrefabAssetType.Regular)
             {
                 if (Selection.instanceIDs.Contains(instanceID))
                 {

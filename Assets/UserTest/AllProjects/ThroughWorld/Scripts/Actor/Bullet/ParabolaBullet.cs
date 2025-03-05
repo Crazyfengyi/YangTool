@@ -37,7 +37,7 @@ public class ParabolaBullet : BulletBase
         var endPos = Data.StartPostion.SetYValue() + direction * distance;
 
         path = new ParabolaPath(Data.StartPostion, endPos, hight);
-        path.isClampStartEnd = true;
+        path.IsClampStartEnd = true;
     }
     public override void OnUpdate()
     {

@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by XCHANGE 
  *All rights reserved. 
  *Author:       YangWork 
@@ -11,7 +11,7 @@ namespace YangTools
     /// <summary>
     /// 循环特效删除--先停止,等播完再删除
     /// </summary>
-    public class LoopEffectDestory : MonoBehaviour
+    public class LoopEffectDestroy : MonoBehaviour
     {
         /// <summary>
         /// 最大生命周期

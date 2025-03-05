@@ -143,11 +143,10 @@ namespace YangTools
         /// <summary>
         /// 加载场景
         /// </summary>
-        public void Load(string _sceneName, LoadSceneMode _sceneLoadType = LoadSceneMode.Single)
+        public void Load(string argSceneName, LoadSceneMode argSceneLoadType = LoadSceneMode.Single)
         {
-            sceneName = _sceneName;
-            sceneLoadType = _sceneLoadType;
-
+            sceneName = argSceneName;
+            sceneLoadType = argSceneLoadType;
             LoadScene();
         }
         /// <summary>

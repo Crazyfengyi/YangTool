@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using Object = UnityEngine.Object;
 
 namespace YangTools
 {
@@ -616,13 +617,12 @@ namespace YangTools
         public void ClearIdleWorldAudioSource()
         {
             HashSet<GameObject> removeSet = new HashSet<GameObject>();
-
             foreach (var audio in worldAudios)
             {
                 if (!audio.Value.isPlaying)
                 {
                     removeSet.Add(audio.Key);
-                    GameObject.Destroy(audio.Value);
+                    Object.Destroy(audio.Value);
                 }
             }
 

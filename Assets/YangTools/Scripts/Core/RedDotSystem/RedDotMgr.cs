@@ -7,73 +7,63 @@ namespace GameMain.RedDot
 {
     public class RedDotMgr
     {
-        private static RedDotMgr _instance;
+        private static RedDotMgr instance;
+        public static RedDotMgr Instance => instance ??= new RedDotMgr();
 
-        public static RedDotMgr Instance => _instance ??= new RedDotMgr();
-
-        private readonly Dictionary<string, RedDotTreeNode> _allTreeNodes;
+        private readonly Dictionary<string, RedDotTreeNode> allTreeNodes;
 
         public char SplitChar { get; private set; }
 
-        public StringBuilder CachedSb { get; private set; }
+        public StringBuilder CachedStrBuilder { get; private set; }
         
-        public RedDotTreeNode Root { get; private set; }
+        public RedDotTreeNode RootNode { get; private set; }
 
-        private readonly HashSet<RedDotTreeNode> _dirtyNodes;
-
-        private readonly List<RedDotTreeNode> _tempDirtyNodes;
-
+        private readonly HashSet<RedDotTreeNode> dirtyNodes;
+        private readonly List<RedDotTreeNode> tempDirtyNodes;
         public Action NodeNumChangeCallback { get; set; }
-
         public Action<RedDotTreeNode, int> NodeValueChangeCallback { get; set; }
-
         public Action CallBackNumberChange { get; set; }
 
         private RedDotMgr()
         {
             SplitChar = '/';
-
-            _allTreeNodes = new Dictionary<string, RedDotTreeNode>();
-
-            Root = new RedDotTreeNode("Root");
-
-            CachedSb = new StringBuilder();
-
-            _dirtyNodes = new HashSet<RedDotTreeNode>();
-
-            _tempDirtyNodes = new List<RedDotTreeNode>();
+            allTreeNodes = new Dictionary<string, RedDotTreeNode>();
+            RootNode = new RedDotTreeNode("Root");
+            CachedStrBuilder = new StringBuilder();
+            dirtyNodes = new HashSet<RedDotTreeNode>();
+            tempDirtyNodes = new List<RedDotTreeNode>();
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (_dirtyNodes.Count == 0)
+            if (dirtyNodes.Count == 0)
             {
                 return;
             }
             
-            _tempDirtyNodes.Clear();
+            tempDirtyNodes.Clear();
 
-            foreach (var node in _dirtyNodes)
+            foreach (var node in dirtyNodes)
             {
-                _tempDirtyNodes.Add(node);
+                tempDirtyNodes.Add(node);
             }
             
-            _dirtyNodes.Clear();
+            dirtyNodes.Clear();
 
-            for (int i = 0; i < _tempDirtyNodes.Count; i++)
+            for (int i = 0; i < tempDirtyNodes.Count; i++)
             {
-                _tempDirtyNodes[i].ChangeValue();
+                tempDirtyNodes[i].ChangeValue();
             }
         }
 
         public void MarkDirtyNode(RedDotTreeNode node)
         {
-            if (node == null || node.Name == Root.Name)
+            if (node == null || node.Name == RootNode.Name)
             {
                 return;
             }
 
-            _dirtyNodes.Add(node);
+            dirtyNodes.Add(node);
         }
 
         private void CheckPathIsValid(string path)
@@ -135,9 +125,7 @@ namespace GameMain.RedDot
             try
             {
                 CheckPathIsValid(path);
-            
                 var node = GetTreeNode(path);
-            
                 node.RemoveAllListener();
             }
             catch (Exception e)
@@ -151,14 +139,12 @@ namespace GameMain.RedDot
             try
             {
                 CheckPathIsValid(path);
-
                 var node = GetTreeNode(path);
-
                 node.ChangeValue(newValue);
             }
             catch (Exception e)
             {
-                //  throw;
+                //throw;
                 Debug.LogError( $"path={path} newValue={newValue} {e}");
             }
         }
@@ -166,9 +152,7 @@ namespace GameMain.RedDot
         public int GetValue(string path)
         {
             CheckPathIsValid(path);
-            
             var node = GetTreeNode(path);
-
             if (node == null)
             {
                 return 0;
@@ -182,47 +166,36 @@ namespace GameMain.RedDot
             try
             {
                 CheckPathIsValid(path);
-
-                var node = _allTreeNodes.GetValueOrDefault(path);
-
+                var node = allTreeNodes.GetValueOrDefault(path);
                 if (node != null)
                 {
                     return node;
                 }
 
-                var cur = Root;
+                var cur = RootNode;
                 int length = path.Length;
-
                 int startIndex = 0;
-
-                for (int i = 0; i < length; i++)
+                for (var i = 0; i < length; i++)
                 {
-                    if (path[i] == SplitChar)
+                    if (path[i] != SplitChar) continue;
+                    if (i == length - 1)
                     {
-                        if (i == length - 1)
-                        {
-                            throw new Exception($"路径不合法, 不能以路径分隔符结尾 path:{path}");
-                        }
-
-                        int endIndex = i - 1;
-
-                        if (endIndex < startIndex)
-                        {
-                            throw new Exception($"路径不合法,不能存在连续的路径分隔符或以路径分隔符开头 path:{path}");
-                        }
-
-                        var child = cur.GetOrAddChild(new RangeString(path, startIndex, endIndex));
-
-                        startIndex = i + 1;
-
-                        cur = child;
+                        throw new Exception($"路径不合法, 不能以路径分隔符结尾 path:{path}");
                     }
+
+                    var endIndex = i - 1;
+                    if (endIndex < startIndex)
+                    {
+                        throw new Exception($"路径不合法,不能存在连续的路径分隔符或以路径分隔符开头 path:{path}");
+                    }
+
+                    var child = cur.GetOrAddChild(new RangeString(path, startIndex, endIndex));
+                    startIndex = i + 1;
+                    cur = child;
                 }
 
                 var target = cur.GetOrAddChild(new RangeString(path, startIndex, length - 1));
-
-                _allTreeNodes.Add(path, target);
-
+                allTreeNodes.Add(path, target);
                 return target;
             }
             catch (Exception e)
@@ -235,35 +208,28 @@ namespace GameMain.RedDot
         public RedDotTreeNode AddTreeNode(string path)
         {
             CheckPathIsValid(path);
-            
             var node = GetTreeNode(path);
-
             return node;
         }
         
         public bool RemoveTreeNode(string path)
         {
             CheckPathIsValid(path);
-            
-            if (_allTreeNodes.ContainsKey(path) == false)
+            if (allTreeNodes.ContainsKey(path) == false)
             {
                 return false;
             }
 
             var node = GetTreeNode(path);
-
-            _allTreeNodes.Remove(path);
-
+            allTreeNodes.Remove(path);
             var flag = node.Parent.RemoveChild(new RangeString(node.Name, 0, node.Name.Length - 1));
-
             return flag;
         }
 
         public void RemoveAllTreeNode()
         {
-            Root.RemoveAllChild();
-            
-            _allTreeNodes.Clear();
+            RootNode.RemoveAllChild();
+            allTreeNodes.Clear();
         }
     }
 }

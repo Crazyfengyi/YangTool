@@ -6,7 +6,7 @@ namespace YangTools.Timer
     /// <summary>
     /// 计时器管理者
     /// </summary>
-    public class YangTimerManager : GameModuleBase
+    public abstract class YangTimerManager : GameModuleBase
     {
         #region 内部调用
 
@@ -135,7 +135,7 @@ namespace YangTools.Timer
         /// <param name="_isScaled">是否受时间影响</param>
         public static YangTimer AddSecondLoopTimer(System.Action callback, System.Func<bool> checkback = null, System.Action overback = null, float delaySecond = float.MinValue, bool _isScaled = true, UnityEngine.Object holder = null)
         {
-            if (delaySecond == float.MinValue)
+            if (Mathf.Approximately(delaySecond, float.MinValue))
             {
                 delaySecond = _isScaled ? Time.deltaTime : Time.unscaledDeltaTime;
             }

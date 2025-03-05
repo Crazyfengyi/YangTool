@@ -1,11 +1,11 @@
-/** 
+/*
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
  *Author:       陈春洋 
  *UnityVersion：2019.3.3f1 
  *创建时间:         2020-06-13 
 */
-//加密是为了防止信息被泄露(用一定算法是信息变为不可读字符串)，而签名是为了防止信息被篡改(用信息里的数据拼接字符串--可以再进行MD5加密)
+//加密是为了防止信息被泄露(用一定算法是信息变为不可读字符串),而签名是为了防止信息被篡改(用信息里的数据拼接字符串--可以再进行MD5加密)
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +20,6 @@ namespace YangTools.Encrypt
         /// MD5加密
         /// </summary>
         /// <param name="input">需要加密的字符串</param>
-        /// <returns></returns>
         public static string Encrypt(string input)
         {
             return Encrypt(input, new UTF8Encoding());
@@ -30,7 +29,6 @@ namespace YangTools.Encrypt
         /// </summary>
         /// <param name="input">需要加密的字符串</param>
         /// <param name="length">加密位数，可选16位与32位</param>
-        /// <returns></returns>
         public static string Encrypt(string input, int length)
         {
             string res = Encrypt(input, new UTF8Encoding());
@@ -45,7 +43,6 @@ namespace YangTools.Encrypt
         /// </summary>
         /// <param name="input">需要加密的字符串</param>
         /// <param name="encode">字符的编码</param>
-        /// <returns></returns>
         public static string Encrypt(string input, Encoding encode)
         {
             if (string.IsNullOrEmpty(input))
@@ -114,16 +111,14 @@ namespace YangTools.Encrypt
         public static string Encrypt(string text)
         {
             DESCryptoServiceProvider dsp = new DESCryptoServiceProvider();
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateEncryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);
-                StreamWriter sWriter = new StreamWriter(crypStream);
-                sWriter.Write(text);
-                sWriter.Flush();
-                crypStream.FlushFinalBlock();
-                memStream.Flush();
-                return Convert.ToBase64String(memStream.GetBuffer(), 0, (int)memStream.Length);
-            }
+            using MemoryStream memStream = new MemoryStream();
+            CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateEncryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);
+            StreamWriter sWriter = new StreamWriter(crypStream);
+            sWriter.Write(text);
+            sWriter.Flush();
+            crypStream.FlushFinalBlock();
+            memStream.Flush();
+            return Convert.ToBase64String(memStream.GetBuffer(), 0, (int)memStream.Length);
         }
         /// <summary>
         /// DES解密
@@ -170,10 +165,10 @@ namespace YangTools.Encrypt
         /// <returns>Encrypt   Decrypt</returns>
         public static KeyValuePair<string, string> GetKeyPair()
         {
-            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-            RSA.ExportCspBlob(false);
-            string publicKey = RSA.ToXmlString(false);
-            string privateKey = RSA.ToXmlString(true);
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.ExportCspBlob(false);
+            string publicKey = rsa.ToXmlString(false);
+            string privateKey = rsa.ToXmlString(true);
             return new KeyValuePair<string, string>(publicKey, privateKey);
         }
         /// <summary>
@@ -186,9 +181,9 @@ namespace YangTools.Encrypt
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(encryptKey);
-            UnicodeEncoding ByteConverter = new UnicodeEncoding();
-            byte[] DataToEncrypt = ByteConverter.GetBytes(content);
-            byte[] resultBytes = rsa.Encrypt(DataToEncrypt, false);
+            UnicodeEncoding byteConverter = new UnicodeEncoding();
+            byte[] dataToEncrypt = byteConverter.GetBytes(content);
+            byte[] resultBytes = rsa.Encrypt(dataToEncrypt, false);
             return Convert.ToBase64String(resultBytes);
         }
         /// <summary>
@@ -200,11 +195,11 @@ namespace YangTools.Encrypt
         public static string Decrypt(string content, string decryptKey)
         {
             byte[] dataToDecrypt = Convert.FromBase64String(content);
-            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-            RSA.FromXmlString(decryptKey);
-            byte[] resultBytes = RSA.Decrypt(dataToDecrypt, false);
-            UnicodeEncoding ByteConverter = new UnicodeEncoding();
-            return ByteConverter.GetString(resultBytes);
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(decryptKey);
+            byte[] resultBytes = rsa.Decrypt(dataToDecrypt, false);
+            UnicodeEncoding byteConverter = new UnicodeEncoding();
+            return byteConverter.GetString(resultBytes);
         }
     }
 }

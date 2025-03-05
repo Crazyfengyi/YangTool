@@ -21,26 +21,26 @@ namespace YangTools.MiniMap
 
         public static MiniMapManager GetMiniMap(int id = 0)
         {
-            MiniMapManager[] allmm = GameObject.FindObjectsOfType<MiniMapManager>();
+            MiniMapManager[] allmm = Object.FindObjectsOfType<MiniMapManager>();
             return allmm[id];
         }
 
         /// <summary>
         /// 输出照片的宽度(以像素为单位)(1 - 4096 px)
         /// </summary>
-        public static int resWidth = 2048;
+        public static readonly int resWidth = 2048;
 
         /// <summary>
         /// 输出照片的高度(以像素为单位)(1 - 4096 px)
         /// </summary>
-        public static int resHeight = 2048;
+        public static readonly int resHeight = 2048;
 
         /// <summary>
         /// 应用的MSAA，可能值为1、2、4和8
         /// </summary>
         public static int msaa = 1;
 
-        private static string _folderPath = "/UGUIMiniMap/Content/Art/SnapShots/";
+        private const string _folderPath = "/UGUIMiniMap/Content/Art/SnapShots/";
         public static string FolderPath => _folderPath;
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace YangTools.MiniMap
         {
             //TODO fix
 #if UNITY_EDITOR && !UNITY_WEBPLAYER
-            //设置rendertexture
+            //设置render texture
             RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
             rt.antiAliasing = msaa;
             rt.filterMode = FilterMode.Trilinear;
@@ -90,8 +90,8 @@ namespace YangTools.MiniMap
             RenderTexture.active = null;
             snapshot.alphaIsTransparency = true;
             byte[] bytes = snapshot.EncodeToPNG();
-            GameObject.DestroyImmediate(rt);
-            GameObject.DestroyImmediate(snapshot);
+            Object.DestroyImmediate(rt);
+            Object.DestroyImmediate(snapshot);
             //保存到文件
             if (!System.IO.Directory.Exists(GetFullFolderPath()))
             {
@@ -100,7 +100,7 @@ namespace YangTools.MiniMap
             }
             string fileName = SnapshotName(resWidth, resHeight);
             System.IO.File.WriteAllBytes(fileName, bytes);
-            Debug.Log(string.Format("Saved snapshot to: {0}", fileName));
+            Debug.Log($"Saved snapshot to: {fileName}");
             fileName = "";
             AssetDatabase.Refresh();
 #endif

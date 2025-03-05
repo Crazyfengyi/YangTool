@@ -20,8 +20,8 @@ using System.Collections.Generic;
 /// </summary>
 public class YangFsmManager : GameModuleBase
 {
-    private readonly Dictionary<string, YangFsm> Fsms = new Dictionary<string, YangFsm>();
-    private readonly List<YangFsm> tempFsms = new List<YangFsm>();
+    private readonly Dictionary<string, YangFsm> fsmDic = new Dictionary<string, YangFsm>();
+    private readonly List<YangFsm> tempFsmList = new List<YangFsm>();
 
     internal override void InitModule()
     {
@@ -29,18 +29,18 @@ public class YangFsmManager : GameModuleBase
 
     internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
     {
-        tempFsms.Clear();
-        if (Fsms.Count <= 0)
+        tempFsmList.Clear();
+        if (fsmDic.Count <= 0)
         {
             return;
         }
 
-        foreach (KeyValuePair<string, YangFsm> fsm in Fsms)
+        foreach (var fsm in fsmDic)
         {
-            tempFsms.Add(fsm.Value);
+            tempFsmList.Add(fsm.Value);
         }
 
-        foreach (YangFsm fsm in tempFsms)
+        foreach (var fsm in tempFsmList)
         {
             fsm.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
         }
@@ -48,13 +48,13 @@ public class YangFsmManager : GameModuleBase
 
     internal override void CloseModule()
     {
-        foreach (KeyValuePair<string, YangFsm> fsm in Fsms)
+        foreach (var fsm in fsmDic)
         {
             fsm.Value.Close();
         }
 
-        Fsms.Clear();
-        tempFsms.Clear();
+        fsmDic.Clear();
+        tempFsmList.Clear();
     }
 
     /// <summary>
@@ -66,15 +66,15 @@ public class YangFsmManager : GameModuleBase
     /// <param name="states">状态集合</param>
     public YangFsm<T> CreateFsm<T>(string name, T handle, List<FsmStateBase<T>> states) where T : class
     {
-        string keyName = name;
-        if (Fsms.ContainsKey(keyName))
+        var keyName = name;
+        if (fsmDic.ContainsKey(keyName))
         {
             Debug.LogError($"重复创建状态机:{keyName}");
             return null;
         }
 
-        YangFsm<T> fsm = YangFsm<T>.Create(keyName, handle, states);
-        Fsms.Add(keyName, fsm);
+        var fsm = YangFsm<T>.Create(keyName, handle, states);
+        fsmDic.Add(keyName, fsm);
         return fsm;
     }
 
@@ -83,12 +83,7 @@ public class YangFsmManager : GameModuleBase
     /// </summary>
     public YangFsm GetFsmFromName(string name)
     {
-        if (Fsms.TryGetValue(name, out YangFsm fsm))
-        {
-            return fsm;
-        }
-
-        return null;
+        return fsmDic.GetValueOrDefault(name);
     }
 }
 
@@ -100,8 +95,7 @@ public abstract class YangFsm
     /// <summary>
     /// 状态机名字
     /// </summary>
-    public string Name { get; protected set; }
-
+    protected string Name { get; set; }
     /// <summary>
     /// 状态机全名字
     /// </summary>
@@ -125,21 +119,17 @@ public class YangFsm<T> : YangFsm
     /// 持有者
     /// </summary>
     public T Handle { get; protected set; }
-
     //所有状态
-    private List<FsmStateBase<T>> allStateList;
-
+    private readonly List<FsmStateBase<T>> allStateList;
     //所有状态
     private Dictionary<Type, FsmStateBase<T>> allStateDic;
-
     //当前状态
     private FsmStateBase<T> currentState;
-
-    private YangFsm(string _name, T _handle, List<FsmStateBase<T>> stateList)
+    private YangFsm(string name, T handle, List<FsmStateBase<T>> stateList)
     {
-        Name = _name;
+        Name = name;
         FullName = typeof(T).Name + Name;
-        Handle = _handle;
+        Handle = handle;
         allStateList = stateList;
     }
 
@@ -179,13 +169,8 @@ public class YangFsm<T> : YangFsm
     /// <typeparam name="TStateType">目标状态</typeparam>
     public bool CurrentStataIsTarget<TStateType>() where TStateType : FsmStateBase<T>
     {
-        Type temp = currentState.GetType();
-        if (typeof(TStateType) == temp)
-        {
-            return true;
-        }
-
-        return false;
+        var temp = currentState.GetType();
+        return typeof(TStateType) == temp;
     }
 
     /// <summary>
@@ -208,12 +193,11 @@ public class YangFsm<T> : YangFsm
             }
 
             Type stateType = state.GetType();
-            if (fsm.allStateDic.ContainsKey(stateType))
+            if (!fsm.allStateDic.TryAdd(stateType, state))
             {
                 throw new Exception($"重复状态:{stateType.Name}");
             }
 
-            fsm.allStateDic.Add(stateType, state);
             state.StateInit(fsm);
         }
 
@@ -229,8 +213,7 @@ public abstract class FsmStateBase<T>
     /// <summary>
     /// 状态机
     /// </summary>
-    public YangFsm<T> Fsm { get; protected set; }
-
+    private YangFsm<T> Fsm { get; set; }
     /// <summary>
     /// 状态初始化
     /// </summary>
@@ -238,28 +221,24 @@ public abstract class FsmStateBase<T>
     {
         Fsm = fsm;
     }
-
     /// <summary>
     /// 状态开始
     /// </summary>
     public virtual void StateStart()
     {
     }
-
     /// <summary>
     /// 状态更新
     /// </summary>
     public virtual void StateUpdate()
     {
     }
-
     /// <summary>
     /// 状态结束
     /// </summary>
     public virtual void StateEnd()
     {
     }
-
     /// <summary>
     /// 切换状态
     /// </summary>

@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by Yang
  *All rights reserved.
  *脚本功能:     #FUNCTION#
@@ -20,19 +20,14 @@ namespace YangTools
     public class AutoSave<T>
     {
         private bool isLoad;
-        private string saveKey;
-
         /// <summary>
         /// 自动保存用的Key
         /// </summary>
-        public string SaveKey => saveKey;
-
-        private bool isOpenAutoSave;
-
+        public string SaveKey { get; }
         /// <summary>
         /// 是否开启自动保存--重复连续更改Value请暂时关闭
         /// </summary>
-        public bool IsOpenAutoSave => isOpenAutoSave;
+        public bool IsOpenAutoSave { get; }
 
         private T value;
 
@@ -44,7 +39,6 @@ namespace YangTools
                 {
                     Load();
                 }
-
                 return value;
             }
             set
@@ -60,20 +54,21 @@ namespace YangTools
         /// <summary>
         /// 默认使用的key:调用方的方法名+文件路径
         /// </summary>
+        /// <param name="saveKey">保存用的Key</param>
         /// <param name="callName">key1:默认为调用方的方法名/字段名</param>
         /// <param name="path">key2:默认为调用方文件路径名</param>
-        public AutoSave(string _saveKey, [CallerMemberName] string callName = "", [CallerFilePath] string path = "")
+        public AutoSave(string saveKey = "", [CallerMemberName] string callName = "", [CallerFilePath] string path = "")
         {
-            if (string.IsNullOrEmpty(_saveKey))
+            if (string.IsNullOrEmpty(saveKey))
             {
-                saveKey = callName + "_" + path.GetHashCode();
+                SaveKey = callName + "_" + path.GetHashCode();
             }
             else
             {
-                saveKey = _saveKey;
+                SaveKey = saveKey;
             }
 
-            isOpenAutoSave = true;
+            IsOpenAutoSave = true;
         }
 
         public void Save()

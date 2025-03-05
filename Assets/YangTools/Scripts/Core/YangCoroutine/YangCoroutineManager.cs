@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -29,7 +29,7 @@ namespace YangTools
             }
         }
         //链表
-        private LinkedList<IEnumerator> coroutineList = new LinkedList<IEnumerator>();
+        private readonly LinkedList<IEnumerator> coroutineList = new LinkedList<IEnumerator>();
         /// <summary>
         /// 开始协程
         /// </summary>
@@ -54,7 +54,7 @@ namespace YangTools
         /// <summary>
         /// 更新
         /// </summary>
-        public void UpdateCorountine()
+        public void UpdateCoroutine()
         {
             LinkedListNode<IEnumerator> node = coroutineList.First;
             while (node != null)
@@ -69,7 +69,7 @@ namespace YangTools
                         result = ie.MoveNext();
                     }
                 }
-                else//// 
+                else
                 {
                     result = ie.MoveNext();
                 }

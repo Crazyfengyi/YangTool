@@ -21,12 +21,12 @@ namespace YangTools
         /// <summary>
         /// 设备线程锁
         /// </summary>
-        private static readonly object padlock = new object();
+        private static readonly object Padlock = new object();
         public static YangDownLoad Instance
         {
             get
             {
-                lock (padlock)
+                lock (Padlock)
                 {
                     if (instance == null)
                     {
@@ -44,9 +44,7 @@ namespace YangTools
         public static IEnumerator DownLoad(string url, Action<byte[]> succeed, Action<string> failed)
         {
             UnityWebRequest webRequest = UnityWebRequest.Get($"{url}");
-
             yield return webRequest.SendWebRequest();
-
             if (webRequest.result is UnityWebRequest.Result.ProtocolError or
                 UnityWebRequest.Result.ConnectionError or 
                 UnityWebRequest.Result.DataProcessingError)

@@ -26,7 +26,7 @@ namespace GameMain.RedDot
             {
                 if (string.IsNullOrEmpty(_fullPath))
                 {
-                    if (Parent == null || Parent == RedDotMgr.Instance.Root)
+                    if (Parent == null || Parent == RedDotMgr.Instance.RootNode)
                     {
                         _fullPath = Name;
                     }

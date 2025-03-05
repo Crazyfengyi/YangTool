@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -31,34 +31,34 @@ namespace YangTools.TaskExtend
         /// <summary>
         /// 设置任务完成的条件
         /// </summary>
-        /// <param name="condition">任务完成的条件</param>
-        public void SetCondition(Predicate<ConditionalTaskBase> condition)
+        /// <param name="argCondition">任务完成的条件</param>
+        public void SetCondition(Predicate<ConditionalTaskBase> argCondition)
         {
-            this.condition = condition;
+            this.condition = argCondition;
         }
         /// <summary>
         /// 设置任务完成时的行为
         /// </summary>
-        /// <param name="completeAction">任务完成时的行为</param>
-        public void SetCompleteAction(Action<ConditionalTaskBase, string> completeAction)
+        /// <param name="argCompleteAction">任务完成时的行为</param>
+        public void SetCompleteAction(Action<ConditionalTaskBase, string> argCompleteAction)
         {
-            this.completeAction = completeAction;
+            this.completeAction = argCompleteAction;
         }
         /// <summary>
         /// 设置任务失败时的行为
         /// </summary>
-        /// <param name="failureAction">任务失败时的行为</param>
-        public void SetFailureAction(Action<ConditionalTaskBase, string> failureAction)
+        /// <param name="argFailureAction">任务失败时的行为</param>
+        public void SetFailureAction(Action<ConditionalTaskBase, string> argFailureAction)
         {
-            this.failureAction = failureAction;
+            this.failureAction = argFailureAction;
         }
         /// <summary>
         /// 设置任务取消时的行为
         /// </summary>
-        /// <param name="cancelAction">任务取消时的行为</param>
-        public void SetCancelAction(Action<ConditionalTaskBase, string> cancelAction)
+        /// <param name="argCancelAction">任务取消时的行为</param>
+        public void SetCancelAction(Action<ConditionalTaskBase, string> argCancelAction)
         {
-            this.cancelAction = cancelAction;
+            this.cancelAction = argCancelAction;
         }
         /// <summary>
         /// 任务开始时调用

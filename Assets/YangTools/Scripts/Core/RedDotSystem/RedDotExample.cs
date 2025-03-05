@@ -7,13 +7,9 @@ namespace GameMain.RedDot
     public class RedDotExample : MonoBehaviour
     {
         private const string Path1 = "First/Second/Test1";
-
         private const string Path2 = "First/Second/Test2";
-        
         private const string Path3 = "First/Second/Third/Test3";
-        
         private const string Path4 = "First/Second/Third/Test4";
-
         private const string ChangeablePath = "First/Second_{0}/Third/x";
         
         private void Start()

@@ -6,55 +6,45 @@ namespace GameMain
 {
     public struct RangeString : IEquatable<RangeString>
     {
-        private readonly string _source;
-
-        private readonly int _startIndex;
-
-        private readonly int _endIndex;
-
-        private readonly int _length;
-
-        private readonly bool _isSourceNullOrEmpty;
-
-        private int _hashCode;
+        private readonly string source;
+        private readonly int startIndex;
+        private readonly int endIndex;
+        private readonly int length;
+        private readonly bool isSourceNullOrEmpty;
+        private int hashCode;
 
         public RangeString(string source, int startIndex, int endIndex)
         {
-            _source = source;
-            
-            _startIndex = startIndex;
-            
-            _endIndex = endIndex;
-
-            _length = endIndex - startIndex + 1;
-            
-            _isSourceNullOrEmpty = string.IsNullOrEmpty(source);
-
-            _hashCode = 0;
+            this.source = source;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            length = endIndex - startIndex + 1;
+            isSourceNullOrEmpty = string.IsNullOrEmpty(source);
+            hashCode = 0;
         }
 
         public bool Equals(RangeString other)
         {
-            var isOtherIsNullOrEmpty = string.IsNullOrEmpty(other._source);
+            var isOtherIsNullOrEmpty = string.IsNullOrEmpty(other.source);
 
-            if (_isSourceNullOrEmpty && isOtherIsNullOrEmpty)
+            if (isSourceNullOrEmpty && isOtherIsNullOrEmpty)
             {
                 return true;
             }
 
-            if (_isSourceNullOrEmpty || isOtherIsNullOrEmpty)
+            if (isSourceNullOrEmpty || isOtherIsNullOrEmpty)
             {
                 return false;
             }
 
-            if (_length != other._length)
+            if (length != other.length)
             {
                 return false;
             }
 
-            for (int i = _startIndex, j = other._startIndex; i < _endIndex; i++, j++)
+            for (int i = startIndex, j = other.startIndex; i < endIndex; i++, j++)
             {
-                if (_source[i] != other._source[j])
+                if (source[i] != other.source[j])
                 {
                     return false;
                 }
@@ -65,27 +55,26 @@ namespace GameMain
 
         public override int GetHashCode()
         {
-            if (_hashCode == 0 && !_isSourceNullOrEmpty)
+            if (hashCode == 0 && !isSourceNullOrEmpty)
             {
-                for (int i = _startIndex; i <= _endIndex; i++)
+                for (int i = startIndex; i <= endIndex; i++)
                 {
-                    _hashCode = 31 * _hashCode + _source[i];
+                    hashCode = 31 * hashCode + source[i];
                 }
             }
 
-            return _hashCode;
+            return hashCode;
         }
 
         public override string ToString()
         {
-            RedDotMgr.Instance.CachedSb.Clear();
-
-            for (int i = _startIndex; i <= _endIndex; i++)
+            RedDotMgr.Instance.CachedStrBuilder.Clear();
+            for (int i = startIndex; i <= endIndex; i++)
             {
-                RedDotMgr.Instance.CachedSb.Append(_source[i]);
+                RedDotMgr.Instance.CachedStrBuilder.Append(source[i]);
             }
 
-            var str = RedDotMgr.Instance.CachedSb.ToString();
+            var str = RedDotMgr.Instance.CachedStrBuilder.ToString();
 
             return str;
         }

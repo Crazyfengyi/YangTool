@@ -12,27 +12,27 @@ namespace YangTools.Timer
         /// <summary>
         /// 计时信息
         /// </summary>
-        public readonly TimerInfo timerInfo;
+        public readonly TimerInfo TimerInfo;
         /// <summary>
         /// 设置自动删除--告诉管理类这个计时器需要删除
         /// </summary>
-        public Action<YangTimer> setAutoDestory;
+        public readonly Action<YangTimer> SetAutoDestroy;
         /// <summary>
         /// 构造函数
         /// </summary>
-        public YangTimer(TimerInfo _timerInfo, Action<YangTimer> manager)
+        public YangTimer(TimerInfo argTimerInfo, Action<YangTimer> manager)
         {
-            setAutoDestory = manager;
-            timerInfo = _timerInfo;
+            SetAutoDestroy = manager;
+            TimerInfo = argTimerInfo;
         }
         /// <summary>
         /// 更新
         /// </summary>
         public void MyUpdate()
         {
-            timerInfo.Update();
+            TimerInfo.Update();
             //更新完后检查是否需要销毁
-            if (timerInfo.needDeatory)
+            if (TimerInfo.NeedDestroy)
             {
                 Destroy();
             }
@@ -42,7 +42,7 @@ namespace YangTools.Timer
         /// </summary>
         public void Destroy()
         {
-            setAutoDestory?.Invoke(this);
+            SetAutoDestroy?.Invoke(this);
         }
     }
     #endregion
@@ -56,45 +56,46 @@ namespace YangTools.Timer
         /// <summary>
         /// 是否需要销毁
         /// </summary>
-        public bool needDeatory = false;
+        public bool NeedDestroy;
         /// <summary>
         /// 回调方法
         /// </summary>
-        public Action callback;
+        public readonly Action Callback;
         /// <summary>
         /// 执行次数
         /// </summary>
-        public int executeCount;
+        public int ExecuteCount;
         /// <summary>
         /// 是否受Unity时间影响
         /// </summary>
-        public bool isScaled;
+        public readonly bool isScaled;
         /// <summary>
         /// 第一帧跳过
         /// </summary>
-        public bool isFirstUpdate = true;
+        public bool IsFirstUpdate;
         /// <summary>
         /// 弱引用-绑定物体
         /// </summary>
-        public System.WeakReference<UnityEngine.Object> weakObject;
+        public readonly System.WeakReference<UnityEngine.Object> WeakObject;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="_callback">回调方法</param>
-        /// <param name="_executeCount">执行次数</param>
-        /// <param name="_isScaled">是否受Unity时间暂停影响</param>
-        /// <param name="_isJump">第一帧跳过</param>
-        public TimerInfo(UnityEngine.Object _object, Action _callback, int _executeCount, bool _isScaled, bool _isJump)
+        /// <param name="argObject"></param>
+        /// <param name="argCallback">回调方法</param>
+        /// <param name="argExecuteCount">执行次数</param>
+        /// <param name="argIsScaled">是否受Unity时间暂停影响</param>
+        /// <param name="argIsJump">第一帧跳过</param>
+        public TimerInfo(UnityEngine.Object argObject, Action argCallback, int argExecuteCount, bool argIsScaled, bool argIsJump)
         {
-            if (_object != null)
+            if (argObject != null)
             {
-                weakObject = new System.WeakReference<UnityEngine.Object>(_object);
+                WeakObject = new System.WeakReference<UnityEngine.Object>(argObject);
             }
-            callback = _callback;
-            executeCount = _executeCount;
-            isScaled = _isScaled;
-            isFirstUpdate = _isJump;
+            Callback = argCallback;
+            ExecuteCount = argExecuteCount;
+            isScaled = argIsScaled;
+            IsFirstUpdate = argIsJump;
         }
 
         /// <summary>
@@ -113,17 +114,17 @@ namespace YangTools.Timer
         /// <summary>
         /// 延迟多少帧
         /// </summary>
-        public int targetFrame;
+        public readonly int TargetFrame;
         /// <summary>
         /// 倒计时帧
         /// </summary>
-        public int currentFrame;
+        public int CurrentFrame;
 
-        public FrameTimerInfo(UnityEngine.Object holder, int _delayFrame, Action _callback, int count = 1, bool _isJump = true)
-            : base(holder, _callback, count, false, _isJump)
+        public FrameTimerInfo(UnityEngine.Object holder, int argDelayFrame, Action argCallback, int count = 1, bool argIsJump = true)
+            : base(holder, argCallback, count, false, argIsJump)
         {
-            targetFrame = _delayFrame;
-            currentFrame = targetFrame;
+            TargetFrame = argDelayFrame;
+            CurrentFrame = TargetFrame;
         }
         /// <summary>
         /// 更新
@@ -131,44 +132,44 @@ namespace YangTools.Timer
         public override void Update()
         {
             //如果需要删除return
-            if (needDeatory) return;
+            if (NeedDestroy) return;
 
             //如果有绑定物体，但绑定物体已经没有存活
-            if (base.weakObject != null && !base.weakObject.TryGetTarget(out UnityEngine.Object target))
+            if (base.WeakObject != null && !base.WeakObject.TryGetTarget(out UnityEngine.Object target))
             {
-                base.needDeatory = true;
+                base.NeedDestroy = true;
                 return;
             }
             //第一帧跳过
-            if (base.isFirstUpdate)
+            if (base.IsFirstUpdate)
             {
-                base.isFirstUpdate = false;
+                base.IsFirstUpdate = false;
                 return;
             }
 
             //时间流逝
-            currentFrame--;
+            CurrentFrame--;
             //如果倒计时为0
             if (IsTimerComplete())
             {
-                callback?.Invoke();
+                Callback?.Invoke();
 
                 //如果是无限循环
-                if (executeCount == int.MinValue)
+                if (ExecuteCount == int.MinValue)
                 {
-                    currentFrame = targetFrame;
+                    CurrentFrame = TargetFrame;
                     return;
                 }
                 else
                 {
-                    executeCount--;
-                    if (executeCount <= 0)
+                    ExecuteCount--;
+                    if (ExecuteCount <= 0)
                     {
-                        base.needDeatory = true;
+                        base.NeedDestroy = true;
                     }
                     else
                     {
-                        currentFrame = targetFrame;
+                        CurrentFrame = TargetFrame;
                     }
                 }
             }
@@ -180,7 +181,7 @@ namespace YangTools.Timer
         /// <returns></returns>
         public bool IsTimerComplete()
         {
-            return currentFrame <= 0f;
+            return CurrentFrame <= 0f;
         }
     }
     /// <summary>
@@ -191,47 +192,47 @@ namespace YangTools.Timer
         /// <summary>
         /// 延时多少秒
         /// </summary>
-        public float delaySecond;
+        public readonly float DelaySecond;
         /// <summary>
         /// 倒计时(秒)
         /// </summary>
-        public float currentSecond;
+        public float CurrentSecond;
         //======下面是无限循环用的=======
         /// <summary>
         /// 是无限循环加条件检查模式
         /// </summary>
-        private bool isInfiniteLoop;
+        private readonly bool isInfiniteLoop;
         /// <summary>
         /// 检查状态(检查是否需要结束)
         /// </summary>
-        private Func<bool> checkState;
+        private readonly Func<bool> checkState;
         /// <summary>
         /// 结束回调
         /// </summary>
-        private Action overBack;
+        private readonly Action overBack;
         //=======THE END===============
         /// <summary>
         /// 普通计时器
         /// </summary>
-        public SecondTimerInfo(UnityEngine.Object holder, float _delayTime, Action _callback, int count = 1, bool _isScaled = true, bool _isJump = true)
-            : base(holder, _callback, count, _isScaled, _isJump)
+        public SecondTimerInfo(UnityEngine.Object holder, float argDelayTime, Action argCallback, int count = 1, bool argIsScaled = true, bool argIsJump = true)
+            : base(holder, argCallback, count, argIsScaled, argIsJump)
         {
-            delaySecond = _delayTime;
-            currentSecond = delaySecond;
+            DelaySecond = argDelayTime;
+            CurrentSecond = DelaySecond;
             isInfiniteLoop = false;
         }
         /// <summary>
         /// 无限循环用
         /// </summary>
-        public SecondTimerInfo(UnityEngine.Object holder, float _delayTime, Action _callback, Func<bool> _checkState, Action _overBack, bool _isScaled = true, bool _isJump = true)
-         : base(holder, _callback, int.MinValue, _isScaled, _isJump)
+        public SecondTimerInfo(UnityEngine.Object holder, float argDelayTime, Action argCallback, Func<bool> argCheckState, Action argOverBack, bool argIsScaled = true, bool argIsJump = true)
+         : base(holder, argCallback, int.MinValue, argIsScaled, argIsJump)
         {
-            delaySecond = _delayTime;
-            currentSecond = delaySecond;
+            DelaySecond = argDelayTime;
+            CurrentSecond = DelaySecond;
 
             isInfiniteLoop = true;
-            checkState = _checkState;
-            overBack = _overBack;
+            checkState = argCheckState;
+            overBack = argOverBack;
         }
         /// <summary>
         /// 更新
@@ -239,19 +240,19 @@ namespace YangTools.Timer
         public override void Update()
         {
             //如果需要删除return
-            if (needDeatory) return;
+            if (NeedDestroy) return;
 
             //如果有绑定物体，但绑定物体已经没有存活
-            if (base.weakObject != null && !base.weakObject.TryGetTarget(out UnityEngine.Object target))
+            if (base.WeakObject != null && !base.WeakObject.TryGetTarget(out UnityEngine.Object target))
             {
-                base.needDeatory = true;
+                base.NeedDestroy = true;
                 return;
             }
 
             //第一帧跳过
-            if (base.isFirstUpdate)
+            if (base.IsFirstUpdate)
             {
-                base.isFirstUpdate = false;
+                base.IsFirstUpdate = false;
                 return;
             }
 
@@ -264,7 +265,7 @@ namespace YangTools.Timer
                     //检查是否需要结束
                     if (checkState.Invoke())
                     {
-                        base.needDeatory = true;
+                        base.NeedDestroy = true;
                         overBack?.Invoke();
                         return;
                     }
@@ -274,34 +275,34 @@ namespace YangTools.Timer
             //时间流逝
             if (base.isScaled)
             {
-                currentSecond -= Time.deltaTime;
+                CurrentSecond -= Time.deltaTime;
             }
             else
             {
-                currentSecond -= Time.unscaledDeltaTime;
+                CurrentSecond -= Time.unscaledDeltaTime;
             }
 
             //如果倒计时为0
             if (IsTimerComplete())
             {
-                callback?.Invoke();
+                Callback?.Invoke();
 
                 //如果是无限循环
-                if (executeCount == int.MinValue)
+                if (ExecuteCount == int.MinValue)
                 {
-                    currentSecond = delaySecond;
+                    CurrentSecond = DelaySecond;
                     return;
                 }
                 else
                 {
-                    executeCount--;
-                    if (executeCount <= 0)
+                    ExecuteCount--;
+                    if (ExecuteCount <= 0)
                     {
-                        base.needDeatory = true;
+                        base.NeedDestroy = true;
                     }
                     else
                     {
-                        currentSecond = delaySecond;
+                        CurrentSecond = DelaySecond;
                     }
                 }
             }
@@ -312,7 +313,7 @@ namespace YangTools.Timer
         /// <returns></returns>
         public bool IsTimerComplete()
         {
-            return currentSecond <= 0f;
+            return CurrentSecond <= 0f;
         }
     }
     #endregion

@@ -25,7 +25,7 @@ namespace YangTools
         static HierarchyShow()
         {
             //开关注册回调
-            if (SettingInfo.GetSO<YangSettingSO>().isOpenHierarchyShowSetting)
+            if (SettingInfo.GetSo<YangSettingSO>().isOpenHierarchyShowSetting)
             {
                 EditorApplication.hierarchyWindowItemOnGUI += HandleHierarchyWindowItemOnGUI;
             }

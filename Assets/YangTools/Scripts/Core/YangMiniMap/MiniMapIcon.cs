@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace YangTools.MiniMap
@@ -10,19 +11,20 @@ namespace YangTools.MiniMap
     {
         [LabelText("图标")]
         public Image icon;
-        [LabelText("死亡图标")]
-        public Sprite DeathIcon;
+        [FormerlySerializedAs("DeathIcon")] [LabelText("死亡图标")]
+        public Sprite deathIcon;
         [LabelText("文字信息")]
         public TMP_Text text;
+        [FormerlySerializedAs("CircleAreaRect")]
         [LabelText("范围显示")]
         [SerializeField]
-        private RectTransform CircleAreaRect;
+        private RectTransform circleAreaRect;
         [LabelText("延时删除")]
         public float destroyDelay = 5f;
 
         private float showDelay = 0.1f;
         private CanvasGroup canvasGroup;
-        private MiniMapMaskHelper MaskHelper;
+        private MiniMapMaskHelper maskHelper;
 
         private void Awake()
         {
@@ -38,9 +40,9 @@ namespace YangTools.MiniMap
             // m_CanvasGroup.ignoreParentGroups = true;
             canvasGroup.alpha = 0;
 
-            if (CircleAreaRect != null)
+            if (circleAreaRect != null)
             {
-                CircleAreaRect.gameObject.SetActive(false);
+                circleAreaRect.gameObject.SetActive(false);
             }
         }
 
@@ -63,20 +65,20 @@ namespace YangTools.MiniMap
         /// 显示攻击圆形范围
         /// </summary>
         /// <param name="radius">半径</param>
-        /// <param name="AreaColor">颜色</param>
-        public RectTransform SetCircleArea(float radius, Color AreaColor)
+        /// <param name="areaColor">颜色</param>
+        public RectTransform SetCircleArea(float radius, Color areaColor)
         {
-            if (CircleAreaRect == null) { return null; }
+            if (circleAreaRect == null) { return null; }
 
-            MaskHelper = transform.root.GetComponentInChildren<MiniMapMaskHelper>();
-            MaskHelper.SetMaskedIcon(CircleAreaRect);
+            maskHelper = transform.root.GetComponentInChildren<MiniMapMaskHelper>();
+            maskHelper.SetMaskedIcon(circleAreaRect);
             radius = radius * 10;
             radius = radius * MiniMapUtils.GetMiniMap().iconMultiplier;
             Vector2 tempRadius = new Vector2(radius, radius);
-            CircleAreaRect.sizeDelta = tempRadius;
-            CircleAreaRect.GetComponent<Image>().CrossFadeColor(AreaColor, 1, true, true);
-            CircleAreaRect.gameObject.SetActive(true);
-            return CircleAreaRect;
+            circleAreaRect.sizeDelta = tempRadius;
+            circleAreaRect.GetComponent<Image>().CrossFadeColor(areaColor, 1, true, true);
+            circleAreaRect.gameObject.SetActive(true);
+            return circleAreaRect;
         }
 
         /// <summary>
@@ -84,8 +86,8 @@ namespace YangTools.MiniMap
         /// </summary>
         public void HideCircleArea()
         {
-            CircleAreaRect.SetParent(transform);
-            CircleAreaRect.gameObject.SetActive(false);
+            circleAreaRect.SetParent(transform);
+            circleAreaRect.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -113,17 +115,17 @@ namespace YangTools.MiniMap
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="inmediate">立即删除</param>
+        /// <param name="immediate">立即删除</param>
         /// <param name="deathSprite">死亡图标</param>
-        public void DestroyIcon(bool inmediate, Sprite deathSprite = null)
+        public void DestroyIcon(bool immediate, Sprite deathSprite = null)
         {
-            if (inmediate)
+            if (immediate)
             {
                 Destroy(gameObject);
             }
             else
             {
-                icon.sprite = deathSprite == null ? DeathIcon : deathSprite;
+                icon.sprite = deathSprite == null ? deathIcon : deathSprite;
                 Destroy(gameObject, destroyDelay);
             }
         }

@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by Test
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -9,6 +9,7 @@
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace YangTools.MiniMap
 {
@@ -49,40 +50,44 @@ namespace YangTools.MiniMap
 
         [LabelText("是否可以交互")]
         public bool isInteractable = true;
+        [FormerlySerializedAs("InfoItem")]
         [LabelText("显示信息")]
         [TextArea(2, 2)]
-        public string InfoItem = "Info Icon here";
-        [LabelText("图标限制在屏幕内")]
-        public bool OffScreen = true;
-        [LabelText("对象销毁删除图标")]
-        public bool DestroyWithObject = false;
+        public string infoItem = "Info Icon here";
+        [FormerlySerializedAs("OffScreen")] [LabelText("图标限制在屏幕内")]
+        public bool offScreen = true;
+        [FormerlySerializedAs("DestroyWithObject")] [LabelText("对象销毁删除图标")]
+        public bool destroyWithObject = false;
+        [FormerlySerializedAs("BorderOffScreen")]
         [LabelText("屏幕边框")]
         [Range(0, 5)]
-        public float BorderOffScreen = 0.01f;
+        public float borderOffScreen = 0.01f;
 
+        [FormerlySerializedAs("OffScreenSize")]
         [LabelText("屏幕外大小")]
         [Range(1, 50)]
-        public float OffScreenSize = 10;
+        public float offScreenSize = 10;
         [LabelText("是N图标")]
         public bool isNMark = false;
+        [FormerlySerializedAs("RenderDelay")]
         [LabelText("图标延时显示时间")]
         [Range(0, 3)]
-        public float RenderDelay = 0.3f;
+        public float renderDelay = 0.3f;
 
         /// <summary>
         /// uiIcon出现效果
         /// </summary>
-        public UIIconShowEffect m_Effect = UIIconShowEffect.None;
+        [FormerlySerializedAs("m_Effect")] 
+        public UIIconShowEffect mEffect = UIIconShowEffect.None;
 
         //UI脚本
-        private GameObject UIIconObject;
-
+        private GameObject uiIconObject;
         private MiniMapIcon miniMapIcon;
 
-        private RectTransform MapUIRoot;
-        private RectTransform CircleAreaRect;
+        private RectTransform mapUIRoot;
+        private RectTransform circleAreaRect;
         private Vector3 position;
-        private MiniMapManager MiniMap;
+        private MiniMapManager miniMap;
 
         public Vector3 TargetPosition
         {
@@ -95,7 +100,7 @@ namespace YangTools.MiniMap
 
         private void Start()
         {
-            MiniMap = MiniMapManager.Instance;
+            miniMap = MiniMapManager.Instance;
 
             if (MiniMapManager.MapUIRoot != null)
             {
@@ -113,28 +118,26 @@ namespace YangTools.MiniMap
         private void CreateIcon()
         {
             //实例化UI在Canvas上
-            UIIconObject = Instantiate(uiPrefab) as GameObject;
-            MapUIRoot = MiniMapManager.MapUIRoot;
-            miniMapIcon = UIIconObject.GetComponent<MiniMapIcon>();
+            uiIconObject = Instantiate(uiPrefab, mapUIRoot.transform, false);
+            mapUIRoot = MiniMapManager.MapUIRoot;
+            miniMapIcon = uiIconObject.GetComponent<MiniMapIcon>();
 
             if (icon != null)
             {
                 miniMapIcon.SetIcon(icon, iconColor);
             }
 
-            UIIconObject.transform.SetParent(MapUIRoot.transform, false);
-            UIIconObject.GetComponent<CanvasGroup>().interactable = isInteractable;
+            uiIconObject.GetComponent<CanvasGroup>().interactable = isInteractable;
             miniMapIcon.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
             if (Target == null) { Target = this.GetComponent<Transform>(); }
-
             UIIconStartShowEffect();
 
-            miniMapIcon.DelayStartShow(RenderDelay);
-            miniMapIcon.SetTextShow(InfoItem);
+            miniMapIcon.DelayStartShow(renderDelay);
+            miniMapIcon.SetTextShow(infoItem);
             if (ShowCircleArea)
             {
-                CircleAreaRect = miniMapIcon.SetCircleArea(CircleAreaRadius, CircleAreaColor);
+                circleAreaRect = miniMapIcon.SetCircleArea(CircleAreaRadius, CircleAreaColor);
             }
         }
 
@@ -143,13 +146,11 @@ namespace YangTools.MiniMap
         /// </summary>
         private void UIIconStartShowEffect()
         {
-            switch (m_Effect)
+            switch (mEffect)
             {
                 case UIIconShowEffect.Fade:
                     //TODO:动画
-
                     break;
-
                 case UIIconShowEffect.None:
                 default:
                     break;
@@ -163,29 +164,29 @@ namespace YangTools.MiniMap
 
             if (isNMark)
             {
-                if (MiniMap.Target != null)
+                if (miniMap.Target != null)
                 {
-                    transform.position = MiniMap.Target.TransformPoint((MiniMap.Target.forward) * 100);
+                    transform.position = miniMap.Target.TransformPoint((miniMap.Target.forward) * 100);
                 }
             }
             //获得UIIocn的Rect
             RectTransform iconRectTran = miniMapIcon.GetComponent<RectTransform>();
             //添加偏移的世界坐标
-            Vector3 CorrectWorldPosition = TargetPosition + OffSet;
+            Vector3 correctWorldPosition = TargetPosition + OffSet;
             //目标位置->视口坐标
-            Vector2 vp2 = MiniMapManager.MiniMapCamera.WorldToViewportPoint(CorrectWorldPosition);
+            Vector2 vp2 = MiniMapManager.MiniMapCamera.WorldToViewportPoint(correctWorldPosition);
             //视口坐标->屏幕坐标/局部坐标(相对于根节点)
-            position = new Vector2((vp2.x * MapUIRoot.sizeDelta.x) - (MapUIRoot.sizeDelta.x * 0.5f),
-                (vp2.y * MapUIRoot.sizeDelta.y) - (MapUIRoot.sizeDelta.y * 0.5f));
+            position = new Vector2((vp2.x * mapUIRoot.sizeDelta.x) - (mapUIRoot.sizeDelta.x * 0.5f),
+                (vp2.y * mapUIRoot.sizeDelta.y) - (mapUIRoot.sizeDelta.y * 0.5f));
             //未限制的坐标
-            Vector2 UnClampPosition = position;
+            Vector2 unClampPosition = position;
             //如果显示在屏幕外
-            if (OffScreen)
+            if (offScreen)
             {
                 //计算移动UI的最大和最小距离
                 //这个限制在MapUIRoot大小边界内
-                position.x = Mathf.Clamp(position.x, -((MapUIRoot.sizeDelta.x * 0.5f) - BorderOffScreen), ((MapUIRoot.sizeDelta.x * 0.5f) - BorderOffScreen));
-                position.y = Mathf.Clamp(position.y, -((MapUIRoot.sizeDelta.y * 0.5f) - BorderOffScreen), ((MapUIRoot.sizeDelta.y * 0.5f) - BorderOffScreen));
+                position.x = Mathf.Clamp(position.x, -((mapUIRoot.sizeDelta.x * 0.5f) - borderOffScreen), ((mapUIRoot.sizeDelta.x * 0.5f) - borderOffScreen));
+                position.y = Mathf.Clamp(position.y, -((mapUIRoot.sizeDelta.y * 0.5f) - borderOffScreen), ((mapUIRoot.sizeDelta.y * 0.5f) - borderOffScreen));
             }
 
             //重新计算UI的位置，确定是否脱离屏幕如果脱离屏幕缩小大小
@@ -211,7 +212,7 @@ namespace YangTools.MiniMap
                     screenPos.x = 0.5f + (cameraRelativeDir.x * MiniMapManager.Instance.CompassSize)/*/ Camera.main.aspect*/;
                     screenPos.y = 0.5f + (cameraRelativeDir.y * MiniMapManager.Instance.CompassSize);
                     position = screenPos;
-                    size = OffScreenSize;
+                    size = offScreenSize;
                 }
                 else
                 {
@@ -220,10 +221,10 @@ namespace YangTools.MiniMap
             }
             else
             {
-                if (position.x == (MapUIRoot.sizeDelta.x * 0.5f) - BorderOffScreen || position.y == (MapUIRoot.sizeDelta.y * 0.5f) - BorderOffScreen ||
-                    position.x == -(MapUIRoot.sizeDelta.x * 0.5f) - BorderOffScreen || -position.y == (MapUIRoot.sizeDelta.y * 0.5f) - BorderOffScreen)
+                if (Mathf.Approximately(position.x, (mapUIRoot.sizeDelta.x * 0.5f) - borderOffScreen) || Mathf.Approximately(position.y, (mapUIRoot.sizeDelta.y * 0.5f) - borderOffScreen) ||
+                    Mathf.Approximately(position.x, -(mapUIRoot.sizeDelta.x * 0.5f) - borderOffScreen) || Mathf.Approximately(-position.y, (mapUIRoot.sizeDelta.y * 0.5f) - borderOffScreen))
                 {
-                    size = OffScreenSize;
+                    size = offScreenSize;
                 }
                 else
                 {
@@ -232,12 +233,12 @@ namespace YangTools.MiniMap
             }
             //应用位置到UIIcon
             iconRectTran.anchoredPosition = position;
-            if (CircleAreaRect != null) { CircleAreaRect.anchoredPosition = UnClampPosition; }
+            if (circleAreaRect != null) { circleAreaRect.anchoredPosition = unClampPosition; }
             //平滑过渡改变大小
-            float CorrectSize = size * MiniMap.iconMultiplier;
-            iconRectTran.sizeDelta = Vector2.Lerp(iconRectTran.sizeDelta, new Vector2(CorrectSize, CorrectSize), Time.deltaTime * 8);
+            float correctSize = size * miniMap.iconMultiplier;
+            iconRectTran.sizeDelta = Vector2.Lerp(iconRectTran.sizeDelta, new Vector2(correctSize, correctSize), Time.deltaTime * 8);
 
-            if (MiniMap.RotationAlwaysFront)
+            if (miniMap.RotationAlwaysFront)
             {
                 //这样图标的旋转就会保持不变(对于正面)
                 Quaternion r = Quaternion.identity;
@@ -247,7 +248,7 @@ namespace YangTools.MiniMap
             else
             {
                 //这样旋转图标将取决于目标
-                Vector3 vre = MiniMap.transform.eulerAngles;
+                Vector3 vre = miniMap.transform.eulerAngles;
                 Vector3 re = Vector3.zero;
                 //Fix player rotation for apply to el icon.
                 //修复玩家旋转为了保存到icon
@@ -260,8 +261,8 @@ namespace YangTools.MiniMap
         /// <summary>
         /// 删除图标
         /// </summary>
-        /// <param name="inmediate"></param>
-        public void DestroyIcon(bool inmediate)
+        /// <param name="immediate">理解删除</param>
+        public void DestroyIcon(bool immediate)
         {
             if (miniMapIcon == null)
             {
@@ -269,37 +270,37 @@ namespace YangTools.MiniMap
                 return;
             }
 
-            if (DeathIcon == null || inmediate)
+            if (DeathIcon == null || immediate)
             {
-                miniMapIcon.DestroyIcon(inmediate);
+                miniMapIcon.DestroyIcon(immediate);
             }
             else
             {
-                miniMapIcon.DestroyIcon(inmediate, DeathIcon);
+                miniMapIcon.DestroyIcon(false, DeathIcon);
             }
         }
 
         /// <summary>
         /// 设置图标
         /// </summary>
-        public void SetIcon(Sprite icon)
+        public void SetIcon(Sprite argIcon)
         {
             if (miniMapIcon == null)
             {
                 Debug.LogWarning("设置图标失败");
                 return;
             }
-            miniMapIcon.SetIcon(icon);
+            miniMapIcon.SetIcon(argIcon);
         }
 
         /// <summary>
         /// 设置攻击范围
         /// </summary>
         /// <param name="radius">半径</param>
-        /// <param name="AreaColor">颜色</param>
-        public void SetCircleArea(float radius, Color AreaColor)
+        /// <param name="areaColor">颜色</param>
+        public void SetCircleArea(float radius, Color areaColor)
         {
-            CircleAreaRect = miniMapIcon.SetCircleArea(radius, AreaColor);
+            circleAreaRect = miniMapIcon.SetCircleArea(radius, areaColor);
         }
 
         /// <summary>
@@ -316,9 +317,9 @@ namespace YangTools.MiniMap
         /// </summary>
         public void ShowItem()
         {
-            if (UIIconObject != null)
+            if (uiIconObject != null)
             {
-                UIIconObject.SetActive(true);
+                uiIconObject.SetActive(true);
                 miniMapIcon.SetVisibleAlpha();
             }
             else
@@ -332,9 +333,9 @@ namespace YangTools.MiniMap
         /// </summary>
         public void HideIcon()
         {
-            if (UIIconObject != null)
+            if (uiIconObject != null)
             {
-                UIIconObject.SetActive(false);
+                uiIconObject.SetActive(false);
             }
             else
             {
@@ -344,7 +345,7 @@ namespace YangTools.MiniMap
 
         private void OnDestroy()
         {
-            if (DestroyWithObject)
+            if (destroyWithObject)
             {
                 DestroyIcon(true);
             }

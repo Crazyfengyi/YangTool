@@ -1,7 +1,7 @@
-/** 
+/* 
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
- *脚本功能:     #FUNCTION# 
+ *脚本功能:     #FUNCTION#
  *Author:       陈春洋 
  *UnityVersion：2019.3.3f1 
  *创建时间:         2020-06-14 
@@ -11,34 +11,29 @@ using System.Collections.Generic;
 namespace YangTools
 {
     /// <summary>
-    /// 事件监听器
+    /// 事件管理器
     /// </summary>
-    public class YangToolEventManager
+    public class YangEventManager
     {
         /// <summary>
         /// 单例
         /// </summary>
-        private static YangToolEventManager instance;
+        private static YangEventManager instance;
         /// <summary>
         /// 线程锁
         /// </summary>
-        private static object eventLock = new object();
+        private static readonly object EventLock = new object();
         /// <summary>
         /// 单例
         /// </summary>
-        public static YangToolEventManager Instance
+        public static YangEventManager Instance
         {
             get
             {
-                if (instance == null)
+                if (instance != null) return instance;
+                lock (EventLock)
                 {
-                    lock (eventLock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new YangToolEventManager();
-                        }
-                    }
+                    instance ??= new YangEventManager();
                 }
                 return instance;
             }
@@ -48,23 +43,21 @@ namespace YangTools
         /// <summary>
         /// 事件字典
         /// </summary>
-        public readonly Dictionary<string, List<EventInspector>> eventDic = new Dictionary<string, List<EventInspector>>();
+        private readonly Dictionary<string, List<EventInfo>> eventDic = new Dictionary<string, List<EventInfo>>();
 
         /// <summary>
-        /// 添加事件监听
+        /// 添加事件
         /// </summary>
-        /// <param name="eventListener"></param>
-        public void Add(EventInspector eventListener)
+        public void Add(EventInfo eventListener)
         {
-            if (eventDic.TryGetValue(eventListener.eventName, out List<EventInspector> toAdd))
+            if (eventDic.TryGetValue(eventListener.EventName, out var toAdd))
             {
                 toAdd.Add(eventListener);
             }
             else
             {
-                toAdd = new List<EventInspector>();
-                toAdd.Add(eventListener);
-                eventDic.Add(eventListener.eventName, toAdd);
+                toAdd = new List<EventInfo> {eventListener};
+                eventDic.Add(eventListener.EventName, toAdd);
             }
         }
 
@@ -73,25 +66,22 @@ namespace YangTools
         /// </summary>
         public void Remove(string eventName)
         {
-            if (eventDic.TryGetValue(eventName, out List<EventInspector> list))
-            {
-                eventDic.Remove(eventName);
-            }
+            eventDic.Remove(eventName, out List<EventInfo> list);
         }
 
         /// <summary>
-        /// 移除一个监听
+        /// 移除事件
         /// </summary>
-        public void Remove(EventInspector eventInspector)
+        public void Remove(EventInfo eventInfo)
         {
             foreach (var i in eventDic)
             {
-                i.Value.Remove(eventInspector);
+                i.Value.Remove(eventInfo);
             }
         }
 
         /// <summary>
-        /// 移除一个对象上的监听
+        /// 移除对象绑定的事件
         /// </summary>
         public void Remove(UnityEngine.Object target)
         {
@@ -99,42 +89,38 @@ namespace YangTools
             {
                 for (int k = i.Value.Count - 1; k >= 0; k--)
                 {
-                    EventInspector v = i.Value[k];
-                    if (ReferenceEquals(v.Holder, target))
-                    {
-                        i.Value.RemoveAt(k);
-                        return;
-                    }
+                    EventInfo v = i.Value[k];
+                    if (!ReferenceEquals(v.Holder, target)) continue;
+                    i.Value.RemoveAt(k);
+                    return;
                 }
             }
         }
 
-        /// <summary> 发送事件 </summary>
+        /// <summary>
+        /// 发送事件
+        /// </summary>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventArgs">参数列表</param>
         public void Send(string eventName, params object[] eventArgs)
         {
-            if (eventDic.TryGetValue(eventName, out List<EventInspector> list))
+            if (eventDic.TryGetValue(eventName, out var list))
             {
-                EventInfo e = new EventInfo(eventName, eventArgs);
-
+                EventData e = new EventData(eventName, eventArgs);
                 for (int i = list.Count - 1; i >= 0; i--)
                 {
-                    EventInspector item = list[i];
-
-                    if (item.isEnabled)
+                    EventInfo item = list[i];
+                    if (!item.IsEnabled) continue;
+                    if (!item.Invoke(e))
                     {
-                        if (!item.Invoke(e))
-                        {
-                            list.RemoveAt(i);
-                        }
+                        list.RemoveAt(i);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// 清理所有事件监听器
+        /// 清理所有事件
         /// </summary>
         public void Clear()
         {
@@ -150,103 +136,97 @@ namespace YangTools
     /// </summary>
     /// <typeparam name="T">参数类型</typeparam>
     /// <param name="arg">参数</param>
-    public delegate void EventCallback<T>(T arg);
+    public delegate void EventCallback<in T>(T arg);
 
     /// <summary>
-    /// 事件检查器
+    /// 事件信息
     /// </summary>
-    //[System.Serializable]
-    public class EventInspector
+    [System.Serializable]
+    public class EventInfo
     {
         /// <summary>
         /// 事件名称
         /// </summary>
-        public string eventName;
+        public readonly string EventName;
         /// <summary>
         /// 事件
         /// </summary>
-        public EventCallback<EventInfo> callback;
+        private readonly EventCallback<EventData> callback;
         /// <summary>
         /// 弱引用绑定的物体
         /// </summary>
-        public System.WeakReference<UnityEngine.Object> weakObjectTagrt;
+        private readonly System.WeakReference<UnityEngine.Object> weakObjectTarget;
         /// <summary>
-        /// 是否可以使用事件--弱引用目标是否存活(存活--可以使用，不存活--不可使用)
+        /// 是否可以使用---弱引用目标是否存活(存活--可以使用,不存活--不可使用)
         /// </summary>
         public bool CanUse
         {
             get
             {
-                UnityEngine.Object nowObj = null;
-                weakObjectTagrt.TryGetTarget(out nowObj);
+                weakObjectTarget.TryGetTarget(out var nowObj);
                 return nowObj != null;
             }
         }
         /// <summary>
-        /// 获取绑定的物体
+        /// 绑定的物体
         /// </summary>
         public UnityEngine.Object Holder
         {
             get
             {
-                UnityEngine.Object nowObj = null;
-                weakObjectTagrt.TryGetTarget(out nowObj);
+                weakObjectTarget.TryGetTarget(out var nowObj);
                 return nowObj;
             }
         }
         /// <summary>
         /// 可用状态
         /// </summary>
-        public bool isEnabled = true;
-
+        public readonly bool IsEnabled = true;
         /// <summary>
         /// 创建事件检查者
         /// </summary>
-        /// <param name="_holder">(谁持有检查器)检查器绑定某个物体上(只要继承自UnityObject就行了),null表示全局监听</param>
-        /// <param name="_eventName">事件名称</param>
-        /// <param name="_eventCallback">事件回调</param>
-        public EventInspector(UnityEngine.Object _holder, string _eventName, EventCallback<EventInfo> _eventCallback)
+        /// <param name="holder">(谁持有检查器)检查器绑定某个物体上(只要继承自UnityObject就行了),null表示全局监听</param>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="eventCallback">事件回调</param>
+        public EventInfo(UnityEngine.Object holder, string eventName, EventCallback<EventData> eventCallback)
         {
-            eventName = _eventName;
-            weakObjectTagrt = new System.WeakReference<UnityEngine.Object>(_holder);
-            callback = _eventCallback;
+            EventName = eventName;
+            weakObjectTarget = new System.WeakReference<UnityEngine.Object>(holder);
+            callback = eventCallback;
         }
-
         /// <summary>
-        /// 调用事件（返回调用是否成功）
+        /// 调用事件
         /// </summary>
-        public bool Invoke(EventInfo e)
+        public bool Invoke(EventData data)
         {
-            if (Holder == null) return false;
-
-            callback?.Invoke(e);
+            if (!CanUse) return false;
+            callback?.Invoke(data);
             return true;
         }
     }
 
     /// <summary>
-    /// 事件信息
+    /// 事件数据
     /// </summary>
-    public class EventInfo
+    public class EventData
     {
         /// <summary>
         /// 事件名称
         /// </summary>
-        public string name { get; private set; }
+        public string Name { get; private set; }
         /// <summary>
         /// 事件参数
         /// </summary>
-        public object[] args { get; private set; }
-
+        public object[] Args { get; private set; }
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="_name">事件名称</param>
-        /// <param name="_args">事件参数</param>
-        public EventInfo(string _name, params object[] _args)
+        /// <param name="name">事件名称</param>
+        /// <param name="args">事件参数</param>
+        public EventData(string name, params object[] args)
         {
-            name = _name;
-            args = _args;
+            Name = name;
+            Args = args;
         }
     }
     #endregion

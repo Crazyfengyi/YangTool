@@ -18,43 +18,44 @@ namespace YangTools.Extend
         /// <summary>
         /// 添加事件监听
         /// </summary>
-        /// <param name="_object">绑定物体</param>
-        /// <param name="_eventName">事件名称</param>
-        /// <param name="_eventCallback">事件回调</param>
-        public static EventInspector AddEventListener(this UnityEngine.Object _object, string _eventName,
-            EventCallback<EventInfo> _eventCallback)
+        /// <param name="thisObject">绑定物体</param>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="eventCallback">事件回调</param>
+        public static EventInspector AddEventListener(this UnityEngine.Object thisObject, string eventName,
+            EventCallback<EventInfo> eventCallback)
         {
-            var ret = new EventInspector(_object, _eventName, _eventCallback);
-            YangToolEventManager.Instance.Add(ret);
+            var ret = new EventInspector(thisObject, eventName, eventCallback);
+            YangEventManager.Instance.Add(ret);
             return ret;
         }
 
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        /// <param name="_listener">事件监听器实例</param>
-        public static void RemoveEventListener(this UnityEngine.Object _object, EventInspector _listener)
+        /// <param name="thisObject"></param>
+        /// <param name="listener">事件监听器实例</param>
+        public static void RemoveEventListener(this UnityEngine.Object thisObject, EventInspector listener)
         {
-            YangToolEventManager.Instance.Remove(_listener);
+            YangEventManager.Instance.Remove(listener);
         }
 
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        public static void RemoveEventListener(this UnityEngine.Object _object)
+        public static void RemoveEventListener(this UnityEngine.Object thisObject)
         {
-            YangToolEventManager.Instance.Remove(_object);
+            YangEventManager.Instance.Remove(thisObject);
         }
 
         /// <summary>
         /// 发送事件
         /// </summary>
-        /// <param name="_object">物体</param>
-        /// <param name="_eventName">事件名称</param>
-        /// <param name="_args">事件参数</param>
-        public static void SendEvent(this UnityEngine.Object _object, string _eventName, params object[] _args)
+        /// <param name="thisObject">物体</param>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="args">事件参数</param>
+        public static void SendEvent(this UnityEngine.Object thisObject, string eventName, params object[] args)
         {
-            YangToolEventManager.Instance.Send(_eventName, _args);
+            YangEventManager.Instance.Send(eventName, args);
         }
 
         #endregion

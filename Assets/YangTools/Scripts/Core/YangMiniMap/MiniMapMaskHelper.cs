@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace YangTools.MiniMap
@@ -8,43 +9,44 @@ namespace YangTools.MiniMap
     /// </summary>
     public class MiniMapMaskHelper : MonoSingleton<MiniMapMaskHelper>
     {
-        [Header("Mask")]
-        public Sprite MiniMapMask;
+        [FormerlySerializedAs("MiniMapMask")] [Header("Mask")]
+        public Sprite miniMapMask;
 
-        public Sprite WorldMapMask;
+        [FormerlySerializedAs("WorldMapMask")] public Sprite worldMapMask;
 
+        [FormerlySerializedAs("Background")]
         [Header("References")]
         [SerializeField]
-        private Image Background;
+        private Image background;
 
-        [SerializeField]
-        private Sprite MiniMapBackGround;
+        [FormerlySerializedAs("MiniMapBackGround")] [SerializeField]
+        private Sprite miniMapBackGround;
 
-        [SerializeField]
-        private Sprite WorldMapBackGround;
+        [FormerlySerializedAs("WorldMapBackGround")] [SerializeField]
+        private Sprite worldMapBackGround;
 
-        [SerializeField]
-        private RectTransform MaskIconRoot;
+        [FormerlySerializedAs("MaskIconRoot")] [SerializeField]
+        private RectTransform maskIconRoot;
 
-        private Image _image = null;
-        private Image m_image
+        private Image image = null;
+        private Image MImage
         {
             get
             {
-                if (_image == null)
+                if (image == null)
                 {
-                    _image = this.GetComponent<Image>();
+                    image = this.GetComponent<Image>();
                 }
-                return _image;
+                return image;
             }
         }
 
         /// <summary>
-        /// 设置被遮罩的Iocn
+        /// 设置被遮罩的Icon
         /// </summary>
         public void SetMaskedIcon(RectTransform trans)
         {
-            trans.SetParent(MaskIconRoot);
+            trans.SetParent(maskIconRoot);
         }
 
         /// <summary>
@@ -54,13 +56,13 @@ namespace YangTools.MiniMap
         {
             if (full)
             {
-                if (m_image) m_image.sprite = WorldMapMask;
-                if (Background != null) { Background.sprite = WorldMapBackGround; }
+                if (MImage) MImage.sprite = worldMapMask;
+                if (background != null) { background.sprite = worldMapBackGround; }
             }
             else
             {
-                if (m_image) m_image.sprite = MiniMapMask;
-                if (Background != null) { Background.sprite = MiniMapBackGround; }
+                if (MImage) MImage.sprite = miniMapMask;
+                if (background != null) { background.sprite = miniMapBackGround; }
             }
         }
     }

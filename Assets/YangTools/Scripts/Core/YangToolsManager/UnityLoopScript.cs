@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -18,7 +18,7 @@ namespace YangTools
         private void Update()
         {
             YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
-            YangCoroutineManager.Instance.UpdateCorountine();
+            YangCoroutineManager.Instance.UpdateCoroutine();
         }
         private void OnApplicationQuit()
         {

@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       YangWork
@@ -18,42 +18,42 @@ namespace YangTools
         /// <summary>
         /// 菜单名称
         /// </summary>
-        private const string menuName = "YangTools";
+        private const string MenuName = "YangTools";
 
         /// <summary>
         /// 辅助功能
         /// </summary>
-        private const string functionName = "辅助工具";
+        private const string FunctionName = "辅助工具";
 
         /// <summary>
         /// 游戏工具
         /// </summary>
-        private const string gameToolName = "游戏工具";
+        private const string GameToolName = "游戏工具";
 
         /// <summary>
         /// 打包工具
         /// </summary>
-        private const string buildToolName = "打包工具";
+        private const string BuildToolName = "打包工具";
 
         /// <summary>
         /// 菜单主路径
         /// </summary>
-        public const string MenuPath = menuName + "/";
+        public const string MenuPath = MenuName + "/";
 
         /// <summary>
         /// 辅助功能路径
         /// </summary>
-        public const string YongToolsFunctionPath = menuName + "/" + functionName + "/";
+        public const string YongToolsFunctionPath = MenuName + "/" + FunctionName + "/";
 
         /// <summary>
         /// 游戏工具路径
         /// </summary>
-        public const string YongToolsGameToolPath = menuName + "/" + gameToolName + "/";
+        public const string YongToolsGameToolPath = MenuName + "/" + GameToolName + "/";
 
         /// <summary>
         /// 打包工具路径
         /// </summary>
-        public const string YongToolsBuildToolPath = menuName + "/" + buildToolName + "/";
+        public const string YongToolsBuildToolPath = MenuName + "/" + BuildToolName + "/";
 
         /// <summary>
         /// UI创建扩展路径

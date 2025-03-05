@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       YangWork
@@ -18,7 +18,7 @@ namespace YangTools.ObjectPool
     /// <summary>
     /// 通用对象池
     /// </summary>
-    public class YangObjectPool : GameModuleBase
+    public abstract class YangObjectPool : GameModuleBase
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
@@ -55,6 +55,7 @@ namespace YangTools.ObjectPool
         /// 获得对象
         /// </summary>
         /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
+        /// <param name="args"></param>
         public static T Get<T>(string poolKey = "", params object[] args) where T : class, IPoolItem<T>, new()
         {
             string resultKey = GetTypeKey<T>(poolKey);
@@ -119,9 +120,9 @@ namespace YangTools.ObjectPool
             {
                 key = typeof(T).FullName;
             }
-            if (AllPools.ContainsKey(key))
+            if (key != null && AllPools.TryGetValue(key, out var allPool))
             {
-                AllPools[key].GetPool<T>().Recycle(item);
+                allPool.GetPool<T>().Recycle(item);
                 return true;
             }
             else
@@ -151,9 +152,9 @@ namespace YangTools.ObjectPool
         public static bool Clear<T>() where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
-            if (AllPools.ContainsKey(key))
+            if (key != null && AllPools.TryGetValue(key, out var pool))
             {
-                AllPools[key].GetPool<T>().Clear();
+                pool.GetPool<T>().Clear();
                 return true;
             }
             return false;
@@ -222,9 +223,8 @@ namespace YangTools.ObjectPool
         private readonly MethodInfo createFunc2;//有参创建方法
 
         private readonly int maxSize;//最大数量
-        private bool collectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
-
-        private int defaultCapacity;//默认对象池大小
+        private readonly bool collectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
+        private readonly int defaultCapacity;//默认对象池大小
 
         /// <summary>
         /// 所有对象数
@@ -331,7 +331,8 @@ namespace YangTools.ObjectPool
                 {
                     item = (T)createFunc?.Invoke(null, null);
                 }
-                item.PoolKey = PoolKey;
+
+                if (item != null) item.PoolKey = PoolKey;
                 AllCount++;
             }
             else
@@ -470,25 +471,25 @@ namespace YangTools.ObjectPool
      * */
 
     //值类型-值类型回收时(销毁时)自动回收对象到对象池--Unity默认对象池抄的
-    public struct PooledObjectPackage<T> : IDisposable where T : class
+    public readonly struct PooledObjectPackage<T> : IDisposable where T : class
     {
-        private readonly T m_ToReturn;
-        private readonly IObjectPool<T> m_Pool;
+        private readonly T mToReturn;
+        private readonly IObjectPool<T> mPool;
 
         internal PooledObjectPackage(T value, IObjectPool<T> pool)
         {
-            m_ToReturn = value;
-            m_Pool = pool;
+            mToReturn = value;
+            mPool = pool;
         }
 
         public T GetData()
         {
-            return m_ToReturn;
+            return mToReturn;
         }
 
         void IDisposable.Dispose()
         {
-            m_Pool.Recycle(m_ToReturn);
+            mPool.Recycle(mToReturn);
         }
     }
 
@@ -537,43 +538,42 @@ namespace YangTools.ObjectPool
     /// </summary>
     public class ReflectionInfo
     {
-        private object instanceT;
-        private System.Reflection.MethodInfo Func;
+        private readonly object instanceT;
+        private readonly MethodInfo func;
 
-        public ReflectionInfo(object _instanceT, System.Reflection.MethodInfo _createFun)
+        public ReflectionInfo(object argInstanceT, MethodInfo createFun)
         {
-            instanceT = _instanceT;
-            Func = _createFun;
+            instanceT = argInstanceT;
+            func = createFun;
         }
 
-        public T Invoke<T>(bool isNull, params object[] paramlist)
+        public T Invoke<T>(bool isNull, params object[] argList)
         {
             if (isNull)
             {
-                return (T)Func?.Invoke(instanceT, null);
+                return (T)func?.Invoke(instanceT, null);
             }
             else
             {
                 //反射调用
-                return (T)Func?.Invoke(instanceT, new object[] { paramlist[0] });
+                return (T)func?.Invoke(instanceT, new object[] { argList[0] });
             }
         }
 
         /// <summary>
         /// 无返回值
         /// </summary>
-        /// <param name="paramlist">参数列表</param>
-        public void Invoke(params object[] paramlist)
+        public void Invoke(params object[] argList)
         {
-            bool isNull = paramlist.Length == 0;
+            bool isNull = argList.Length == 0;
             if (isNull)
             {
-                Func.Invoke(instanceT, null);
+                func.Invoke(instanceT, null);
             }
             else
             {
                 //反射调用
-                Func.Invoke(instanceT, paramlist);
+                func.Invoke(instanceT, argList);
             }
         }
     }
@@ -627,7 +627,7 @@ namespace YangTools.ObjectPool
             {
                 if (PoolDictionary.ContainsKey(typeof(T)))
                 {
-                    if (PoolDictionary[typeof(T)] is Stack<T> pooledObjects && pooledObjects.Count > 0)
+                    if (PoolDictionary[typeof(T)] is Stack<T> {Count: > 0} pooledObjects)
                     {
                         return pooledObjects.Pop();
                     }

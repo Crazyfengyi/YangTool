@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -123,12 +123,12 @@ namespace YangTools.TaskExtend
         /// <summary>
         /// 初始化任务基类。
         /// </summary>
-        /// <param name="_serialId">任务的序列编号</param>
-        /// <param name="_priority">任务的优先级</param>
-        internal void Initialize(int _serialId, int _priority)
+        /// <param name="argSerialId">任务的序列编号</param>
+        /// <param name="argPriority">任务的优先级</param>
+        internal void Initialize(int argSerialId, int argPriority)
         {
-            this.serialId = _serialId;
-            this.priority = _priority;
+            this.serialId = argSerialId;
+            this.priority = argPriority;
         }
 
         /// <summary>

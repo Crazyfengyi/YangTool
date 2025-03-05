@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by Test
  *All rights reserved.
  *Author:       WIN-VJ19D9AB7HB
@@ -17,7 +17,7 @@ using YooAsset;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-public class RescoreManager
+public class ResourceManager
 {
     private Dictionary<string, Object> assetCacheDict;
 
@@ -37,20 +37,11 @@ public class RescoreManager
     /// <param name="location">地址</param>
     /// <param name="parent">父节点</param>
     /// <param name="inWorldSpace">世界空间</param>
-    /// <returns></returns>
     public async UniTask<GameObject> InstantiateGameObject(string location, Transform parent, bool inWorldSpace)
     {
         GameObject prefab = await LoadAssetAsync<GameObject>(location);
         GameObject instance = null;
-        if (parent != null)
-        {
-            instance = GameObject.Instantiate(prefab, parent, inWorldSpace);
-        }
-        else
-        {
-            instance = GameObject.Instantiate(prefab);
-        }
-
+        instance = parent != null ? Object.Instantiate(prefab, parent, inWorldSpace) : Object.Instantiate(prefab);
         return instance;
     }
     /// <summary>
@@ -159,8 +150,7 @@ public class RescoreManager
         }
 
         var sprite = await LoadSprite(spriteLocation);
-
-      if (image != null)
+        if (image != null)
         {
             image.sprite = sprite;
             success?.Invoke(image);

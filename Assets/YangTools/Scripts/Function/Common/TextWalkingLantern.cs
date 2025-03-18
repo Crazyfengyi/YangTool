@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using YangTools.Extend;
 
@@ -13,32 +14,18 @@ namespace YangTools
     public class TextWalkingLantern : MonoBehaviour
     {
         /// <summary>
-        /// 默认显示
-        /// </summary>
-        public enum DefaultShow
-        {
-            None,
-            左边,
-            中间,
-            右边
-        }
-
-        /// <summary>
         /// 遮罩框
         /// </summary>
         private Image maskImage;
         /// <summary>
         /// Text组件
         /// </summary>
-        public Text m_Text;
+        [FormerlySerializedAs("m_Text")]
+        public Text mText;
         /// <summary>
         /// 开始位置
         /// </summary>
         private float startPos = 0;
-        /// <summary>
-        /// ?
-        /// </summary>
-        float startPosBlack;
         /// <summary>
         /// 结束位置
         /// </summary>
@@ -50,18 +37,18 @@ namespace YangTools
         {
             maskImage = GetComponent<Image>();
 
-            if (m_Text == null)
+            if (mText == null)
             {
-                m_Text = transform.GetChild(0).GetComponent<Text>();
+                mText = transform.GetChild(0).GetComponent<Text>();
             }
 
-            m_Text.RegisterDirtyVerticesCallback(OnTextChange);
-            SetText(m_Text.text, DefaultShow.中间);
+            mText.RegisterDirtyVerticesCallback(OnTextChange);
+            SetText(mText.text, DefaultShow.中间);
         }
 
         private void OnDestroy()
         {
-            m_Text.UnregisterDirtyVerticesCallback(OnTextChange);
+            mText.UnregisterDirtyVerticesCallback(OnTextChange);
         }
         /// <summary>
         /// 文本循环滚动
@@ -69,7 +56,7 @@ namespace YangTools
         /// <returns></returns>
         private IEnumerator TextCycle()
         {
-            m_Text.transform.ChangeLocalPosX(startPos);
+            mText.transform.ChangeLocalPosX(startPos);
 
             yield return new WaitForSeconds(0.3f); //受Time.timeScale时间影响
 
@@ -79,31 +66,31 @@ namespace YangTools
             {
                 progress += Time.deltaTime * speed;
                 float xPos = Mathf.Lerp(startPos, moveEndPos, progress);
-                m_Text.transform.ChangeLocalPosX(xPos);
+                mText.transform.ChangeLocalPosX(xPos);
                 yield return null;
             }
 
             yield return new WaitForSeconds(0.23f); //受Time.timeScale时间影响
 
-            float oldAlpha = m_Text.color.a;
+            float oldAlpha = mText.color.a;
             DOTween.Sequence()
-                .Append(m_Text.DOFade(0, 0.13f))
+                .Append(mText.DOFade(0, 0.13f))
                 .AppendCallback(() =>
                 {
-                    m_Text.transform.ChangeLocalPosX(startPos);
+                    mText.transform.ChangeLocalPosX(startPos);
                 })
-                .Append(m_Text.DOFade(oldAlpha, 0.13f))
+                .Append(mText.DOFade(oldAlpha, 0.13f))
                 .OnKill(() =>
                 {
-                    m_Text.ChangeAlpha(oldAlpha);
-                    m_Text.transform.ChangeLocalPosX(startPos);
+                    mText.ChangeAlpha(oldAlpha);
+                    mText.transform.ChangeLocalPosX(startPos);
                 })
                 .SetEase(Ease.Linear)
                 .SetTarget(this);
 
             yield return new WaitForSeconds(0.26f);
 
-            StartCoroutine("TextCycle");
+            StartCoroutine(nameof(TextCycle));
         }
 
         /// <summary>
@@ -113,44 +100,44 @@ namespace YangTools
         /// <param name="defaultShowType">默认显示位置(当字符长度每超出框--不用走马灯时的显示位置)</param>
         public void SetText(string str, DefaultShow defaultShowType = DefaultShow.中间)
         {
-            m_Text.text = str;
+            mText.text = str;
             float maskSize = maskImage.rectTransform.sizeDelta.x;//遮罩x大小
-            float difference = m_Text.preferredWidth - maskImage.rectTransform.sizeDelta.x; //字的完美宽度和遮罩的差值
+            float difference = mText.preferredWidth - maskImage.rectTransform.sizeDelta.x; //字的完美宽度和遮罩的差值
 
             defaultShow = defaultShowType;
 
             //是否需要走马灯效果
             if (difference > 0)
             {
-                m_Text.rectTransform.pivot = new Vector2(0, 0.5f);
-                m_Text.transform.localPosition = new Vector2(-maskSize / 2, 0);
+                mText.rectTransform.pivot = new Vector2(0, 0.5f);
+                mText.transform.localPosition = new Vector2(-maskSize / 2, 0);
 
                 startPos = -maskSize / 2;
                 moveEndPos = startPos - difference;
 
-                StopCoroutine("TextCycle");
+                StopCoroutine(nameof(TextCycle));
                 DOTween.Kill(this);
-                StartCoroutine("TextCycle");
+                StartCoroutine(nameof(TextCycle));
             }
             else
             {
                 switch (defaultShow)
                 {
                     case DefaultShow.左边:
-                        m_Text.rectTransform.pivot = new Vector2(0, 0.5f);
-                        m_Text.transform.localPosition = new Vector2(-maskSize / 2, 0);
+                        mText.rectTransform.pivot = new Vector2(0, 0.5f);
+                        mText.transform.localPosition = new Vector2(-maskSize / 2, 0);
                         break;
                     case DefaultShow.中间:
-                        m_Text.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                        m_Text.transform.localPosition = new Vector2(0, 0);
+                        mText.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                        mText.transform.localPosition = new Vector2(0, 0);
                         break;
                     case DefaultShow.右边:
-                        m_Text.rectTransform.pivot = new Vector2(1f, 0.5f);
-                        m_Text.transform.localPosition = new Vector2(maskSize / 2, 0);
+                        mText.rectTransform.pivot = new Vector2(1f, 0.5f);
+                        mText.transform.localPosition = new Vector2(maskSize / 2, 0);
                         break;
                     default:
-                        m_Text.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                        m_Text.transform.localPosition = new Vector2(0, 0);
+                        mText.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                        mText.transform.localPosition = new Vector2(0, 0);
                         break;
                 }
             }
@@ -169,7 +156,18 @@ namespace YangTools
         /// </summary>
         public string GetText()
         {
-            return m_Text.text;
+            return mText.text;
         }
+    }
+    
+    /// <summary>
+    /// 默认显示
+    /// </summary>
+    public enum DefaultShow
+    {
+        None,
+        左边,
+        中间,
+        右边
     }
 }

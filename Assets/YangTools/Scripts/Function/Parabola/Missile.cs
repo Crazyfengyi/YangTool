@@ -17,7 +17,7 @@ namespace YangTools
         {
             path = new ParabolaPath(transform.position, target.position, Random.Range(10, 16), gravity)
                 {
-                    isClampStartEnd = true
+                    IsClampStartEnd = true
                 };
             transform.LookAt(path.GetPosition(path.Time + Time.deltaTime));
         }

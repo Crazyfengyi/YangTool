@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -35,10 +37,32 @@ namespace YangTools
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
         public static void TestScrpit()
         {
+            Debug.LogError("测试输出");
+            //TestTask();
             //TestUniTask();
-            SendEmail();
+            //SendEmail();
+            TestFun22();
         }
 
+        public static void TestFun22()
+        {
+            DataTable temp = new DataTable();
+            int tempValue1 = 10;
+            //string temstr = string.Format("1+1/2+1*2+{0}", tempValue1);
+            string temstr = "1+1/2+1*2+tempValue1".Replace(nameof(tempValue1),tempValue1.ToString());
+            Debug.LogError($"测试1:{temstr}");
+            object valueObj = temp.Compute(temstr,string.Empty);
+            float.TryParse(valueObj.ToString(), out var result);
+            Debug.LogError($"测试2:{result}");
+        } 
+        
+        static async Task TestTask()
+        {
+            Debug.LogError($"{Time.frameCount}");
+            await Task.CompletedTask;
+            //await Task.Yield();
+            Debug.LogError($"{Time.frameCount}");
+        }
 
         /// <summary> 
         /// 发送邮件 

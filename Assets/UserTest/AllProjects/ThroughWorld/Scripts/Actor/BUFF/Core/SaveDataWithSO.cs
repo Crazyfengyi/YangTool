@@ -88,10 +88,10 @@ public abstract class SaveDataWithSO<T> : ScriptableObject where T : ConfigBase
 
 }
 
-[Serializable]
 /// <summary>
 /// 配置基类
 /// </summary>
+[Serializable]
 public class ConfigBase
 {
     [ReadOnly]

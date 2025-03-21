@@ -35,13 +35,38 @@ namespace YangTools
 
         #region 测试
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
-        public static void TestScrpit()
+        public static async void TestScript()
         {
             Debug.LogError("测试输出");
             //TestTask();
             //TestUniTask();
             //SendEmail();
             TestFun22();
+
+            int count = 0;
+            
+            for(int i=0;i<100;i++)
+            {
+                Interlocked.Increment(ref count);//c#提供的原子操作
+            }
+            Parallel.For(0,1000, i =>
+            {
+                
+            });
+            //await TestTask().ConfigureAwait(false);//同步上下文,是否返回上一个线程来执行下面的操作
+            
+            var semaphore = new Semaphore(3, 3);//3个窗口,初始3个空闲
+            int[] array = Enumerable.Range(1, 20).ToArray();
+            int[] result = array.AsParallel().AsOrdered().Select(TestAsyncFun).ToArray();
+            int TestAsyncFun(int input)
+            {
+                semaphore.WaitOne();
+                Thread.Sleep(300);
+                semaphore.Release();
+                return input * 2;
+            }
+            
+            semaphore.Dispose();
         }
 
         public static void TestFun22()

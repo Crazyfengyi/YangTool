@@ -16,7 +16,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 using YangTools.Translate;
 
 namespace YangTools

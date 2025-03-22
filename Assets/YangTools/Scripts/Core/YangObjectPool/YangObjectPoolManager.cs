@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools.Scripts.Core.YangObjectPool
 {
@@ -19,7 +19,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// <summary>
     /// 通用对象池
     /// </summary>
-    public abstract class YangObjectPool : GameModuleBase
+    public  class YangObjectPool : GameModuleBase
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
@@ -31,6 +31,10 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         #region 生命周期
 
+        public YangObjectPool()
+        {
+            
+        }
         internal override void InitModule()
         {
         }

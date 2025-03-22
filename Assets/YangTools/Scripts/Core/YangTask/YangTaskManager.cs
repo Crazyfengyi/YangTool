@@ -8,7 +8,7 @@
 
 using System;
 using System.Collections.Generic;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools.Scripts.Core.YangTask
 {

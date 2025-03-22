@@ -32,7 +32,7 @@ namespace YangTools.Scripts.Core.YangDownLoad
                     {
                         IEnumeratorObject = new GameObject("IEnumeratorObject");
                         instance = IEnumeratorObject.AddComponent<YangDownLoad>();
-                        IEnumeratorObject.transform.SetParent(YangToolsManager.YangToolsManager.DontDestoryObject.transform);
+                        IEnumeratorObject.transform.SetParent(Core.YangToolsManager.DontDestoryObject.transform);
                     }
                     return instance;
                 }

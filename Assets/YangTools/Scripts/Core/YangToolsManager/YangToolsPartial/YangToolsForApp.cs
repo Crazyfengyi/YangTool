@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     public partial class YangToolsManager
     {

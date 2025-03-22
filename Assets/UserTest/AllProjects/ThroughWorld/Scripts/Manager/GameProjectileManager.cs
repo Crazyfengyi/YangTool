@@ -12,7 +12,7 @@ using UnityEditor;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangObjectPool;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 /// <summary>

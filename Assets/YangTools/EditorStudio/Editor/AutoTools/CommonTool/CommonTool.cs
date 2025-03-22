@@ -17,7 +17,7 @@ using UnityEditor;
 using System.IO;
 using UnityEditor.Build;
 using UnityEditor.SceneManagement;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 public class CommonTool : MonoBehaviour
 {

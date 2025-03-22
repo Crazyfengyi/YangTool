@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace GameMain
 {

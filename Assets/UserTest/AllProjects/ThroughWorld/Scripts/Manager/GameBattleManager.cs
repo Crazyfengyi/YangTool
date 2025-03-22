@@ -10,7 +10,7 @@ using DataStruct;
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 战斗管理器

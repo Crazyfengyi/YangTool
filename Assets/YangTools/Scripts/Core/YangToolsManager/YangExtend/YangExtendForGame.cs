@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using YangTools.Log;
 using Object = UnityEngine.Object;
 
-namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
+namespace YangTools.Scripts.Core.YangExtend
 {
     public static partial class YangExtend
     {
@@ -167,7 +167,7 @@ namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
         public static void DefaultGameObjectRecycle(this GameObject gameObject)
         {
             gameObject.SetActive(false);
-            gameObject.transform.SetParent(Scripts.Core.YangToolsManager.YangToolsManager.GamePoolObject.transform);
+            gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
         }
 
         /// <summary>
@@ -258,8 +258,8 @@ namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
             tempRenderer.bones = boneList.ToArray();
             tempRenderer.material = material;
 
-            Texture2D skinnedMeshAtlas = new Texture2D(Scripts.Core.YangToolsManager.YangExtend.YangExtend.GetThanPowerOfTwo(width),
-                Scripts.Core.YangToolsManager.YangExtend.YangExtend.GetThanPowerOfTwo(height));
+            Texture2D skinnedMeshAtlas = new Texture2D(YangExtend.GetThanPowerOfTwo(width),
+                YangExtend.GetThanPowerOfTwo(height));
             Rect[] packingResult = skinnedMeshAtlas.PackTextures(textures.ToArray(), 0);
             Vector2[] atlasUVs = new Vector2[uvCount];
             // 因为将贴图都整合到了一张图片上，所以需要重新计算UV

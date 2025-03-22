@@ -15,7 +15,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using YangTools;
 using YangTools.Scripts.Core.YangUGUI;
-using YangToolsManager = YangTools.Scripts.Core.YangToolsManager.YangToolsManager;
+using YangToolsManager = YangTools.Scripts.Core.YangToolsManager;
 
 public class PlayerController : RoleBase
 {
@@ -58,6 +58,8 @@ public class PlayerController : RoleBase
     private bool isJumpAni;
 
     Player TBdata;
+    private GameInputSet gameInput;
+    
     public void SetTableData(Player _TBdata)
     {
         TBdata = _TBdata;
@@ -67,8 +69,8 @@ public class PlayerController : RoleBase
         base.IInit();
         campType = ActorCampType.Player;
         canAtkCamp = ActorCampType.MonsterAndBuilding;
-
-        GameInputSet gameInput = GameInputManager.Instance.GameInput;
+        
+        gameInput = GameInputManager.Instance.GameInput;
         gameInput.Player.Move.performed += OnMove;
         gameInput.Player.Move.canceled += OnMoveEnd;
         gameInput.Player.Interactive.performed += OnInteractive;
@@ -141,6 +143,7 @@ public class PlayerController : RoleBase
         Destroy(gameObject);
         UIMonoInstance.Instance.OpenPanel("GameOverPanel", "One");
         YangToolsManager.SetCursorLock(false);
+        GameInputManager.Instance.DisablePlayer();
     }
 
     #region 搜索攻击目标

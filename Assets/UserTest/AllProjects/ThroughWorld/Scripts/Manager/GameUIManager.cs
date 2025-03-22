@@ -16,9 +16,9 @@ using YangTools.Log;
 using Sirenix.OdinInspector;
 using UnityEngine.SocialPlatforms.Impl;
 using YangTools.Scripts.Core.YangObjectPool;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
-using YangTools.Scripts.Core.YangToolsManager;
-using YangExtend = YangTools.Scripts.Core.YangToolsManager.YangExtend.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
+using YangTools.Scripts.Core;
+using YangExtend = YangTools.Scripts.Core.YangExtend.YangExtend;
 
 /// <summary>
 /// UI管理器

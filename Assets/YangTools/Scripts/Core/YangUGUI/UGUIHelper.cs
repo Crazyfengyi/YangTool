@@ -8,7 +8,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 namespace YangTools.Scripts.Core.YangUGUI
 {

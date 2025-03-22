@@ -14,7 +14,7 @@ using YangTools;
 using System.Collections.Generic;
 using DataStruct;
 using YangTools.Scripts.Core.YangObjectPool;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 /// <summary>
 /// 子弹基类

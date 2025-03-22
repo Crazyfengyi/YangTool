@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using YangTools.Scripts.Core.YangObjectPool;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     public static partial class YangToolsManager
     {

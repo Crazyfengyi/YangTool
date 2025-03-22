@@ -9,7 +9,7 @@
 using UnityEngine;
 using YangTools.Scripts.Core.YangCoroutine;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     /// <summary>
     /// Unity生命周期脚本
@@ -19,12 +19,12 @@ namespace YangTools.Scripts.Core.YangToolsManager
         #region 生命周期
         private void Update()
         {
-            Scripts.Core.YangToolsManager.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
             YangCoroutineManager.Instance.UpdateCoroutine();
         }
         private void OnApplicationQuit()
         {
-            Scripts.Core.YangToolsManager.YangToolsManager.OnApplicationQuit();
+            YangToolsManager.OnApplicationQuit();
         }
         #endregion
     }

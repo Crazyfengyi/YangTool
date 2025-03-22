@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools.Scripts.Core.YangFSM
 {

@@ -5,7 +5,7 @@ using UnityEngine;
 using YangTools.Scripts.Core.YangAudio;
 using YangTools.Scripts.Core.YangUGUI;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     /// <summary>
     /// 工具总管理器
@@ -36,8 +36,8 @@ namespace YangTools.Scripts.Core.YangToolsManager
 
             InitDontDestoryObject();
             //手动创建模块(顺序问题)
-            YangToolsManager.GetModule<YangUIManager>();
-            YangToolsManager.GetModule<YangAudioManager>();
+            GetModule<YangUIManager>();
+            GetModule<YangAudioManager>();
             //初始化未手动创建的模块
             for (int i = 0; i < allGameModule.Count; i++)
             {
@@ -203,7 +203,7 @@ namespace YangTools.Scripts.Core.YangToolsManager
         /// <summary>
         /// 优先级
         /// </summary>
-        /// <remarks>优先级较高的模块会优先轮询</remarks>
+        /// <remarks>轮询优先级(链表从大道小排序)</remarks>
         internal virtual int Priority => 0;
         /// <summary>
         /// 初始化模块

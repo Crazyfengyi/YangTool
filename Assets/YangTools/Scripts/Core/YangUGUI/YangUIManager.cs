@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YangTools.Scripts.Core.YangObjectPool;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools.Scripts.Core.YangUGUI
 {
-    public abstract class YangUIManager : GameModuleBase, IUIManager 
+    public class YangUIManager : GameModuleBase, IUIManager 
     {
         public static Font MainFont = null;//主字体
 
@@ -39,7 +39,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <summary>
         /// 初始化
         /// </summary>
-        protected YangUIManager()
+        public YangUIManager()
         {
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
             recycleQueue = new Queue<IUIPanel>();
@@ -106,7 +106,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             if (string.IsNullOrEmpty(groupName))
             {
-                throw new Exception("UI group name is invalid.");
+                throw new Exception($"UI group name is invalid:{groupName}");
             }
             return uiGroups.ContainsKey(groupName);
         }

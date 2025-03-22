@@ -12,7 +12,7 @@ using System.IO;
 using cfg;
 using cfg.item;
 using cfg.player;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 public class GameTableManager : MonoSingleton<GameTableManager>
 {

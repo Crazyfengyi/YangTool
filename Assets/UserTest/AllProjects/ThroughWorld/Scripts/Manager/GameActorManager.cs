@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangMiniMap;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 游戏角色管理类

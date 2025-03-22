@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangObjectPool;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core.YangExtend;
+using YangTools.Scripts.Core;
 
 public class GameEffectManager : MonoSingleton<GameEffectManager>
 {

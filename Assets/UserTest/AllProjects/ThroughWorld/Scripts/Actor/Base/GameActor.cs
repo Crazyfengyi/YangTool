@@ -8,7 +8,7 @@
 
 using DataStruct;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 public abstract class GameActor : MonoBehaviour, ICustomLife, IInteractive, IAtker, IBeHit
 {

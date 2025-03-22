@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
+namespace YangTools.Scripts.Core.YangExtend
 {
     /// <summary>
     /// 扩展工具类

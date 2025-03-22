@@ -14,7 +14,7 @@ using Pathfinding;
 using cfg.monster;
 using DataStruct;
 using Sirenix.OdinInspector;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 [TaskCategory("RoleAI/Motion")]
 public class AIFindTarget : Action

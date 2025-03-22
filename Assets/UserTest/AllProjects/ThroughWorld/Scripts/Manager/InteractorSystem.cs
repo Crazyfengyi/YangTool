@@ -10,8 +10,8 @@ using System.Collections;
 using DataStruct;
 using UnityEngine;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core.YangExtend;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 交互系统

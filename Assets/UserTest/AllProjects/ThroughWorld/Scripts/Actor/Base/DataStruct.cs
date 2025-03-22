@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using cfg.skill;
-using static YangTools.Scripts.Core.YangToolsManager.YangExtend.YangExtend;
+using static YangTools.Scripts.Core.YangExtend.YangExtend;
 
 namespace DataStruct
 {

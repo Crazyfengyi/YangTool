@@ -1,7 +1,7 @@
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 资源管理器

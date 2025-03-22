@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
+namespace YangTools.Scripts.Core.YangExtend
 {
     public partial class YangExtend
     {

@@ -8,7 +8,7 @@
 using System;
 using DataStruct;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 [Serializable]
 public class HealthControl

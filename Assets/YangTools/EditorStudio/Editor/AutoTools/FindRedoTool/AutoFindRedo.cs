@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools
 {

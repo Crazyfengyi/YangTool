@@ -9,7 +9,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     /// <summary>
     /// 工具设置开关

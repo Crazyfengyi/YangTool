@@ -11,7 +11,7 @@ using TMPro;
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
-using YangToolsManager = YangTools.Scripts.Core.YangToolsManager.YangToolsManager;
+using YangToolsManager = YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 块的信息

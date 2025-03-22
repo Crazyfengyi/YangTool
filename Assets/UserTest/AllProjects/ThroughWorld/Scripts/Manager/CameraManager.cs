@@ -10,7 +10,7 @@ using Cinemachine;
 using UnityEngine;
 using YangTools;
 using Sirenix.OdinInspector;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 相机管理器

@@ -14,7 +14,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 /// <summary>
 /// 打包工具

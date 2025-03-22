@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools.Scripts.Core.YangTimer
 {
     /// <summary>
     /// 计时器管理者
     /// </summary>
-    public abstract class YangTimerManager : GameModuleBase
+    public class YangTimerManager : GameModuleBase
     {
         #region 内部调用
 
@@ -29,6 +29,11 @@ namespace YangTools.Scripts.Core.YangTimer
         #endregion
    
         #region 生命周期
+
+        public YangTimerManager()
+        {
+            
+        }
         /// <summary>
         /// 初始化
         /// </summary>

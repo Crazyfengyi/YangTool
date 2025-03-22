@@ -18,7 +18,7 @@ using YangTools.Log;
 using Sirenix.OdinInspector;
 using UnityEngine.Diagnostics;
 using DataStruct;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 //[BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.baidu.com")]
 [TaskIcon(BehaviorSetting.path + "AniAndEventIcon.png")]

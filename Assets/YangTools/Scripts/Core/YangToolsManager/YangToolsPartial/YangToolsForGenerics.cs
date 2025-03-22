@@ -8,7 +8,7 @@
 
 using UnityEngine;
 
-namespace YangTools.Scripts.Core.YangToolsManager
+namespace YangTools.Scripts.Core
 {
     /// <summary>
     /// 饿汉模式-单例模板

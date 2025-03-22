@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 public class GameInputManager : MonoSingleton<GameInputManager>
 {

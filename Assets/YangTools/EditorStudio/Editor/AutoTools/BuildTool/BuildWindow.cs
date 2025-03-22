@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 public class BuildWindow : EditorWindow
 {

@@ -9,7 +9,7 @@
 using DataStruct;
 using DG.Tweening;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 /// <summary>
 /// 灌木

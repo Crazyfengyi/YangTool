@@ -8,7 +8,7 @@
 using UnityEngine;
 using System.Collections;
 using DataStruct;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 /// <summary>
 /// 怪物发射器

@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 namespace YangTools
 {

@@ -116,9 +116,9 @@ namespace YangTools.Scripts.Core.YangMiniMap
         /// </summary>
         private void CreateIcon()
         {
+            mapUIRoot = MiniMapManager.MapUIRoot;
             //实例化UI在Canvas上
             uiIconObject = Instantiate(uiPrefab, mapUIRoot.transform, false);
-            mapUIRoot = MiniMapManager.MapUIRoot;
             miniMapIcon = uiIconObject.GetComponent<MiniMapIcon>();
 
             if (icon != null)

@@ -1,7 +1,7 @@
 using YangTools.Scripts.Core.YangEvent;
 using EventInfo = YangTools.Scripts.Core.YangEvent.EventInfo;
 
-namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
+namespace YangTools.Scripts.Core.YangExtend
 {
     /// <summary>
     /// 扩展类

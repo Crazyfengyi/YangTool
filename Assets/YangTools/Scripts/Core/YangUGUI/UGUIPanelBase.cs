@@ -11,7 +11,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 using Debug = UnityEngine.Debug;
 
 namespace YangTools.Scripts.Core.YangUGUI

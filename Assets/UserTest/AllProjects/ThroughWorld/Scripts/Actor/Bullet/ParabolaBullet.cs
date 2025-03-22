@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangExtend;
 
 /// <summary>
 /// 抛物线子弹--只适用于到结束位置后自动销毁的物体(结束位置确定)

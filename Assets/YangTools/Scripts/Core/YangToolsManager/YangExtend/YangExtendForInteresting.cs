@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
+namespace YangTools.Scripts.Core.YangExtend
 {
     /// <summary>
     /// 有趣的写法

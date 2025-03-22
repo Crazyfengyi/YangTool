@@ -7,7 +7,7 @@
 */
 using YangTools;
 using YangTools.Scripts.Core.YangAudio;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 public class GameSoundManager : MonoSingleton<GameSoundManager>
 {

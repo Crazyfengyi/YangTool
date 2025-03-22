@@ -10,7 +10,7 @@ using System.Linq;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangMiniMap;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 
 [AddComponentMenu("游戏管理器")]
 public class GameManager : MonoSingleton<GameManager>

@@ -8,7 +8,7 @@
 
 using System;
 using YangTools;
-using YangTools.Scripts.Core.YangToolsManager;
+using YangTools.Scripts.Core;
 using YangTools.Scripts.Core.YangUGUI;
 
 public class UICommonTool : Singleton<UICommonTool>

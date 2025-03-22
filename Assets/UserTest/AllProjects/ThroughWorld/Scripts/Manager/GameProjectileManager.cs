@@ -11,8 +11,8 @@ using DataStruct;
 using UnityEditor;
 using UnityEngine;
 using YangTools;
-using YangTools.Extend;
-using YangTools.ObjectPool;
+using YangTools.Scripts.Core.YangObjectPool;
+using YangTools.Scripts.Core.YangToolsManager;
 using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 /// <summary>

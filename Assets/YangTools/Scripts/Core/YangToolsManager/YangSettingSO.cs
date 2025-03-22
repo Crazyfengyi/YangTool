@@ -5,10 +5,11 @@
  *UnityVersion：2022.1.0b14 
  *创建时间:         2022-04-07 
 */
+
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     /// <summary>
     /// 工具设置开关

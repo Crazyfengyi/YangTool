@@ -9,7 +9,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using YangTools;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 
 /// <summary>
 /// 通用二级弹窗参数

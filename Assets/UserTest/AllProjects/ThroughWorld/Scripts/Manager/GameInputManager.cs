@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by Test 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -11,7 +11,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangToolsManager;
+
 public class GameInputManager : MonoSingleton<GameInputManager>
 {
     #region 变量

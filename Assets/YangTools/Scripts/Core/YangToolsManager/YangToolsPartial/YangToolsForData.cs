@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
-using YangTools.ObjectPool;
+using YangTools.Scripts.Core.YangObjectPool;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     public static partial class YangToolsManager
     {

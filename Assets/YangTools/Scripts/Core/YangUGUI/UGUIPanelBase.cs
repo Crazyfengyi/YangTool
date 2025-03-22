@@ -6,15 +6,15 @@
  *创建时间:         2022-02-20
 */
 
-using DG.Tweening;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using YangTools.Extend;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 using Debug = UnityEngine.Debug;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     /// <summary>
     /// UGUI Panel逻辑基类

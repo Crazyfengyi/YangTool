@@ -5,9 +5,11 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-18 
 */
-using UnityEngine;
 
-namespace YangTools
+using UnityEngine;
+using YangTools.Scripts.Core.YangCoroutine;
+
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     /// <summary>
     /// Unity生命周期脚本
@@ -17,12 +19,12 @@ namespace YangTools
         #region 生命周期
         private void Update()
         {
-            YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            Scripts.Core.YangToolsManager.YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
             YangCoroutineManager.Instance.UpdateCoroutine();
         }
         private void OnApplicationQuit()
         {
-            YangTools.YangToolsManager.OnApplicationQuit();
+            Scripts.Core.YangToolsManager.YangToolsManager.OnApplicationQuit();
         }
         #endregion
     }

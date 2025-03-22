@@ -1,11 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
-    public static partial class YangToolsManager
+    public partial class YangToolsManager
     {
 #if UNITY_EDITOR
         /// <summary>

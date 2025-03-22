@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEngine;
+using YangTools.Scripts.Core.YangEvent;
+using EventInfo = YangTools.Scripts.Core.YangEvent.EventInfo;
 
-namespace YangTools.Extend
+namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
 {
     /// <summary>
     /// 扩展类

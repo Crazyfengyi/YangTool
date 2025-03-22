@@ -13,11 +13,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
 using UnityEditor;
 using System.IO;
 using UnityEditor.Build;
 using UnityEditor.SceneManagement;
+using YangTools.Scripts.Core.YangToolsManager;
 
 public class CommonTool : MonoBehaviour
 {

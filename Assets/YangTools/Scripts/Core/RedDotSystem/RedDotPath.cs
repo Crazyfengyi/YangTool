@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GameMain
+namespace YangTools.Scripts.Core.RedDotSystem
 {
     public static class RedDotPath
     {

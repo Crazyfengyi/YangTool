@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using GameMain;
 using UnityEngine;
 
-namespace GameMain.RedDot
+namespace YangTools.Scripts.Core.RedDotSystem
 {
     public class RedDotMgr
     {

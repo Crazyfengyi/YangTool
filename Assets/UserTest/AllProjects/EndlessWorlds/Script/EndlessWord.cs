@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
-using YangTools.Extend;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 程序生成无限世界的脚本

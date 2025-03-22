@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangAudio;
+using YangTools.Scripts.Core.YangUGUI;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     /// <summary>
     /// 工具总管理器

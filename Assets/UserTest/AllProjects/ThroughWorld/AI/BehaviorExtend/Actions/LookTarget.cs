@@ -9,7 +9,7 @@ using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 using System.Collections;
-using YangTools.Extend;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 
 [TaskCategory("RoleAI/Motion")]
 public class LookTarget : Action

@@ -9,7 +9,7 @@
 using System;
 using UnityEngine;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     /// <summary>
     /// UI页面管理类--框架自动生成挂载到UI

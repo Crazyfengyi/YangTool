@@ -12,7 +12,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
 
 /// <summary>
 /// 延迟炸弹

@@ -8,9 +8,9 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using YangTools.Extend;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     /// <summary>
     /// UGUI组辅助器

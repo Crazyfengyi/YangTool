@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -11,6 +11,7 @@ using TMPro;
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
+using YangToolsManager = YangTools.Scripts.Core.YangToolsManager.YangToolsManager;
 
 /// <summary>
 /// 块的信息

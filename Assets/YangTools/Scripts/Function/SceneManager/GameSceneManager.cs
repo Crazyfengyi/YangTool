@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YangTools.Scripts.Core.YangToolsManager;
 
 namespace YangTools
 {

@@ -9,7 +9,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 
 public class GameOverPanel : UGUIPanelBase<UGUIDataBase>
 {

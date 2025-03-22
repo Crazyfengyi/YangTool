@@ -11,7 +11,7 @@ using DataStruct;
 using DG.Tweening;
 using Pathfinding;
 using UnityEngine;
-using YangTools.Extend;
+using YangExtend = YangTools.Scripts.Core.YangToolsManager.YangExtend.YangExtend;
 
 /// <summary>
 /// 怪物控制器

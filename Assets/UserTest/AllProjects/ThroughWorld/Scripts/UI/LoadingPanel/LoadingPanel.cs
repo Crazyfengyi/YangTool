@@ -7,7 +7,7 @@
 */
 
 using UnityEngine;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 
 /// <summary>
 /// 加载界面

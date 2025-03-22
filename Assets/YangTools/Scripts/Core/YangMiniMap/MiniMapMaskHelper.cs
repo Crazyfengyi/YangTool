@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using YangTools.Scripts.Core.YangToolsManager;
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     /// <summary>
     /// 小地图遮罩

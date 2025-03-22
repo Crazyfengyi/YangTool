@@ -10,9 +10,10 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using YangTools.ObjectPool;
+using YangTools.Scripts.Core.YangObjectPool;
+using YangTools.Scripts.Core.YangToolsManager;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     public abstract class YangUIManager : GameModuleBase, IUIManager 
     {

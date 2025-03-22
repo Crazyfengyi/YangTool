@@ -14,7 +14,6 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
 using YangTools;
-using YangTools.UGUI;
 
 namespace YangTools
 {

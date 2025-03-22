@@ -1,13 +1,14 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-23 
 */
+
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     /// <summary>
     /// 饿汉模式-单例模板

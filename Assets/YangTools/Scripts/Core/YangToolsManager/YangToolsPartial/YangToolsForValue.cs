@@ -1,10 +1,11 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-19 
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using YangTools.ObjectPool;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     public static partial class YangToolsManager
     {

@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using YangTools.Scripts.Core.YangToolsManager;
 
 namespace YangTools
 {

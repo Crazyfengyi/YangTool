@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using UnityEngine.SceneManagement;
-using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     public static partial class YangToolsManager
     {

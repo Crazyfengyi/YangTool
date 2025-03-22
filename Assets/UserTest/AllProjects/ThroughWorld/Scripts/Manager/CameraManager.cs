@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -10,6 +10,7 @@ using Cinemachine;
 using UnityEngine;
 using YangTools;
 using Sirenix.OdinInspector;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 相机管理器

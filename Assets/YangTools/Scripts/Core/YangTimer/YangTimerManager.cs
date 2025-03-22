@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using YangTools.Scripts.Core.YangToolsManager;
 
-namespace YangTools.Timer
+namespace YangTools.Scripts.Core.YangTimer
 {
     /// <summary>
     /// 计时器管理者

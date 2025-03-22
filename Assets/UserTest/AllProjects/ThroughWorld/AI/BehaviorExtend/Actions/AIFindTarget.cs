@@ -13,8 +13,8 @@ using UnityEngine.AI;
 using Pathfinding;
 using cfg.monster;
 using DataStruct;
-using YangTools.Extend;
 using Sirenix.OdinInspector;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 
 [TaskCategory("RoleAI/Motion")]
 public class AIFindTarget : Action

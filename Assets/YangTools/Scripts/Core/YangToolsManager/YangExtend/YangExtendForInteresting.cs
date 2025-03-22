@@ -1,26 +1,25 @@
 #define INTERESTING
 //#undef  INTERESTING  //测试时关闭
 
-/**
+/*
  *Copyright(C) 2020 by Test
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
  *UnityVersion：2022.1.0f1c1
  *创建时间:         2022-12-16
 */
-using UnityEngine;
-using System.Collections;
-using System.Runtime.CompilerServices;
 using System;
-using System.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
-namespace YangTools.Extend
+namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
 {
     /// <summary>
     /// 有趣的写法
     /// </summary>
-    public partial class YangExtend
+    public static partial class YangExtend
     {
 #if INTERESTING
         //任何有GetAwaiter()方法的都可await,你可以这样写:await 2;

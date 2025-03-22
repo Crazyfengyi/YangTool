@@ -8,9 +8,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace YangTools.Extend
+namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
 {
-    public partial class YangExtend
+    public static partial class YangExtend
     {
         /// <summary>
         /// 检查字段是否包含某个特性

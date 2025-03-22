@@ -5,9 +5,10 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2022-02-18 
 */
+
 using System;
 
-namespace YangTools.TaskExtend
+namespace YangTools.Scripts.Core.YangTask
 {
     /// <summary>
     /// 条件任务。

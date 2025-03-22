@@ -11,11 +11,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
-using YangTools.Extend;
-using YangTools.ObjectPool;
 using System.Collections.Generic;
 using DataStruct;
+using YangTools.Scripts.Core.YangObjectPool;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 
 /// <summary>
 /// 子弹基类

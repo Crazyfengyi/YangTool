@@ -11,7 +11,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
 
 public class AddAtk : BulletDecoratorBase
 {

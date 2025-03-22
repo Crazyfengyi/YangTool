@@ -9,9 +9,8 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     #region 类定义
 

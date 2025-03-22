@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     public static class MiniMapUtils
     {

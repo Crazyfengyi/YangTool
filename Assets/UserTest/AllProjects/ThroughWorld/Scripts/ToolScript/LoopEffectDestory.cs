@@ -6,7 +6,7 @@
  *创建时间:         2021-08-03 
 */
 using UnityEngine;
-using YangTools.Timer;
+using YangTools.Scripts.Core.YangTimer;
 
 /// <summary>
 /// 循环特效删除--先停止,等播完再删除

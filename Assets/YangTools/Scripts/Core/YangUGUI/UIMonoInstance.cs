@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace YangTools.UGUI
+namespace YangTools.Scripts.Core.YangUGUI
 {
     public class UIMonoInstance : MonoBehaviour
     {
@@ -49,7 +49,7 @@ namespace YangTools.UGUI
                 Debug.LogError("UIMonoInstance有重复");
             }
 
-            uiManager = YangToolsManager.GetModule<YangUIManager>();
+            uiManager = YangToolsManager.YangToolsManager.GetModule<YangUIManager>();
             if (uiManager == null)
             {
                 Debug.LogError("UIManager is null.");

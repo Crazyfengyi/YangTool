@@ -6,7 +6,7 @@
  *创建时间:         2022-02-18
 */
 
-namespace YangTools.TaskExtend
+namespace YangTools.Scripts.Core.YangTask
 {
     /// <summary>
     /// 任务管理器

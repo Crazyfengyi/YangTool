@@ -11,7 +11,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
 using DG.Tweening;
 /// <summary>
 /// 动画控制器

@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -10,7 +10,8 @@ using System.Collections;
 using DataStruct;
 using UnityEngine;
 using YangTools;
-using YangTools.Extend;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 交互系统

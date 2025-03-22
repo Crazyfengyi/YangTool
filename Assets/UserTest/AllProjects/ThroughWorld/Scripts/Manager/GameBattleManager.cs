@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -10,6 +10,7 @@ using DataStruct;
 using UnityEngine;
 using YangTools;
 using YangTools.Log;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 战斗管理器

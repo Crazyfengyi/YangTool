@@ -1,16 +1,15 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools.Log;
 using Object = UnityEngine.Object;
 
-namespace YangTools.Extend
+namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
 {
-    public partial class YangExtend
+    public static partial class YangExtend
     {
         #region GameObject扩展
 
@@ -134,7 +133,7 @@ namespace YangTools.Extend
         /// <summary>
         /// 自动设置显隐--会先判断是否已经是目标状态
         /// </summary>
-        public static void AutoSetActive(this GameObject gameObject, bool isActive, [CallerMemberNameAttribute] string callName = "")
+        public static void AutoSetActive(this GameObject gameObject, bool isActive, [CallerMemberName] string callName = "")
         {
             if (!gameObject)
             {
@@ -168,7 +167,7 @@ namespace YangTools.Extend
         public static void DefaultGameObjectRecycle(this GameObject gameObject)
         {
             gameObject.SetActive(false);
-            gameObject.transform.SetParent(YangToolsManager.GamePoolObject.transform);
+            gameObject.transform.SetParent(Scripts.Core.YangToolsManager.YangToolsManager.GamePoolObject.transform);
         }
 
         /// <summary>
@@ -259,8 +258,8 @@ namespace YangTools.Extend
             tempRenderer.bones = boneList.ToArray();
             tempRenderer.material = material;
 
-            Texture2D skinnedMeshAtlas = new Texture2D(YangTools.Extend.YangExtend.GetThanPowerOfTwo(width),
-                YangTools.Extend.YangExtend.GetThanPowerOfTwo(height));
+            Texture2D skinnedMeshAtlas = new Texture2D(Scripts.Core.YangToolsManager.YangExtend.YangExtend.GetThanPowerOfTwo(width),
+                Scripts.Core.YangToolsManager.YangExtend.YangExtend.GetThanPowerOfTwo(height));
             Rect[] packingResult = skinnedMeshAtlas.PackTextures(textures.ToArray(), 0);
             Vector2[] atlasUVs = new Vector2[uvCount];
             // 因为将贴图都整合到了一张图片上，所以需要重新计算UV

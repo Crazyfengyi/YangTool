@@ -11,7 +11,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangDataCode
 {
     /// <summary>
     /// 自动保存类(用的ES3.Save)

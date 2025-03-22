@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -9,8 +9,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
-using YangTools.Extend;
-using YangTools.ObjectPool;
+using YangTools.Scripts.Core.YangObjectPool;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangToolsManager;
 
 public class GameEffectManager : MonoSingleton<GameEffectManager>
 {

@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -9,9 +9,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 using YangTools;
-using YangTools.Extend;
-using YangTools.MiniMap;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangMiniMap;
+using YangTools.Scripts.Core.YangToolsManager;
 
 [AddComponentMenu("游戏管理器")]
 public class GameManager : MonoSingleton<GameManager>

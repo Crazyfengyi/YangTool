@@ -1,11 +1,11 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections;
+﻿using System.Collections;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     public class MiniMapIcon : MonoBehaviour
     {

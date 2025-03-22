@@ -10,8 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using YangTools.Scripts.Core.YangToolsManager;
 
-namespace YangTools.ObjectPool
+namespace YangTools.Scripts.Core.YangObjectPool
 {
     #region 对象池
 

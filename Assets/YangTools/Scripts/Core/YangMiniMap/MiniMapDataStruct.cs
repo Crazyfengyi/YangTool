@@ -6,7 +6,7 @@
  *创建时间:         2023-02-26
 */
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     /// <summary>
     /// 小地图渲染类型

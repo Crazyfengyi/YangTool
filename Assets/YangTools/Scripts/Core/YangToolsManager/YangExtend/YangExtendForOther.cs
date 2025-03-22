@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using UnityEngine.AI;
-using System.Text.RegularExpressions;
 
-namespace YangTools.Extend
+namespace YangTools.Scripts.Core.YangToolsManager.YangExtend
 {
     /// <summary>
     /// 扩展工具类

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using YangTools.Scripts.Core.YangToolsManager;
 
 namespace YangTools
 {

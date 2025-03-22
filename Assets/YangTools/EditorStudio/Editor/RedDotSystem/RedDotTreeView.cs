@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
-using GameMain.RedDot;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using YangTools.Scripts.Core.RedDotSystem;
 
 namespace GameMain
 {

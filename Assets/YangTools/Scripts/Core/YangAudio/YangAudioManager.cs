@@ -1,12 +1,13 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
+using YangTools.Scripts.Core.YangToolsManager;
 using Object = UnityEngine.Object;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangAudio
 {
     /// <summary>
     /// 声音管理器
@@ -172,7 +173,7 @@ namespace YangTools
             instance = new YangAudioManager();
             mixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
             managerObject = new GameObject("AudioManagerObject");
-            managerObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
+            managerObject.transform.SetParent(YangToolsManager.YangToolsManager.DontDestoryObject.transform);
 
             bgmAudio = CreateAudioSource("BGMusic", BackgroundPriorityDefault, 0.6f, 1f, 0);
             singleAudio = CreateAudioSource("singleMusic", SinglePriorityDefault, 1f, 1f, 0);

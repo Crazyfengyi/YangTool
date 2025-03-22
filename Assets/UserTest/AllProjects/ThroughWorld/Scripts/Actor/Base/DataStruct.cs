@@ -10,9 +10,8 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using YangTools.Extend;
 using cfg.skill;
-using static YangTools.Extend.YangExtend;
+using static YangTools.Scripts.Core.YangToolsManager.YangExtend.YangExtend;
 
 namespace DataStruct
 {

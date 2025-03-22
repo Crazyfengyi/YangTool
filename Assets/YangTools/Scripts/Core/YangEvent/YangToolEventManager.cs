@@ -6,9 +6,10 @@
  *UnityVersion：2019.3.3f1 
  *创建时间:         2020-06-14 
 */
+
 using System.Collections.Generic;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangEvent
 {
     /// <summary>
     /// 事件管理器

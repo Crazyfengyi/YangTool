@@ -6,15 +6,15 @@
  *创建时间:         2023-02-26
 */
 
-using Sirenix.OdinInspector;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using YangTools.Scripts.Core.YangToolsManager;
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     public class MiniMapManager : MonoSingleton<MiniMapManager>
     {

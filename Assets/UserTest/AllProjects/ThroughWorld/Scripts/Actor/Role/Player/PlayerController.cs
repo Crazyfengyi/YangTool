@@ -14,7 +14,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using YangTools;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
+using YangToolsManager = YangTools.Scripts.Core.YangToolsManager.YangToolsManager;
 
 public class PlayerController : RoleBase
 {

@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -10,7 +10,8 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using YangTools;
-using YangTools.MiniMap;
+using YangTools.Scripts.Core.YangMiniMap;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 游戏角色管理类

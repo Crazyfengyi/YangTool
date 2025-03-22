@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using YangTools.Scripts.Core.YangToolsManager;
 
 namespace YangTools
 {

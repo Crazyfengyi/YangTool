@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -12,12 +12,13 @@ using DG.Tweening;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using YangTools.ObjectPool;
-using YangTools.Extend;
 using YangTools.Log;
 using Sirenix.OdinInspector;
-using YangTools.UGUI;
 using UnityEngine.SocialPlatforms.Impl;
+using YangTools.Scripts.Core.YangObjectPool;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangToolsManager;
+using YangExtend = YangTools.Scripts.Core.YangToolsManager.YangExtend.YangExtend;
 
 /// <summary>
 /// UI管理器

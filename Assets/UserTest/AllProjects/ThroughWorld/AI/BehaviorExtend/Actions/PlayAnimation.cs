@@ -15,10 +15,10 @@ using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
 using System.Reflection;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using YangTools.Log;
-using YangTools.Extend;
 using Sirenix.OdinInspector;
 using UnityEngine.Diagnostics;
 using DataStruct;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
 
 //[BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.baidu.com")]
 [TaskIcon(BehaviorSetting.path + "AniAndEventIcon.png")]

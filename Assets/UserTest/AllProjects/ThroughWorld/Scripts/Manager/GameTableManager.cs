@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by Test 
  *All rights reserved. 
  *Author:       WIN-VJ19D9AB7HB 
@@ -12,6 +12,7 @@ using System.IO;
 using cfg;
 using cfg.item;
 using cfg.player;
+using YangTools.Scripts.Core.YangToolsManager;
 
 public class GameTableManager : MonoSingleton<GameTableManager>
 {

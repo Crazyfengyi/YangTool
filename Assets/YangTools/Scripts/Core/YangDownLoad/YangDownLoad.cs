@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangDownLoad
 {
     /// <summary>
     /// UnityWebRequest下载器
@@ -32,7 +32,7 @@ namespace YangTools
                     {
                         IEnumeratorObject = new GameObject("IEnumeratorObject");
                         instance = IEnumeratorObject.AddComponent<YangDownLoad>();
-                        IEnumeratorObject.transform.SetParent(YangToolsManager.DontDestoryObject.transform);
+                        IEnumeratorObject.transform.SetParent(YangToolsManager.YangToolsManager.DontDestoryObject.transform);
                     }
                     return instance;
                 }

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     public static partial class YangToolsManager
     {

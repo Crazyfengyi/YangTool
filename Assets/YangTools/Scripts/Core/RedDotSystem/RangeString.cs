@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using GameMain.RedDot;
 
-namespace GameMain
+namespace YangTools.Scripts.Core.RedDotSystem
 {
     public struct RangeString : IEquatable<RangeString>
     {

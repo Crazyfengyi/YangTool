@@ -11,8 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
-  
+
 [RequireComponent(typeof(CanvasRenderer))]
 public class EffectCanvas : Graphic 
 {  

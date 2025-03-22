@@ -7,11 +7,10 @@
 */
 
 using Sirenix.OdinInspector;
-using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace YangTools.MiniMap
+namespace YangTools.Scripts.Core.YangMiniMap
 {
     /// <summary>
     /// 小地图Item(挂载在角色身上)

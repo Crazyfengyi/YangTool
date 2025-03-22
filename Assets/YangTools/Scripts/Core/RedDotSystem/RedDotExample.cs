@@ -1,8 +1,7 @@
-using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace GameMain.RedDot
+namespace YangTools.Scripts.Core.RedDotSystem
 {
     public class RedDotExample : MonoBehaviour
     {

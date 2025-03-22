@@ -9,7 +9,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 
 /// <summary>
 /// 提示界面

@@ -10,7 +10,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 using static UnityEngine.Application;
 
 /// <summary>

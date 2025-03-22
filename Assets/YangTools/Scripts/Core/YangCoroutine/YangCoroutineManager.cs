@@ -5,11 +5,12 @@
  *UnityVersion：2021.2.1f1c1 
  *创建时间:         2021-12-12 
 */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangCoroutine
 {
     /// <summary>
     /// 协程管理器(利用迭代器实现携程)

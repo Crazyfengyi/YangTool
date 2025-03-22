@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using YangTools;
+using YangTools.Scripts.Core.YangToolsManager;
 
 namespace GameMain.Editor
 {

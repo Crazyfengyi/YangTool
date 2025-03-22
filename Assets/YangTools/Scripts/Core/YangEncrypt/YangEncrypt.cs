@@ -6,13 +6,14 @@
  *创建时间:         2020-06-13 
 */
 //加密是为了防止信息被泄露(用一定算法是信息变为不可读字符串),而签名是为了防止信息被篡改(用信息里的数据拼接字符串--可以再进行MD5加密)
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace YangTools.Encrypt
+namespace YangTools.Scripts.Core.YangEncrypt
 {
     public static class MD5Encrypt
     {

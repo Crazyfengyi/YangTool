@@ -11,8 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using YangTools;
-using YangTools.UGUI;
-  
+
 public class PlayerAniEvent : MonoBehaviour 
 {
 	#region 方法

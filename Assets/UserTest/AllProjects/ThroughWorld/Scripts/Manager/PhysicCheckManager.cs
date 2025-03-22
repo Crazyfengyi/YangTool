@@ -17,9 +17,10 @@ using System.Collections.Generic;
 using YangTools;
 using DataStruct;
 using System.Linq;
-using YangTools.Extend;
 using UnityEditorInternal;
 using cfg.player;
+using YangTools.Scripts.Core.YangToolsManager.YangExtend;
+using YangTools.Scripts.Core.YangToolsManager;
 
 /// <summary>
 /// 物理检测管理类

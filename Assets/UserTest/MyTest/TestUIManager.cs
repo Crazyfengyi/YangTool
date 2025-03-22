@@ -6,7 +6,6 @@
  *创建时间:         2022-12-11 
 */
 using UnityEngine;
-using YangTools.UGUI;
 
 public class TestUIManager : MonoBehaviour
 {

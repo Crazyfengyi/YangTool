@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace YangTools.Timer
+namespace YangTools.Scripts.Core.YangTimer
 {
     #region 计时器
     /// <summary>

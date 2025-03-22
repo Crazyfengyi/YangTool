@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -6,6 +6,8 @@
  *创建时间:         2022-10-17 
 */
 using YangTools;
+using YangTools.Scripts.Core.YangAudio;
+using YangTools.Scripts.Core.YangToolsManager;
 
 public class GameSoundManager : MonoSingleton<GameSoundManager>
 {

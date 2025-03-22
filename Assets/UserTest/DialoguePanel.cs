@@ -6,7 +6,7 @@
  *创建时间:         2022-04-05
 */
 
-using YangTools.UGUI;
+using YangTools.Scripts.Core.YangUGUI;
 
 public class DialoguePanel : UGUIPanelBase<DefaultUGUIDataBase>
 {

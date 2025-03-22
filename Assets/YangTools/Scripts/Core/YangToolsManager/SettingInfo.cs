@@ -8,7 +8,7 @@
 
 using UnityEngine;
 
-namespace YangTools
+namespace YangTools.Scripts.Core.YangToolsManager
 {
     /// <summary>
     /// 工具设置

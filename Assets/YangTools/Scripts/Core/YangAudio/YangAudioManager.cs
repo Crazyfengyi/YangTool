@@ -187,7 +187,7 @@ namespace YangTools.Scripts.Core.YangAudio
         }
 
         /// <summary>
-        /// 加载Resources里对应位置的Aduio
+        /// 加载Resources里对应位置的Audio
         /// </summary>
         public static void LoadAllAudio()
         {

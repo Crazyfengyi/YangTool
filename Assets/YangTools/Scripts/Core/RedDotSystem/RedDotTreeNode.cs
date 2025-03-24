@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
-using GameMain;
 using UnityEngine;
 
 namespace YangTools.Scripts.Core.RedDotSystem
 {
     public class RedDotTreeNode
     {
-        private Dictionary<RangeString, RedDotTreeNode> _children;
+        private Dictionary<RangeString, RedDotTreeNode> children;
         
-        private Action<RedDotTreeNode> _changeCallBack;
-        private int _callBackCount;
-        public int CallBackCount => _callBackCount;
+        private Action<RedDotTreeNode> changeCallBack;
+        private int callBackCount;
+        public int CallBackCount => callBackCount;
         
         public string Name { get; private set; }
 
@@ -19,41 +18,41 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public RedDotTreeNode Parent { get; private set; }
 
-        private string _fullPath;
+        private string fullPath;
         public string FullPath
         {
             get
             {
-                if (string.IsNullOrEmpty(_fullPath))
+                if (string.IsNullOrEmpty(fullPath))
                 {
                     if (Parent == null || Parent == RedDotMgr.Instance.RootNode)
                     {
-                        _fullPath = Name;
+                        fullPath = Name;
                     }
                     else
                     {
-                        _fullPath = Parent.FullPath + RedDotMgr.Instance.SplitChar + Name;
+                        fullPath = Parent.FullPath + RedDotMgr.Instance.SplitChar + Name;
                     }
                 }
 
-                return _fullPath;
+                return fullPath;
             }
         }
 
-        public Dictionary<RangeString, RedDotTreeNode>.ValueCollection Children => _children?.Values;
+        public Dictionary<RangeString, RedDotTreeNode>.ValueCollection Children => children?.Values;
 
         public int ChildrenCount
         {
             get
             {
-                if (_children == null)
+                if (children == null)
                 {
                     return 0;
                 }
 
-                int sum = _children.Count;
+                int sum = children.Count;
 
-                foreach (var node in _children.Values)
+                foreach (var node in children.Values)
                 {
                     sum += node.ChildrenCount;
                 }
@@ -68,9 +67,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
             Value = 0;
 
-            _changeCallBack = null;
+            changeCallBack = null;
 
-            _callBackCount = 0;
+            callBackCount = 0;
         }
 
         public RedDotTreeNode(string name, RedDotTreeNode parent):this(name)
@@ -82,9 +81,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
         {
             if(callback == null) return;
             
-            _changeCallBack += callback;
+            changeCallBack += callback;
 
-            _callBackCount++;
+            callBackCount++;
             
             RedDotMgr.Instance.CallBackNumberChange?.Invoke();
             
@@ -95,9 +94,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
         {
             if(callback == null) return;
             
-            _changeCallBack -= callback;
+            changeCallBack -= callback;
 
-            _callBackCount--;
+            callBackCount--;
             
             RedDotMgr.Instance.CallBackNumberChange?.Invoke();
             Debug.Log($"监听个数改变: {this}");
@@ -105,9 +104,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public void RemoveAllListener()
         {
-            _changeCallBack = null;
+            changeCallBack = null;
             
-            _callBackCount = 0;
+            callBackCount = 0;
             
             RedDotMgr.Instance.CallBackNumberChange?.Invoke();
             
@@ -116,7 +115,7 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public void ChangeValue(int newValue)
         {
-            if (_children != null && _children.Count > 0)
+            if (children != null && children.Count > 0)
             {
                 throw new Exception("不允许直接改变非叶子节点的数据");
             }
@@ -128,9 +127,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
         {
             int sum = 0;
 
-            if (_children != null && _children.Count > 0)
+            if (children != null && children.Count > 0)
             {
-                foreach (var child in _children)
+                foreach (var child in children)
                 {
                     sum += child.Value.Value;
                 }
@@ -153,29 +152,29 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public RedDotTreeNode GetChild(RangeString key)
         {
-            if (_children == null)
+            if (children == null)
             {
                 return null;
             }
 
-            _children.TryGetValue(key, out var child);
+            children.TryGetValue(key, out var child);
 
             return child;
         }
 
         private RedDotTreeNode AddChild(RangeString key)
         {
-            if (_children == null)
+            if (children == null)
             {
-                _children = new Dictionary<RangeString, RedDotTreeNode>();
+                children = new Dictionary<RangeString, RedDotTreeNode>();
             }
-            else if (_children.ContainsKey(key))
+            else if (children.ContainsKey(key))
             {
                 throw new Exception($"子节点添加失败,不允许重复添加 key={key}");
             }
 
             var child = new RedDotTreeNode(key.ToString(), this);
-            _children.Add(key, child);
+            children.Add(key, child);
             RedDotMgr.Instance.NodeNumChangeCallback?.Invoke();
 
             return child;
@@ -183,7 +182,7 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public bool RemoveChild(RangeString key)
         {
-            if (_children == null || _children.Count == 0)
+            if (children == null || children.Count == 0)
             {
                 return false;
             }
@@ -192,7 +191,7 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
             if (child != null)
             {
-                _children.Remove(key);
+                children.Remove(key);
 
                 RedDotMgr.Instance.MarkDirtyNode(this);
 
@@ -206,12 +205,12 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public void RemoveAllChild()
         {
-            if (_children == null || _children.Count == 0)
+            if (children == null || children.Count == 0)
             {
                 return;
             }
             
-            _children.Clear();
+            children.Clear();
             
             RedDotMgr.Instance.MarkDirtyNode(this);
             
@@ -226,7 +225,7 @@ namespace YangTools.Scripts.Core.RedDotSystem
             }
 
             Value = newValue;
-            _changeCallBack?.Invoke(this);
+            changeCallBack?.Invoke(this);
             
             RedDotMgr.Instance.NodeValueChangeCallback?.Invoke(this, Value);
             
@@ -235,7 +234,7 @@ namespace YangTools.Scripts.Core.RedDotSystem
 
         public override string ToString()
         {
-            return $"节点名:{Name} 节点值:{Value} 节点路径:{FullPath} 子节点数量:{ChildrenCount} 监听数量:{_callBackCount}";
+            return $"节点名:{Name} 节点值:{Value} 节点路径:{FullPath} 子节点数量:{ChildrenCount} 监听数量:{callBackCount}";
         }
     }
 }

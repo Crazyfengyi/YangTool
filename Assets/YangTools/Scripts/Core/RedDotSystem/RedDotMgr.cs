@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using GameMain;
 using UnityEngine;
 
 namespace YangTools.Scripts.Core.RedDotSystem
@@ -51,9 +50,9 @@ namespace YangTools.Scripts.Core.RedDotSystem
             
             dirtyNodes.Clear();
 
-            for (int i = 0; i < tempDirtyNodes.Count; i++)
+            foreach (var t in tempDirtyNodes)
             {
-                tempDirtyNodes[i].ChangeValue();
+                t.ChangeValue();
             }
         }
 

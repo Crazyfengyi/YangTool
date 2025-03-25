@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class TMPJump : MonoBehaviour
 {
-    private TMP_Text _textTMP;
-    private TMP_TextInfo _textInfo;
+    private TMP_Text textTMP;
+    private TMP_TextInfo textInfo;
 
     [LabelText("是否循环")]
     public bool isLoop;
@@ -40,26 +40,26 @@ public class TMPJump : MonoBehaviour
     [ContextMenu("文字跳动")]
     public void DoJump()
     {
-        if (_textTMP == null)
+        if (textTMP == null)
         {
-            TryGetComponent(out _textTMP);
+            TryGetComponent(out textTMP);
         }
 
-        _textInfo = _textTMP.textInfo;
-        var count = Mathf.Min(_textInfo.characterCount, _textInfo.characterInfo.Length);
+        textInfo = textTMP.textInfo;
+        var count = Mathf.Min(textInfo.characterCount, textInfo.characterInfo.Length);
 
         for (int i = 0; i < count; i++)
         {
-            var characterInfo = _textInfo.characterInfo[i];
+            var characterInfo = textInfo.characterInfo[i];
             if (!characterInfo.isVisible)
             {
                 continue;
             }
             var pos = Vector3.zero;
 
-            _textTMP.ForceMeshUpdate();
+            textTMP.ForceMeshUpdate();
             var materialIndex = characterInfo.materialReferenceIndex;
-            var meshInfo = _textInfo.meshInfo[materialIndex];
+            var meshInfo = textInfo.meshInfo[materialIndex];
             var vertexIndex = characterInfo.vertexIndex;
 
             var color = meshInfo.colors32[vertexIndex];
@@ -120,7 +120,7 @@ public class TMPJump : MonoBehaviour
             }
         }
 
-        _textTMP.UpdateVertexData();
+        textTMP.UpdateVertexData();
     }
 
     private Vector3[] GetOriPos(TMP_MeshInfo meshInfo, int vertexIndex)

@@ -6,8 +6,8 @@ namespace YangTools.Scripts.Core
 {
     public static partial class YangToolsManager
     {
-        static int collectionCount = 0;
-        static Stopwatch watch = null;
+        private static int collectionCount = 0;
+        private static Stopwatch watch = null;
         public static int testCount = 100000;//测试循环次数
 
         /// <summary>
@@ -47,15 +47,15 @@ namespace YangTools.Scripts.Core
         {
             string logStart = "--DEBUG START--";
             //文件名
-            string FileName = "FileName:" + System.IO.Path.GetFileName(new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileName());
+            string fileName = "FileName:" + System.IO.Path.GetFileName(new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileName());
             //文件行号
-            string LineNumber = "Line:" + new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileLineNumber().ToString();
+            string lineNumber = "Line:" + new System.Diagnostics.StackTrace(1, true).GetFrame(0).GetFileLineNumber().ToString();
             //方法名
             string callStack = "CallStack:" + new System.Diagnostics.StackTrace().GetFrame(1).GetMethod();
 
             string logEnd = "--END--";
 
-            string outputResult = $"{logStart}\n{callStack} \n{FileName}\n{LineNumber}\n{logEnd}";
+            string outputResult = $"{logStart}\n{callStack} \n{fileName}\n{lineNumber}\n{logEnd}";
             UnityEngine.Debug.Log(outputResult);
         }
     }

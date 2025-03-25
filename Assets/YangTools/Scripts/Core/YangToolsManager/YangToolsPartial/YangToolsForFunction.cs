@@ -38,18 +38,18 @@ namespace YangTools.Scripts.Core
         /// <summary>
         /// Catmull-Rom 曲线插值---返回点1-2的曲线
         /// </summary>
-        /// <param name="P0">点0</param>
-        /// <param name="P1">点1</param>
-        /// <param name="P2">点2</param>
-        /// <param name="P3">点3</param>
+        /// <param name="p0">点0</param>
+        /// <param name="p1">点1</param>
+        /// <param name="p2">点2</param>
+        /// <param name="p3">点3</param>
         /// <param name="t">百分比0-1</param>
-        public static Vector3 CatmullRomPoint(Vector3 P0, Vector3 P1, Vector3 P2, Vector3 P3, float t)
+        public static Vector3 CatmullRomPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
             float factor = 0.5f;
-            Vector3 c0 = P1;
-            Vector3 c1 = (P2 - P0) * factor;
-            Vector3 c2 = (P2 - P1) * 3f - (P3 - P1) * factor - (P2 - P0) * 2f * factor;
-            Vector3 c3 = (P2 - P1) * -2f + (P3 - P1) * factor + (P2 - P0) * factor;
+            Vector3 c0 = p1;
+            Vector3 c1 = (p2 - p0) * factor;
+            Vector3 c2 = (p2 - p1) * 3f - (p3 - p1) * factor - (p2 - p0) * 2f * factor;
+            Vector3 c3 = (p2 - p1) * -2f + (p3 - p1) * factor + (p2 - p0) * factor;
 
             Vector3 curvePoint = c3 * t * t * t + c2 * t * t + c1 * t + c0;
             return curvePoint;
@@ -63,7 +63,7 @@ namespace YangTools.Scripts.Core
         /// <param name="endPoint"></param>目标点
         /// <param name="segmentNum"></param>采样点的数量
         /// <returns>存储贝塞尔曲线点的数组</returns>
-        public static Vector3[] GetBeizerList(Vector3 startPoint, Vector3 controlPoint, Vector3 endPoint,
+        public static Vector3[] GetBezierList(Vector3 startPoint, Vector3 controlPoint, Vector3 endPoint,
             int segmentNum)
         {
             Vector3[] path = new Vector3[segmentNum];
@@ -107,9 +107,9 @@ namespace YangTools.Scripts.Core
         /// <summary>
         /// 判断方向
         /// </summary>
-        /// <param name="Forward">正前方</param>
-        /// <param name="SecondValue">要判断的向量(点)</param>
-        public static CheckDirectionType CheckDirection(Vector3 Forward, Vector3 SecondValue)
+        /// <param name="forward">正前方</param>
+        /// <param name="secondValue">要判断的向量(点)</param>
+        public static CheckDirectionType CheckDirection(Vector3 forward, Vector3 secondValue)
         {
             CheckDirectionType directionType = CheckDirectionType.None;
             //点乘--判断前后 >0:前 <0:后 
@@ -118,22 +118,22 @@ namespace YangTools.Scripts.Core
              * 等于0:表示两向量垂直
              * 小于0:表示两向量角度大于90度
              */
-            float dotVaule = Vector3.Dot(Forward.normalized, SecondValue.normalized);
+            float dotValue = Vector3.Dot(forward.normalized, secondValue.normalized);
             //叉乘--判断左右 y>0:左 y<0:右
             /*
              * 结果为一条新的向量,并垂直于两条旧的向量
              */
-            Vector3 crossVaule = Vector3.Cross(Forward.normalized, SecondValue.normalized);
+            Vector3 crossValue = Vector3.Cross(forward.normalized, secondValue.normalized);
 
             //叉乘和点乘的结合可用来准确判断方位
             //前
-            if (dotVaule > 0)
+            if (dotValue > 0)
             {
-                if (crossVaule.y > 0) //在左前方
+                if (crossValue.y > 0) //在左前方
                 {
                     directionType = CheckDirectionType.LeftForward;
                 }
-                else if (crossVaule.y < 0) //在右前方
+                else if (crossValue.y < 0) //在右前方
                 {
                     directionType = CheckDirectionType.RightForward;
                 }
@@ -142,13 +142,13 @@ namespace YangTools.Scripts.Core
                     directionType = CheckDirectionType.Forward;
                 }
             }
-            else if (dotVaule < 0) //后
+            else if (dotValue < 0) //后
             {
-                if (crossVaule.y > 0) //在左后方
+                if (crossValue.y > 0) //在左后方
                 {
                     directionType = CheckDirectionType.LeftBack;
                 }
-                else if (crossVaule.y < 0) //在右后方
+                else if (crossValue.y < 0) //在右后方
                 {
                     directionType = CheckDirectionType.RightBack;
                 }
@@ -159,11 +159,11 @@ namespace YangTools.Scripts.Core
             }
             else
             {
-                if (crossVaule.y > 0) //左
+                if (crossValue.y > 0) //左
                 {
                     directionType = CheckDirectionType.Left;
                 }
-                else if (crossVaule.y < 0) //右
+                else if (crossValue.y < 0) //右
                 {
                     directionType = CheckDirectionType.Right;
                 }

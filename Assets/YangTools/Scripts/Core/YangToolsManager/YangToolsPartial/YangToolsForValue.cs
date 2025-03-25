@@ -20,14 +20,14 @@ namespace YangTools.Scripts.Core
     public static partial class YangToolsManager
     {
         #region 随机数
-        private static System.Random s_Random = new System.Random((int)DateTime.UtcNow.Ticks);
+        private static System.Random Random = new System.Random((int)DateTime.UtcNow.Ticks);
         /// <summary>
         /// 设置随机数种子
         /// </summary>
         /// <param name="seed">随机数种子</param>
         public static void SetSeed(int seed)
         {
-            s_Random = new System.Random(seed);
+            Random = new System.Random(seed);
         }
         /// <summary>
         /// 返回非负随机数
@@ -35,7 +35,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,System.Int32.MaxValue)的32位带符号整数</returns>
         public static int GetRandom()
         {
-            return s_Random.Next();
+            return Random.Next();
         }
         /// <summary>
         /// 返回一个小于所指定最大值的非负随机数。
@@ -44,7 +44,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,maxValue)的32位带符号整数</returns>
         public static int GetRandom(int maxValue)
         {
-            return s_Random.Next(maxValue);
+            return Random.Next(maxValue);
         }
         /// <summary>
         /// 返回一个指定范围内的随机数
@@ -54,7 +54,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[minValue,maxValue)</returns>
         public static int GetRandom(int minValue, int maxValue)
         {
-            return s_Random.Next(minValue, maxValue);
+            return Random.Next(minValue, maxValue);
         }
         /// <summary>
         /// 返回0~1范围内的随机数
@@ -70,7 +70,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,1)的双精度浮点数</returns>
         public static double GetRandomDouble()
         {
-            return s_Random.NextDouble();
+            return Random.NextDouble();
         }
         /// <summary>
         /// 用随机数填充指定字节数组的元素
@@ -78,14 +78,14 @@ namespace YangTools.Scripts.Core
         /// <param name="buffer">包含随机数的字节数组</param>
         public static void GetRandomBytes(byte[] buffer)
         {
-            s_Random.NextBytes(buffer);
+            Random.NextBytes(buffer);
         }
         #endregion
 
         #region 字符串
         private const int StringBuilderCapacity = 1024;
         [ThreadStatic]
-        private static StringBuilder s_CachedStringBuilder = null;
+        private static StringBuilder CachedStringBuilder;
         /// <summary>
         /// 获取格式化字符串。
         /// </summary>
@@ -104,16 +104,13 @@ namespace YangTools.Scripts.Core
                 throw new Exception("Args is invalid.");
             }
             CheckCachedStringBuilder();
-            s_CachedStringBuilder.Length = 0;
-            s_CachedStringBuilder.AppendFormat(format, args);
-            return s_CachedStringBuilder.ToString();
+            CachedStringBuilder.Length = 0;
+            CachedStringBuilder.AppendFormat(format, args);
+            return CachedStringBuilder.ToString();
         }
         private static void CheckCachedStringBuilder()
         {
-            if (s_CachedStringBuilder == null)
-            {
-                s_CachedStringBuilder = new StringBuilder(StringBuilderCapacity);
-            }
+            CachedStringBuilder ??= new StringBuilder(StringBuilderCapacity);
         }
         #endregion
 
@@ -121,13 +118,13 @@ namespace YangTools.Scripts.Core
         /// <summary>
         /// 将一个数分割成几份
         /// </summary>
-        /// <param name="_targetNum">目标数</param>
-        /// <param name="_splitCount">分割成几份</param>
+        /// <param name="argTargetNum">目标数</param>
+        /// <param name="splitCount">分割成几份</param>
         /// <returns>分割符数(数组)</returns>
-        public static int[] SplitNumber(int _targetNum, int _splitCount)
+        public static int[] SplitNumber(int argTargetNum, int splitCount)
         {
-            int targetNum = _targetNum;
-            int[] arry = new int[_splitCount - 1];
+            int targetNum = argTargetNum;
+            int[] arry = new int[splitCount - 1];
             System.Random rand = new System.Random(DateTime.Now.Millisecond);
             for (int i = 0; i < arry.Length; i++)
             {
@@ -135,7 +132,7 @@ namespace YangTools.Scripts.Core
             }
             Array.Sort(arry);
             // split数组中存放的就是最后分成10份的数，
-            int[] split = new int[_splitCount];
+            int[] split = new int[splitCount];
             for (int i = 0; i < split.Length; i++)
             {
                 if (i == 0)
@@ -259,17 +256,17 @@ namespace YangTools.Scripts.Core
             return new Bounds(transform.position, new Vector3(Mathf.Abs(width), Mathf.Abs(height), 0));
         }
 
-        private static PointerEventData _eventDataCurrentPosition;
-        private static List<RaycastResult> _results;
+        private static PointerEventData EventDataCurrentPosition;
+        private static List<RaycastResult> Results;
         /// <summary>
         /// 鼠标是否在UI上
         /// </summary>
         public static bool IsOverUI()
         {
-            _eventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
-            _results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(_eventDataCurrentPosition, _results);
-            return _results.Count > 0;
+            EventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            Results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(EventDataCurrentPosition, Results);
+            return Results.Count > 0;
         }
         /// <summary>
         /// 获得Transform的世界坐标

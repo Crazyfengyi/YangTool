@@ -14,7 +14,7 @@ public class TestRuby : MonoBehaviour
             var textScript = GetComponentInChildren<CustomText>();
             textScript.ShowTextByTyping(textScript.text, () =>
             {
-                Debug.LogError("²âÊÔ½áÊø..");
+                Debug.LogError("æµ‹è¯•ç»“æŸ..");
             });
         }
     }

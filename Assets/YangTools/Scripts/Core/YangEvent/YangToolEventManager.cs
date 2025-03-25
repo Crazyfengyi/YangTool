@@ -7,6 +7,7 @@
  *创建时间:         2020-06-14 
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace YangTools.Scripts.Core.YangEvent
@@ -103,7 +104,7 @@ namespace YangTools.Scripts.Core.YangEvent
         /// </summary>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventArgs">参数列表</param>
-        public void Send(string eventName, IEventMessage eventArgs)
+        public void Send(string eventName, EventMessageBase eventArgs)
         {
             if (eventDic.TryGetValue(eventName, out var list))
             {
@@ -218,13 +219,13 @@ namespace YangTools.Scripts.Core.YangEvent
         /// <summary>
         /// 事件参数
         /// </summary>
-        public IEventMessage Args { get; private set; }
+        public EventMessageBase Args { get; private set; }
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="name">事件名称</param>
         /// <param name="args">事件参数</param>
-        public EventData(string name, IEventMessage args)
+        public EventData(string name, EventMessageBase args)
         {
             Name = name;
             Args = args;
@@ -233,8 +234,33 @@ namespace YangTools.Scripts.Core.YangEvent
     /// <summary>
     /// 事件参数
     /// </summary>
-    public interface IEventMessage
+    public class EventMessageBase
     {
+        public void SendSelf() 
+        {
+            YangExtend.YangExtend.SendEvent(this.GetType(),this);
+        }
+    }
+    
+    /// <summary>
+    /// 默认事件参数
+    /// </summary>
+    public class DefaultEventMsg : EventMessageBase
+    {
+    
     }
     #endregion
+    
+    /*
+     *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
+        {
+            Debug.LogError($"收到事件:{msg.Name}--{msg.Args}");
+        });
+        Debug.LogError("测试1");
+        yield return new WaitForSeconds(1);
+        Debug.LogError("测试2");
+        YangExtend.SendEvent<DefaultEventMsg>(new DefaultEventMsg());
+        DefaultEventMsg temp = new DefaultEventMsg();
+        temp.SendSelf();
+     */
 }

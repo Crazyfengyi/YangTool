@@ -17,6 +17,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using YangTools.Scripts.Core;
+using YangTools.Scripts.Core.YangEvent;
+using YangTools.Scripts.Core.YangExtend;
 using YangTools.Translate;
 
 namespace YangTools
@@ -42,32 +44,32 @@ namespace YangTools
             //TestTask();
             //TestUniTask();
             //SendEmail();
-            TestFun22();
-
-            int count = 0;
+            // TestFun22();
             
-            for(int i=0;i<100;i++)
-            {
-                Interlocked.Increment(ref count);//c#提供的原子操作
-            }
-            Parallel.For(0,1000, i =>
-            {
-                
-            });
-            //await TestTask().ConfigureAwait(false);//同步上下文,是否返回上一个线程来执行下面的操作
-            
-            var semaphore = new Semaphore(3, 3);//3个窗口,初始3个空闲
-            int[] array = Enumerable.Range(1, 20).ToArray();
-            int[] result = array.AsParallel().AsOrdered().Select(TestAsyncFun).ToArray();
-            int TestAsyncFun(int input)
-            {
-                semaphore.WaitOne();
-                Thread.Sleep(300);
-                semaphore.Release();
-                return input * 2;
-            }
-            
-            semaphore.Dispose();
+            // int count = 0;
+            //
+            // for(int i=0;i<100;i++)
+            // {
+            //     Interlocked.Increment(ref count);//c#提供的原子操作
+            // }
+            // Parallel.For(0,1000, i =>
+            // {
+            //     
+            // });
+            // //await TestTask().ConfigureAwait(false);//同步上下文,是否返回上一个线程来执行下面的操作
+            //
+            // var semaphore = new Semaphore(3, 3);//3个窗口,初始3个空闲
+            // int[] array = Enumerable.Range(1, 20).ToArray();
+            // int[] result = array.AsParallel().AsOrdered().Select(TestAsyncFun).ToArray();
+            // int TestAsyncFun(int input)
+            // {
+            //     semaphore.WaitOne();
+            //     Thread.Sleep(300);
+            //     semaphore.Release();
+            //     return input * 2;
+            // }
+            //
+            // semaphore.Dispose();
         }
 
         public static void TestFun22()

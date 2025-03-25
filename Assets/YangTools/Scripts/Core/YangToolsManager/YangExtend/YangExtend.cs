@@ -1,3 +1,4 @@
+using System;
 using YangTools.Scripts.Core.YangEvent;
 using EventInfo = YangTools.Scripts.Core.YangEvent.EventInfo;
 
@@ -18,10 +19,17 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="thisObject">绑定的物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventCallback">事件回调</param>
-        public static EventInfo AddEventListener(this UnityEngine.Object thisObject, string eventName,
-            EventCallback<EventData> eventCallback)
+        public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject,
+            EventCallback<EventData> eventCallback,string eventName = "")
+            where T : EventMessageBase
         {
-            var ret = new EventInfo(thisObject, eventName, eventCallback);
+            var targetName = typeof(T).FullName;
+            if (!string.IsNullOrEmpty(eventName))
+            {
+                targetName = eventName;
+            }
+            
+            var ret = new EventInfo(thisObject, targetName, eventCallback);
             YangEventManager.Instance.Add(ret);
             return ret;
         }
@@ -29,9 +37,8 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        /// <param name="thisObject">绑定的物体</param>
         /// <param name="listener">事件监听器实例</param>
-        public static void RemoveEventListener(this UnityEngine.Object thisObject, EventInfo listener)
+        public static void RemoveEventListener(EventInfo listener)
         {
             YangEventManager.Instance.Remove(listener); 
         }
@@ -39,7 +46,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        public static void RemoveEventListener(this UnityEngine.Object thisObject)
+        public static void RemoveEventListener(UnityEngine.Object thisObject)
         {
             YangEventManager.Instance.Remove(thisObject);
         }
@@ -47,14 +54,34 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 发送事件
         /// </summary>
-        /// <param name="thisObject">物体</param>
+        /// <param name="type">类型</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="args">事件参数</param>
-        public static void SendEvent(this UnityEngine.Object thisObject, string eventName, IEventMessage args)
+        public static void SendEvent(Type type, EventMessageBase args,string eventName = "") 
         {
-            YangEventManager.Instance.Send(eventName, args);
+            string targetName = type.FullName;
+            if (!string.IsNullOrEmpty(eventName))
+            {
+                targetName = eventName;
+            }
+            YangEventManager.Instance.Send(targetName, args);
         }
 
+        /// <summary>
+        /// 发送事件
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="args">事件参数</param>
+        public static void SendEvent<T>(EventMessageBase args,string eventName = "") 
+            where T : EventMessageBase 
+        {
+            string targetName = typeof(T).FullName;
+            if (!string.IsNullOrEmpty(eventName))
+            {
+                targetName = eventName;
+            }
+            YangEventManager.Instance.Send(targetName, args);
+        }
         #endregion
     }
 

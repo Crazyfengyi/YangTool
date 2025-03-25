@@ -15,7 +15,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 添加事件监听
         /// </summary>
-        /// <param name="thisObject">绑定物体</param>
+        /// <param name="thisObject">绑定的物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventCallback">事件回调</param>
         public static EventInfo AddEventListener(this UnityEngine.Object thisObject, string eventName,
@@ -29,7 +29,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 移除事件监听
         /// </summary>
-        /// <param name="thisObject"></param>
+        /// <param name="thisObject">绑定的物体</param>
         /// <param name="listener">事件监听器实例</param>
         public static void RemoveEventListener(this UnityEngine.Object thisObject, EventInfo listener)
         {
@@ -50,7 +50,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="thisObject">物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="args">事件参数</param>
-        public static void SendEvent(this UnityEngine.Object thisObject, string eventName, params object[] args)
+        public static void SendEvent(this UnityEngine.Object thisObject, string eventName, IEventMessage args)
         {
             YangEventManager.Instance.Send(eventName, args);
         }

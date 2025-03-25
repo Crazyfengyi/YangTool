@@ -103,7 +103,7 @@ namespace YangTools.Scripts.Core.YangEvent
         /// </summary>
         /// <param name="eventName">事件名称</param>
         /// <param name="eventArgs">参数列表</param>
-        public void Send(string eventName, params object[] eventArgs)
+        public void Send(string eventName, IEventMessage eventArgs)
         {
             if (eventDic.TryGetValue(eventName, out var list))
             {
@@ -218,17 +218,23 @@ namespace YangTools.Scripts.Core.YangEvent
         /// <summary>
         /// 事件参数
         /// </summary>
-        public object[] Args { get; private set; }
+        public IEventMessage Args { get; private set; }
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="name">事件名称</param>
         /// <param name="args">事件参数</param>
-        public EventData(string name, params object[] args)
+        public EventData(string name, IEventMessage args)
         {
             Name = name;
             Args = args;
         }
+    }
+    /// <summary>
+    /// 事件参数
+    /// </summary>
+    public interface IEventMessage
+    {
     }
     #endregion
 }

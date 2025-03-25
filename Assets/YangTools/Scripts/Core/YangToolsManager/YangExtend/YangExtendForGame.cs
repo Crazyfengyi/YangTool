@@ -710,11 +710,11 @@ namespace YangTools.Scripts.Core.YangExtend
         #region 通用UI动画
 
         /// <summary>
-        /// UGUI通用动画
+        /// UGUI窗口打开动画
         /// </summary>
         /// <param name="rectTrans">动画对象</param>
         /// <param name="callback">回调</param>
-        public static void CommonAni(RectTransform rectTrans, Action<RectTransform> callback = null)
+        public static void WindowOpenAni(RectTransform rectTrans, Action<RectTransform> callback = null)
         {
             DOTween.Kill(rectTrans, true);
 

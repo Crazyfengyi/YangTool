@@ -15,7 +15,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// 删除所有子节点
         /// </summary>
         /// <param name="content"></param>
-        public static void DestoryAllChild(this Transform content)
+        public static void DestroyAllChild(this Transform content)
         {
             foreach (Transform item in content)
             {
@@ -26,7 +26,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 只更改透明度
         /// </summary>
-        /// <param name="image"></param>
         public static void ChangeAlpha(this Image image, float alpha)
         {
             Color tempColor = image.color;
@@ -37,7 +36,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 只更改透明度
         /// </summary>
-        /// <param name="text"></param>
         public static void ChangeAlpha(this Text text, float alpha)
         {
             Color tempColor = text.color;
@@ -48,7 +46,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 只更局部坐标X
         /// </summary>
-        /// <param name="text"></param>
         public static void ChangeLocalPosX(this Transform transform, float x)
         {
             Vector3 oldPos = transform.localPosition;
@@ -59,7 +56,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 只更局部坐标Y
         /// </summary>
-        /// <param name="text"></param>
         public static void ChangeLocalPosY(this Transform transform, float y)
         {
             Vector3 oldPos = transform.localPosition;
@@ -180,7 +176,7 @@ namespace YangTools.Scripts.Core.YangExtend
                             BoolBridge obj = (BoolBridge)t.Assembly.CreateInstance(t.FullName);//创建bool桥类实例
                                                                                                //反射设置属性值
                             FieldInfo info = t.GetField("value");
-                            info.SetValue(obj, result == 0 ? false : true);
+                            info.SetValue(obj, result != 0);
 
                             return (T)(object)(obj.value);
                         }
@@ -468,23 +464,23 @@ namespace YangTools.Scripts.Core.YangExtend
         
         /* 多语言参考写法--自动回调
          *
-         *     public static void AutoToText(this TextMeshPro text, string textId)
-    {
-        var id = text.gameObject.GetInstanceID();
-        System.Action act = () =>
-        {
-            text.text = textId.ToText();
-        };
-        if (PlayerSettingManager.ChangeleLanguageTextDic.ContainsKey(id))
-        {
-            PlayerSettingManager.ChangeleLanguageTextDic[id] = act;
-        }
-        else
-        {
-            PlayerSettingManager.ChangeleLanguageTextDic.Add(id, act);
-        }
-        act();
-    }
+         * public static void AutoToText(this TextMeshPro text, string textId)
+            {
+                var id = text.gameObject.GetInstanceID();
+                System.Action act = () =>
+                {
+                    text.text = textId.ToText();
+                };
+                if (PlayerSettingManager.ChangeleLanguageTextDic.ContainsKey(id))
+                {
+                    PlayerSettingManager.ChangeleLanguageTextDic[id] = act;
+                }
+                else
+                {
+                    PlayerSettingManager.ChangeleLanguageTextDic.Add(id, act);
+                }
+                act();
+            }
          */
         
         /*

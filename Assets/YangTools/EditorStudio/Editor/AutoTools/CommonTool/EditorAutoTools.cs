@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,10 +21,12 @@ using YangTools.Scripts.Core;
 using YangTools.Scripts.Core.YangEvent;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Translate;
+using Debug = UnityEngine.Debug;
 
 namespace YangTools
 {
     #region 工具类--显示在unity面板上
+
     /// <summary>
     /// 工具类
     /// </summary>
@@ -31,12 +34,14 @@ namespace YangTools
     {
         static string currentFloder = "Assets/Resources/Prefabs/Monster";
         static string targetFloder = "Assets/Resources/UI/Monster/New";
+
         /// <summary>
         /// 输出字符串
         /// </summary>
         public static ConsleString consleString = new ConsleString();
 
         #region 测试
+
         [MenuItem(SettingInfo.MenuPath + "TestScript", priority = 100000)]
         public static async void TestScript()
         {
@@ -45,7 +50,7 @@ namespace YangTools
             //TestUniTask();
             //SendEmail();
             // TestFun22();
-            
+
             // int count = 0;
             //
             // for(int i=0;i<100;i++)
@@ -77,13 +82,13 @@ namespace YangTools
             DataTable temp = new DataTable();
             int tempValue1 = 10;
             //string temstr = string.Format("1+1/2+1*2+{0}", tempValue1);
-            string temstr = "1+1/2+1*2+tempValue1".Replace(nameof(tempValue1),tempValue1.ToString());
+            string temstr = "1+1/2+1*2+tempValue1".Replace(nameof(tempValue1), tempValue1.ToString());
             Debug.LogError($"测试1:{temstr}");
-            object valueObj = temp.Compute(temstr,string.Empty);
+            object valueObj = temp.Compute(temstr, string.Empty);
             float.TryParse(valueObj.ToString(), out var result);
             Debug.LogError($"测试2:{result}");
-        } 
-        
+        }
+
         static async Task TestTask()
         {
             Debug.LogError($"{Time.frameCount}");
@@ -115,15 +120,13 @@ namespace YangTools
             // 账号授权码 邮箱开通SMTP服务，可生成授权码 
             smtpServer.Credentials = new System.Net.NetworkCredential(mailSender, "密码") as ICredentialsByHost;
             smtpServer.EnableSsl = true;
-            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate,
+                X509Chain chain, SslPolicyErrors sslPolicyErrors)
             {
                 return true;
             };
             //发送邮件回调方法 
-            smtpServer.SendCompleted += new SendCompletedEventHandler((a, b) =>
-            {
-                Debug.LogError("发送邮件完成");
-            });
+            smtpServer.SendCompleted += new SendCompletedEventHandler((a, b) => { Debug.LogError("发送邮件完成"); });
 
             //同步发送 
             //smtpServer.Send(mailMessage);
@@ -189,7 +192,8 @@ namespace YangTools
             //Debug.LogError($"测试:{DateTime.Now}");
         }
 
-        static CancellationTokenSource token = null/*CancellationTokenSource.CreateLinkedTokenSource()*/;
+        static CancellationTokenSource token = null /*CancellationTokenSource.CreateLinkedTokenSource()*/;
+
         public static async void TestUni1()
         {
             try
@@ -201,29 +205,34 @@ namespace YangTools
                 Debug.LogError("取消task");
             }
 
-            bool cancelled = await UniTask.Delay(1000).SuppressCancellationThrow();//忽略取消task的异常抛出
+            bool cancelled = await UniTask.Delay(1000).SuppressCancellationThrow(); //忽略取消task的异常抛出
             if (cancelled)
             {
                 Debug.LogError("取消task");
             }
         }
+
         public static async UniTask TestUni2(CancellationToken token)
         {
             await UniTask.Delay(1000, cancellationToken: token);
             Debug.LogError($"测试:TestUni2");
         }
+
         public static async UniTask<string> TestUni3(string url, float timeOut)
         {
             var cts = new CancellationTokenSource();
-            cts.CancelAfterSlim(TimeSpan.FromSeconds(timeOut));//超时设置
+            cts.CancelAfterSlim(TimeSpan.FromSeconds(timeOut)); //超时设置
 
-            var (cancelOrFailed, result) = await UnityWebRequest.Get(url).SendWebRequest().WithCancellation(cts.Token).SuppressCancellationThrow();
+            var (cancelOrFailed, result) = await UnityWebRequest.Get(url).SendWebRequest().WithCancellation(cts.Token)
+                .SuppressCancellationThrow();
             if (!cancelOrFailed)
             {
                 return result.downloadHandler.text.Substring(0, 10);
             }
+
             return "取消或超时";
         }
+
         public static async UniTask TestUni4(Action callBack, UniTaskCompletionSource source)
         {
             if (true)
@@ -236,6 +245,7 @@ namespace YangTools
                 source.TrySetCanceled();
             }
         }
+
         public static async UniTask TestUni5()
         {
             //线程切换
@@ -247,12 +257,14 @@ namespace YangTools
             string fileNeme = "url";
             await UniTask.SwitchToThreadPool();
             string fileContent = await File.ReadAllTextAsync(fileNeme);
-            await UniTask.Yield(PlayerLoopTiming.Update);//只要调用yield就会回到主线程
+            await UniTask.Yield(PlayerLoopTiming.Update); //只要调用yield就会回到主线程
             Debug.LogError($"测试:{fileContent}");
         }
+
         #endregion
 
         #region 复制文件
+
         [MenuItem(SettingInfo.YongToolsFunctionPath + "CopyToFolder")]
         public static void CopyToTargetFolder()
         {
@@ -269,6 +281,7 @@ namespace YangTools
                     newList.Add(tempList[i]);
                 }
             }
+
             for (int i = 0; i < newList.Count; i++)
             {
                 try
@@ -276,11 +289,14 @@ namespace YangTools
                     string name = newList[i];
                     var ss = $"{currentFloder}/Monster_{name}";
                     // 加载资源
-                    GameObject obj = AssetDatabase.LoadAssetAtPath($"{currentFloder}/Monster_{name}.prefab", typeof(GameObject)) as GameObject;
+                    GameObject obj =
+                        AssetDatabase.LoadAssetAtPath($"{currentFloder}/Monster_{name}.prefab", typeof(GameObject)) as
+                            GameObject;
                     // 以模板创建
                     UnityEngine.Object obj2 = PrefabUtility.InstantiatePrefab(obj);
                     // 创建资源
-                    PrefabUtility.SaveAsPrefabAsset((GameObject)obj2, $"{targetFloder}/{name}.prefab", out bool success);
+                    PrefabUtility.SaveAsPrefabAsset((GameObject)obj2, $"{targetFloder}/{name}.prefab",
+                        out bool success);
 
                     if (success)
                     {
@@ -305,16 +321,18 @@ namespace YangTools
             AssetDatabase.Refresh();
             Debug.LogError("Copy完成");
         }
+
         /// <summary>
         /// 占位用--工具脚本需要MonoBehaviour站位
         /// </summary>
         public class MySample : MonoBehaviour
         {
-
         }
+
         #endregion
 
         #region 快捷工具
+
         [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中预制体的丢失脚本")]
         public static void RemoveMissScript()
         {
@@ -326,10 +344,12 @@ namespace YangTools
                 count += GameObjectUtility.RemoveMonoBehavioursWithMissingScript(objs[i]);
                 EditorUtility.SetDirty(objs[i]);
             }
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("移除丢失脚本结束", $"移除丢失脚本数量:{count}", "OK");
         }
+
         /// <summary>
         /// 删除所有动画事件
         /// </summary>
@@ -347,12 +367,15 @@ namespace YangTools
                 {
                     continue;
                 }
-                ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
+
+                ModelImporterClipAnimation[] tempModelClips =
+                    new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
                 for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
                 {
                     tempModelClips[k] = modelImporter.clipAnimations[k];
                     tempModelClips[k].events = new AnimationEvent[0];
                 }
+
                 modelImporter.clipAnimations = tempModelClips;
                 modelImporter.SaveAndReimport();
                 EditorUtility.SetDirty(modelImporter);
@@ -362,6 +385,7 @@ namespace YangTools
             AssetDatabase.Refresh();
             Debug.LogError("移除动画事件结束!");
         }
+
         #endregion
 
         #region 文件夹下图片重命名
@@ -383,8 +407,9 @@ namespace YangTools
                     {
                         //Debug.LogError("发现图像文件: " + Path.GetFileName(file));
 
-                        string oldFileName = Path.GetFileNameWithoutExtension(file);// 原始文件名
-                        string newFileName = baiduTranslate.Translate(oldFileName, LanguageType.Zh, LanguageType.En); // 新文件名
+                        string oldFileName = Path.GetFileNameWithoutExtension(file); // 原始文件名
+                        string newFileName =
+                            baiduTranslate.Translate(oldFileName, LanguageType.Zh, LanguageType.En); // 新文件名
                         newFileName = newFileName.Replace(" ", "");
 
                         var newFile = file.Replace(oldFileName, newFileName);
@@ -419,17 +444,124 @@ namespace YangTools
         }
 
         #endregion
+
+        #region Luban快捷
+
+        [MenuItem(SettingInfo.MenuPath + "更新表格")]
+        public static void UpdateLubanData()
+        {
+            // 设置BAT文件的路径
+            string batFilePath = @"LubanTool/gen_code_json.bat";
+            string path = Path.Combine(Environment.CurrentDirectory,batFilePath);
+            path = path.Replace('\\','/');
+            Debug.LogError($"{path}");
+            // 创建ProcessStartInfo对象
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = path,
+                WorkingDirectory = Path.Combine(Environment.CurrentDirectory,"LubanTool"),
+                UseShellExecute = true, // 使用Shell执行，这对于运行BAT文件是必需的
+                CreateNoWindow = false, // 显示窗口（如果你的BAT文件中有窗口的话）
+                RedirectStandardOutput = false, // 不重定向输出（如果你的应用需要读取输出的话，可以设置为true）
+                RedirectStandardError = false, // 不重定向错误输出（如果你的应用需要读取错误输出的话，可以设置为true）
+            };
+            // 创建Process对象并启动它
+            using (Process process = Process.Start(startInfo))
+            {
+                //等待进程退出（等待BAT文件执行完成）
+                process?.WaitForExit();
+            }
+            Debug.Log("BAT文件执行完成。");
+        }
+   
+        /// <summary>
+        /// 处理Cmd命令
+        /// </summary>
+        /// <param name="cmd">cmd排头</param>
+        /// <param name="argument">执行命令</param>
+        /// <param name="wait"></param>
+        public static bool ProcessCmdCommand(string cmd, string argument = null, bool wait = true)
+        {
+            Debug.Log($"cmd:{cmd.Colored("green")} argument:{argument.Colored("green")} wait:{wait.ToString().Colored("green")}");
+            if (SystemInfo.operatingSystemFamily == OperatingSystemFamily.MacOSX)
+            {
+                string command = argument == null ? cmd : $"{cmd} {argument}";
+                string tempFileName = "ProcessCmdCommand.sh";
+                File.WriteAllText(tempFileName, command);
+                Process process = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = "/bin/bash",
+                        Arguments = tempFileName,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    }
+                };
+                process.Start();
+
+                string outputInfo = process.StandardOutput.ReadToEnd();
+                string outputError = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+                int exitCode = process.ExitCode;
+
+                if (!string.IsNullOrEmpty(outputInfo)) Debug.Log(outputInfo);
+                if (!string.IsNullOrEmpty(outputError)) Debug.LogWarning(outputError);
+                //File.Delete(tempFileName);
+                return exitCode == 0;
+            }
+            else if (SystemInfo.operatingSystemFamily == OperatingSystemFamily.Windows)
+            {
+                ProcessStartInfo start = new ProcessStartInfo(cmd)
+                {
+                    Arguments = argument ?? cmd,
+                    CreateNoWindow = false,
+                    ErrorDialog = true,
+                    UseShellExecute = true,
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false,
+                    RedirectStandardInput = false,
+                };
+
+                Process p = Process.Start(start);
+                if (p == null) return false;
+                if (wait)
+                {
+                    p.WaitForExit();
+                    var exitCode = p.ExitCode;
+                    p.Close();
+                    return exitCode == 0;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                throw new Exception("UnKnow 操作系统");
+            }
+        }
+
+        private static string Colored(this string content, string color = "cyan")
+        {
+            return $"<color={color}>{content}</color>";
+        }
+        #endregion
     }
 
     #endregion
 
     #region 资源管理器监听
+
     /// <summary>
     /// 资源流程管理
     /// </summary>
     public class AssetChangeListener : AssetPostprocessor
     {
         #region 预制体更改
+
         /// <summary>
         /// 预制体修改监听
         /// </summary>
@@ -445,42 +577,52 @@ namespace YangTools
             // 关闭Prefab编辑界面回调
             UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += OnPrefabClosing;
         }
+
         private static void OnPrefabOpened(UnityEditor.SceneManagement.PrefabStage prefabStage)
         {
         }
+
         private static void OnPrefabSaving(GameObject prefab)
         {
         }
+
         private static void OnPrefabSaved(GameObject prefab)
         {
         }
+
         private static void OnPrefabClosing(UnityEditor.SceneManagement.PrefabStage prefabStage)
         {
         }
+
         #endregion
 
         #region 资源导入+更改
 
         //所有的资源的导入，删除，移动，都会调用此方法
-        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,
+            string[] movedFromAssetPaths)
         {
             foreach (string str in importedAssets)
             {
                 //导入
             }
+
             foreach (string str in deletedAssets)
             {
                 //删除
             }
+
             foreach (string str in movedAssets)
             {
                 //移动结束位置
             }
+
             foreach (string str in movedFromAssetPaths)
             {
                 //移动起始位置
             }
         }
+
         //模型导入之前调用
         public void OnPreprocessModel()
         {
@@ -491,14 +633,14 @@ namespace YangTools
             modelImporter.meshCompression = ModelImporterMeshCompression.Off;
 
             //带动画的FBX资源
-            if (/*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_anim.fbx"))
+            if ( /*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_anim.fbx"))
             {
                 modelImporter.importAnimation = true;
                 modelImporter.importBlendShapes = true;
                 modelImporter.animationCompression = ModelImporterAnimationCompression.KeyframeReduction;
             }
             //蒙皮模型
-            else if (/*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_skin.fbx"))
+            else if ( /*assetPath.Contains("Arts") &&*/ assetPath.EndsWith("_skin.fbx"))
             {
                 modelImporter.importAnimation = false;
                 modelImporter.importBlendShapes = false;
@@ -508,12 +650,15 @@ namespace YangTools
                 modelImporter.importLights = false;
             }
         }
+
         //模型导入之后调用
         public void OnPostprocessModel(GameObject go)
         {
         }
+
         // 正则表达式匹配--示例："宝箱&1204"名字
         private string RegexTextureMaxSize = @"[&]\d{2,4}";
+
         //纹理导入之后调用
         public void OnPostprocessTexture(Texture2D tex)
         {
@@ -568,10 +713,12 @@ namespace YangTools
                 }
             }
         }
+
         //精灵导入之后调用
         public void OnPostprocessSprites(Sprite spr)
         {
         }
+
         //声音导入前调用
         public void OnPreprocessAudio()
         {
@@ -598,19 +745,20 @@ namespace YangTools
             }
 
             #region 加载方式和质量设置
+
             /*
              * AudioClipLoadType加载音频的方式：
              * DecompressOnLoad 表示加载完音频文件之后，无压缩的释放到内存内，这样做的好处是播放的时候无需解压，速度快，减少CPU的开销，坏处是占用较多的内存。小于2秒的选用此选项。
              * CompressInMemory 表示加载完音频文件之后，以压缩的方式放到内存中，这样做的好处是节省了内存，坏处是播放的时候会消耗CPU进行解压处理。一般大于2秒，小于10秒选择这个选项。
              * Streaming 播放音频的时候流式加载，好处是文件不占用内存，坏处是加载的时候对IO、CPU都会有开销。我们项目一般对大于10秒的文件才会勾选此选项。
-             * 
+             *
              * Preload Audio Data 预加载音效数据，这个是在进入场景的时候进行预加载的，会占用内存，大于10秒的文件都不进行预加载，除非有特殊情况。
-             * 
+             *
              * CompressionFormat压缩格式：
              * PCM 最高质量和最大文件的方式。小于2秒的文件。
              * ADPCM 是介于PCM和Vorbis之间的压缩格式，官方推荐一些包含噪声且被多次播放的音效文件例如脚步声、打击声、武器碰撞声等可以选择，2-5秒的文件选用此选项。
              * Vorbis/Mp3 低质量的,压缩更小的文件,压缩率可以在选择了Vorbis格式之后，在Quality中进行选择，值越小，压缩越厉害，文件也越小。我们项目选择的值是：70。大于5秒的文件选择Vorbis
-             * 
+             *
              * 暂时选择：加载方式-> 长:Streaming 中：CompressedInMemory 短：DecompressOnLoad  原因：长音效用流模式,短音效加载放在内存中
              * 暂时选择：压缩格-> 长：PCM 中：ADPCM 短:Vorbis 原因：按质量分=长音效为背景音乐需要高质量,短音效不需要高质量(备用按大小分：长音效用低质量，短音效用高质量,大的需要压缩)
              */
@@ -619,9 +767,9 @@ namespace YangTools
             //长音效(背景)--20秒
             if (fileInfo.Length > 200 * 1024)
             {
-
                 AudioImporterSampleSettings defaultSetting = audioImporter.defaultSampleSettings;
-                if (defaultSetting.loadType != AudioClipLoadType.Streaming || defaultSetting.compressionFormat != AudioCompressionFormat.Vorbis)
+                if (defaultSetting.loadType != AudioClipLoadType.Streaming ||
+                    defaultSetting.compressionFormat != AudioCompressionFormat.Vorbis)
                 {
                     defaultSetting.loadType = AudioClipLoadType.Streaming;
                     defaultSetting.compressionFormat = AudioCompressionFormat.Vorbis;
@@ -634,17 +782,19 @@ namespace YangTools
             else if (fileInfo.Length > 100 * 1024)
             {
                 AudioImporterSampleSettings defaultSetting = audioImporter.defaultSampleSettings;
-                if (defaultSetting.loadType != AudioClipLoadType.CompressedInMemory || defaultSetting.compressionFormat != AudioCompressionFormat.ADPCM)
+                if (defaultSetting.loadType != AudioClipLoadType.CompressedInMemory ||
+                    defaultSetting.compressionFormat != AudioCompressionFormat.ADPCM)
                 {
                     defaultSetting.loadType = AudioClipLoadType.CompressedInMemory;
                     defaultSetting.compressionFormat = AudioCompressionFormat.ADPCM;
                     audioImporter.defaultSampleSettings = defaultSetting;
                 }
             }
-            else//短音效
+            else //短音效
             {
                 AudioImporterSampleSettings defaultSetting = audioImporter.defaultSampleSettings;
-                if (defaultSetting.loadType != AudioClipLoadType.DecompressOnLoad || defaultSetting.compressionFormat != AudioCompressionFormat.Vorbis)
+                if (defaultSetting.loadType != AudioClipLoadType.DecompressOnLoad ||
+                    defaultSetting.compressionFormat != AudioCompressionFormat.Vorbis)
                 {
                     defaultSetting.loadType = AudioClipLoadType.DecompressOnLoad;
                     defaultSetting.compressionFormat = AudioCompressionFormat.Vorbis;
@@ -652,17 +802,22 @@ namespace YangTools
                     audioImporter.defaultSampleSettings = defaultSetting;
                 }
             }
+
             #endregion
         }
+
         //声音导入后调用
         public void OnPostprocessAudio(AudioClip clip)
         {
         }
+
         #endregion
     }
+
     #endregion
 
     #region 编辑器创建物体扩展
+
     public static partial class EditorAutoTools
     {
         [MenuItem(SettingInfo.YangToolUIPath + "YangImage")]
@@ -679,6 +834,7 @@ namespace YangTools
                 }
             }
         }
+
         [MenuItem(SettingInfo.YangToolUIPath + "YangText")]
         static void CreatText()
         {
@@ -703,13 +859,16 @@ namespace YangTools
             }
         }
     }
+
     #endregion
 
     #region 备注
+
     //Process.Start(fullTablePath);C# 打开文件方法
+
     #endregion
 
-    /*  移动文件夹 
+    /*  移动文件夹
     /// <summary>
     /// 角色管理窗口
     /// </summary>

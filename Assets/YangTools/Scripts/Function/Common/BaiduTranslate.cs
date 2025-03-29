@@ -6,6 +6,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using Codice.Utils;
 using UnityEngine;
 
 namespace YangTools.Translate

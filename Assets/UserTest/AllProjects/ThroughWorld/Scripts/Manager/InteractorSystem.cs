@@ -57,7 +57,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     private void Start()
     {
         target = GameActorManager.Instance.MainPlayer;
-        StartCoroutine("UpdateNearestInteractive");
+        StartCoroutine(nameof(UpdateNearestInteractive));
     }
 
     private void LateUpdate()
@@ -122,7 +122,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             foreach (var item in recordCollider)
             {
                 if (item == null || !item.TryGetComponent<IInteractive>(out var interactive) || !interactive.CanInter() || !interactive.IsValid()) continue;
-                if (interactive == null || interactive.Equals(null)) continue;
+                if (interactive.Equals(null)) continue;
 
                 float overideDistance = interactive.GetOverideMaxDistance();//覆盖范围
                 float distance = interactive.DistanceToPoint(recordPos);//距离

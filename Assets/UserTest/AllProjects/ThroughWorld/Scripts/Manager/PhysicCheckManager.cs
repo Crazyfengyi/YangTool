@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by XCHANGE 
  *All rights reserved. 
  *Author:       YangWork 
@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using YangTools;
 using DataStruct;
 using System.Linq;
-using UnityEditorInternal;
-using cfg.player;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Scripts.Core;
 

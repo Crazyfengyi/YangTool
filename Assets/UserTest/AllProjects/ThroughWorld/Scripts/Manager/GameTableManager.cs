@@ -31,7 +31,7 @@ public class GameTableManager : MonoSingleton<GameTableManager>
 
     private JSONNode Loader(string fileName)
     {
-        return JSON.Parse(File.ReadAllText(Application.dataPath + "/Plugins/Luban/GenerateDatas/json/" + fileName + ".json"));
+        return JSON.Parse(File.ReadAllText(Application.dataPath + "/YangTools/LubanData/GenerateDatas/json/" + fileName + ".json"));
     }
 
 }

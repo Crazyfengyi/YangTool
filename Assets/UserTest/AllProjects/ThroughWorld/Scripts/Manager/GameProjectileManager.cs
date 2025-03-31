@@ -1,4 +1,4 @@
-/**
+/*
  *Copyright(C) 2020 by DefaultCompany
  *All rights reserved.
  *Author:       DESKTOP-AJS8G4U
@@ -8,27 +8,25 @@
 
 using System.Collections.Generic;
 using DataStruct;
-using UnityEditor;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangObjectPool;
 using YangTools.Scripts.Core;
-using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 /// <summary>
 /// 抛射体管理器(子弹)
 /// </summary>
-/// <remarks>Shooter射手-->emitter发射器--(发射信息--子弹id)-->生成子弹bullet(AtkInfo=>DamageInfo&&EffectInfo)</remarks>
+/// <remarks>Shooter射手-->emitter发射器--(发射信息--子弹id)-->生成子弹bullet(AtkInfo=>DamageInfo && EffectInfo)</remarks>
 public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 {
     //所有子弹
-    private static List<BulletBase> allBullet = new List<BulletBase>();
+    private static readonly List<BulletBase> AllBullet = new List<BulletBase>();
 
     public void Update()
     {
-        for (int i = 0; i < allBullet.Count; i++)
+        for (int i = 0; i < AllBullet.Count; i++)
         {
-            allBullet[i].OnUpdate();
+            AllBullet[i].OnUpdate();
         }
     }
 
@@ -37,11 +35,11 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// </summary>
     public void OnSceneChangeStart(string sceneName)
     {
-        for (int i = 0; i < allBullet.Count; i++)
+        for (int i = 0; i < AllBullet.Count; i++)
         {
-            allBullet[i].OnDie(BulletDieType.SceneChange);
+            AllBullet[i].OnDie(BulletDieType.SceneChange);
         }
-        allBullet.Clear();
+        AllBullet.Clear();
     }
 
     /// <summary>
@@ -83,7 +81,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
 
         bulletBase.targetCamp = bulletData.targetCampType;
         bulletBase.SetBulletObjectPoolItem(poolItem);
-        allBullet.Add(bulletBase);
+        AllBullet.Add(bulletBase);
         return bulletBase;
     }
 
@@ -92,7 +90,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     /// </summary>
     public void RemoveBullet(BulletBase bulletBase)
     {
-        allBullet.Remove(bulletBase);
+        AllBullet.Remove(bulletBase);
         YangObjectPool.Recycle(bulletBase.PoolItem);
     }
 }

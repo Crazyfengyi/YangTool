@@ -371,12 +371,12 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     public GameObject obj;
     public TipObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
         obj = tempObj;
     }
     public TipObjectPoolItem(string arg)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
         obj = tempObj;
     }
     public void OnGet()
@@ -435,7 +435,7 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/WordUI"), GameUIManager.Instance.scoreParent);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/WordUI"), GameUIManager.Instance.scoreParent);
         obj = tempObj;
     }
     public void OnGet()
@@ -501,7 +501,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad("UI/UICommon/HPBarUI"), GameUIManager.Instance.hpBarParent);
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/HPBarUI"), GameUIManager.Instance.hpBarParent);
         obj = tempObj;
         //设置显示
         text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);

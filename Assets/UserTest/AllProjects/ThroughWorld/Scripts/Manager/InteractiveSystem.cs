@@ -9,6 +9,7 @@
 using System.Collections;
 using DataStruct;
 using UnityEngine;
+using UnityEngine.Serialization;
 using YangTools;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Scripts.Core;
@@ -16,15 +17,15 @@ using YangTools.Scripts.Core;
 /// <summary>
 /// 交互系统
 /// </summary>
-public class InteractorSystem : MonoSingleton<InteractorSystem>
+public class InteractiveSystem : MonoSingleton<InteractiveSystem>
 {
-    public float InteractorRange = 3;//可交互范围
-    private WaitForSeconds interactorTimerInterval = new WaitForSeconds(0.2f);//交互物检测间隔
+    public GameObject ShowCircle;//显示的圆
+    
+    public float InteractiveRange = 3;//可交互范围
+    private readonly WaitForSeconds timerInterval = new WaitForSeconds(0.2f);//交互物检测间隔
 
     //交互者
     private RoleBase target;
-
-    public GameObject ShowCircle;//显示的圆
 
     //最近的可交互物
     private IInteractive currentInteractive;
@@ -33,16 +34,11 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
     private IInteractive lastInteractive;
 
     //强制刷新可交互物
-    private bool forceUpdate;
 
     /// <summary>
     /// 强制刷新
     /// </summary>
-    public bool ForceUpdate
-    {
-        get { return forceUpdate; }
-        set { forceUpdate = value; }
-    }
+    public bool ForceUpdate { get; set; }
 
     private InterActiveType interActiveType;
 
@@ -117,7 +113,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
             recordCollider = new Collider[20];
             currentInteractive = null;
             recordPos = target ? target.transform.position : Vector3.zero;
-            Physics.OverlapSphereNonAlloc(recordPos, InteractorRange, recordCollider, ~LayerMask.GetMask("Player"));
+            Physics.OverlapSphereNonAlloc(recordPos, InteractiveRange, recordCollider, ~LayerMask.GetMask("Player"));
             float currentMinDistance = float.MaxValue;
             foreach (var item in recordCollider)
             {
@@ -133,7 +129,7 @@ public class InteractorSystem : MonoSingleton<InteractorSystem>
                 }
             }
 
-            yield return interactorTimerInterval;
+            yield return timerInterval;
         }
     }
 }

@@ -225,7 +225,7 @@ public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
 
     public BulletObjectPoolItem(string name)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad($"Bullets/{name}"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Bullets/{name}"));
         obj = tempObj;
     }
 

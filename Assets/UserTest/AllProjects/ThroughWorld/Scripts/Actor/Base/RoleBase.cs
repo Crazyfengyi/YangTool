@@ -250,7 +250,7 @@ public abstract class RoleBase : GameActor
             ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
 
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
+        GameObject obj = GameResourceManager.Instance.ResourceLoad($"Effects/{effectName}");
 
         Vector3 tempPos = ModelInfo.GetEffectPoint(effectPointType).position - ModelInfo.GetEffectPoint(ModelPointType.Foot).position;
         GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity, ModelInfo.GetEffectPoint(ModelPointType.Root));
@@ -285,7 +285,7 @@ public abstract class RoleBase : GameActor
         {
             ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Effects/{effectName}");
+        GameObject obj = GameResourceManager.Instance.ResourceLoad($"Effects/{effectName}");
 
         Vector3 tempPos = ModelInfo.GetEffectPoint(effectPointType).position;
         GameObject effect = GameObject.Instantiate(obj, tempPos, Quaternion.identity);

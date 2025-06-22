@@ -196,7 +196,7 @@ public class PlayerController : RoleBase
 
     public void OnInteractive(InputAction.CallbackContext context)
     {
-        InteractorSystem.Instance.OnInter();
+        InteractiveSystem.Instance.OnInter();
     }
 
     public void OnJump(InputAction.CallbackContext context)

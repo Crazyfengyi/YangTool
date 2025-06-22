@@ -57,7 +57,7 @@ public class SkillControl
         {
             //TODO:资源加载
             //行为树里正式执行
-            skillTimeLine.playableAsset = GameResourceManager.Instance.ResoruceLoad<PlayableAsset>($"Skills/{CurrentRunTimeSkillData.skill.ResName}");
+            skillTimeLine.playableAsset = GameResourceManager.Instance.ResourceLoad<PlayableAsset>($"Skills/{CurrentRunTimeSkillData.skill.ResName}");
 
             Dictionary<string, PlayableBinding> bindingDict = new Dictionary<string, PlayableBinding>();
             foreach (var at in skillTimeLine.playableAsset.outputs)

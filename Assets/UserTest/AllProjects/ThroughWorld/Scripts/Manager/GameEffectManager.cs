@@ -91,7 +91,7 @@ public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
 
     public EffectObjectPoolItem(string name)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResoruceLoad($"Effects/{name}"));
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Effects/{name}"));
         obj = tempObj;
     }
 

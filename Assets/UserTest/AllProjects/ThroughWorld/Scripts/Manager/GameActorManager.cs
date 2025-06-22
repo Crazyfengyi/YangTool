@@ -99,7 +99,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// </summary>
     public Monster CreateMonster(int id = 10001)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Monster/Monster_{id}");
+        GameObject obj = GameResourceManager.Instance.ResourceLoad($"Monster/Monster_{id}");
         if (obj)
         {
             ICustomLife tempScript = Instantiate(obj, new Vector3(Random.Range(-10, 10), 0f, Random.Range(-10, 10)), Quaternion.identity).GetComponent<ICustomLife>();
@@ -116,7 +116,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     }
     public void CreateTree(Vector3 pos)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Build/Tree");
+        GameObject obj = GameResourceManager.Instance.ResourceLoad($"Build/Tree");
         if (obj)
         {
             ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();
@@ -126,7 +126,7 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     }
     public GameObject CreateItem(string itemName, Vector3 pos)
     {
-        GameObject obj = GameResourceManager.Instance.ResoruceLoad($"Item/{itemName}");
+        GameObject obj = GameResourceManager.Instance.ResourceLoad($"Item/{itemName}");
         if (obj)
         {
             ICustomLife temp = Instantiate(obj, pos, Quaternion.identity).GetComponent<ICustomLife>();

@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -11,7 +11,7 @@ public class LookCamera : MonoBehaviour
 {
     public void LateUpdate()
     {
-        if (CameraManager.Instance.PlayerCamera != null)
+        if (CameraManager.IsInit && CameraManager.Instance?.PlayerCamera)
         {
             //竖
             var v = CameraManager.Instance.PlayerCamera.transform.parent.eulerAngles.x;

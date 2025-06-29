@@ -7,6 +7,7 @@
 */
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core.YangObjectPool;
@@ -55,7 +56,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     private EffectObjectPoolItem CreateEffet(EffectData effectData)
     {
         //特效对象
-        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName, effectData.effectName);
+        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName, effectData.effectName).GetAwaiter().GetResult();
         poolItem.InitData(effectData);
         GameObject effectObj = poolItem.obj;
         effectObj.transform.localPosition = effectData.worldPos;
@@ -85,18 +86,25 @@ public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
     public bool IsInPool { get; set; }
     public GameObject obj;
 
+    private string pathName;
     public EffectObjectPoolItem()
     {
     }
 
     public EffectObjectPoolItem(string name)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Effects/{name}"));
-        obj = tempObj;
+        pathName = name;
     }
 
     public void InitData(EffectData effectData)
     {
+    }
+
+    public Task OnCreate()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Effects/{pathName}"));
+        obj = tempObj;
+        return Task.CompletedTask;
     }
 
     public void OnGet()

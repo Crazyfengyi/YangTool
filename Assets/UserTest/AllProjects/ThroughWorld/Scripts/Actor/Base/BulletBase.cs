@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using TMPro;
 using YangTools;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataStruct;
 using YangTools.Scripts.Core.YangObjectPool;
 using YangTools.Scripts.Core.YangExtend;
@@ -219,18 +220,25 @@ public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
     public bool IsInPool { get; set; }
     public GameObject obj;
 
+    private string pathName;
     public BulletObjectPoolItem()
     {
     }
 
     public BulletObjectPoolItem(string name)
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Bullets/{name}"));
-        obj = tempObj;
+        pathName = name;
     }
 
     public void InitData(BulletData bulletData)
     {
+    }
+
+    public Task OnCreate()
+    {
+        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad($"Bullets/{pathName}"));
+        obj = tempObj;
+        return Task.CompletedTask;
     }
 
     public void OnGet()

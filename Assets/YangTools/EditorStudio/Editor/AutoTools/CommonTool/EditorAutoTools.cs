@@ -18,7 +18,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using YangTools.Scripts.Core;
-using YangTools.Scripts.Core.YangEvent;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Translate;
 using Debug = UnityEngine.Debug;

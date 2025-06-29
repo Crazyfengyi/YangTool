@@ -19,7 +19,7 @@ namespace YangTools.Scripts.Core.ResourceManager
 {
     public class ResourceManager
     {
-        private Dictionary<string, Object> assetCacheDict;
+        private static Dictionary<string, Object> assetCacheDict = new Dictionary<string, Object>();
 
         protected void OnEnter()
         {
@@ -38,7 +38,7 @@ namespace YangTools.Scripts.Core.ResourceManager
         /// <param name="location">地址</param>
         /// <param name="parent">父节点</param>
         /// <param name="inWorldSpace">世界空间</param>
-        public async UniTask<GameObject> InstantiateGameObject(string location, Transform parent, bool inWorldSpace)
+        public static async UniTask<GameObject> InstantiateGameObject(string location, Transform parent, bool inWorldSpace)
         {
             GameObject prefab = await LoadAssetAsync<GameObject>(location);
             GameObject instance = null;
@@ -53,7 +53,7 @@ namespace YangTools.Scripts.Core.ResourceManager
         /// <param name="timing"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async UniTask<T> LoadAssetAsync<T>(string location, System.IProgress<float> progress = null,
+        public static async UniTask<T> LoadAssetAsync<T>(string location, System.IProgress<float> progress = null,
             PlayerLoopTiming timing = PlayerLoopTiming.Update) where T : Object
         {
             if (assetCacheDict.TryGetValue(location, out var asset))
@@ -83,7 +83,7 @@ namespace YangTools.Scripts.Core.ResourceManager
             return null;
         }
 
-        public async UniTask<TObject> LoadSubAssetAsync<TObject>(string location, string assetName,
+        public static async UniTask<TObject> LoadSubAssetAsync<TObject>(string location, string assetName,
             System.IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update)
             where TObject : Object
         {
@@ -112,7 +112,7 @@ namespace YangTools.Scripts.Core.ResourceManager
             return subAsset;
         }
 
-        public async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
+        public static async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
         {
             Debug.Log($"YooAssets场景加载---{location}---"); 
             SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode,localPhysicsMode,suspendLoad, priority);
@@ -121,12 +121,12 @@ namespace YangTools.Scripts.Core.ResourceManager
             return handler;
         }
 
-        public async UniTask<Sprite> LoadSprite(string location)
+        public static async UniTask<Sprite> LoadSprite(string location)
         {
             return await LoadAssetAsync<Sprite>(location);
         }
 
-        public async void SetImageSprite(Image image, string spriteLocation, System.Action<Image> success = null)
+        public static async void SetImageSprite(Image image, string spriteLocation, System.Action<Image> success = null)
         {
             if (image == null)
             {
@@ -153,7 +153,7 @@ namespace YangTools.Scripts.Core.ResourceManager
             }
         }
 
-        public async UniTask<AudioClip> LoadAudioClip(string location)
+        public static async UniTask<AudioClip> LoadAudioClip(string location)
         {
             return await LoadAssetAsync<AudioClip>(location);
         }

@@ -10,7 +10,6 @@ public class GameManager2 : MonoBehaviour
     public Camera cam;
     private void Start()
     {
-        
         idleBut.onClick.AddListener( delegate { Idle(); } );
         walkBut.onClick.AddListener(delegate {  ChangeStateTo(SlimeAnimationState.Walk); });
         jumpBut.onClick.AddListener(delegate { LookAtCamera(); ChangeStateTo(SlimeAnimationState.Jump); });

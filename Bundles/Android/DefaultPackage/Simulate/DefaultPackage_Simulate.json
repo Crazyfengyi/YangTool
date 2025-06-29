@@ -1,0 +1,214 @@
+{
+    "FileVersion": "2.3.1",
+    "EnableAddressable": true,
+    "LocationToLower": false,
+    "IncludeAssetGUID": true,
+    "OutputNameStyle": 0,
+    "BuildBundleType": 1,
+    "BuildPipeline": "EditorSimulateBuildPipeline",
+    "PackageName": "DefaultPackage",
+    "PackageVersion": "Simulate",
+    "PackageNote": "2025/6/30 2:38:20",
+    "AssetList": [
+        {
+            "Address": "CommonConfirmPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/CommonConfirmPanel/CommonConfirmPanel.prefab",
+            "AssetGUID": "960f31c749e828147895d95300ea70f1",
+            "AssetTags": [],
+            "BundleID": 0,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "GameOverPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/GameOverPanel/GameOverPanel.prefab",
+            "AssetGUID": "d76348123c59f394eaf43dd9d3dc15f5",
+            "AssetTags": [],
+            "BundleID": 1,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "Loading",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/Loading.anim",
+            "AssetGUID": "d51509d3b745b374093879fff7f8073a",
+            "AssetTags": [],
+            "BundleID": 2,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "LoadingAni",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/LoadingAni.controller",
+            "AssetGUID": "923e47f22364d9444a7b72ec6404a24f",
+            "AssetTags": [],
+            "BundleID": 3,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "LoadingPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/LoadingPanel.prefab",
+            "AssetGUID": "2cd586fee4044aa44936fa1d1b4a7ab9",
+            "AssetTags": [],
+            "BundleID": 4,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "SeceneLoading",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/SceneLoading/SeceneLoading.prefab",
+            "AssetGUID": "8ece96e781c0d1d4ba5dbeaa2628e29c",
+            "AssetTags": [],
+            "BundleID": 5,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "TipsPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/TipsPanel/TipsPanel.prefab",
+            "AssetGUID": "b27a2fa16a1756c4a85fbe7e954bb142",
+            "AssetTags": [],
+            "BundleID": 6,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "HPBarUI",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/HPBarUI.prefab",
+            "AssetGUID": "065459738c17cb24bb13228169f8cd0b",
+            "AssetTags": [],
+            "BundleID": 7,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "TipsNode",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/TipsNode.prefab",
+            "AssetGUID": "3fad1ddc86ff4e8428259218ce89f888",
+            "AssetTags": [],
+            "BundleID": 8,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "UIRoot",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/UIRoot.prefab",
+            "AssetGUID": "8a8f053af1c816e49a6172802b65b8e0",
+            "AssetTags": [],
+            "BundleID": 9,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "WordUI",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/WordUI.prefab",
+            "AssetGUID": "eb67fefc264847e4999463dc544fd0e7",
+            "AssetTags": [],
+            "BundleID": 10,
+            "DependBundleIDs": []
+        }
+    ],
+    "BundleList": [
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_commonconfirmpanel_commonconfirmpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "a69bcf29743fc6a09b6202fb866f26f4",
+            "FileCRC": "00000000",
+            "FileSize": 33896,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_gameoverpanel_gameoverpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "ed77eaa23f14ebf3c80b4311457f18e0",
+            "FileCRC": "00000000",
+            "FileSize": 29016,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loading.bundle",
+            "UnityCRC": 0,
+            "FileHash": "5822c32375fa6422272cfe58f496b8fd",
+            "FileCRC": "00000000",
+            "FileSize": 15508,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingani.bundle",
+            "UnityCRC": 0,
+            "FileHash": "c00833fa532c41fcac8b59ff963ec86d",
+            "FileCRC": "00000000",
+            "FileSize": 9376,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "93ffba67c93ed92e3da9a6ca5443b6eb",
+            "FileCRC": "00000000",
+            "FileSize": 22120,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_sceneloading_seceneloading.bundle",
+            "UnityCRC": 0,
+            "FileHash": "5f85157248d7f4a3c5133da3d8d5c81a",
+            "FileCRC": "00000000",
+            "FileSize": 18120,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_tipspanel_tipspanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "cf894cd0edf1c31711ee2dfb36b9f67b",
+            "FileCRC": "00000000",
+            "FileSize": 19420,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_hpbarui.bundle",
+            "UnityCRC": 0,
+            "FileHash": "02ce96fc47eed584d1567827e6e42a05",
+            "FileCRC": "00000000",
+            "FileSize": 29520,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_tipsnode.bundle",
+            "UnityCRC": 0,
+            "FileHash": "3a7cbde40e3826741282a08d89a7dc3e",
+            "FileCRC": "00000000",
+            "FileSize": 20344,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_uiroot.bundle",
+            "UnityCRC": 0,
+            "FileHash": "eb5f99778fd359bdb7ed96342502e9f1",
+            "FileCRC": "00000000",
+            "FileSize": 70964,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_wordui.bundle",
+            "UnityCRC": 0,
+            "FileHash": "c8dc9d3dadab9dd1f0117467af4adfb3",
+            "FileCRC": "00000000",
+            "FileSize": 14816,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        }
+    ]
+}

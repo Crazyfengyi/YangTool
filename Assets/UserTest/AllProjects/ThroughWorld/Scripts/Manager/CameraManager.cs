@@ -41,7 +41,7 @@ public class CameraManager : MonoSingleton<CameraManager>
         {
             if (mainCamera == null)
             {
-                GameObject obj = GameObject.Instantiate(cameraPrefab);
+                GameObject obj = Instantiate(cameraPrefab);
                 cameraRoot = obj;
                 Init();
             }

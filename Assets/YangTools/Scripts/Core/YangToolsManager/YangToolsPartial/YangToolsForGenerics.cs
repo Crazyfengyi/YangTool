@@ -1,10 +1,10 @@
-/* 
- *Copyright(C) 2020 by DefaultCompany 
- *All rights reserved. 
- *Author:       DESKTOP-AJS8G4U 
- *UnityVersion：2021.2.1f1c1 
- *创建时间:         2021-12-23 
-*/
+/*
+ *Copyright(C) 2020 by DefaultCompany
+ *All rights reserved.
+ *Author:       DESKTOP-AJS8G4U
+ *UnityVersion：2021.2.1f1c1
+ *创建时间:         2021-12-23
+ */
 
 using UnityEngine;
 
@@ -17,14 +17,17 @@ namespace YangTools.Scripts.Core
     {
         public static T Instance { get; } = new T();
     }
+
     /// <summary>
     /// 简单的线程安全单例模板
     /// </summary>
     public abstract class SimpleSingleton<T> where T : class, new()
     {
         private static T instance = default(T);
+
         //线程锁
         private static readonly object obj = new object();
+
         public T Instance
         {
             get
@@ -37,11 +40,13 @@ namespace YangTools.Scripts.Core
                         //支持非公共的无参构造函数，new T()不支持非公共的无参构造函数
                         //instance = (T)Activator.CreateInstance(typeof(T), true);
                     }
+
                     return instance;
                 }
             }
         }
     }
+
     /// <summary>
     /// Mono单例模板
     /// </summary>
@@ -50,6 +55,7 @@ namespace YangTools.Scripts.Core
         private static T instance = null;
         private static readonly object locker = new object();
         private static bool isInstanceDestory;
+        public static bool IsInit => instance = null;
         public static T Instance
         {
             get
@@ -59,6 +65,7 @@ namespace YangTools.Scripts.Core
                     instance = null;
                     return instance;
                 }
+
                 lock (locker)
                 {
                     if (instance == null)
@@ -69,8 +76,10 @@ namespace YangTools.Scripts.Core
                             Debug.LogError($"不应该存在多个{typeof(T)}单例！");
                             return instance;
                         }
+
                         if (instance == null)
                         {
+                            Debug.Log($"初始化{typeof(T)}");
                             GameObject singleton = new GameObject();
                             instance = singleton.AddComponent<T>();
                             singleton.name = typeof(T) + "(Singleton)";
@@ -86,19 +95,23 @@ namespace YangTools.Scripts.Core
                             }
                         }
                     }
+
                     return instance;
                 }
             }
         }
+
         protected virtual void Awake()
         {
             isInstanceDestory = false;
         }
+
         protected virtual void OnDestroy()
         {
             isInstanceDestory = true;
         }
     }
+
     /// <summary>
     /// Mono注册性单例
     /// </summary>
@@ -110,6 +123,7 @@ namespace YangTools.Scripts.Core
     {
         private static T instance;
         private static readonly object locker = new object();
+
         public static T Instance
         {
             get

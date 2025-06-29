@@ -113,14 +113,14 @@ public class PlayerController : RoleBase
         {
             Animator.SetFloat("Speed", inputVector3.magnitude);
         }
-        if (!advancedWalker.IsGrounded() && isJumpAni == false)
+        if (advancedWalker && !advancedWalker.IsGrounded() && isJumpAni == false)
         {
             isJumpAni = true;
             AniControl.Play("Jump", 0, 0);
         }
 
         //跳跃切换到地面
-        if (advancedWalker.IsGrounded() && isJumpAni == true)
+        if (advancedWalker && advancedWalker.IsGrounded() && isJumpAni == true)
         {
             AniControl.Play("Land");
             isJumpAni = false;

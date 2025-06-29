@@ -48,7 +48,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     public BulletBase CreateBullet(BulletData bulletData)
     {
         //子弹对象
-        BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name);
+        BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name).GetAwaiter().GetResult();
         poolItem.InitData(bulletData);
         GameObject bulletObj = poolItem.obj;
         bulletObj.transform.position = bulletData.StartPostion;

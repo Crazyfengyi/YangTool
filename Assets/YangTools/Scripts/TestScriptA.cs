@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using YangTools.Scripts.Core.YangEvent;
 using YangTools.Scripts.Core.YangExtend;
 
 public class TestScriptA : MonoBehaviour

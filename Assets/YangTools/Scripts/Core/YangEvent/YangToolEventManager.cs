@@ -9,8 +9,22 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace YangTools.Scripts.Core.YangEvent
+
+/*
+ *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
+    {
+        Debug.LogError($"收到事件:{msg.Name}--{msg.Args}");
+    });
+    Debug.LogError("测试1");
+    yield return new WaitForSeconds(1);
+    Debug.LogError("测试2");
+    YangExtend.SendEvent<DefaultEventMsg>(new DefaultEventMsg());
+    DefaultEventMsg temp = new DefaultEventMsg();
+    temp.SendSelf();
+ */
+namespace YangTools
 {
     /// <summary>
     /// 事件管理器
@@ -64,9 +78,9 @@ namespace YangTools.Scripts.Core.YangEvent
         }
 
         /// <summary>
-        /// 移除事件
+        /// 移除Key对应所有事件
         /// </summary>
-        public void Remove(string eventName)
+        public void RemoveForKey(string eventName)
         {
             eventDic.Remove(eventName, out List<EventInfo> list);
         }
@@ -134,13 +148,6 @@ namespace YangTools.Scripts.Core.YangEvent
 
     #region 事件相关类
     /// <summary>
-    /// 委托
-    /// </summary>
-    /// <typeparam name="T">参数类型</typeparam>
-    /// <param name="arg">参数</param>
-    public delegate void EventCallback<in T>(T arg);
-
-    /// <summary>
     /// 事件信息
     /// </summary>
     [System.Serializable]
@@ -153,7 +160,7 @@ namespace YangTools.Scripts.Core.YangEvent
         /// <summary>
         /// 事件
         /// </summary>
-        private readonly EventCallback<EventData> callback;
+        private readonly Action<EventData> callback;
         /// <summary>
         /// 弱引用绑定的物体
         /// </summary>
@@ -189,12 +196,12 @@ namespace YangTools.Scripts.Core.YangEvent
         /// </summary>
         /// <param name="holder">(谁持有检查器)检查器绑定某个物体上(只要继承自UnityObject就行了),null表示全局监听</param>
         /// <param name="eventName">事件名称</param>
-        /// <param name="eventCallback">事件回调</param>
-        public EventInfo(UnityEngine.Object holder, string eventName, EventCallback<EventData> eventCallback)
+        /// <param name="action">事件回调</param>
+        public EventInfo(UnityEngine.Object holder, string eventName, Action<EventData> action)
         {
             EventName = eventName;
             weakObjectTarget = new System.WeakReference<UnityEngine.Object>(holder);
-            callback = eventCallback;
+            callback = action;
         }
         /// <summary>
         /// 调用事件
@@ -236,9 +243,9 @@ namespace YangTools.Scripts.Core.YangEvent
     /// </summary>
     public class EventMessageBase
     {
-        public void SendSelf() 
+        public void SendEvent() 
         {
-            YangExtend.YangExtend.SendEvent(this.GetType(),this);
+            YangTools.YangExtend.SendEvent(GetType(),this);
         }
     }
     
@@ -250,17 +257,52 @@ namespace YangTools.Scripts.Core.YangEvent
     
     }
     #endregion
-    
-    /*
-     *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
+
+    #region 事件分组
+
+    public class YangEventGroup
+    {
+        private readonly Dictionary<string, List<Action<EventData>>> groupCachedListener = new Dictionary<string, List<Action<EventData>>>();
+        /// <summary>
+        /// 添加一个监听
+        /// </summary>
+        public void AddListener<T>(Action<EventData> listener) where T : EventMessageBase
         {
-            Debug.LogError($"收到事件:{msg.Name}--{msg.Args}");
-        });
-        Debug.LogError("测试1");
-        yield return new WaitForSeconds(1);
-        Debug.LogError("测试2");
-        YangExtend.SendEvent<DefaultEventMsg>(new DefaultEventMsg());
-        DefaultEventMsg temp = new DefaultEventMsg();
-        temp.SendSelf();
-     */
+            Type eventType = typeof(T);
+            string key = eventType.FullName;
+            if (key != null && !groupCachedListener.ContainsKey(key))
+            {
+                groupCachedListener.Add(key, new List<Action<EventData>>());
+            }
+
+            if (key != null && groupCachedListener[key].Contains(listener) == false)
+            {
+                groupCachedListener[key].Add(listener);
+                EventInfo ret = new EventInfo(GameInit.Instance.gameObject, key, listener);
+                YangEventManager.Instance.Add(ret);
+            }
+            else
+            {
+                Debug.LogWarning($"Event listener is exist : {eventType}");
+            }
+        }
+
+        /// <summary>
+        /// 移除所有缓存的监听
+        /// </summary>
+        public void RemoveAllListener()
+        {
+            foreach (var pair in groupCachedListener)
+            {
+                string eventKey = pair.Key;
+                for (int i = 0; i < pair.Value.Count; i++)
+                {
+                    YangEventManager.Instance.RemoveForKey(eventKey);
+                }
+                pair.Value.Clear();
+            }
+            groupCachedListener.Clear();
+        }
+    }
+    #endregion
 }

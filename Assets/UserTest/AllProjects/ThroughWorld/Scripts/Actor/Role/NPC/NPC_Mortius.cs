@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -63,7 +63,7 @@ public class NPC_Mortius : RoleBase
     /// </summary>
     public override void Interact(RoleBase role)
     {
-        GameManager.Instance.SceneLoad("GameLevel2");
+        YangTools.GameManager.Instance.SceneLoad("GameLevel2");
     }
     #endregion
 }

@@ -237,4 +237,36 @@ namespace YangTools.Scripts.Core.YangSaveData
         {
         }
     }
+
+    /// <summary>
+    /// 游戏设置
+    /// </summary>
+    public class Save_GameSet : ISaveData
+    {
+        /// <summary>
+        /// 音乐开关
+        /// </summary>
+        public bool isOnMusic;
+        
+        public override void SetDefaultData(string tableData)
+        {
+            
+        }
+    }
+    
+    /// <summary>
+    /// 游戏信息存储
+    /// </summary>
+    public class Save_GameData : ISaveData
+    {
+        /// <summary>
+        /// 是否首次进入
+        /// </summary>
+        public bool isFirstEnter;
+        
+        public override void SetDefaultData(string tableData)
+        {
+            isFirstEnter = true;
+        }
+    }
 }

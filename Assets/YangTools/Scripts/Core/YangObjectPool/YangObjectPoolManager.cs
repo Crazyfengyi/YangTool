@@ -4,11 +4,12 @@
  *Author:       YangWork
  *UnityVersion：2021.2.1f1c1
  *创建时间:         2021-11-11
-*/
+ */
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using YangTools.Scripts.Core;
 
@@ -19,7 +20,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// <summary>
     /// 通用对象池
     /// </summary>
-    public  class YangObjectPool : GameModuleBase
+    public class YangObjectPool : GameModuleBase
     {
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
@@ -30,11 +31,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
         private static readonly Dictionary<string, PoolPackage> AllPools = new Dictionary<string, PoolPackage>();
 
         #region 生命周期
-
+        //反射初始化用
         public YangObjectPool()
         {
-            
         }
+
         internal override void InitModule()
         {
         }
@@ -61,44 +62,45 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// </summary>
         /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
         /// <param name="args"></param>
-        public static T Get<T>(string poolKey = "", params object[] args) where T : class, IPoolItem<T>, new()
+        public static async Task<T> Get<T>(string poolKey = "", params object[] args)
+            where T : class, IPoolItem<T>, new()
         {
             string resultKey = GetTypeKey<T>(poolKey);
 
-            if (AllPools.TryGetValue(resultKey, out var pool))
+            if (AllPools.TryGetValue(resultKey, out PoolPackage pool))
             {
-                return pool.GetPool<T>().Get(args);
+                return await pool.GetPool<T>().Get(args);
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return AllPools[resultKey].GetPool<T>().Get(args);
+                return await AllPools[resultKey].GetPool<T>().Get(args);
             }
         }
 
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        public static PooledObjectPackage<T> Get<T>(out T item, string poolKey = "") where T : class, IPoolItem<T>, new()
+        public static async Task<PooledObjectPackage<T>> GetAutoPackage<T>(string poolKey = "")
+            where T : class, IPoolItem<T>, new()
         {
-            item = null;
             string resultKey = GetTypeKey<T>(poolKey);
 
             if (AllPools.TryGetValue(resultKey, out var pool))
             {
-                return pool.GetPool<T>().GetAutoRecycleItem();
+                return await pool.GetPool<T>().GetAutoRecycleItem();
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return AllPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+                return await AllPools[resultKey].GetPool<T>().GetAutoRecycleItem();
             }
         }
 
         /// <summary>
         /// 创建对象池
         /// </summary>
-        public static void CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
+        private static void CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
         {
             ObjectPool<T> pool = new ObjectPool<T>();
             pool.PoolKey = key;
@@ -125,6 +127,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 key = typeof(T).FullName;
             }
+
             if (key != null && AllPools.TryGetValue(key, out var allPool))
             {
                 allPool.GetPool<T>().Recycle(item);
@@ -162,13 +165,14 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 pool.GetPool<T>().Clear();
                 return true;
             }
+
             return false;
         }
 
         /// <summary>
         /// 获得类型的对象池Key
         /// </summary>
-        public static string GetTypeKey<T>(string poolKey = "")
+        private static string GetTypeKey<T>(string poolKey = "")
         {
             //默认用全路径
             string resultKey = typeof(T).FullName;
@@ -194,11 +198,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public object ObjectPool;
         public Type PoolType;
         public Type Type;
-        private ReflectionInfo updateAction;//轮询方法
+        private ReflectionInfo updateAction; //轮询方法
 
         public ObjectPool<T> GetPool<T>() where T : class, IPoolItem<T>, new()
         {
-            return (ObjectPool<T>)(object)ObjectPool;
+            return (ObjectPool<T>)ObjectPool;
         }
 
         /// <summary>
@@ -207,7 +211,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public void Binding<T>()
         {
             Type type = PoolType;
-            System.Reflection.MethodInfo createFunc = type.GetMethod("Update");
+            MethodInfo createFunc = type.GetMethod("Update");
             updateAction = new ReflectionInfo(ObjectPool, createFunc);
         }
 
@@ -223,13 +227,13 @@ namespace YangTools.Scripts.Core.YangObjectPool
     public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         public string PoolKey { get; set; }
-        private readonly Stack<T> stack;//栈
-        private readonly MethodInfo createFunc;//创建方法
-        private readonly MethodInfo createFunc2;//有参创建方法
+        private readonly Stack<T> stack; //栈
+        private readonly MethodInfo createFunc; //创建方法
+        private readonly MethodInfo createFunc2; //有参创建方法
 
-        private readonly int maxSize;//最大数量
-        private readonly bool collectionCheck;//回收检查(防止将已经在对象池的对象重复放进对象池)
-        private readonly int defaultCapacity;//默认对象池大小
+        private readonly int maxSize; //最大数量
+        private readonly bool collectionCheck; //回收检查(防止将已经在对象池的对象重复放进对象池)
+        private readonly int defaultCapacity; //默认对象池大小
 
         /// <summary>
         /// 所有对象数
@@ -269,12 +273,14 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// <param name="autoRecycleTime">自动回收间隔时间</param>
         /// <param name="priority">优先级</param>
         /// <param name="collectionCheck">是否回收检查</param>
-        public ObjectPool(int defaultCapacity = 10, int maxSize = 10000, float autoRecycleTime = 60, float priority = 0, bool collectionCheck = true)
+        public ObjectPool(int defaultCapacity = 10, int maxSize = 10000, float autoRecycleTime = 60, float priority = 0,
+            bool collectionCheck = true)
         {
             if (maxSize <= 0)
             {
                 throw new ArgumentException("Max Size must be greater than 0", "maxSize");
             }
+
             stack = new Stack<T>(defaultCapacity);
             this.defaultCapacity = defaultCapacity;
             this.maxSize = maxSize;
@@ -316,10 +322,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 return;
             }
+
             RecycleToDefaultCount();
         }
 
-        public T Get(params object[] args)
+        public async Task<T> Get(params object[] args)
         {
             T item;
             if (stack.Count == 0)
@@ -330,11 +337,13 @@ namespace YangTools.Scripts.Core.YangObjectPool
                     {
                         throw new InvalidOperationException();
                     }
-                    item = (T)createFunc2?.Invoke(null, new object[] { args });
+                    Task<T> result = (Task<T>)createFunc2?.Invoke(null, new object[] { args });
+                    item = await result;
                 }
                 else
                 {
-                    item = (T)createFunc?.Invoke(null, null);
+                    Task<T> result =  (Task<T>)createFunc?.Invoke(null, null);
+                    item = await result;
                 }
 
                 if (item != null) item.PoolKey = PoolKey;
@@ -344,14 +353,16 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 item = stack.Pop();
             }
+
             item.IsInPool = false;
             item.OnGet();
             return item;
         }
 
-        public PooledObjectPackage<T> GetAutoRecycleItem()
+        public async Task<PooledObjectPackage<T>> GetAutoRecycleItem()
         {
-            return new PooledObjectPackage<T>(Get(), this);
+            T target = await Get();
+            return new PooledObjectPackage<T>(target, this);
         }
 
         public void RecycleToDefaultCount()
@@ -391,6 +402,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 item.IsInPool = false;
                 item.OnDestroy();
             }
+
             stack.Clear();
             AllCount = 0;
         }
@@ -436,12 +448,12 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
-        T Get(params object[] args);
+        Task<T> Get(params object[] args);
 
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        PooledObjectPackage<T> GetAutoRecycleItem();
+        Task<PooledObjectPackage<T>> GetAutoRecycleItem();
 
         /// <summary>
         /// 回收对象
@@ -475,21 +487,20 @@ namespace YangTools.Scripts.Core.YangObjectPool
         return simplifiedPoints;
      * */
 
-    //值类型-值类型回收时(销毁时)自动回收对象到对象池--Unity默认对象池抄的
+    /// <summary>
+    /// 对象池包裹---值类型回收时(销毁时)自动回收对象到对象池--Unity默认对象池抄的
+    /// </summary>
+    /// <typeparam name="T">对象</typeparam>
     public readonly struct PooledObjectPackage<T> : IDisposable where T : class
     {
         private readonly T mToReturn;
         private readonly IObjectPool<T> mPool;
-
+        public T Data => mToReturn;
+        
         internal PooledObjectPackage(T value, IObjectPool<T> pool)
         {
             mToReturn = value;
             mPool = pool;
-        }
-
-        public T GetData()
-        {
-            return mToReturn;
         }
 
         void IDisposable.Dispose()
@@ -501,7 +512,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// <summary>
     /// 对象池物体接口
     /// </summary>
-    public interface IPoolItem<T> where T : new()
+    public interface IPoolItem<T> where T : IPoolItem<T>, new()
     {
         /// <summary>
         /// 所属对象池在管理类字典里的key
@@ -510,17 +521,24 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         bool IsInPool { get; set; }
 
-        public static T PoolCreate()
+        public static async Task<T> PoolCreate()
         {
-            T result = new T();//在构造函数里初始化
+            T result = new T();
+            await result.OnCreate();
             return result;
         }
 
-        public static T PoolCreate(params object[] args)
+        public static async Task<T> PoolCreate(params object[] args)
         {
-            T result = (T)Activator.CreateInstance(typeof(T), args);//在构造函数里初始化
+            T result = (T)Activator.CreateInstance(typeof(T), args);
+            await result.OnCreate();
             return result;
         }
+
+        /// <summary>
+        /// 创建时
+        /// </summary>
+        Task OnCreate();
 
         /// <summary>
         /// 获得时
@@ -597,6 +615,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
         {
         }
 
+        public Task OnCreate()
+        {
+            return Task.CompletedTask;
+        }
+
         public void OnGet()
         {
         }
@@ -632,7 +655,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 if (PoolDictionary.ContainsKey(typeof(T)))
                 {
-                    if (PoolDictionary[typeof(T)] is Stack<T> {Count: > 0} pooledObjects)
+                    if (PoolDictionary[typeof(T)] is Stack<T> { Count: > 0 } pooledObjects)
                     {
                         return pooledObjects.Pop();
                     }
@@ -685,7 +708,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// </summary>
         private static object CreateInstance(Type t)
         {
-#if NETFX_CORE && !UNITY_EDITOR//微软VR
+#if NETFX_CORE && !UNITY_EDITOR //微软VR
             if (t.IsGenericType() && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
 #else
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -693,7 +716,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
 #endif
                 t = Nullable.GetUnderlyingType(t);
             }
-#if NETFX_CORE && !UNITY_EDITOR//微软VR
+#if NETFX_CORE && !UNITY_EDITOR //微软VR
             return Activator.CreateInstance(t);
 #else
             return Activator.CreateInstance(t, true);

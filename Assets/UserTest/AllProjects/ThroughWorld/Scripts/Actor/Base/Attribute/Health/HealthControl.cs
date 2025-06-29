@@ -1,4 +1,4 @@
-/** 
+/* 
  *Copyright(C) 2020 by DefaultCompany 
  *All rights reserved. 
  *Author:       DESKTOP-AJS8G4U 
@@ -17,15 +17,17 @@ public class HealthControl
     /// 游戏表演者
     /// </summary>
     private GameActor gameActor;
+
     /// <summary>
     /// 血量值
     /// </summary>
-    [SerializeField]
-    private ValueTotal valueTotal;
+    [SerializeField] private ValueTotal valueTotal;
+
     // <summary>
     // 血条UI
     // </summary>
     public HPBarObjectPoolItem healthBar;
+
     /// <summary>
     /// 死亡回调
     /// </summary>
@@ -36,11 +38,16 @@ public class HealthControl
         gameActor = _gameActor;
         valueTotal = _value;
         dieCallBack = _dieCallBack;
-        Transform hpPoint = _gameActor.transform.Find("HPBarPoint");
-        healthBar = GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
+        Create();
     }
 
-    #region 方法
+    public async void Create()
+    {
+        Transform hpPoint = gameActor.transform.Find("HPBarPoint");
+        healthBar = await GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
+    }
+
+#region 方法
     /// <summary>
     /// 加血
     /// </summary>

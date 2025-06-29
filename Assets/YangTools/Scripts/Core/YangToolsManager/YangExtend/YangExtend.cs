@@ -1,8 +1,6 @@
 using System;
-using YangTools.Scripts.Core.YangEvent;
-using EventInfo = YangTools.Scripts.Core.YangEvent.EventInfo;
 
-namespace YangTools.Scripts.Core.YangExtend
+namespace YangTools
 {
     /// <summary>
     /// 扩展类
@@ -18,9 +16,8 @@ namespace YangTools.Scripts.Core.YangExtend
         /// </summary>
         /// <param name="thisObject">绑定的物体</param>
         /// <param name="eventName">事件名称</param>
-        /// <param name="eventCallback">事件回调</param>
-        public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject,
-            EventCallback<EventData> eventCallback,string eventName = "")
+        /// <param name="action">事件回调</param>
+        public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject, Action<EventData> action,string eventName = "")
             where T : EventMessageBase
         {
             var targetName = typeof(T).FullName;
@@ -29,7 +26,7 @@ namespace YangTools.Scripts.Core.YangExtend
                 targetName = eventName;
             }
             
-            var ret = new EventInfo(thisObject, targetName, eventCallback);
+            var ret = new EventInfo(thisObject, targetName, action);
             YangEventManager.Instance.Add(ret);
             return ret;
         }

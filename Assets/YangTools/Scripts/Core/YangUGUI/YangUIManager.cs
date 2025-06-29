@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YangTools.Scripts.Core.YangObjectPool;
@@ -997,6 +998,11 @@ namespace YangTools.Scripts.Core.YangUGUI
         public void Release(bool isShutdown)
         {
             iuiCreateHelper.ReleasePanel(uiPanelAsset, target);
+        }
+
+        public Task OnCreate()
+        {
+           return Task.CompletedTask;
         }
 
         public void OnGet()

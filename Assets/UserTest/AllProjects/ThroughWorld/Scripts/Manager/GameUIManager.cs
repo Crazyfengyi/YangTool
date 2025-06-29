@@ -11,6 +11,8 @@ using YangTools;
 using DG.Tweening;
 using TMPro;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using YangTools.Log;
 using Sirenix.OdinInspector;
@@ -18,6 +20,7 @@ using UnityEngine.SocialPlatforms.Impl;
 using YangTools.Scripts.Core.YangObjectPool;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Scripts.Core;
+using YangTools.Scripts.Core.ResourceManager;
 using YangExtend = YangTools.Scripts.Core.YangExtend.YangExtend;
 
 /// <summary>
@@ -149,7 +152,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         currentCount++;
 
-        TipObjectPoolItem poolItem = YangObjectPool.Get<TipObjectPoolItem>();
+        TipObjectPoolItem poolItem = YangObjectPool.Get<TipObjectPoolItem>().GetAwaiter().GetResult();
         GameObject obj = poolItem.obj;
         obj.transform.SetParent(tipsParent);
         obj.transform.SetAsLastSibling();
@@ -207,7 +210,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         //飘分对象
         Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
-        ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>();
+        ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>().GetAwaiter().GetResult();
         GameObject score = poolItem.obj;
         score.transform.SetAsLastSibling();
         score.transform.localPosition = pos;
@@ -306,7 +309,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <param name="_target">跟随目标</param>
     /// <param name="text">文字</param>
     /// <param name="color">颜色</param>
-    public HPBarObjectPoolItem GetHPBar(Transform _target, string text, Color color = default)
+    public async Task<HPBarObjectPoolItem> GetHPBar(Transform _target, string text, Color color = default)
     {
         HPBarData data = new HPBarData();
         data.target = _target;
@@ -315,15 +318,16 @@ public class GameUIManager : MonoSingleton<GameUIManager>
         data.hpValue = 1f;
         data.mpValue = 1f;
 
-        return CreateHPBar(data);
+        HPBarObjectPoolItem temp = await CreateHPBar(data);
+        return temp;
     }
     /// <summary>
     /// 创建血条
     /// </summary>
-    private HPBarObjectPoolItem CreateHPBar(HPBarData hpBarData)
+    private async Task<HPBarObjectPoolItem> CreateHPBar(HPBarData hpBarData)
     {
         Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
-        HPBarObjectPoolItem poolItem = YangObjectPool.Get<HPBarObjectPoolItem>();
+        HPBarObjectPoolItem poolItem = await YangObjectPool.Get<HPBarObjectPoolItem>();
         poolItem.InitData(hpBarData);
         GameObject hpBar = poolItem.obj;
         hpBar.transform.SetAsLastSibling();
@@ -371,14 +375,20 @@ public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
     public GameObject obj;
     public TipObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
-        obj = tempObj;
+ 
     }
     public TipObjectPoolItem(string arg)
     {
+    
+    }
+
+    public Task OnCreate()
+    {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/TipsNode"), Vector3.zero, Quaternion.identity);
         obj = tempObj;
+        return Task.CompletedTask;
     }
+
     public void OnGet()
     {
         obj.DefaultGameObjectOnGet(GameUIManager.Instance.tipsParent.transform);
@@ -435,9 +445,16 @@ public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
     public GameObject obj;
     public ScoreObjectPoolItem()
     {
+       
+    }
+
+    public Task OnCreate()
+    {
         GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/WordUI"), GameUIManager.Instance.scoreParent);
         obj = tempObj;
+        return Task.CompletedTask;
     }
+
     public void OnGet()
     {
         obj.DefaultGameObjectOnGet(GameUIManager.Instance.scoreParent);
@@ -501,12 +518,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     private HPBarData hpBarData;
     public HPBarObjectPoolItem()
     {
-        GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/HPBarUI"), GameUIManager.Instance.hpBarParent);
-        obj = tempObj;
-        //设置显示
-        text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
-        hpSlider = obj.transform.GetChild(1).gameObject.GetComponentInChildren<Slider>(true);
-        mpSlider = obj.transform.GetChild(2).gameObject.GetComponentInChildren<Slider>(true);
+
     }
     public void InitData(HPBarData _hpBarData)
     {
@@ -540,6 +552,18 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
             mpSlider.value = hpBarData.mpValue;
         }
     }
+
+    public async Task OnCreate()
+    {
+        GameObject tempObj = await ResourceManager.InstantiateGameObject("HPBarUI", GameUIManager.Instance.hpBarParent,false);
+        //GameObject tempObj = GameObject.Instantiate(GameResourceManager.Instance.ResourceLoad("UI/UICommon/HPBarUI"), GameUIManager.Instance.hpBarParent);
+        obj = tempObj;
+        //设置显示
+        text = obj.transform.GetChild(0).gameObject.GetComponentInChildren<TMP_Text>(true);
+        hpSlider = obj.transform.GetChild(1).gameObject.GetComponentInChildren<Slider>(true);
+        mpSlider = obj.transform.GetChild(2).gameObject.GetComponentInChildren<Slider>(true);
+    }
+
     public void OnGet()
     {
         obj.DefaultGameObjectOnGet(GameUIManager.Instance.hpBarParent);

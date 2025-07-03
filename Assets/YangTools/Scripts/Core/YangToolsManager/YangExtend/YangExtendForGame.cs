@@ -614,7 +614,15 @@ namespace YangTools.Scripts.Core.YangExtend
         #endregion
 
         #region 坐标转换
-
+        /*
+         * unity 屏幕坐标转相机坐标
+         *  // 获取鼠标在屏幕上的位置
+            Vector3 mousePosition = Input.mousePosition;
+            // 将屏幕坐标转换为相机坐标
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            
+            Ray temp = mahjongCamera.ScreenPointToRay(mousePosition);
+         */
         /// <summary>
         /// 获取自身的世界坐标(父节点不能为空-通过父节点坐标系转)
         /// </summary>

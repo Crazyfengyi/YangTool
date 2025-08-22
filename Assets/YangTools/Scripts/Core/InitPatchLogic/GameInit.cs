@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using GameMain;
+using Sirenix.OdinInspector;
 using UnityEngine;  
 using UnityEngine.UI;
 using TMPro;
@@ -19,6 +20,8 @@ public class GameInit : MonoBehaviour
 {
     public static GameInit Instance;
     private EPlayMode playMode;
+    [LabelText("版本号(修改AS)")] [GUIColor("red")]
+    public string appVersion;
     
     public void Awake()
     {

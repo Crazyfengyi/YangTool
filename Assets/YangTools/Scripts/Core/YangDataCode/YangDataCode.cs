@@ -73,17 +73,17 @@ namespace YangTools.Scripts.Core.YangDataCode
 
         public void Save()
         {
-            //ES3.Save<T>(saveKey, value);
+            ES3.Save<T>(SaveKey, value);
         }
 
         public void Load()
         {
             isLoad = true;
-            //if (ES3.KeyExists(saveKey))
-            //{
-            //    T loadValue = ES3.Load<T>(saveKey);
-            //    value = loadValue;
-            //}
+            if (ES3.KeyExists(SaveKey))
+            {
+                T loadValue = ES3.Load<T>(SaveKey);
+                value = loadValue;
+            }
         }
     }
 

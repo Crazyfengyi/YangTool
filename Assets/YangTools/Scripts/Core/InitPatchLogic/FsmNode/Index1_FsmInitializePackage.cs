@@ -101,8 +101,7 @@ namespace GameMain
             string fallbackHostServer = GetHostServerURL();
             string packageRoot = $"{WeChatWASM.WX.env.USER_DATA_PATH}/__GAME_FILE_CACHE"; //注意：如果有子目录，请修改此处！
             IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
-            createParameters.WebServerFileSystemParameters =
- WechatFileSystemCreater.CreateFileSystemParameters(packageRoot, remoteServices);
+            createParameters.WebServerFileSystemParameters = WechatFileSystemCreater.CreateFileSystemParameters(packageRoot, remoteServices);
             initializationOperation = package.InitializeAsync(createParameters);
 #else
                 var createParameters = new WebPlayModeParameters
@@ -116,9 +115,9 @@ namespace GameMain
             yield return initializationOperation;
 
             // 如果初始化失败弹出提示界面
-            if (initializationOperation.Status != EOperationStatus.Succeed)
+            if (initializationOperation?.Status != EOperationStatus.Succeed)
             {
-                Debug.LogWarning($"{initializationOperation.Error}");
+                Debug.LogWarning($"{initializationOperation?.Error}");
                 InitializeFailed temp = new InitializeFailed();
                 temp.SendEvent();
             }
@@ -127,25 +126,23 @@ namespace GameMain
                 machine.ChangeState<FsmRequestPackageVersion>();
             }
         }
-
+        
+        public static readonly string HostServerIP = "http://127.0.0.1";
         /// <summary>
         /// 获取资源服务器地址
         /// </summary>
         private string GetHostServerURL()
         {
-            //string hostServerIP = "http://10.0.2.2"; //安卓模拟器地址
-            string hostServerIP = "http://127.0.0.1";
-            string appVersion = "v1.0";
-
+            string appVersion = GameInit.Instance.appVersion;
 #if UNITY_EDITOR
             if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
-                return $"{hostServerIP}/CDN/Android/{appVersion}";
+                return $"{HostServerIP}/CDN/Android/{appVersion}";
             else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
-                return $"{hostServerIP}/CDN/IPhone/{appVersion}";
+                return $"{HostServerIP}/CDN/IPhone/{appVersion}";
             else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
-                return $"{hostServerIP}/CDN/WebGL/{appVersion}";
+                return $"{HostServerIP}/CDN/WebGL/{appVersion}";
             else
-                return $"{hostServerIP}/CDN/PC/{appVersion}";
+                return $"{HostServerIP}/CDN/PC/{appVersion}";
 #else
             if (Application.platform == RuntimePlatform.Android)
                 return $"{hostServerIP}/CDN/Android/{appVersion}";

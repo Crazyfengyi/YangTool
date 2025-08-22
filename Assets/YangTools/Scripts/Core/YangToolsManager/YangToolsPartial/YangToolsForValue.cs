@@ -279,5 +279,43 @@ namespace YangTools.Scripts.Core
         }
         
         #endregion
+
+        #region 序列化
+
+        /// <summary>
+        /// 序列化字典
+        /// </summary>
+        [System.Serializable]
+        public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver
+        {
+            [SerializeField]
+            private List<TKey> keys;
+            [SerializeField]
+            private List<TValue> values;
+
+            private Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
+
+            public Dictionary<TKey, TValue> Dictionary
+            {
+                get { return dictionary; }
+            }
+
+            public void OnBeforeSerialize()
+            {
+                keys = new List<TKey>(dictionary.Keys);
+                values = new List<TValue>(dictionary.Values);
+            }
+
+            public void OnAfterDeserialize()
+            {
+                dictionary = new Dictionary<TKey, TValue>();
+                for (int i = 0; i < keys.Count && i < values.Count; i++)
+                {
+                    dictionary[keys[i]] = values[i];
+                }
+            }
+        }
+
+        #endregion
     }
 }

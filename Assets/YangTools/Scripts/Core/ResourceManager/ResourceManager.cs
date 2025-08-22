@@ -19,19 +19,102 @@ namespace YangTools.Scripts.Core.ResourceManager
 {
     public class ResourceManager
     {
-        private static Dictionary<string, Object> assetCacheDict = new Dictionary<string, Object>();
-
-        protected void OnEnter()
+        private static readonly Dictionary<string, Object> AssetCacheDict = new Dictionary<string, Object>();
+        /// <summary>
+        /// 清除缓存
+        /// </summary>
+        public void ClearCache()
         {
-            assetCacheDict = new Dictionary<string, Object>();
+            AssetCacheDict.Clear();
         }
 
-        protected  void OnExit()
+        #region 资源加载
+
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="progress"></param>
+        /// <param name="timing"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static async UniTask<T> LoadAssetAsync<T>(string location, System.IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update) where T : Object
         {
-            assetCacheDict.Clear();
-            assetCacheDict = null;
+            if (AssetCacheDict.TryGetValue(location, out var asset))
+            {
+                if (asset != null && asset is T tAsset)
+                {
+                    return tAsset;
+                }
+
+                Debug.LogError($"资源缓存 is Null location:{location}");
+            }
+
+            Debug.Log($"加载资源:{location}");
+            AssetHandle handler = YooAssets.LoadAssetAsync<T>(location);
+            await handler.ToUniTask(progress, timing);
+            if (handler.AssetObject is T obj)
+            {
+                AssetCacheDict[location] = obj;
+                return obj;
+            }
+
+            Debug.LogError($"类型转换失败location:{location}资源类型:{handler.AssetObject.GetType()}加载类型:{typeof(T)}");
+            return null;
+        }
+        /// <summary>
+        /// 加载子资源
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="assetName"></param>
+        /// <param name="progress"></param>
+        /// <param name="timing"></param>
+        /// <typeparam name="TObject"></typeparam>
+        /// <returns></returns>
+        public static async UniTask<TObject> LoadSubAssetAsync<TObject>(string location, string assetName, System.IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update) where TObject : Object
+        {
+            if (AssetCacheDict.TryGetValue(location, out var asset))
+            {
+                if (asset != null && asset is TObject tAsset)
+                {
+                    return tAsset;
+                }
+                Debug.LogError($"资源缓存=NULL location:{location}");
+            }
+
+            Debug.Log($"加载资源:{location}");
+            SubAssetsHandle handler = YooAssets.LoadSubAssetsAsync<TObject>(location);
+            await handler.ToUniTask(progress, timing);
+            TObject subAsset = handler.GetSubAssetObject<TObject>(location);
+            if (subAsset == null)
+            {
+                Debug.LogError($"不存在的资源类型location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
+            }
+
+            return subAsset;
+        }
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="sceneMode"></param>
+        /// <param name="localPhysicsMode"></param>
+        /// <param name="suspendLoad"></param>
+        /// <param name="priority"></param>
+        /// <returns></returns>
+        public static async UniTask<SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
+        {
+            Debug.Log($"YooAssets场景加载---{location}---"); 
+            SceneHandle handler = YooAssets.LoadSceneAsync(location, sceneMode,localPhysicsMode,suspendLoad, priority);
+            await handler.ToUniTask();
+
+            return handler;
         }
         
+        #endregion
+
+        #region 资源处理
+             
         /// <summary>
         /// 异步实例化
         /// </summary>
@@ -46,86 +129,18 @@ namespace YangTools.Scripts.Core.ResourceManager
             return instance;
         }
         /// <summary>
-        /// 异步加载资源
+        /// 加载精灵图片
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="progress"></param>
-        /// <param name="timing"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static async UniTask<T> LoadAssetAsync<T>(string location, System.IProgress<float> progress = null,
-            PlayerLoopTiming timing = PlayerLoopTiming.Update) where T : Object
-        {
-            if (assetCacheDict.TryGetValue(location, out var asset))
-            {
-                if (asset != null && asset is T tAsset)
-                {
-                    return tAsset;
-                }
-                else
-                {
-                    Debug.LogError($"资源缓存 is Null location:{location}");
-                }
-            }
-
-            // Debugger.Log($"加载资源:{location}", Debugger.ELogColor.Orange);
-            var handler = YooAsset.YooAssets.LoadAssetAsync<T>(location);
-
-            await handler.ToUniTask(progress, timing);
-
-            if (handler.AssetObject is T obj)
-            {
-                assetCacheDict[location] = obj;
-                return obj;
-            }
-
-            Debug.LogError($"类型转换失败location:{location}资源类型:{handler.AssetObject.GetType()}加载类型:{typeof(T)}");
-            return null;
-        }
-
-        public static async UniTask<TObject> LoadSubAssetAsync<TObject>(string location, string assetName,
-            System.IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update)
-            where TObject : Object
-        {
-            if (assetCacheDict.TryGetValue(location, out var asset))
-            {
-                if (asset != null && asset is TObject tAsset)
-                {
-                    return tAsset;
-                }
-                else
-                {
-                    Debug.LogError($"资源缓存=NULL location:{location}");
-                }
-            }
-
-            // Debug.Log($"加载资源:{location}", Debug.ELogColor.Orange);
-            var handler = YooAsset.YooAssets.LoadSubAssetsAsync<TObject>(location);
-            await handler.ToUniTask(progress, timing);
-            var subAsset = handler.GetSubAssetObject<TObject>(location);
-
-            if (subAsset == null)
-            {
-                Debug.LogError($"不存在的资源类型location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
-            }
-
-            return subAsset;
-        }
-
-        public static async UniTask<YooAsset.SceneHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single,LocalPhysicsMode localPhysicsMode = LocalPhysicsMode.Physics3D , bool suspendLoad = false, uint priority = 100)
-        {
-            Debug.Log($"YooAssets场景加载---{location}---"); 
-            SceneHandle handler = YooAsset.YooAssets.LoadSceneAsync(location, sceneMode,localPhysicsMode,suspendLoad, priority);
-            await handler.ToUniTask();
-
-            return handler;
-        }
-
         public static async UniTask<Sprite> LoadSprite(string location)
         {
             return await LoadAssetAsync<Sprite>(location);
         }
-
+        /// <summary>
+        /// 设置图片精灵
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="spriteLocation"></param>
+        /// <param name="success"></param>
         public static async void SetImageSprite(Image image, string spriteLocation, System.Action<Image> success = null)
         {
             if (image == null)
@@ -152,10 +167,16 @@ namespace YangTools.Scripts.Core.ResourceManager
                 success?.Invoke(image);
             }
         }
-
+        /// <summary>
+        /// 加载声音片断
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public static async UniTask<AudioClip> LoadAudioClip(string location)
         {
             return await LoadAssetAsync<AudioClip>(location);
         }
+        
+        #endregion
     }
 }

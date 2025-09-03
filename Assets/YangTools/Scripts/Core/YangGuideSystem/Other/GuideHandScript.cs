@@ -10,7 +10,7 @@ public class GuideHandScript : MonoBehaviour
     public RectTransform hand;
 
     private Image handImage;
-    private void Start()
+    private void Awake()
     {
         handImage = hand.GetComponent<Image>();
     }

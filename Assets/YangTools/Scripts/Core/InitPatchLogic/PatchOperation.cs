@@ -12,11 +12,11 @@ namespace GameMain
         public PatchOperation(string packageName, string buildPipeline, EPlayMode playMode)
         {
             // 注册监听事件
-            YangTools.YangExtend.AddEventListener<UserTryInitialize>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangTools.YangExtend.AddEventListener<UserBeginDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangTools.YangExtend.AddEventListener<UserTryUpdatePackageVersion>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangTools.YangExtend.AddEventListener<UserTryUpdatePatchManifest>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangTools.YangExtend.AddEventListener<UserTryDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            YangExtend.AddEventListener<UserTryInitialize>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            YangExtend.AddEventListener<UserBeginDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            YangExtend.AddEventListener<UserTryUpdatePackageVersion>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            YangExtend.AddEventListener<UserTryUpdatePatchManifest>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            YangExtend.AddEventListener<UserTryDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
 
             // 创建状态机
             machine = new StateMachine(this);

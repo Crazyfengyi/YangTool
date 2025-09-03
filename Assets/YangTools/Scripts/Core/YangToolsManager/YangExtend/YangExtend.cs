@@ -17,7 +17,7 @@ namespace YangTools
         /// <param name="thisObject">绑定的物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="action">事件回调</param>
-        public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject, Action<EventData> action,string eventName = "")
+        public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject, Action<EventData> action,string eventName = "",int sortId = 0)
             where T : EventMessageBase
         {
             var targetName = typeof(T).FullName;
@@ -26,7 +26,7 @@ namespace YangTools
                 targetName = eventName;
             }
             
-            var ret = new EventInfo(thisObject, targetName, action);
+            var ret = new EventInfo(thisObject, targetName, action, sortId);
             YangEventManager.Instance.Add(ret);
             return ret;
         }

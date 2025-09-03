@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 
 /*
  *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
@@ -21,8 +21,9 @@ using UnityEngine;
     yield return new WaitForSeconds(1);
     Debug.LogError("测试2");
     YangExtend.SendEvent<DefaultEventMsg>(new DefaultEventMsg());
+    
     DefaultEventMsg temp = new DefaultEventMsg();
-    temp.SendSelf();
+    temp.SendEvent();
  */
 namespace YangTools
 {
@@ -59,21 +60,24 @@ namespace YangTools
         /// <summary>
         /// 事件字典
         /// </summary>
-        private readonly Dictionary<string, List<EventInfo>> eventDic = new Dictionary<string, List<EventInfo>>();
+        private readonly Dictionary<string, SortedList<int,EventInfo>> eventDic = new Dictionary<string, SortedList<int,EventInfo>>();
 
         /// <summary>
         /// 添加事件
         /// </summary>
-        public void Add(EventInfo eventListener)
+        public void Add(EventInfo eventInfo)
         {
-            if (eventDic.TryGetValue(eventListener.EventName, out var toAdd))
+            if (eventDic.TryGetValue(eventInfo.EventName, out var toAdd))
             {
-                toAdd.Add(eventListener);
+                toAdd.Add(eventInfo.SortId,eventInfo);
             }
             else
             {
-                toAdd = new List<EventInfo> {eventListener};
-                eventDic.Add(eventListener.EventName, toAdd);
+                toAdd = new SortedList<int, EventInfo>
+                {
+                    {eventInfo.SortId,eventInfo}
+                };
+                eventDic.Add(eventInfo.EventName, toAdd);
             }
         }
 
@@ -82,7 +86,7 @@ namespace YangTools
         /// </summary>
         public void RemoveForKey(string eventName)
         {
-            eventDic.Remove(eventName, out List<EventInfo> list);
+            eventDic.Remove(eventName, out SortedList<int, EventInfo> list);
         }
 
         /// <summary>
@@ -90,9 +94,9 @@ namespace YangTools
         /// </summary>
         public void Remove(EventInfo eventInfo)
         {
-            foreach (var i in eventDic)
+            foreach (var item in eventDic)
             {
-                i.Value.Remove(eventInfo);
+                item.Value.Remove(eventInfo.SortId);
             }
         }
 
@@ -101,13 +105,16 @@ namespace YangTools
         /// </summary>
         public void Remove(UnityEngine.Object target)
         {
-            foreach (var i in eventDic)
+            foreach (var item in eventDic)
             {
-                for (int k = i.Value.Count - 1; k >= 0; k--)
+                for (int k = item.Value.Count - 1; k >= 0; k--)
                 {
-                    EventInfo v = i.Value[k];
-                    if (!ReferenceEquals(v.Holder, target)) continue;
-                    i.Value.RemoveAt(k);
+                    EventInfo eventInfo = item.Value[k];
+                    //绑定目标不存在
+                    if (eventInfo.Holder == null) continue;
+                    //目标不一样
+                    if (!ReferenceEquals(eventInfo.Holder, target)) continue;
+                    item.Value.RemoveAt(k);
                     return;
                 }
             }
@@ -120,17 +127,16 @@ namespace YangTools
         /// <param name="eventArgs">参数列表</param>
         public void Send(string eventName, EventMessageBase eventArgs)
         {
-            if (eventDic.TryGetValue(eventName, out var list))
+            if (eventDic.TryGetValue(eventName, out SortedList<int, EventInfo> sortList))
             {
-                EventData e = new EventData(eventName, eventArgs);
-                for (int i = list.Count - 1; i >= 0; i--)
+                EventData eventData = new EventData(eventName, eventArgs);
+                List<EventInfo> temp = sortList.Values.ToList();
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    EventInfo item = list[i];
-                    if (!item.IsEnabled) continue;
-                    if (!item.Invoke(e))
-                    {
-                        list.RemoveAt(i);
-                    }
+                    EventInfo item = temp[i];
+                    if (!item.isEnabled) continue;
+                    //调用
+                    item.Invoke(eventData);
                 }
             }
         }
@@ -153,6 +159,10 @@ namespace YangTools
     [System.Serializable]
     public class EventInfo
     {
+        /// <summary>
+        /// 排序ID
+        /// </summary>
+        public readonly int SortId;
         /// <summary>
         /// 事件名称
         /// </summary>
@@ -190,25 +200,32 @@ namespace YangTools
         /// <summary>
         /// 可用状态
         /// </summary>
-        public readonly bool IsEnabled = true;
+        public bool isEnabled = true;
+
         /// <summary>
         /// 创建事件检查者
         /// </summary>
         /// <param name="holder">(谁持有检查器)检查器绑定某个物体上(只要继承自UnityObject就行了),null表示全局监听</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="action">事件回调</param>
-        public EventInfo(UnityEngine.Object holder, string eventName, Action<EventData> action)
+        /// <param name="sortId">触发优先级排序</param>
+        public EventInfo(UnityEngine.Object holder, string eventName, Action<EventData> action,int sortId = 0)
         {
+            SortId = sortId;
             EventName = eventName;
             weakObjectTarget = new System.WeakReference<UnityEngine.Object>(holder);
             callback = action;
         }
         /// <summary>
-        /// 调用事件
+        /// 调用事件--返回是否可用
         /// </summary>
         public bool Invoke(EventData data)
         {
-            if (!CanUse) return false;
+            if (!CanUse)
+            {
+                Debug.LogWarning($"绑定物品未null,事件:{EventName}不可用");
+                return false;
+            }
             callback?.Invoke(data);
             return true;
         }
@@ -243,9 +260,9 @@ namespace YangTools
     /// </summary>
     public class EventMessageBase
     {
-        public void SendEvent() 
+        public void SendEvent()
         {
-            YangTools.YangExtend.SendEvent(GetType(),this);
+            YangExtend.SendEvent(GetType(),this);
         }
     }
     

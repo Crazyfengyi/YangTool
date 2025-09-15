@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1001,
+    "guideText": "试试道具吧",
+    "isShowBg": false,
+    "dialogDir": "Mid",
+    "haveFinger": true,
+    "haveClickArea": true,
+    "roleSprite": "",
+    "startEvent": "",
+    "clickEvent": "",
+    "showType": "Mask",
+    "maskType": "Rect",
+    "nextID": 1002
+  },
+  {
+    "id": 1002,
+    "guideText": "点击开启轮廓",
+    "isShowBg": false,
+    "dialogDir": "Mid",
+    "haveFinger": true,
+    "haveClickArea": false,
+    "roleSprite": "",
+    "startEvent": "",
+    "clickEvent": "",
+    "showType": "Mask",
+    "maskType": "Rect",
+    "nextID": 1003
+  },
+  {
+    "id": 1003,
+    "guideText": "将碎片转回正确方向",
+    "isShowBg": false,
+    "dialogDir": "Mid",
+    "haveFinger": true,
+    "haveClickArea": false,
+    "roleSprite": "",
+    "startEvent": "",
+    "clickEvent": "Guide1003Over",
+    "showType": "Mask",
+    "maskType": "Rect",
+    "nextID": 0
+  }
+]

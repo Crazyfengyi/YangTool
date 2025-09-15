@@ -19,7 +19,7 @@ using UnityEditor.Build;
 using UnityEditor.SceneManagement;
 using YangTools.Scripts.Core;
 
-public class CommonTool : MonoBehaviour
+public partial class CommonTool
 {
     [MenuItem(SettingInfo.YongToolsGameToolPath + "打开存档目录")]
     public static void OpenGameSavePath()

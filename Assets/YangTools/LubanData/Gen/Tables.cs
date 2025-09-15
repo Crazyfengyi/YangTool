@@ -20,6 +20,8 @@ public sealed partial class Tables
     public skill.TbSkill TbSkill {get; }
     public tips.TBTips TBTips {get; }
     public area.TBArea TBArea {get; }
+    public guide.TBGuideSet TBGuideSet {get; }
+    public language.TBLanguage TBLanguage {get; }
 
     public Tables(System.Func<string, JSONNode> loader)
     {
@@ -36,6 +38,10 @@ public sealed partial class Tables
         tables.Add("tips.TBTips", TBTips);
         TBArea = new area.TBArea(loader("area_tbarea")); 
         tables.Add("area.TBArea", TBArea);
+        TBGuideSet = new guide.TBGuideSet(loader("guide_tbguideset")); 
+        tables.Add("guide.TBGuideSet", TBGuideSet);
+        TBLanguage = new language.TBLanguage(loader("language_tblanguage")); 
+        tables.Add("language.TBLanguage", TBLanguage);
         PostInit();
 
         TbItem.Resolve(tables); 
@@ -44,6 +50,8 @@ public sealed partial class Tables
         TbSkill.Resolve(tables); 
         TBTips.Resolve(tables); 
         TBArea.Resolve(tables); 
+        TBGuideSet.Resolve(tables); 
+        TBLanguage.Resolve(tables); 
         PostResolve();
     }
 
@@ -55,6 +63,8 @@ public sealed partial class Tables
         TbSkill.TranslateText(translator); 
         TBTips.TranslateText(translator); 
         TBArea.TranslateText(translator); 
+        TBGuideSet.TranslateText(translator); 
+        TBLanguage.TranslateText(translator); 
     }
     
     partial void PostInit();

@@ -1,0 +1,17 @@
+[
+  {
+    "strId": "textStrId_1",
+    "Chinese": "中文1",
+    "English": "English1"
+  },
+  {
+    "strId": "textStrId_2",
+    "Chinese": "中文2",
+    "English": "English2"
+  },
+  {
+    "strId": "textStrId_3",
+    "Chinese": "中文3",
+    "English": "English3"
+  }
+]

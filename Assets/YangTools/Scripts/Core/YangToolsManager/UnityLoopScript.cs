@@ -73,6 +73,7 @@ namespace YangTools.Scripts.Core
 
             instance = this;
             DontDestroyOnLoad(gameObject);
+            TimeTool.Init();
         }
 
         void Update()
@@ -80,6 +81,7 @@ namespace YangTools.Scripts.Core
             UpdateAction?.Invoke();
             YangToolsManager.Update(Time.deltaTime, Time.unscaledDeltaTime);
             YangCoroutineManager.Instance.UpdateCoroutine();
+            TimeTool.Update();
         }
 
         private void FixedUpdate()

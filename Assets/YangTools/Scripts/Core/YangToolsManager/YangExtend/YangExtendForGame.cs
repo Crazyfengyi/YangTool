@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using YangTools.Log;
 using Object = UnityEngine.Object;
@@ -16,17 +18,18 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 删除所有子节点
         /// </summary>
-        public static void DeleteChildren(this Transform trans)
+        public static void DestroyAllChild(this Transform content)
         {
-            foreach (Transform item in trans)
+            foreach (Transform item in content)
             {
-                UnityEngine.Object.Destroy(item);
+                UnityEngine.Object.Destroy(item.gameObject);
             }
         }
 
         /// <summary>
         /// 在物体世界坐标播放声音
         /// </summary>
+        /// <param name="obj"></param>
         /// <param name="clipName">音效名称</param>
         public static void PlayAtPoint(this GameObject obj, AudioClip clipName)
         {
@@ -180,13 +183,15 @@ namespace YangTools.Scripts.Core.YangExtend
 
         #endregion
 
-        #region 射线和网格合并
+        #region 网格相关
 
         /// <summary>
         /// 合并蒙皮网格，刷新骨骼
-        /// 注意：合并后的网格会使用同一个Material
+        /// 注意:合并后的网格会使用同一个Material
         /// </summary>
         /// <param name="root">角色根物体</param>
+        /// <param name="material"></param>
+        /// <param name="ignoreTag"></param>
         public static void Combine(Transform root, Material material, string ignoreTag = null)
         {
             // 遍历所有蒙皮网格渲染器，以计算出所有需要合并的网格、UV、骨骼的信息
@@ -204,7 +209,6 @@ namespace YangTools.Scripts.Core.YangExtend
             for (int i = 0; i < allSmr.Length; i++)
             {
                 SkinnedMeshRenderer smr = allSmr[i];
-
                 try
                 {
                     if (ignoreTag != null && smr.gameObject.CompareTag(ignoreTag)) continue;
@@ -283,7 +287,7 @@ namespace YangTools.Scripts.Core.YangExtend
             {
                 if (targetParts[i])
                 {
-                    GameObject.DestroyImmediate(targetParts[i]);
+                    Object.DestroyImmediate(targetParts[i]);
                 }
             }
 
@@ -307,10 +311,10 @@ namespace YangTools.Scripts.Core.YangExtend
                     continue;
                 if ((1 << meshFilters[i].gameObject.layer & layMask) == 0) //如果该层被屏蔽则跳过
                     continue;
-                var MR = meshFilters[i].GetComponent<MeshRenderer>();
-                for (int j = 0; j < MR.materials.Length; j++)
+                var mr = meshFilters[i].GetComponent<MeshRenderer>();
+                for (int j = 0; j < mr.materials.Length; j++)
                 {
-                    var matName = MR.materials[j];
+                    var matName = mr.materials[j];
                     if (combineDic.ContainsKey(LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName))
                     {
                         combineDic[LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName]
@@ -318,8 +322,7 @@ namespace YangTools.Scripts.Core.YangExtend
                     }
                     else
                     {
-                        List<MeshFilter> values = new List<MeshFilter>();
-                        values.Add(meshFilters[i]);
+                        List<MeshFilter> values = new List<MeshFilter> { meshFilters[i] };
                         combineDic.Add(LayerMask.LayerToName(meshFilters[i].gameObject.layer) + "_" + matName,
                             values); //用名字和材质球来分组
                     }
@@ -386,8 +389,8 @@ namespace YangTools.Scripts.Core.YangExtend
                         meshList.Add(meshFs[i].sharedMesh);
                         matrixList.Add(meshFs[i].transform.localToWorldMatrix);
                         if (meshFs[i].GetComponent<MeshRenderer>())
-                            GameObject.Destroy(meshFs[i].GetComponent<MeshRenderer>());
-                        GameObject.Destroy(meshFs[i]);
+                            Object.Destroy(meshFs[i].GetComponent<MeshRenderer>());
+                        Object.Destroy(meshFs[i]);
                     }
                 }
             }
@@ -395,123 +398,34 @@ namespace YangTools.Scripts.Core.YangExtend
             Debug.Log("合并了" + meshFilters.Length + "个网格");
         }
 
-        private static List<Collider> colliders = new List<Collider>();
-
-        /// <summary>
-        /// 在一定宽度区间内绘制一定精度条的射线
-        /// </summary>
-        /// <param name="beginPot">起点</param>
-        /// <param name="endPot">终点</param>
-        /// <param name="width">宽度</param>
-        /// <param name="precision">精度（必须是单数）</param>
-        /// <param name="layerMask"></param>
-        private static List<Collider> DrawRays(Vector3 beginPot, Vector3 endPot, float width, int precision,
-            LayerMask layerMask)
-        {
-            var offsetDir = Quaternion.Euler(0, 90, 0) * (endPot - beginPot).normalized;
-            var perWidthOffset = width / (precision - 1);
-            RaycastHit hit;
-            for (int i = 0; i < (precision + 1) / 2; i++)
-            {
-                Vector3 offset = perWidthOffset * i * offsetDir;
-                Ray[] rays = new Ray[]
-                {
-                    new Ray((beginPot + offset), endPot - beginPot), new Ray((beginPot - offset), endPot - beginPot)
-                };
-                float length = Vector3.Distance(beginPot, endPot);
-                for (int j = 0; j < rays.Length; j++)
-                {
-                    if (Physics.Raycast(rays[j], out hit, length, layerMask))
-                    {
-                        if (!colliders.Contains(hit.collider))
-                        {
-                            colliders.Add(hit.collider);
-                        }
-                    }
-                }
-            }
-
-            return colliders;
-        }
-
-        /// <summary>
-        /// 进行一次扇形射线检测
-        /// </summary>
-        /// /// <param name="rotate">旋转方向</param>
-        /// <param name="castRange">检测范围，只需要输入一半的范围，如输入45则从-45—45度检测</param>
-        /// <param name="precision">检测精度，决定射线的数量，推荐与范围值的比在4:3左右</param>
-        /// <param name="length">射线长度</param>
-        /// <param name="mask">mask层</param>
-        /// <param name="flipRayDir">是否翻转射线方向,如果是,则射线由终点向起点发射</param>
-        /// <returns>符合的碰撞信息</returns>
-        public static List<Collider> SectorRayCast(Vector3 pot, Quaternion rotate, float castRange, int precision,
-            float length, LayerMask mask, bool flipRayDir = false)
-        {
-            float spacing = castRange * 2 / precision; //每条线之间的间隔
-            List<Collider> colliders = new List<Collider>();
-            for (int i = 0; i < precision + 1; i++) //中间有一条对称轴，所以条数为精度+1
-            {
-                Debug.DrawRay(pot,
-                    (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length, Color.red,
-                    5f);
-                if (flipRayDir)
-                {
-                    RaycastHit[] hits = Physics.RaycastAll(
-                        pot + (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * length,
-                        (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward * -1f, length,
-                        mask);
-                    for (int j = 0; j < hits.Length; j++)
-                    {
-                        if (!colliders.Contains(hits[j].collider))
-                            colliders.Add(hits[j].collider);
-                    }
-                }
-                else
-                {
-                    RaycastHit[] hits = Physics.RaycastAll(pot,
-                        (Quaternion.Euler(0, -castRange + (i * spacing), 0) * rotate) * Vector3.forward, length, mask);
-                    for (int j = 0; j < hits.Length; j++)
-                    {
-                        if (!colliders.Contains(hits[j].collider))
-                            colliders.Add(hits[j].collider);
-                    }
-                }
-            }
-
-            return colliders;
-        }
-
         /// <summary>
         /// 获取模型大概大小
         /// </summary>
         public static float GetModelWrapAxis(Transform model)
         {
-            var modelSmrs = model.GetComponentsInChildren<SkinnedMeshRenderer>();
-            List<Transform> bones = new List<Transform>();
+            SkinnedMeshRenderer[] modelSmr = model.GetComponentsInChildren<SkinnedMeshRenderer>();
+            //List<Transform> bones = new List<Transform>();
             Vector3 center = Vector3.zero;
             Vector3 maxPot = Vector3.one * -Mathf.Infinity;
             Vector3 minPot = Vector3.one * Mathf.Infinity;
-            Vector3 size = Vector3.zero;
-            for (int i = 0; i < modelSmrs.Length; i++)
+            foreach (var skinnedMeshRender in modelSmr)
             {
-                var smrBones = modelSmrs[i].bones;
-                for (int j = 0; j < smrBones.Length; j++)
+                var smrBones = skinnedMeshRender.bones;
+                foreach (var temp in smrBones)
                 {
-                    if (!smrBones[j]) continue;
-                    bones.Add(smrBones[j]);
-                    center += smrBones[j].position;
-                    maxPot.x = Mathf.Max(smrBones[j].position.x, maxPot.x);
-                    maxPot.y = Mathf.Max(smrBones[j].position.y, maxPot.y);
-                    maxPot.z = Mathf.Max(smrBones[j].position.z, maxPot.z);
-                    minPot.x = Mathf.Min(smrBones[j].position.x, minPot.x);
-                    minPot.y = Mathf.Min(smrBones[j].position.y, minPot.y);
-                    minPot.z = Mathf.Min(smrBones[j].position.z, minPot.z);
+                    if (!temp) continue;
+                    //bones.Add(temp);
+                    center += temp.position;
+                    maxPot.x = Mathf.Max(temp.position.x, maxPot.x);
+                    maxPot.y = Mathf.Max(temp.position.y, maxPot.y);
+                    maxPot.z = Mathf.Max(temp.position.z, maxPot.z);
+                    minPot.x = Mathf.Min(temp.position.x, minPot.x);
+                    minPot.y = Mathf.Min(temp.position.y, minPot.y);
+                    minPot.z = Mathf.Min(temp.position.z, minPot.z);
                 }
             }
-
-            size = maxPot - minPot;
-
-            return Mathf.Min(size.y, size.z); //只需要包裹核心部分
+            Vector3 size = maxPot - minPot;
+            return Mathf.Min(size.y, size.z);//只需要包裹核心部分
         }
 
         #endregion
@@ -521,6 +435,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 获取状态机中动画长度
         /// </summary>
+        /// <param name="anim"></param>
         /// <param name="clipName">动画片段的名称</param>
         /// <returns>可空类型-没找到返回null</returns>
         public static float? GetAnimLength(this Animator anim, string clipName)
@@ -546,6 +461,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 获取状态机中的动画Clip
         /// </summary>
+        /// <param name="anim"></param>
         /// <param name="clipName">动画片段名</param>
         public static AnimationClip GetAnimClipByName(this Animator anim, string clipName)
         {
@@ -575,7 +491,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="function">事件函数名</param>
         /// <param name="time">插入的时间点</param>
         /// <returns></returns>
-        public static bool AddEventToAnimtionClip(this Animator anim, string clipName, string function, float time)
+        public static bool AddEventToAnimationClip(this Animator anim, string clipName, string function, float time)
         {
             if (anim == null || string.IsNullOrEmpty(clipName) || anim.runtimeAnimatorController == null)
                 return false;
@@ -627,7 +543,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// 获取自身的世界坐标(父节点不能为空-通过父节点坐标系转)
         /// </summary>
         /// <param name="tran">自身</param>
-        public static Vector3 LocalPostionToWordPostion(Transform tran)
+        public static Vector3 LocalPosToWordPos(Transform tran)
         {
             return tran.parent.TransformPoint(tran.localPosition);
         }
@@ -637,7 +553,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// </summary>
         /// <param name="tran">转换的坐标系原点</param>
         /// <param name="wordSpace">世界坐标</param>
-        public static Vector3 WordPostionToLocalPostion(Transform tran, Vector3 wordSpace)
+        public static Vector3 WordPosToLocalPos(Transform tran, Vector3 wordSpace)
         {
             return tran.InverseTransformPoint(wordSpace);
         }
@@ -647,13 +563,13 @@ namespace YangTools.Scripts.Core.YangExtend
         /// </summary>
         /// <param name="localTran">被转换的节点(它的局部坐标)</param>
         /// <param name="targetTran">目标父节点(目标局部原点)</param>
-        public static Vector3 LocalPositonToLocalPosition(Transform localTran, Transform targetTran)
+        public static Vector3 LocalPosToLocalPos(Transform localTran, Transform targetTran)
         {
-            Transform _parent = localTran.parent;
-            if (_parent != null)
+            Transform parent = localTran.parent;
+            if (parent != null)
             {
-                Vector3 _wordSpace = _parent.TransformPoint(localTran.localPosition);
-                return targetTran.InverseTransformPoint(_wordSpace);
+                Vector3 wordSpace = parent.TransformPoint(localTran.localPosition);
+                return targetTran.InverseTransformPoint(wordSpace);
             }
 
             return default;
@@ -662,18 +578,18 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 世界坐标转UI的局部坐标
         /// </summary>
-        /// <param name="WorldCamara">场景相机</param>
-        /// <param name="UICamara">UI相机</param>
+        /// <param name="worldCamara">场景相机</param>
+        /// <param name="uiCamara">UI相机</param>
         /// <param name="worldPos">世界坐标</param>
         /// <param name="targetParent">目标节点</param>
-        public static Vector3 WorldPositionToUILocalPosition(Camera WorldCamara, Camera UICamara, Vector3 worldPos,
+        public static Vector3 WorldPosToUILocalPos(Camera worldCamara, Camera uiCamara, Vector3 worldPos,
             Transform targetParent)
         {
             //世界坐标转屏幕坐标
-            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(WorldCamara, worldPos);
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(worldCamara, worldPos);
             //屏幕坐标转局部坐标
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(targetParent.GetComponent<RectTransform>(),
-                    screenPoint, UICamara, out Vector2 localPoint))
+                    screenPoint, uiCamara, out Vector2 localPoint))
             {
                 return localPoint;
             }
@@ -687,7 +603,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="parent">目标父节点(坐标系原点)</param>
         /// <param name="screenPos">屏幕点位置</param>
         /// <param name="uiCamera">UI相机</param>
-        public static Vector3 ScreenPostionToUIPostion(RectTransform parent, Vector2 screenPos, Camera uiCamera)
+        public static Vector3 ScreenPosToUIPos(RectTransform parent, Vector2 screenPos, Camera uiCamera)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, screenPos, uiCamera,
                     out Vector2 localPoint))
@@ -742,6 +658,37 @@ namespace YangTools.Scripts.Core.YangExtend
                 .SetTarget(rectTrans);
         }
 
+        #endregion
+        
+        #region 网络图片
+        /// <summary>
+        /// 设置网络图片
+        /// </summary>
+        public static IEnumerator SetHttpUrl(this Image selfImage,string imageUrl)
+        {
+            selfImage.sprite = null;
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                Debug.Log("下载图片地址为null");
+                //TODO:默认头像
+                //ResourceMgr.Instance.SetImageSprite(selfImage, "default");
+                yield break;
+            }
+            //Debug.Log($"开始下载图片:{imageUrl}");
+            using UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(imageUrl);
+            yield return webRequest.SendWebRequest();
+            
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"下载图片失败:{webRequest.error}:{imageUrl}");
+            }
+            else
+            {
+                //获取下载的纹理
+                Texture2D texture = DownloadHandlerTexture.GetContent(webRequest);
+                selfImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
+        }
         #endregion
     }
 }

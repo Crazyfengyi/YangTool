@@ -209,7 +209,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private void StartScoreUIShow(ScoreData scoreData)
     {
         //飘分对象
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
+        Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
         ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>().GetAwaiter().GetResult();
         GameObject score = poolItem.obj;
         score.transform.SetAsLastSibling();
@@ -237,7 +237,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         .Join(canvasGroup.DOFade(0.3f, 0.2f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -262,7 +262,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         .Append(canvasGroup.DOFade(0, 0.15f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -286,7 +286,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         .Append(canvasGroup.DOFade(0, 0.2f))
                         .OnUpdate(() =>
                         {
-                            Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
+                            Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
                             score.transform.localPosition = pos;
                         })
                         .OnComplete(() =>
@@ -326,7 +326,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     private async Task<HPBarObjectPoolItem> CreateHPBar(HPBarData hpBarData)
     {
-        Vector3 pos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
+        Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
         HPBarObjectPoolItem poolItem = await YangObjectPool.Get<HPBarObjectPoolItem>();
         poolItem.InitData(hpBarData);
         GameObject hpBar = poolItem.obj;
@@ -529,7 +529,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     }
     public void UpdatePos()
     {
-        targetPos = YangExtend.WorldPositionToUILocalPosition(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
+        targetPos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, GameUIManager.Instance.hpBarParent);
         obj.transform.localPosition = Vector3.Lerp(obj.transform.localPosition, targetPos, Time.deltaTime * 10);
     }
     /// <summary>

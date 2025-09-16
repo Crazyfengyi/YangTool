@@ -8,7 +8,7 @@ namespace YangTools.Scripts.Core
     {
         private static int collectionCount = 0;
         private static Stopwatch watch = null;
-        public static int testCount = 100000;//测试循环次数
+        public static int TestCount = 100000;//测试循环次数
 
         /// <summary>
         /// 测试开始
@@ -31,6 +31,7 @@ namespace YangTools.Scripts.Core
             Console.WriteLine("耗时：{0}", watch.ElapsedMilliseconds.ToString());
             Console.WriteLine("垃圾回收次数：{0}", GC.CollectionCount(0) - collectionCount);
         }
+        
         /// <summary>
         /// 获取引用类型的内存地址方法
         /// </summary>

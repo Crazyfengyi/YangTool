@@ -6,19 +6,6 @@ namespace YangTools.Scripts.Core
 {
     public partial class YangToolsManager
     {
-#if UNITY_EDITOR
-        /// <summary>
-        /// 清空UnityLog
-        /// </summary>
-        private static void ClearConsole()
-        {
-            Assembly assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-            Type type = assembly.GetType("UnityEditor.LogEntries");
-            MethodInfo method = type.GetMethod("Clear");
-            method?.Invoke(new object(), null);
-        }
-#endif
-
         #region 工具
         /// <summary>
         /// 开关鼠标指针
@@ -67,5 +54,18 @@ namespace YangTools.Scripts.Core
             te.Copy();
         }
         #endregion
+        
+#if UNITY_EDITOR
+        /// <summary>
+        /// 清空UnityLog
+        /// </summary>
+        private static void ClearConsole()
+        {
+            Assembly assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
+            Type type = assembly.GetType("UnityEditor.LogEntries");
+            MethodInfo method = type.GetMethod("Clear");
+            method?.Invoke(new object(), null);
+        }
+#endif
     }
 }

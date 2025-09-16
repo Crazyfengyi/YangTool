@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
@@ -12,14 +13,15 @@ namespace YangTools.Scripts.Core.YangExtend
 {
     public static partial class YangExtend
     {
+        #region 特性
         /// <summary>
-        /// 检查字段是否包含某个特性
+        /// 字段是否包含目标特性
         /// </summary>
         public static bool HasAttribute<T>(this FieldInfo fieldInfo) where T : System.Attribute
         {
             try
             {
-                var attrs = fieldInfo.GetCustomAttributes(typeof(T), false).Cast<T>();
+                IEnumerable<T> attrs = fieldInfo.GetCustomAttributes(typeof(T), false).Cast<T>();
                 return attrs.First() != null;
             }
             catch
@@ -27,6 +29,51 @@ namespace YangTools.Scripts.Core.YangExtend
                 return false;
             }
         }
+        #endregion
+
+        #region 字符串相关
+
+        /// <summary>
+        /// 判断字符串是否为空
+        /// </summary> 
+        public static bool IsNull(this string str)
+        {
+            //extendName.Lengh效率最高，但必须判断有初始化---string str或者 string str = null会报错;
+            return str == null || str?.Length == 0 || string.IsNullOrEmpty(str) || str == string.Empty;
+        }
+
+        /// <summary>
+        /// 去除富文本--去掉字符串的html标签
+        /// </summary>
+        public static string GetNoHtmlString(this string input)
+        {
+            input = Regex.Replace(input, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"-->", "", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"<!--.*", "", RegexOptions.IgnoreCase);
+
+            input = Regex.Replace(input, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"&#(\d+);", "", RegexOptions.IgnoreCase);
+
+            input = input.Replace("<", "");
+            input = input.Replace(">", "");
+            input = input.Replace("\r\n", "");
+            //去两端空格,中间多余空格
+            input = Regex.Replace(input.Trim(), "\\s+", " ");
+            return input;
+        }
+
+        #endregion
+        
+        #region 幂相关
 
         /// <summary>
         /// 是否为2的N次幂
@@ -34,7 +81,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="num">自身(int)</param>
         public static bool IsPowerOfTwo(this int num)
         {
-            //这些数减1后与自身进行按位与，如果结果为0，表示这个数是2的n次幂
+            //这些数减1后与自身进行按位与,如果结果为0,表示这个数是2的n次幂
             return num > 0 && (num & (num - 1)) == 0;
         }
 
@@ -80,20 +127,13 @@ namespace YangTools.Scripts.Core.YangExtend
             return n;
         }
 
-        /// <summary>
-        /// 判断字符串是否为空
-        /// </summary> 
-        public static bool IsNull(this string str)
-        {
-            //extendName.Lengh效率最高，但必须判断有初始化---string str; 或者 string str = null 会报错;
-            return str == null || str?.Length == 0 || string.IsNullOrEmpty(str) || str == string.Empty;
-        }
+        #endregion
+        
+        #region 随机值
 
         /// <summary>
         /// 随机返回bool值
         /// </summary>
-        /// <param name="random"></param>
-        /// <returns></returns>
         public static bool RandomBool(this System.Random random)
         {
             return random.NextDouble() > 0.5d;
@@ -102,23 +142,21 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 随机返回+-1
         /// </summary>
-        /// <param name="random"></param>
-        /// <returns></returns>
         public static int Random1(this System.Random random)
         {
             return random.NextDouble() > 0.5d ? 1 : -1;
         }
 
         /// <summary>
-        /// 随机返回枚举--不知道手动枚举值是否有效，需验证
+        /// 随机返回枚举
         /// </summary>
         public static T RandomEnum<T>(this System.Random random) where T : struct
         {
             Type type = typeof(T);
-            if (type.IsEnum == false) throw new InvalidOperationException();
+            if (!type.IsEnum) throw new InvalidOperationException();
 
             Array array = Enum.GetValues(type);
-            int index = random.Next(array.GetLowerBound(0), array.GetUpperBound(0) + 1);
+            int index = random.Next(0, array.Length);
             return (T) array.GetValue(index);
         }
 
@@ -155,67 +193,8 @@ namespace YangTools.Scripts.Core.YangExtend
             return data;
         }
 
-        /// <summary>
-        /// 去除富文本--去掉字符串的html标签
-        /// </summary>
-        public static string GetNoHtmlString(this string input)
-        {
-            input = Regex.Replace(input, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"-->", "", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"<!--.*", "", RegexOptions.IgnoreCase);
-
-            input = Regex.Replace(input, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"&#(\d+);", "", RegexOptions.IgnoreCase);
-
-            input.Replace("<", "");
-            input.Replace(">", "");
-            input.Replace("\r\n", "");
-            //去两端空格，中间多余空格
-            input = Regex.Replace(input.Trim(), "\\s+", " ");
-            return input;
-        }
-
-        /// <summary>
-        /// 克隆List
-        /// </summary>
-        public static List<T> GetClone<T>(this List<T> list)
-        {
-            List<T> newList = new List<T>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                newList.Add(list[i]);
-            }
-
-            return newList;
-        }
-
-        /// <summary>
-        /// 克隆类对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="RealObject"></param>
-        /// <returns></returns>
-        public static T Clone<T>(T RealObject)
-        {
-            using (Stream objStream = new MemoryStream())
-            {
-                //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
-                IFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(objStream, RealObject);
-                objStream.Seek(0, SeekOrigin.Begin);
-                return (T) formatter.Deserialize(objStream);
-            }
-        }
-
+        #endregion
+       
         #region Unity相关
 
         /// <summary>
@@ -248,7 +227,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置绝对位置的x坐标。
         /// </summary>
-        /// <param name="newValue">x坐标值</param>
         public static void SetPositionX(this Transform transform, float newValue)
         {
             Vector3 v = transform.position;
@@ -259,7 +237,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置绝对位置的y坐标。
         /// </summary>
-        /// <param name="newValue">y坐标值</param>
         public static void SetPositionY(this Transform transform, float newValue)
         {
             Vector3 v = transform.position;
@@ -270,7 +247,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置绝对位置的z坐标。
         /// </summary>
-        /// <param name="newValue">z坐标值</param>
         public static void SetPositionZ(this Transform transform, float newValue)
         {
             Vector3 v = transform.position;
@@ -281,7 +257,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加绝对位置的x坐标。
         /// </summary>
-        /// <param name="deltaValue">x坐标值增量</param>
         public static void AddPositionX(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.position;
@@ -292,7 +267,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加绝对位置的y坐标。
         /// </summary>
-        /// <param name="deltaValue">y坐标值增量</param>
         public static void AddPositionY(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.position;
@@ -303,7 +277,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加绝对位置的 z 坐标。
         /// </summary>
-        /// <param name="deltaValue">z坐标值增量</param>
         public static void AddPositionZ(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.position;
@@ -314,7 +287,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对位置的x坐标。
         /// </summary>
-        /// <param name="newValue">x坐标值</param>
         public static void SetLocalPositionX(this Transform transform, float newValue)
         {
             Vector3 v = transform.localPosition;
@@ -325,7 +297,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对位置的y坐标。
         /// </summary>
-        /// <param name="newValue">y坐标值</param>
         public static void SetLocalPositionY(this Transform transform, float newValue)
         {
             Vector3 v = transform.localPosition;
@@ -336,7 +307,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对位置的z坐标。
         /// </summary>
-        /// <param name="newValue">z坐标值</param>
         public static void SetLocalPositionZ(this Transform transform, float newValue)
         {
             Vector3 v = transform.localPosition;
@@ -347,7 +317,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对位置的x坐标。
         /// </summary>
-        /// <param name="deltaValue">x坐标值</param>
         public static void AddLocalPositionX(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localPosition;
@@ -358,7 +327,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对位置的y坐标。
         /// </summary>
-        /// <param name="deltaValue">y坐标值</param>
         public static void AddLocalPositionY(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localPosition;
@@ -369,7 +337,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对位置的z坐标。
         /// </summary>
-        /// <param name="deltaValue">z坐标值</param>
         public static void AddLocalPositionZ(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localPosition;
@@ -380,7 +347,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对尺寸的x分量。
         /// </summary>
-        /// <param name="newValue">x分量值</param>
         public static void SetLocalScaleX(this Transform transform, float newValue)
         {
             Vector3 v = transform.localScale;
@@ -391,7 +357,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对尺寸的y分量。
         /// </summary>
-        /// <param name="newValue">y分量值</param>
         public static void SetLocalScaleY(this Transform transform, float newValue)
         {
             Vector3 v = transform.localScale;
@@ -402,7 +367,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 设置相对尺寸的z分量。
         /// </summary>
-        /// <param name="newValue">z分量值</param>
         public static void SetLocalScaleZ(this Transform transform, float newValue)
         {
             Vector3 v = transform.localScale;
@@ -413,7 +377,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对尺寸的x分量。
         /// </summary>
-        /// <param name="deltaValue">x分量增量</param>
         public static void AddLocalScaleX(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localScale;
@@ -424,7 +387,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对尺寸的y分量。
         /// </summary>
-        /// <param name="deltaValue">y分量增量</param>
         public static void AddLocalScaleY(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localScale;
@@ -435,7 +397,6 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 增加相对尺寸的z分量。
         /// </summary>
-        /// <param name="deltaValue">z分量增量</param>
         public static void AddLocalScaleZ(this Transform transform, float deltaValue)
         {
             Vector3 v = transform.localScale;
@@ -444,20 +405,7 @@ namespace YangTools.Scripts.Core.YangExtend
         }
 
         #endregion
-
-        //=================需整理+验证==================
-        //随机时间
-        public static DateTime NextDateTime(this System.Random random, DateTime minValue, DateTime maxValue)
-        {
-            long ticks = minValue.Ticks + (long) ((maxValue.Ticks - minValue.Ticks) * random.NextDouble());
-            return new DateTime(ticks);
-        }
-
-        public static DateTime NextDateTime(this System.Random random)
-        {
-            return NextDateTime(random, DateTime.MinValue, DateTime.MaxValue);
-        }
-
+        
         #region 根据权重获取
 
         /// <summary>
@@ -472,7 +420,8 @@ namespace YangTools.Scripts.Core.YangExtend
             T ret = default;
 
             int totalWeight = 0; //总权重值
-            foreach (T i in weightInfos)
+            var enumerable = weightInfos.ToList();
+            foreach (T i in enumerable)
             {
                 totalWeight += i.GetWeight();
             }
@@ -481,7 +430,7 @@ namespace YangTools.Scripts.Core.YangExtend
             int indexWeight = 0;
             int randomWeight = UnityEngine.Random.Range(1, totalWeight + 1);
 
-            foreach (T item in weightInfos)
+            foreach (T item in enumerable)
             {
                 indexWeight += item.GetWeight();
                 if (randomWeight <= indexWeight)
@@ -503,7 +452,7 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <summary>
         /// 权重接口
         /// </summary>
-        public interface IWeight<T>
+        public interface IWeight<out T>
         {
             /// <summary>
             /// 获得权重
@@ -558,5 +507,22 @@ namespace YangTools.Scripts.Core.YangExtend
         }
 
         #endregion
+         
+        #region 克隆
+
+        /// <summary>
+        /// 克隆List
+        /// </summary>
+        public static List<T> GetClone<T>(this List<T> list)
+        {
+            List<T> newList = new List<T>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                newList.Add(list[i]);
+            }
+            return newList;
+        }
+        #endregion
     }
 }
+

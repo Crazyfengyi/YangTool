@@ -20,14 +20,14 @@ namespace YangTools.Scripts.Core
     public static partial class YangToolsManager
     {
         #region 随机数
-        private static System.Random Random = new System.Random((int)DateTime.UtcNow.Ticks);
+        private static System.Random random = new System.Random((int)DateTime.UtcNow.Ticks);
         /// <summary>
         /// 设置随机数种子
         /// </summary>
         /// <param name="seed">随机数种子</param>
         public static void SetSeed(int seed)
         {
-            Random = new System.Random(seed);
+            random = new System.Random(seed);
         }
         /// <summary>
         /// 返回非负随机数
@@ -35,7 +35,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,System.Int32.MaxValue)的32位带符号整数</returns>
         public static int GetRandom()
         {
-            return Random.Next();
+            return random.Next();
         }
         /// <summary>
         /// 返回一个小于所指定最大值的非负随机数。
@@ -44,7 +44,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,maxValue)的32位带符号整数</returns>
         public static int GetRandom(int maxValue)
         {
-            return Random.Next(maxValue);
+            return random.Next(maxValue);
         }
         /// <summary>
         /// 返回一个指定范围内的随机数
@@ -54,7 +54,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[minValue,maxValue)</returns>
         public static int GetRandom(int minValue, int maxValue)
         {
-            return Random.Next(minValue, maxValue);
+            return random.Next(minValue, maxValue);
         }
         /// <summary>
         /// 返回0~1范围内的随机数
@@ -70,7 +70,7 @@ namespace YangTools.Scripts.Core
         /// <returns>[0,1)的双精度浮点数</returns>
         public static double GetRandomDouble()
         {
-            return Random.NextDouble();
+            return random.NextDouble();
         }
         /// <summary>
         /// 用随机数填充指定字节数组的元素
@@ -78,14 +78,14 @@ namespace YangTools.Scripts.Core
         /// <param name="buffer">包含随机数的字节数组</param>
         public static void GetRandomBytes(byte[] buffer)
         {
-            Random.NextBytes(buffer);
+            random.NextBytes(buffer);
         }
         #endregion
 
         #region 字符串
         private const int StringBuilderCapacity = 1024;
         [ThreadStatic]
-        private static StringBuilder CachedStringBuilder;
+        private static StringBuilder cachedStringBuilder;
         /// <summary>
         /// 获取格式化字符串。
         /// </summary>
@@ -104,13 +104,13 @@ namespace YangTools.Scripts.Core
                 throw new Exception("Args is invalid.");
             }
             CheckCachedStringBuilder();
-            CachedStringBuilder.Length = 0;
-            CachedStringBuilder.AppendFormat(format, args);
-            return CachedStringBuilder.ToString();
+            cachedStringBuilder.Length = 0;
+            cachedStringBuilder.AppendFormat(format, args);
+            return cachedStringBuilder.ToString();
         }
         private static void CheckCachedStringBuilder()
         {
-            CachedStringBuilder ??= new StringBuilder(StringBuilderCapacity);
+            cachedStringBuilder ??= new StringBuilder(StringBuilderCapacity);
         }
         #endregion
 
@@ -176,52 +176,9 @@ namespace YangTools.Scripts.Core
 
             return results;
         }
-        /// <summary>
-        /// 判断是否有交集
-        /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="list1">列表1</param>
-        /// <param name="list2">列表2</param>
-        /// <returns></returns>
-        public static bool IsArrayIntersection<T>(List<T> list1, List<T> list2)
-        {
-            List<T> t = list1.Distinct().ToList();//去重
-            List<T> exceptArr = t.Except(list2).ToList();//不包括
-
-            if (exceptArr.Count < t.Count)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
         #endregion
 
-        #region  时间戳和异步
-        /// <summary>
-        /// 时间转换为时间戳--UTC
-        /// </summary>
-        /// <return>毫秒</return>
-        public static long DataTimeConvertToTimeStamp(DateTime dataTime = default)
-        {
-            if (dataTime == default) dataTime = DateTime.UtcNow;
-            TimeSpan ts = dataTime - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            long timeStampStr = Convert.ToInt64(ts.TotalMilliseconds);
-            return timeStampStr;
-        }
-        /// <summary>
-        /// 时间戳转换为时间--UTC
-        /// </summary>
-        /// <param name="timestamp">毫秒</param>
-        public static DateTime TimestampConvertToDate(this long timestamp)
-        {
-            DateTime dtStart = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Utc);
-            return dtStart.AddMilliseconds(timestamp);
-        }
-
+        #region 异步
         /// <summary>
         /// 将异步操作改成await
         /// </summary>
@@ -235,13 +192,30 @@ namespace YangTools.Scripts.Core
 
         #region 功能
         /// <summary>
+        /// 判断是否有交集
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="list1">列表1</param>
+        /// <param name="list2">列表2</param>
+        /// <returns></returns>
+        public static bool IsArrayIntersection<T>(List<T> list1, List<T> list2)
+        {
+            List<T> t = list1.Distinct().ToList();//去重
+            List<T> exceptArr = t.Except(list2).ToList();//不包括
+            if (exceptArr.Count < t.Count)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary>
         /// 返回相机在Z=0时的实际视口大小
         /// </summary>
         public static Bounds GetCameraView(Transform transform, Camera useCamera)
         {
             float width, height;
-            if (useCamera == null)
-                return new Bounds();
+            if (useCamera == null) return new Bounds();
             if (useCamera.orthographic)
             {
                 height = useCamera.orthographicSize * 2;
@@ -256,30 +230,20 @@ namespace YangTools.Scripts.Core
             return new Bounds(transform.position, new Vector3(Mathf.Abs(width), Mathf.Abs(height), 0));
         }
 
-        private static PointerEventData EventDataCurrentPosition;
-        private static List<RaycastResult> Results;
+        private static PointerEventData eventDataCurrentPosition;
+        private static List<RaycastResult> results;
         /// <summary>
         /// 鼠标是否在UI上
         /// </summary>
         public static bool IsOverUI()
         {
-            EventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
-            Results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(EventDataCurrentPosition, Results);
-            return Results.Count > 0;
+            eventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = Input.mousePosition };
+            results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+            return results.Count > 0;
         }
-        /// <summary>
-        /// 获得Transform的世界坐标
-        /// </summary>
-        public static Vector3 GetWorldPosOfCanvasRectTransform(RectTransform trans, Camera camera = null)
-        {
-            if (camera == null) camera = Camera.main;
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(trans, trans.position, camera, out Vector3 result);
-            return result;
-        }
-        
         #endregion
-
+        
         #region 序列化
 
         /// <summary>

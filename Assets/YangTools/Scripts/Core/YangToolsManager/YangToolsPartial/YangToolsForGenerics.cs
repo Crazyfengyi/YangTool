@@ -115,10 +115,6 @@ namespace YangTools.Scripts.Core
     /// <summary>
     /// Mono注册性单例
     /// </summary>
-    /// public class Example : MonoBehaviour
-    /// {
-    ///     public static Example Instance => MonoSingletonRegister<Example>.Instance;
-    /// }
     public static class MonoSingletonRegister<T> where T : MonoBehaviour
     {
         private static T instance;
@@ -145,4 +141,12 @@ namespace YangTools.Scripts.Core
             }
         }
     }
+    
+   /*
+   *public class Example : MonoBehaviour
+    {
+        public static Example Instance => MonoSingletonRegister<Example>.Instance;
+    }
+   * 
+   */
 }

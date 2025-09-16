@@ -7,23 +7,6 @@ namespace YangTools.Scripts.Core.YangExtend
 {
     public partial class YangExtend
     {
-        /// <summary>
-        /// 当天结束时间(24点)
-        /// </summary>
-        public static DateTime GetDayLastTime()
-        {
-            return Convert.ToDateTime(DateTime.UtcNow.ToString("yyyy-MM-dd 23:59:59"));
-        }
-
-        /// <summary>
-        /// 获得给定时间在所在年里是第几周
-        /// </summary>
-        public static int GetWeekOfYear(DateTime dateTime)
-        {
-            return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek,
-                DayOfWeek.Monday);
-        }
-
         //测试值占内存大小
         /* * 1字节(byte)=8位(bit) * 1024字节=1K * 1024k=1M */ //如果为空也要占用1字节,不为空则为实际数据大小
         public struct TestStruct

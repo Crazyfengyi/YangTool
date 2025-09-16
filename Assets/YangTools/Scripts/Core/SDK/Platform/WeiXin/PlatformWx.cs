@@ -19,7 +19,7 @@ namespace GameMain
         private string WxAppId => PlatformMgr.Instance.appIdWx;
         public string OpenId { get; set; }
         
-        private const string AppSecret = "a51e2d22b6e366028a17f017d1e0941a";
+        private const string AppSecret = "xxxxxxxx";
         private WXRewardedVideoAd rewardedVideoAd;
         
         private Action getOpenIdOver;

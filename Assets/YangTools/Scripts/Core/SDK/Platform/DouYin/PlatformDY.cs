@@ -19,7 +19,7 @@ namespace GameMain
     public class PlatformDy : IPlatform
     {
         public string OpenId { get; set; }
-        private const string AppSecret = "8a89b8a11592803f4319bb82266b3e2e30dda619";
+        private const string AppSecret = "xxxxx";
 
         /// <summary>
         /// 系统标签

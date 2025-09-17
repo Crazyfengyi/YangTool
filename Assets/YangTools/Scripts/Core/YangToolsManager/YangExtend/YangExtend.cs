@@ -17,7 +17,7 @@ namespace YangTools
         // 支付--版号问题,暂无
         // 存档-状态机-红点-资源管理YooAsset-对象池-交互管理器-小地图-引导管理器-声音管理器-UI界面管理器 --完成
         // 多语言(根据表来)--完成
-        // 时间(初始获取时间,自增管理).--完成
+        // 时间(初始获取时间,自增管理)--完成
         
         #region 事件系统扩展
 
@@ -27,6 +27,7 @@ namespace YangTools
         /// <param name="thisObject">绑定的物体</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="action">事件回调</param>
+        /// <param name="sortId"></param>
         public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject, Action<EventData> action,string eventName = "",int sortId = 0)
             where T : EventMessageBase
         {

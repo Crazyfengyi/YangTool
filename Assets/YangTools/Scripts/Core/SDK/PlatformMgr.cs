@@ -15,24 +15,23 @@ namespace GameMain
         [LabelText("平台")] [OnValueChanged("OnPlatformChange")]
         public PlatformType platformType;
         [LabelText("平台数据")] 
-        public Dictionary<PlatformType, PlatformData> platformData;
+        public Dictionary<PlatformType, PlatformData> PlatformData;
         
-        public string PlatformAppId => platformData.TryGetValue(platformType, out var value) ? value.appId : null;
-        public string PlatformAdId => platformData.TryGetValue(platformType, out var value) ? value.adsId : null;
-        public string PlatformAppKey => platformData.TryGetValue(platformType, out var value) ? value.appKey : null;
-        public string PlatformAppSecret => platformData.TryGetValue(platformType, out var value) ? value.appSecret : null;
-        public string PlatformGameTag => platformData.TryGetValue(platformType, out var value) ? value.gameTag : null;
+        public string PlatformAppId => PlatformData.TryGetValue(platformType, out var value) ? value.appId : null;
+        public string PlatformAdId => PlatformData.TryGetValue(platformType, out var value) ? value.adsId : null;
+        public string PlatformAppKey => PlatformData.TryGetValue(platformType, out var value) ? value.appKey : null;
+        public string PlatformAppSecret => PlatformData.TryGetValue(platformType, out var value) ? value.appSecret : null;
+        public string PlatformGameTag => PlatformData.TryGetValue(platformType, out var value) ? value.gameTag : null;
 
-        private IPlatform platform;
-        public IPlatform Platform => platform;
-        
+        public IPlatform Platform { get; private set; }
+
         /// <summary>
         /// 用户唯一ID
         /// </summary>
         public string OpenId
         {
-            get => platform?.OpenId;
-            set => platform.OpenId = value;
+            get => Platform?.OpenId;
+            set => Platform.OpenId = value;
         }
 
         [LabelText("跳过看广告")] 
@@ -72,9 +71,9 @@ namespace GameMain
 
         public void Initialize()
         {
-            platform = NewPlatform();
-            platform.Initialize();
-            Debug.Log($"初始化平台成功:{platform.GetType()}");
+            Platform = NewPlatform();
+            Platform.Initialize();
+            Debug.Log($"初始化平台成功:{Platform.GetType()}");
             switch (platformType)
             {
                 case PlatformType.WeiXin:
@@ -100,14 +99,14 @@ namespace GameMain
 
         public void UnInitialize()
         {
-            Debug.Log($"销毁平台成功:{platform.GetType()}");
-            platform?.UnInitialize();
-            platform = null;
+            Debug.Log($"销毁平台成功:{Platform.GetType()}");
+            Platform?.UnInitialize();
+            Platform = null;
         }
 
         public void GameManagerInited()
         {
-            platform.GameManagerInited();
+            Platform.GameManagerInited();
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace GameMain
             }
             else
             {
-                platform.LookAd((lookAdResult) =>
+                Platform.LookAd((lookAdResult) =>
                 {
                     result?.Invoke(lookAdResult);
 
@@ -145,7 +144,7 @@ namespace GameMain
         {
             //heavy、medium、light
             //if (LocalSaveMgr.Instance.DataCenter.GetLocalSave<Save_Setting>().shakeIsOn == false) return;
-            platform.Shake(type);
+            Platform.Shake(type);
         }
 
         /// <summary>
@@ -153,7 +152,7 @@ namespace GameMain
         /// </summary>
         public void ShowShare(string str = "", Action<bool> result = null)
         {
-            platform?.ShowShare(str, (success) =>
+            Platform?.ShowShare(str, (success) =>
             {
                 result?.Invoke(success);
             });
@@ -164,7 +163,7 @@ namespace GameMain
         /// </summary>
         public void DirectedShare(int posType, Action<bool> result)
         {
-            platform.DirectedShare(posType, (resultB) =>
+            Platform.DirectedShare(posType, (resultB) =>
             {
                 result?.Invoke(resultB);
             });
@@ -172,7 +171,7 @@ namespace GameMain
 
         public void AddToMiniGameEntrance(Action<bool> result)
         {
-            platform.AddToMiniGameEntrance(result);
+            Platform.AddToMiniGameEntrance(result);
         }
 
         /// <summary>
@@ -180,7 +179,7 @@ namespace GameMain
         /// </summary>
         public void CreateDesktopEnterAppIcon()
         {
-            platform.CreateDesktopEnterAppIcon();
+            Platform.CreateDesktopEnterAppIcon();
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace GameMain
         /// </summary>
         public void CheckHaveDesktopAppIcon(Action<bool> callBack)
         {
-            platform?.CheckHaveDesktopAppIcon(callBack);
+            Platform?.CheckHaveDesktopAppIcon(callBack);
         }
 
         /// <summary>
@@ -196,7 +195,7 @@ namespace GameMain
         /// </summary>
         public void GetCanvasSize(Action<bool, Rect> callBack)
         {
-            platform.GetCanvasSize(callBack);
+            Platform.GetCanvasSize(callBack);
         }
 
         /// <summary>
@@ -211,12 +210,12 @@ namespace GameMain
         public void GetUserInfo(bool forceLogin, Action<bool, string, string> result, bool noAuthorityIsCreateBtn,
             Action showBtn, Rect btnPos, Action<bool> isLimitBtnCallback)
         {
-            platform.GetUserInfo(forceLogin, result, noAuthorityIsCreateBtn, showBtn, btnPos, isLimitBtnCallback);
+            Platform.GetUserInfo(forceLogin, result, noAuthorityIsCreateBtn, showBtn, btnPos, isLimitBtnCallback);
         }
 
         public void HideGetUserBtn()
         {
-            platform.HideGetUserBtn();
+            Platform.HideGetUserBtn();
         }
 
         /// <summary>
@@ -224,7 +223,7 @@ namespace GameMain
         /// </summary>
         public void GetBangsHeight(Action<bool, float> result)
         {
-            platform.GetBangsHeight(result);
+            Platform.GetBangsHeight(result);
         }
 
         /// <summary>
@@ -232,7 +231,7 @@ namespace GameMain
         /// </summary>
         public void AddLifeCycleEvent(System.Action hideCallback, System.Action showCallback)
         {
-            platform.AddLifeCycleEvent(hideCallback, showCallback);
+            Platform.AddLifeCycleEvent(hideCallback, showCallback);
         }
 
         /// <summary>
@@ -269,7 +268,7 @@ namespace GameMain
         /// </summary>
         public void TagGameIsRunning()
         {
-            platform.TagGameIsRunning();
+            Platform.TagGameIsRunning();
         }
 
         /// <summary>
@@ -277,24 +276,18 @@ namespace GameMain
         /// </summary>
         public void GetCopyToClipboard(string str, Action<bool> result)
         {
-            platform.GetCopyToClipboard(str, result);
+            Platform.GetCopyToClipboard(str, result);
         }
 
         #region 登录相关
-
-        private int loginCount;
         public static bool IsLoginSuccess;
-        private static string userId;
-        private static string defaultName = "未知用户";
-        private static string defaultIconUrl = "";
-        public static string DefaultName => defaultName + userId?.Substring(0, 4);
-        public static string DefaultIconUrl => defaultIconUrl;
+        public static string DefaultName => "未知用户" + UserId?.Substring(0, 4);
+        private static string DefaultIconUrl { get; } = "";
         
         /// <summary>
         /// 用户显示短ID
         /// </summary>
-        public static string UserId => userId;
-
+        public static string UserId { get; private set; }
         /// <summary>
         /// 用户昵称
         /// </summary>
@@ -304,10 +297,14 @@ namespace GameMain
         /// </summary>
         public static string IconUrl { get; set; }
 
-        private readonly YangEventGroup eventGroup = new YangEventGroup();
+        private YangEventGroup EventGroup { get; } = new YangEventGroup();
+
+        /// <summary>
+        /// 登录
+        /// </summary>
         public void Login(Action<bool, Action> resultAction)
         {
-            eventGroup.AddListener<EventMessageBase>(OnGetOpenIdSuccess);
+            EventGroup.AddListener<EventMessageBase>(OnGetOpenIdSuccess);
             resultAction?.Invoke(true, null);
 #if !UNITY_EDITOR
             if (ePlatform == EPlatform.Default)
@@ -330,43 +327,42 @@ namespace GameMain
         /// </summary>
         private void OnGetOpenIdSuccess(EventData data)
         {
-            if (data is GetOpenIdSuccess)
+            if (data.Args is GetOpenIdSuccess)
             {
                 IsLoginSuccess = true;
-                userId = OpenId.GetHashCode().ToString();
+                UserId = OpenId.GetHashCode().ToString();
                 //ReportManager.Instance.StartLoad();
                 //已有玩家信息，开始加载
                 //Init.Instance.AutoClickStartBtn();
                 //获取用户信息
-                GetUserInfo(true, (result, _nickName, _iconUrl) =>
+                GetUserInfo(true, (result, nickName, iconUrl) =>
                 {
-                    Debug.Log($"获取用户信息:{result}昵称nick:{_nickName},头像url:{_iconUrl}");
+                    Debug.Log($"获取用户信息:{result}昵称nick:{nickName},头像url:{iconUrl}");
                     if (result)
                     {
-                        NickName = _nickName;
-                        IconUrl = _iconUrl;
+                        NickName = nickName;
+                        IconUrl = iconUrl;
                     }
                     else
                     {
                         NickName = DefaultName;
-                        IconUrl = defaultIconUrl;
+                        IconUrl = DefaultIconUrl;
                     }
                 }, false, null, Rect.zero, null);
             }
         }
 
         /// <summary>
-        /// 打点
+        /// 打点统计
         /// </summary>
         public void Report(string eventName, Dictionary<string, string> data)
         {
-            platform.Report(eventName, data);
+            Platform.Report(eventName, data);
         }
 
         #endregion
 
 #if UNITY_EDITOR
-        
         private void OnPlatformChange()
         {
             //获取当前是哪个平台

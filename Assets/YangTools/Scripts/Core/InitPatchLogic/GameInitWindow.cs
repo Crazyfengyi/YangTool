@@ -122,7 +122,7 @@ namespace YangTools
         /// </summary>
         private void ShowMessageBox(string content, System.Action ok)
         {
-            // 尝试获取一个可用的对话框
+            //尝试获取一个可用的对话框
             MessageBox msgBox = null;
             for (int i = 0; i < _msgBoxList.Count; i++)
             {
@@ -134,7 +134,7 @@ namespace YangTools
                 }
             }
 
-            // 如果没有可用的对话框，则创建一个新的对话框
+            //如果没有可用的对话框，则创建一个新的对话框
             if (msgBox == null)
             {
                 msgBox = new MessageBox();
@@ -143,7 +143,7 @@ namespace YangTools
                 _msgBoxList.Add(msgBox);
             }
 
-            // 显示对话框
+            //显示对话框
             msgBox.Show(content, ok);
         }
     }

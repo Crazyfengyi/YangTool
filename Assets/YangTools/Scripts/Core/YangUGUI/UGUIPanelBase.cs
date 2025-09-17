@@ -21,15 +21,15 @@ namespace YangTools.Scripts.Core.YangUGUI
     /// </summary>
     public abstract class UGUIPanelBase<T> : MonoBehaviour, IUGUIPanel where T : UGUIDataBase
     {
-        private const int DepthFactor = 10; //UI界面深度系数
+        private const int DepthFactor = 10;//UI界面深度系数
 
-        private readonly List<Canvas> cachedCanvasList = new(); //缓存的Canvas列表
-        private CanvasGroup canvasGroup; //缓存的CanvasGroup
-        private Canvas cachedCanvas; //缓存的Canvas
-        private bool visible; //是否显示
+        private readonly List<Canvas> cachedCanvasList = new();//缓存的Canvas列表
+        private CanvasGroup canvasGroup;//缓存的CanvasGroup
+        private Canvas cachedCanvas;//缓存的Canvas
+        private bool visible;//是否显示
 
-        private Transform node; //页面表现节点(动画节点)
-        private int originalLayer; //原始层级
+        private Transform node;//页面表现节点(动画节点)
+        private int originalLayer;//原始层级
 
         #region 对外属性
 

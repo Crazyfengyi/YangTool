@@ -347,20 +347,18 @@ namespace YangTools.Scripts.Core.YangUGUI
             if (uiGroup == null) throw new Exception($"UI组是未找到{groupName}");
 
             int serialId = ++serial;
-            //TODO:对象池
-            UIPanelInstanceObject uiPanelInstanceObject = null;/*instancePool?.Get("")*/
+            //对象池
+            UIPanelInstanceObject uiPanelInstanceObject = await instancePool.Get(assetName);
             IUIPanel uiPanel = null;
             if (uiPanelInstanceObject == null)
             {
-                //TODO 需要完整的资源加载器
-                UnityEngine.Object panelAsset = Resources.Load("UI/" + assetName + "/" + assetName);//资源
-                //await 异步加载
+                //资源加载
+                GameObject panelAsset = await ResourceManager.ResourceManager.LoadAssetAsync<GameObject>(assetName);
                 if (!panelAsset)
                 {
                     Debug.LogError($"UI页面加载失败:{assetName}");
                     throw new Exception();
                 }
-
                 uiPanelInstanceObject = UIPanelInstanceObject.Create(assetName, panelAsset, UICreateHelper.InstantiatePanel(panelAsset), UICreateHelper);
                 uiPanel = OpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, true, 0f, userData);
             }

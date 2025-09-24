@@ -123,13 +123,13 @@ public class ScriptableGridConfig : ScriptableObject
 [Serializable]
 public enum GridType
 {
-    [LabelText("¾ØĞÎ")]
+    [LabelText("çŸ©å½¢")]
     Rectangle,
-    [LabelText("µÈ¾àµÄ")]
+    [LabelText("ç­‰è·çš„")]
     Isometric,
-    [LabelText("Áù½ÇĞÎ")]
+    [LabelText("å…­è§’å½¢")]
     HexagonPointy,
-    [LabelText("Áù½ÇÆ½Ãæ")]
+    [LabelText("å…­è§’å¹³é¢")]
     HexagonFlat
 }
 

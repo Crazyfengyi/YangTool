@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
 /// <summary>
 /// 配置数据保存
 /// </summary>
+[Serializable]
 public abstract class SaveDataWithSO<T> : ScriptableObject where T : ConfigBase
 {
     /// <summary>
     /// 字典(运行时用),字典不能序列化
     /// </summary>
     internal Dictionary<int, T> dataDic;
-    [SerializeField]
     /// <summary>
     /// 数据列表(序列化用)
     /// </summary>
+    [SerializeField]
     [ListDrawerSettings(/*DraggableItems = false,*/ ShowIndexLabels = true, ListElementLabelName = "ConfigName")]
     public List<T> dataList = new List<T>();
     /// <summary>

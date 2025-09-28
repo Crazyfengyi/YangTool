@@ -408,11 +408,8 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiPanel.OnClose(isShutdown, userData);
             uiGroup.Refresh();
 
-            if (CloseUIPanelComplete != null)
-            {
-                UIPanelClosedEventArgs closeuiPanelCompleteEventArgs = UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
-                CloseUIPanelComplete(this, closeuiPanelCompleteEventArgs);
-            }
+            UIPanelClosedEventArgs closeUIArgs = UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
+            CloseUIPanelComplete?.Invoke(this, closeUIArgs);
             
             recycleQueue.Enqueue(uiPanel);
         }
@@ -458,21 +455,16 @@ namespace YangTools.Scripts.Core.YangUGUI
                 uiPanel.OnOpen(userData);
                 group.Refresh();
                 uiPanel.Handle = (object)panelInstanceObject;
-
-                if (OpenUIPanelSuccess != null)
-                {
-                    UIPanelOpenSucceedEventArgs openuiPanelSuccessEventArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
-                    OpenUIPanelSuccess(this, openuiPanelSuccessEventArgs);
-                }
+                
+                UIPanelOpenSucceedEventArgs openUIArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
+                OpenUIPanelSuccess?.Invoke(this, openUIArgs);
+                
                 return uiPanel;
             }
             catch (Exception exception)
             {
-                if (OpenUIPanelFailure != null)
-                {
-                    UIPanelOpenFailedEventArgs openuiPanelFailureEventArgs = UIPanelOpenFailedEventArgs.Create(serialId, panelAssetName, group.Name, pauseCoveredPanel, exception.ToString(), userData);
-                    OpenUIPanelFailure(this, openuiPanelFailureEventArgs);
-                }
+                UIPanelOpenFailedEventArgs openUIArgs = UIPanelOpenFailedEventArgs.Create(serialId, panelAssetName, group.Name, pauseCoveredPanel, exception.ToString(), userData);
+                OpenUIPanelFailure?.Invoke(this, openUIArgs);
                 throw;
             }
         }

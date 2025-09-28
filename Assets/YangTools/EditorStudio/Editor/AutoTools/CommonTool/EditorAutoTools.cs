@@ -352,7 +352,6 @@ namespace YangTools
         /// <summary>
         /// 删除所有动画事件
         /// </summary>
-        /// <param name="modelPath"></param>
         [MenuItem(SettingInfo.YongToolsFunctionPath + "移除选中动画文件所有动画事件")]
         public static void RemoveAllAnimationEvent()
         {

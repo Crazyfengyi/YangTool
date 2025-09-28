@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -430,6 +431,25 @@ namespace YangTools.Scripts.Core.YangExtend
 
             return offsetVec3;
         }
+
+        //更改回调字典
+        public static Dictionary<int,Action> ChangeleLanguageTextDic = new Dictionary<int, Action>();
+        /// <summary>
+        /// 多语言
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="textKey">多语言表Key</param>
+        public static void AutoToText(this TextMeshPro text, string textKey)
+        {
+            int uuidKey = text.GetInstanceID();
+            Action changeAction = () =>
+            {
+                text.text = LanguageManager.Instance.GetLanguage(textKey);
+            };
+            
+            ChangeleLanguageTextDic[uuidKey] = changeAction;
+            changeAction?.Invoke();
+        }
     }
 
     /// <summary>
@@ -443,215 +463,4 @@ namespace YangTools.Scripts.Core.YangExtend
         {
         }
     }
-
-    /* 多语言参考写法--自动回调
-     *
-     * public static void AutoToText(this TextMeshPro text, string textId)
-        {
-            var id = text.gameObject.GetInstanceID();
-            System.Action act = () =>
-            {
-                text.text = textId.ToText();
-            };
-            if (PlayerSettingManager.ChangeleLanguageTextDic.ContainsKey(id))
-            {
-                PlayerSettingManager.ChangeleLanguageTextDic[id] = act;
-            }
-            else
-            {
-                PlayerSettingManager.ChangeleLanguageTextDic.Add(id, act);
-            }
-            act();
-        }
-     */
-
-    /*
-        ---------参考编辑器update ----
-     *	/// <summary>
-/// 查找引用
-/// </summary>
-[MenuItem("SceneTools/删除未引用资源")]
-static private void FindAndDelete()
-{
-    Dictionary<string, string> guidAndPaths = new Dictionary<string, string>();
-    List<string> deletePaths = new List<string>();
-    var obj = Selection.objects[0];
-    string dire = AssetDatabase.GetAssetPath(obj);
-    DirectoryInfo directory = new DirectoryInfo(Application.dataPath + "/" + dire.Replace("Assets/", ""));
-    DirectoryInfo[] dirs = directory.GetDirectories();
-    for (int i = 0; i < dirs.Length; i++)
-    {
-        if (dirs[i].FullName.Contains("Spine")) continue;//Spine不做处理
-        FileInfo[] dFiles = dirs[i].GetFiles("*.png");
-        for (int j = 0; j < dFiles.Length; j++)
-        {
-            string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
-            if (string.IsNullOrEmpty(filePath)) continue;
-            guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
-            deletePaths.Add(filePath);
-        }
-        dFiles = dirs[i].GetFiles("*.tga");
-        for (int j = 0; j < dFiles.Length; j++)
-        {
-            string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
-            if (string.IsNullOrEmpty(filePath)) continue;
-            guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
-            deletePaths.Add(filePath);
-        }
-        dFiles = dirs[i].GetFiles("*.jpg");
-        for (int j = 0; j < dFiles.Length; j++)
-        {
-            string filePath = dFiles[j].FullName.Substring(dFiles[j].FullName.IndexOf("Assets")).Replace("\\", "/");
-            if (string.IsNullOrEmpty(filePath)) continue;
-            guidAndPaths.Add(AssetDatabase.AssetPathToGUID(filePath), filePath);
-            deletePaths.Add(filePath);
-        }
-    }
-    List<string> withoutExtensions = new List<string>() { ".prefab", ".unity", ".mat", ".asset" };
-    string[] files = Directory.GetFiles(Application.dataPath, "*.*", SearchOption.AllDirectories)
-        .Where(s => withoutExtensions.Contains(Path.GetExtension(s).ToLower())).ToArray();
-    int startIndex = 0;
-
-    EditorApplication.update = delegate ()
-    {
-        string file = files[startIndex];
-
-        bool isCancel = EditorUtility.DisplayCancelableProgressBar("匹配资源中", file, (float)startIndex / (float)files.Length);
-        foreach (var guid in guidAndPaths.Keys)
-        {
-            if (Regex.IsMatch(File.ReadAllText(file), guid))//找到引用则不删除
-            {
-                deletePaths.Remove(guidAndPaths[guid]);
-            }
-        }
-        startIndex++;
-        if (isCancel || startIndex >= files.Length)
-        {
-            EditorUtility.ClearProgressBar();
-            EditorApplication.update = null;
-            startIndex = 0;
-            for (int i = 0; i < deletePaths.Count; i++)
-            {
-                AssetDatabase.DeleteAsset(deletePaths[i]);
-                Debug.Log("删除了" + deletePaths[i]);
-            }
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Debug.Log($"删除了{deletePaths.Count}个文件");
-        }
-    };
-}
-     *
-     *
-     *
-     */
-
-    /*---参考移除动画事件-----
-     *	[MenuItem("SceneTools/删除所有动画事件")]
-public static void RemoveAllAnimationEvent()
-{
-    var obj = Selection.activeObject;
-    string dire = AssetDatabase.GetAssetPath(obj);
-    DirectoryInfo directory = new DirectoryInfo(Application.dataPath + "/" + dire.Replace("Assets/",""));
-    DirectoryInfo[] dirs = directory.GetDirectories();
-    for (int i = 0; i < dirs.Length; i++)
-    {
-        FileInfo[] files = dirs[i].GetFiles("*.fbx");
-        for (int j = 0; j < files.Length; j++)
-        {
-            string modelPath = files[j].FullName.Substring(files[j].FullName.IndexOf("Assets")).Replace("\\","/");
-            ModelImporter modelImporter = AssetImporter.GetAtPath(modelPath) as ModelImporter;
-            ModelImporterClipAnimation[] tempModelClips = new ModelImporterClipAnimation[modelImporter.clipAnimations.Length];
-            for (int k = 0; k < modelImporter.clipAnimations.Length; k++)
-            {
-                tempModelClips[k] = modelImporter.clipAnimations[k];
-                tempModelClips[k].events = new AnimationEvent[0];
-            }
-            modelImporter.clipAnimations = tempModelClips;
-            modelImporter.SaveAndReimport();
-        }
-    }
-    AssetDatabase.SaveAssets();
-    AssetDatabase.Refresh();
-    Debug.Log("删除动画事件成功!");
-}
-     *
-     *
-     *
-     *
-     */
-
-    /*
-     ---------参考子弹对称发射--------
-     *int bulletCount = 2;//子弹数量
-    int atkCount = 2;//攻击次数
-
-    if (Random.Range(0f, 1f) < finnalValue[GameAttribute.散射箭概率])
-    {
-        //触发散射
-        bulletCount += 1;
-    }
-
-    if (Random.Range(0f, 1f) < finnalValue[GameAttribute.连射箭概率])
-    {
-        //连射箭
-        atkCount += 1;
-    }
-
-    if (Random.Range(0f, 1f) < finnalValue[GameAttribute.贯穿箭概率])
-    {
-        //贯穿箭
-        AddBattleTempAttribute(-1, (int)GameAttribute.子弹穿透障碍物, 1, 0);
-    }
-
-    for (int i = 0; i < atkCount; i++)
-    {
-        //Wait(-1, 0.2f * i);
-        //连射间隔
-        skillTimerId.AddTimePot(0.2f * i, () =>
-         {
-             //偶数
-             if (bulletCount % 2 == 0)
-             {
-                 var lastOffSet = 0;//上一根箭位置偏移
-
-                 for (int j = 0; j < bulletCount; j++)
-                 {
-                     int OffSet = 30 * j  * (j % 2 == 0 ? 1 : -1);//临时偏移  (j % 2 == 1 ? 1 : -1)是区分上下的
-
-                     //第一根特殊处理--向上偏移15度，其他按规则来
-                     if (j == 0)
-                     {
-                         OffSet = 15;
-                     }
-
-                     int realityOffset = OffSet + lastOffSet;//实际偏移
-
-                     Shot(-1, "Bullet_101_1", true, euler: realityOffset);
-
-                     lastOffSet = realityOffset;//记录偏移
-                 }
-
-
-             }
-             else//奇数
-             {
-                 var lastOffSet = 0;//上一根箭位置偏移
-                 for (int j = 0; j < bulletCount; j++)
-                 {
-                     int OffSet = 30 * j * (j % 2 == 1 ? 1 : -1);//临时偏移  (j % 2 == 1 ? 1 : -1)是区分上下的
-                     int realityOffset = OffSet + lastOffSet;//实际偏移
-
-                     Shot(-1, "Bullet_101_1", true, euler: realityOffset);
-
-                     lastOffSet = realityOffset;//记录偏移
-                 }
-             }
-         });
-    }
-     *
-     *
-     *
-     *
-     */
 }

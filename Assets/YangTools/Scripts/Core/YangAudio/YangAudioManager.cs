@@ -416,11 +416,18 @@ namespace YangTools.Scripts.Core.YangAudio
         private void PlaySoundAudio(AudioClip clip, bool isLoop = false, float speed = 1)
         {
             AudioSource audio = ExtractIdleSoundAudioSource();
-            audio.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
-            audio.clip = clip;
-            audio.loop = isLoop;
-            audio.pitch = speed;
-            audio.Play();
+            if (audio)
+            {
+                if(mixer)audio.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
+                audio.clip = clip;
+                audio.loop = isLoop;
+                audio.pitch = speed;
+                audio.Play();  
+            }
+            else
+            {
+                Debug.LogWarning("音效音源不足，无法播放音效");
+            }
         }
 
         /// <summary>

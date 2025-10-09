@@ -49,7 +49,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                 Debug.LogError("UIMonoInstance有重复");
             }
 
-            uiManager = Core.YangToolsManager.GetModule<YangUIManager>();
+            uiManager = YangToolsManager.GetModule<YangUIManager>();
             if (uiManager == null)
             {
                 Debug.LogError("UIManager is null.");

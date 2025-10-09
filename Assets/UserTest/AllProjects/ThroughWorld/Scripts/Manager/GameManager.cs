@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using YangTools;
@@ -18,9 +19,13 @@ namespace YangTools
     [AddComponentMenu("游戏管理器")]
     public class GameManager : MonoSingleton<GameManager>
     {
+        [SerializeField]
+        public List<GameModuleBase> GameModulesList;
         protected override void Awake()
         {
             base.Awake();
+            GameModulesList = YangToolsManager.GetGameModulesList.ToList();
+            
             LoadOnProgress onProgress = new LoadOnProgress();
             onProgress.OnStartLoad += GameProjectileManager.Instance.OnSceneChangeStart;
             onProgress.OnStartLoad += GameUIManager.Instance.OnSceneChangeStart;

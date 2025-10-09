@@ -12,6 +12,7 @@ public class GameEntryLoad : MonoBehaviour
 {
     public void Awake()
     {
+        GameSceneManager.Instance.IsAutoSkip = true;
         GameSceneManager.Instance.Load("GameMain");
     }
 }

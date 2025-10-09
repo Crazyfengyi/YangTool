@@ -90,6 +90,7 @@ namespace YangTools.Scripts.Core
         /// 游戏模块链表
         /// </summary>
         private static readonly LinkedList<GameModuleBase> GameModulesList = new LinkedList<GameModuleBase>();
+        public static LinkedList<GameModuleBase> GetGameModulesList => GameModulesList;
         /// <summary>
         /// 获得模块
         /// </summary>
@@ -198,6 +199,7 @@ namespace YangTools.Scripts.Core
     /// <summary>
     /// 游戏模块基类
     /// </summary>
+    [Serializable]
     public abstract class GameModuleBase
     {
         /// <summary>

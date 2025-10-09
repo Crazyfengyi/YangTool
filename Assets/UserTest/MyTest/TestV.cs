@@ -11,14 +11,16 @@ using UnityEngine;
 
 public class TestV : MonoBehaviour
 {
-    public Rigidbody rigidbody;
 
     public Transform point1;
     public Transform point2;
 
+    private Rigidbody rigidbody;
+    private Transform body;
     public void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+        body = GetComponent<Transform>();
     }
     public void LateUpdate()
     {
@@ -33,10 +35,16 @@ public class TestV : MonoBehaviour
             Application.targetFrameRate = 120;
         }
 
+        if (body&& rigidbody && rigidbody.linearVelocity != Vector3.zero)
+        {
+            //看向目标方向
+            transform.rotation = Quaternion.LookRotation(rigidbody.linearVelocity);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             transform.position = point1.position;
-            //看下目标方向
+            //看向目标方向
             Vector3 projectileXZPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
             Vector3 targetXZPos = new Vector3(point2.position.x, 0.0f, point2.position.z);
             transform.LookAt(targetXZPos);

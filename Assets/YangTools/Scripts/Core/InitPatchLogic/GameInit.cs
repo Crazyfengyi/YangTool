@@ -14,6 +14,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using YangTools;
+using YangTools.Scripts.Core.YangAudio;
 using YooAsset;
 
 public class GameInit : MonoBehaviour
@@ -54,6 +55,5 @@ public class GameInit : MonoBehaviour
 
     public void InitializeAfterManagers()
     {
-        
     }
 } 

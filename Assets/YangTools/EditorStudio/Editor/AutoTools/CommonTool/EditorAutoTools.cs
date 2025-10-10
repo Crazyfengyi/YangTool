@@ -15,12 +15,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.U2D.SpritePacking;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using YangTools.Scripts.Core;
 using YangTools.Scripts.Core.YangExtend;
 using YangTools.Translate;
 using Debug = UnityEngine.Debug;
+using Text = UnityEngine.UI.Text;
 
 namespace YangTools
 {
@@ -545,6 +547,54 @@ namespace YangTools
         private static string Colored(this string content, string color = "cyan")
         {
             return $"<color={color}>{content}</color>";
+        }
+        #endregion
+
+        #region 图片切割
+
+        [MenuItem(SettingInfo.MenuPath + "一键切图")]   
+        public static void ClipTexture()
+        {
+            Texture2D[] texture2Ds = GetSelectObject();
+            foreach(Texture2D texture2D in texture2Ds)
+            {
+                string path = AssetDatabase.GetAssetPath(texture2D);
+                TextureImporter textureImporter = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (textureImporter != null)
+                {
+                    textureImporter.textureType = TextureImporterType.Sprite;
+                    textureImporter.spriteImportMode = SpriteImportMode.Multiple;
+                    //记得精灵的尺寸是从左下角开始计算的（左下角为原点，向右上增大）
+                    SpriteMetaData[] spriteMetaDatas = new SpriteMetaData[2]
+                    {
+                        GetSpriteMetaData("01",
+                            new Rect(0, texture2D.height / 2f, texture2D.width, texture2D.height / 2f),
+                            new Vector2(0.5f, 0.5f), new Vector4(0, 0, 0, 0), 9),
+                        GetSpriteMetaData("02",
+                            new Rect(0, 0, texture2D.width, texture2D.height / 2f),
+                            new Vector2(0.5f, 0.5f), new Vector4(0, 0, 0, 0), 9),
+                    };
+                    textureImporter.spritesheet = spriteMetaDatas;
+                    textureImporter.SaveAndReimport();
+                }
+            }
+        }
+        
+        static SpriteMetaData GetSpriteMetaData(string Name,Rect Rect, Vector2 Pivot, Vector4 Border, int AlignmentType)
+        {
+            return new SpriteMetaData()
+            {
+                name = Name,//名字
+                rect = Rect, //精灵大小
+                pivot = Pivot, //锚点
+                border = Border, //包围盒
+                alignment = AlignmentType, //这个就是记录了你的锚点类型，居中，中左，中右。。。 0~9正好对应编辑器里10个状态
+            };
+        }
+
+        public static Texture2D[] GetSelectObject()
+        {
+            return Selection.GetFiltered<Texture2D>(SelectionMode.DeepAssets);
         }
         #endregion
     }

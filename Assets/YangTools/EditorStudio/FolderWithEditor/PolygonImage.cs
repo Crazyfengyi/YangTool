@@ -1,4 +1,4 @@
-/** 
+/*
  *Copyright(C) 2020 by Yang 
  *All rights reserved. 
  *脚本功能:     RawImage重新绘制脚本--动态更改图片显示边数
@@ -111,6 +111,5 @@ namespace YangTools
             }
             return vbo;
         }
-
     }
 }

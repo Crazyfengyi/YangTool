@@ -12,12 +12,6 @@ namespace GameMain.Editor
 {
     public static class ToolEditor
     {
-        // [MenuItem("工具/生成配表-微信(bytes)")]
-        // public static void ExcelToUnit_Wx()
-        // {
-        //     ExecuteBat("gen_byte_wx.bat", $"{Application.dataPath}/../../../excels/DataTables/");
-        // }
-        //
         // [MenuItem("工具/生成配表-抖音(bytes)")]
         // public static void ExcelToUnity_Dy()
         // {
@@ -27,7 +21,6 @@ namespace GameMain.Editor
         // private static void ExecuteBat(string batFile, string workDir)
         // {
         //     string path = FormatPath(workDir + batFile);
-        //
         //     if (System.IO.File.Exists(path) == false)
         //     {
         //         Debug.LogError($"不存在的bat文件:{path}");
@@ -37,19 +30,12 @@ namespace GameMain.Editor
         //     try
         //     {
         //         System.Diagnostics.Process process = null;
-        //         
         //         process = new System.Diagnostics.Process();
-        //
         //         process.StartInfo.WorkingDirectory = workDir;
-        //
         //         process.StartInfo.FileName = batFile;
-        //
         //         process.Start();
-        //
         //         process.WaitForExit();
-        //
         //         process.Close();
-        //
         //     }
         //     catch (System.Exception ex)
         //     {
@@ -60,12 +46,10 @@ namespace GameMain.Editor
         // private static string FormatPath(string path)
         // {
         //     path = path.Replace("//", "\\");
-        //
         //     if (Application.platform == RuntimePlatform.OSXEditor)
         //     {
         //         path = path.Replace('\\', '/');
         //     }
-        //
         //     return path;
         // }
 
@@ -91,12 +75,6 @@ namespace GameMain.Editor
         // public static void OpenArtsFolder()
         // {
         //     Application.OpenURL($"{Application.dataPath}/../../../美术");
-        // }
-
-        // [MenuItem("工具/打开策划目录")]
-        // public static void OpenPlanFolder()
-        // {
-        //     Application.OpenURL($"{Application.dataPath}/../../../策划文档");
         // }
         
         // [MenuItem("工具/设置微信权限信息", priority = 100001)]
@@ -125,34 +103,6 @@ namespace GameMain.Editor
         //     Debug.LogError($"设置微信权限信息完成:{targetPath}");
         // }
 
-        // [MenuItem("工具/移除缺失脚本", priority = 100002)]
-        // public static void RemoveMissScript()
-        // {
-        //     if (Selection.gameObjects == null)
-        //     {
-        //         Debug.LogError("请选择对象");
-        //         return;
-        //     }
-        //     
-        //     m_goCount = 0;
-        //     m_missingCount = 0;
-        //     foreach (var go in Selection.gameObjects)
-        //     {
-        //         search(go);
-        //     }
-        //     Debug.LogError($"移除缺失脚本完成:{m_goCount}个对象，移除{m_missingCount}个缺失脚本");
-        // }
-        
-        // static int m_goCount;
-        // static int m_missingCount;
-        // static void search(GameObject go)
-        // {
-        //     m_goCount++;
-        //     m_missingCount += GameObjectUtility.RemoveMonoBehavioursWithMissingScript(go);
-        //     foreach (Transform child in go.transform)
-        //         search(child.gameObject);
-        // }
-        
 //         public class PostBuild : AssetPostprocessor
 //         {
 //             [PostProcessBuild(100)] //确保这个方法在打包后执行

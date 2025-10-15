@@ -9,11 +9,9 @@ namespace GameMain
 {
     public class RedDotTreeViewWindow : EditorWindow
     {
-        private static RedDotTreeViewWindow _window;
-
-        private RedDotTreeView _treeView;
-
-        private SearchField _searchField;
+        private static RedDotTreeViewWindow redDotWindow;
+        private RedDotTreeView treeView;
+        private SearchField searchField;
 
         [MenuItem(SettingInfo.YongToolsGameToolPath + "红点树可视化窗口")]
         private static void OpenWindow()
@@ -24,21 +22,26 @@ namespace GameMain
                 return;
             }
 
-            _window = GetWindow<RedDotTreeViewWindow>();
-            _window.titleContent = new GUIContent("红点树视图窗口");
-            _window.Show();
+            redDotWindow = GetWindow<RedDotTreeViewWindow>();
+            redDotWindow.titleContent = new GUIContent("红点树视图窗口");
+            redDotWindow.Show();
         }
 
         private void OnEnable()
         {
-            _treeView = new RedDotTreeView(new TreeViewState());
-
-            _searchField = new SearchField();
-            _searchField.downOrUpArrowKeyPressed += _treeView.SetFocusAndEnsureSelectedItem;
-
+            treeView = new RedDotTreeView(new TreeViewState());
+            searchField = new SearchField();
+            searchField.downOrUpArrowKeyPressed += treeView.SetFocusAndEnsureSelectedItem;
             EditorApplication.playModeStateChanged += OnPlayModeStateChange;
         }
-
+        private void OnDestroy()
+        {
+            treeView.OnDestroy();
+        }
+        
+        /// <summary>
+        /// 编辑器模式更改时
+        /// </summary>
         private void OnPlayModeStateChange(PlayModeStateChange obj)
         {
             switch (obj)
@@ -50,57 +53,49 @@ namespace GameMain
                 case PlayModeStateChange.EnteredPlayMode:
                     break;
                 case PlayModeStateChange.ExitingPlayMode:
-                    
-                    _window.Close();
-                    
+                    redDotWindow.Close();
                     break;
             }
-        }
-
-        private void OnDestroy()
-        {
-            _treeView.OnDestroy();
         }
 
         private void OnGUI()
         {
             UpToolBar();
-            
             TreeView();
-            
             ButtonToolBar();
         }
-
+        /// <summary>
+        /// 顶部工具栏
+        /// </summary>
         private void UpToolBar()
         {
-            _treeView.searchString =
-                _searchField.OnGUI(new Rect(0, 0, position.width - 40f, 20f), _treeView.searchString);
+            treeView.searchString = searchField.OnGUI(new Rect(0, 0, position.width - 40f, 20f), treeView.searchString);
         }
-
+        /// <summary>
+        /// 树视图
+        /// </summary>
         private void TreeView()
         {
-            _treeView.OnGUI(new Rect(0, 20f, position.width, position.height - 40));
+            treeView.OnGUI(new Rect(0, 20f, position.width, position.height - 40));
         }
-
+        /// <summary>
+        /// 按钮工具栏
+        /// </summary>
         private void ButtonToolBar()
         {
             GUILayout.BeginArea(new Rect(20, position.height - 18f, position.width - 40f, 16f));
-
             using (new EditorGUILayout.HorizontalScope())
             {
                 var style = "miniButton";
-
                 if (GUILayout.Button("展开", style))
                 {
-                    _treeView.ExpandAll();
+                    treeView.ExpandAll();
                 }
-
                 if (GUILayout.Button("收起", style))
                 {
-                    _treeView.CollapseAll();
+                    treeView.CollapseAll();
                 }
             }
-            
             GUILayout.EndArea();
         }
     }

@@ -9,48 +9,55 @@ namespace GameMain
 {
     public class RedDotTreeView : TreeView
     {
-        private RedDotTreeViewItem _root;
-
-        private int _id;
+        private RedDotTreeViewItem root;
+        private int id;
         
         public RedDotTreeView(TreeViewState state) : base(state)
         {
             Reload();
-
             useScrollView = true;
-
+            
             RedDotMgr.Instance.NodeNumChangeCallback += Reload;
             RedDotMgr.Instance.NodeValueChangeCallback += Repaint;
             RedDotMgr.Instance.CallBackNumberChange += Repaint;
-        }
-
-        private void Repaint(RedDotTreeNode arg1, int arg2)
-        {
-            Repaint();
         }
 
         public RedDotTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader)
         {
         }
 
+        public void OnDestroy()
+        {
+            RedDotMgr.Instance.NodeNumChangeCallback -= Reload;
+            RedDotMgr.Instance.NodeValueChangeCallback -= Repaint;
+            RedDotMgr.Instance.CallBackNumberChange -= Repaint;
+        }
+        
+        private void Repaint(RedDotTreeNode arg1, int arg2)
+        {
+            Repaint();
+        }
+        /// <summary>
+        /// 构建节点
+        /// </summary>
+        /// <returns></returns>
         protected override TreeViewItem BuildRoot()
         {
-            _id = 0;
-
-            _root = PreOrder(RedDotMgr.Instance.RootNode);
-            _root.depth = -1;
-
-            SetupDepthsFromParentsAndChildren(_root);
-
-            return _root;
+            id = 0;
+            root = PreOrder(RedDotMgr.Instance.RootNode);
+            root.depth = -1;
+            //更新子节点深度
+            SetupDepthsFromParentsAndChildren(root);
+            return root;
         }
-
+        /// <summary>
+        /// 预先排序
+        /// </summary>
         private RedDotTreeViewItem PreOrder(RedDotTreeNode root)
         {
             if (root == null) return null;
 
-            var item = new RedDotTreeViewItem(_id++, root);
-
+            RedDotTreeViewItem item = new RedDotTreeViewItem(id++, root);
             if (root.ChildrenCount > 0)
             {
                 foreach (var child in root.Children)
@@ -60,13 +67,6 @@ namespace GameMain
             }
 
             return item;
-        }
-
-        public void OnDestroy()
-        {
-            RedDotMgr.Instance.NodeNumChangeCallback -= Reload;
-            RedDotMgr.Instance.NodeValueChangeCallback -= Repaint;
-            RedDotMgr.Instance.CallBackNumberChange -= Repaint;
         }
     }
 }

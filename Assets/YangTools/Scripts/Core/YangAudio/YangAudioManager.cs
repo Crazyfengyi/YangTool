@@ -102,7 +102,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(bgmValue, value)) return;
                 bgmValue = value;
-                SetValue("BGM", bgmValue);
+                SetValue("BGMVolume", bgmValue);
             }
         }
 
@@ -116,7 +116,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(singleValue, value)) return;
                 singleValue = value;
-                SetValue("Dialogue", singleValue);
+                SetValue("DialogueVolume", singleValue);
             }
         }
 
@@ -130,7 +130,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(soundValue, value)) return;
                 soundValue = value;
-                SetValue("Sound", soundValue);
+                SetValue("SoundVolume", soundValue);
             }
         }
 
@@ -144,7 +144,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(worldValue, value)) return;
                 worldValue = value;
-                SetValue("World", worldValue);
+                SetValue("WorldVolume", worldValue);
             }
         }
 

@@ -151,9 +151,12 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <summary>
         /// 对话结束事件
         /// </summary>
-        public event Action singleSoundEndOfPlayEvent;
+        public event Action SingleSoundEndOfPlayEvent;
 
-        private bool singleSoundPlayDetector; //检查是否开启
+        /// <summary>
+        /// 对话是否开始
+        /// </summary>
+        private bool isDialogueStart;
 
         private void SetValue(string name, float value)
         {
@@ -213,12 +216,12 @@ namespace YangTools.Scripts.Core.YangAudio
 
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            if (singleSoundPlayDetector)
+            if (isDialogueStart)
             {
                 if (!singleAudio.isPlaying)
                 {
-                    singleSoundPlayDetector = false;
-                    singleSoundEndOfPlayEvent?.Invoke();
+                    isDialogueStart = false;
+                    SingleSoundEndOfPlayEvent?.Invoke();
                 }
             }
         }
@@ -342,7 +345,7 @@ namespace YangTools.Scripts.Core.YangAudio
             singleAudio.loop = isLoop;
             singleAudio.pitch = speed;
             singleAudio.Play();
-            singleSoundPlayDetector = true;
+            isDialogueStart = true;
         }
 
         /// <summary>

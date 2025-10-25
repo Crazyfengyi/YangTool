@@ -72,7 +72,7 @@ namespace YangTools.Scripts.Core.YangAudio
 
         #region 声音管理
 
-        private bool isMute; //是否静音
+        private bool isMute;//是否静音
         private float bgmValue = 0.6f;
         private float singleValue = 1f;
         private float soundValue = 1f;
@@ -88,7 +88,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (isMute == value) return;
                 isMute = value;
-                mixer.SetFloat("Master", isMute ? 0 : 1);
+                SetValue("Master", isMute ? 0 : 1);
             }
         }
 
@@ -102,7 +102,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(bgmValue, value)) return;
                 bgmValue = value;
-                mixer.SetFloat("BGM", bgmValue);
+                SetValue("BGM", bgmValue);
             }
         }
 
@@ -116,7 +116,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(singleValue, value)) return;
                 singleValue = value;
-                mixer.SetFloat("Dialogue", singleValue);
+                SetValue("Dialogue", singleValue);
             }
         }
 
@@ -130,7 +130,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(soundValue, value)) return;
                 soundValue = value;
-                mixer.SetFloat("Sound", soundValue);
+                SetValue("Sound", soundValue);
             }
         }
 
@@ -144,7 +144,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(worldValue, value)) return;
                 worldValue = value;
-                mixer.SetFloat("World", worldValue);
+                SetValue("World", worldValue);
             }
         }
 
@@ -155,6 +155,12 @@ namespace YangTools.Scripts.Core.YangAudio
 
         private bool singleSoundPlayDetector; //检查是否开启
 
+        private void SetValue(string name, float value)
+        {
+            //mixer是按照-80分贝->20分贝的范围  去掉前30分贝--听不到&去掉后20分贝--增加音量
+            float volume = Mathf.Lerp(-50f, 0f,value);
+            mixer.SetFloat(name, volume);
+        }
         #endregion
 
         #region 生命周期

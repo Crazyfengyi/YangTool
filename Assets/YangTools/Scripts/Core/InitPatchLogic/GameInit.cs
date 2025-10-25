@@ -38,14 +38,14 @@ public class GameInit : MonoBehaviour
     
     private IEnumerator Start()
     {
-        // 初始化资源系统
+        //初始化资源系统
         YooAssets.Initialize();
-        // 开始补丁更新流程
+        //开始补丁更新流程
         var operation = new PatchOperation("DefaultPackage","",playMode);
         YooAssets.StartOperation(operation);
         yield return operation;
 
-        // 设置默认的资源包
+        //设置默认的资源包
         var gamePackage = YooAssets.GetPackage("DefaultPackage");
         YooAssets.SetDefaultPackage(gamePackage);
         yield return null;

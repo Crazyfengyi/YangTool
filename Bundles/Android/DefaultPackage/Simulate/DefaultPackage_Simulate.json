@@ -8,7 +8,7 @@
     "BuildPipeline": "EditorSimulateBuildPipeline",
     "PackageName": "DefaultPackage",
     "PackageVersion": "Simulate",
-    "PackageNote": "2025/10/9 15:18:35",
+    "PackageNote": "2025/11/13 15:25:20",
     "AssetList": [
         {
             "Address": "CommonConfirmPanel",
@@ -96,6 +96,14 @@
             "AssetGUID": "eb67fefc264847e4999463dc544fd0e7",
             "AssetTags": [],
             "BundleID": 10,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "UICircleMask",
+            "AssetPath": "Assets/YangTools/AssetBunds/Materials/UICircleMask.mat",
+            "AssetGUID": "64db51965ffcad24e97c69391b7537e9",
+            "AssetTags": [],
+            "BundleID": 11,
             "DependBundleIDs": []
         },
         {
@@ -231,7 +239,7 @@
             "UnityCRC": 0,
             "FileHash": "efd88dfdd203117ea326da1302608cae",
             "FileCRC": "00000000",
-            "FileSize": 2287,
+            "FileSize": 7395,
             "Encrypted": false,
             "Tags": [],
             "DependBundleIDs": []

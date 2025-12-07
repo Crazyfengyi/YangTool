@@ -8,7 +8,7 @@
     "BuildPipeline": "EditorSimulateBuildPipeline",
     "PackageName": "DefaultPackage",
     "PackageVersion": "Simulate",
-    "PackageNote": "2025/11/13 15:25:20",
+    "PackageNote": "2025/12/7 23:16:09",
     "AssetList": [
         {
             "Address": "CommonConfirmPanel",
@@ -127,7 +127,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_commonconfirmpanel_commonconfirmpanel.bundle",
             "UnityCRC": 0,
-            "FileHash": "bc546bdd800a11734d1e51b44f66f132",
+            "FileHash": "a69bcf29743fc6a09b6202fb866f26f4",
             "FileCRC": "00000000",
             "FileSize": 33896,
             "Encrypted": false,
@@ -137,7 +137,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_gameoverpanel_gameoverpanel.bundle",
             "UnityCRC": 0,
-            "FileHash": "d505646cd60626693f4027026e9a2d48",
+            "FileHash": "ed77eaa23f14ebf3c80b4311457f18e0",
             "FileCRC": "00000000",
             "FileSize": 29016,
             "Encrypted": false,
@@ -147,7 +147,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loading.bundle",
             "UnityCRC": 0,
-            "FileHash": "ffe9e0b5d81ee413868cf8b316c5fd60",
+            "FileHash": "5822c32375fa6422272cfe58f496b8fd",
             "FileCRC": "00000000",
             "FileSize": 15508,
             "Encrypted": false,
@@ -157,7 +157,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingani.bundle",
             "UnityCRC": 0,
-            "FileHash": "1491af321592d3f62faddd33f9ae1d28",
+            "FileHash": "c00833fa532c41fcac8b59ff963ec86d",
             "FileCRC": "00000000",
             "FileSize": 9376,
             "Encrypted": false,
@@ -167,7 +167,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingpanel.bundle",
             "UnityCRC": 0,
-            "FileHash": "8e4ece64999109ff8bcfc0c8cb50f801",
+            "FileHash": "93ffba67c93ed92e3da9a6ca5443b6eb",
             "FileCRC": "00000000",
             "FileSize": 22120,
             "Encrypted": false,
@@ -177,7 +177,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_sceneloading_seceneloading.bundle",
             "UnityCRC": 0,
-            "FileHash": "46dfea7a77b566fc68dba7988a4d70d9",
+            "FileHash": "5f85157248d7f4a3c5133da3d8d5c81a",
             "FileCRC": "00000000",
             "FileSize": 18120,
             "Encrypted": false,
@@ -187,7 +187,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_tipspanel_tipspanel.bundle",
             "UnityCRC": 0,
-            "FileHash": "d6e95714831d5def5673d92fd66b6cbd",
+            "FileHash": "cf894cd0edf1c31711ee2dfb36b9f67b",
             "FileCRC": "00000000",
             "FileSize": 19420,
             "Encrypted": false,
@@ -197,7 +197,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_hpbarui.bundle",
             "UnityCRC": 0,
-            "FileHash": "a047fb5d8a2331c5f34d085c25c5bce5",
+            "FileHash": "02ce96fc47eed584d1567827e6e42a05",
             "FileCRC": "00000000",
             "FileSize": 29520,
             "Encrypted": false,
@@ -207,7 +207,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_tipsnode.bundle",
             "UnityCRC": 0,
-            "FileHash": "47912a21790102802958f1290fd7da2d",
+            "FileHash": "3a7cbde40e3826741282a08d89a7dc3e",
             "FileCRC": "00000000",
             "FileSize": 20344,
             "Encrypted": false,
@@ -217,7 +217,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_uiroot.bundle",
             "UnityCRC": 0,
-            "FileHash": "c83bdd5fcefcf1caf481fc8444dca3d3",
+            "FileHash": "eb5f99778fd359bdb7ed96342502e9f1",
             "FileCRC": "00000000",
             "FileSize": 70964,
             "Encrypted": false,
@@ -227,7 +227,7 @@
         {
             "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_wordui.bundle",
             "UnityCRC": 0,
-            "FileHash": "fa44419bfbd5f4c9b04b25f572cc68f7",
+            "FileHash": "c8dc9d3dadab9dd1f0117467af4adfb3",
             "FileCRC": "00000000",
             "FileSize": 14816,
             "Encrypted": false,
@@ -237,9 +237,9 @@
         {
             "BundleName": "defaultpackage_assets_yangtools_assetbunds_materials.bundle",
             "UnityCRC": 0,
-            "FileHash": "efd88dfdd203117ea326da1302608cae",
+            "FileHash": "51fd4f12db9154c4d41617e9a811ba1f",
             "FileCRC": "00000000",
-            "FileSize": 7395,
+            "FileSize": 7483,
             "Encrypted": false,
             "Tags": [],
             "DependBundleIDs": []
@@ -247,7 +247,7 @@
         {
             "BundleName": "defaultpackage_assets_yangtools_assetbunds_prefabs.bundle",
             "UnityCRC": 0,
-            "FileHash": "217ab41d3c132557d6f4e4bac7f52fe6",
+            "FileHash": "c3713630cdb5def34ac6cb3a8a80282f",
             "FileCRC": "00000000",
             "FileSize": 41064,
             "Encrypted": false,

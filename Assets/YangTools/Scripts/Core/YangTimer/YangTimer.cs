@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace YangTools.Scripts.Core.YangTimer
 {
@@ -54,6 +55,10 @@ namespace YangTools.Scripts.Core.YangTimer
     public class TimerInfo
     {
         /// <summary>
+        /// 标签
+        /// </summary>
+        public string tag;
+        /// <summary>
         /// 是否需要销毁
         /// </summary>
         public bool NeedDestroy;
@@ -86,12 +91,14 @@ namespace YangTools.Scripts.Core.YangTimer
         /// <param name="argExecuteCount">执行次数</param>
         /// <param name="argIsScaled">是否受Unity时间暂停影响</param>
         /// <param name="argIsJump">第一帧跳过</param>
-        public TimerInfo(UnityEngine.Object argObject, Action argCallback, int argExecuteCount, bool argIsScaled, bool argIsJump)
+        public TimerInfo(UnityEngine.Object argObject, string _tag,Action argCallback, int argExecuteCount, bool argIsScaled, bool argIsJump)
         {
             if (argObject != null)
             {
                 WeakObject = new System.WeakReference<UnityEngine.Object>(argObject);
             }
+
+            tag = _tag;
             Callback = argCallback;
             ExecuteCount = argExecuteCount;
             isScaled = argIsScaled;
@@ -120,8 +127,8 @@ namespace YangTools.Scripts.Core.YangTimer
         /// </summary>
         public int CurrentFrame;
 
-        public FrameTimerInfo(UnityEngine.Object holder, int argDelayFrame, Action argCallback, int count = 1, bool argIsJump = true)
-            : base(holder, argCallback, count, false, argIsJump)
+        public FrameTimerInfo(UnityEngine.Object holder,string _tag, int argDelayFrame, Action argCallback, int count = 1, bool argIsJump = true)
+            : base(holder,_tag, argCallback, count, false, argIsJump)
         {
             TargetFrame = argDelayFrame;
             CurrentFrame = TargetFrame;
@@ -214,9 +221,10 @@ namespace YangTools.Scripts.Core.YangTimer
         /// <summary>
         /// 普通计时器
         /// </summary>
-        public SecondTimerInfo(UnityEngine.Object holder, float argDelayTime, Action argCallback, int count = 1, bool argIsScaled = true, bool argIsJump = true)
-            : base(holder, argCallback, count, argIsScaled, argIsJump)
+        public SecondTimerInfo(UnityEngine.Object holder,string _tag, float argDelayTime, Action argCallback, int count = 1, bool argIsScaled = true, bool argIsJump = true)
+            : base(holder, _tag,argCallback, count, argIsScaled, argIsJump)
         {
+            tag = _tag;
             DelaySecond = argDelayTime;
             CurrentSecond = DelaySecond;
             isInfiniteLoop = false;
@@ -224,8 +232,8 @@ namespace YangTools.Scripts.Core.YangTimer
         /// <summary>
         /// 无限循环用
         /// </summary>
-        public SecondTimerInfo(UnityEngine.Object holder, float argDelayTime, Action argCallback, Func<bool> argCheckState, Action argOverBack, bool argIsScaled = true, bool argIsJump = true)
-         : base(holder, argCallback, int.MinValue, argIsScaled, argIsJump)
+        public SecondTimerInfo(UnityEngine.Object holder,string _tag, float argDelayTime, Action argCallback, Func<bool> argCheckState, Action argOverBack, bool argIsScaled = true, bool argIsJump = true)
+         : base(holder,_tag, argCallback, int.MinValue, argIsScaled, argIsJump)
         {
             DelaySecond = argDelayTime;
             CurrentSecond = DelaySecond;

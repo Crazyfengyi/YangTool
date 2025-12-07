@@ -645,7 +645,6 @@ namespace YangTools
         #endregion
 
         #region 资源导入+更改
-
         //所有的资源的导入，删除，移动，都会调用此方法
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,
             string[] movedFromAssetPaths)
@@ -705,12 +704,10 @@ namespace YangTools
         }
 
         // 正则表达式匹配--示例："宝箱&1204"名字
-        private string RegexTextureMaxSize = @"[&]\d{2,4}";
-
+        private readonly string RegexTextureMaxSize = @"[&]\d{2,4}";
         //纹理导入之后调用
         public void OnPostprocessTexture(Texture2D tex)
         {
-            return;
             //判断导入资源的路径名中,是否含有sprites文件夹,如果有则该图片自动设置Sprite,并做一些初始化。
             if (assetPath.ToUpper().Contains("/UI/"))
             {
@@ -721,6 +718,7 @@ namespace YangTools
                 textureImporter.mipmapEnabled = false;
 
                 string fileName = System.IO.Path.GetFileName(assetPath);
+                Debug.LogError($"自动设置图片属性:{fileName}");
                 // 设置MaxSize尺寸
                 Regex tempRegex = new Regex(RegexTextureMaxSize);
                 if (tempRegex.IsMatch(fileName))
@@ -760,11 +758,6 @@ namespace YangTools
                     Debug.Log("设置UI图片尺寸为：" + maxSize);
                 }
             }
-        }
-
-        //精灵导入之后调用
-        public void OnPostprocessSprites(Sprite spr)
-        {
         }
 
         //声音导入前调用

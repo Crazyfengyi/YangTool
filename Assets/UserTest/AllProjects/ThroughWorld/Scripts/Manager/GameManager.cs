@@ -72,9 +72,7 @@ namespace YangTools
         /// </summary>
         public void SceneLoad(string sceneName)
         {
-            GameSceneManager.Instance.IsAutoSkip = true;
             UICommonTool.Instance.SetSeceneLoading(true);
-
             MiniMapManager.Instance.SetMiniMapShow(false);
 
             GameSceneManager.Instance.OnProgressEvent.OnEndLoad = (progrese) =>
@@ -86,7 +84,7 @@ namespace YangTools
             {
                 //TODO:
             };
-            GameSceneManager.Instance.Load(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            GameSceneManager.Instance.Load(sceneName);
         }
 
         #endregion

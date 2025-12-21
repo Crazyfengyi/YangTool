@@ -49,9 +49,9 @@ public class GameInit : MonoBehaviour
         var gamePackage = YooAssets.GetPackage("DefaultPackage");
         YooAssets.SetDefaultPackage(gamePackage);
         yield return null;
-
-        //SceneManager.LoadSceneAsync("GameEntry");
-        SceneManager.LoadSceneAsync("PhysicsMiniGame");
+        
+        GameSceneManager.Instance.Load("GameEntry");
+        //GameSceneManager.Instance.Load("PhysicsMiniGame");
     }
 
     public void InitializeAfterManagers()

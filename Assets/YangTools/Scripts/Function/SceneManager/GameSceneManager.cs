@@ -110,7 +110,11 @@ namespace YangTools
         /// </summary>
         private void LoadScene()
         {
-            if (IsLoading) return;
+            if (IsLoading)
+            {
+                Debug.LogError($"正在加载场景:请等待加载完成.再加载新场景:{sceneName}");
+                return;
+            }
             progress = 0;
             enabled = true;
             OnProgressEvent?.OnStartLoad?.Invoke(sceneName);
@@ -143,10 +147,11 @@ namespace YangTools
         /// <summary>
         /// 加载场景
         /// </summary>
-        public void Load(string argSceneName, LoadSceneMode argSceneLoadType = LoadSceneMode.Single)
+        public void Load(string argSceneName, LoadSceneMode _sceneLoadType = LoadSceneMode.Single,bool _isAutoSkip = true)
         {
+            isAutoSkip = _isAutoSkip;
             sceneName = argSceneName;
-            sceneLoadType = argSceneLoadType;
+            sceneLoadType = _sceneLoadType;
             LoadScene();
         }
         /// <summary>

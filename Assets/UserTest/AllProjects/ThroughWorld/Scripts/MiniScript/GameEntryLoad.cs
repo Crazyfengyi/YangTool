@@ -10,9 +10,8 @@ using YangTools;
 
 public class GameEntryLoad : MonoBehaviour
 {
-    public void Awake()
+    public void Start()
     {
-        GameSceneManager.Instance.IsAutoSkip = true;
         GameSceneManager.Instance.Load("GameMain");
     }
 }

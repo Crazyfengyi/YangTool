@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 
 namespace YangTools.Scripts.Core.ResourceManager
 {
-    public class ResourceManager
+    public abstract class ResourceManager
     {
         private static readonly Dictionary<string, Object> AssetCacheDict = new Dictionary<string, Object>();
         /// <summary>

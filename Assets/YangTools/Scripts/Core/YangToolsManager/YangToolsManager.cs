@@ -57,16 +57,16 @@ namespace YangTools.Scripts.Core
         {
             DontDestoryObject = new GameObject("YangToolsObject");
             DontDestoryObject.AddComponent<UnityLoopScript>();
-            //DontDestoryObject.hideFlags = HideFlags.HideInHierarchy; //在层级面板隐藏
+            //DontDestroyObject.hideFlags = HideFlags.HideInHierarchy; //在层级面板隐藏
             UnityEngine.Object.DontDestroyOnLoad(DontDestoryObject);
             GamePoolObject = new GameObject("GamePoolsObject");
             GamePoolObject.transform.SetParent(DontDestoryObject.transform);
         }
 
         //所有游戏模块
-        private readonly static List<TypeInfo> allGameModule = GetAllGameModule();
+        private static readonly List<TypeInfo> allGameModule = GetAllGameModule();
         //已经创建过的模块全名
-        private readonly static List<string> allCreateModuleName = new List<string>();
+        private static readonly List<string> allCreateModuleName = new List<string>();
         //获得所有游戏模块
         private static List<TypeInfo> GetAllGameModule()
         {

@@ -28,7 +28,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public static bool IsCheckRecycle { get; set; } = true;
 
         //所有对象池
-        private static readonly Dictionary<string, PoolPackage> AllPools = new Dictionary<string, PoolPackage>();
+        private static readonly Dictionary<string, IObjectPool> AllPools = new Dictionary<string, IObjectPool>();
 
         #region 生命周期
         //反射初始化用
@@ -42,7 +42,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            foreach (KeyValuePair<string, PoolPackage> item in AllPools)
+            foreach (KeyValuePair<string, IObjectPool> item in AllPools)
             {
                 item.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
             }
@@ -66,15 +66,17 @@ namespace YangTools.Scripts.Core.YangObjectPool
             where T : class, IPoolItem<T>, new()
         {
             string resultKey = GetTypeKey<T>(poolKey);
-
-            if (AllPools.TryGetValue(resultKey, out PoolPackage pool))
+            
+            if (AllPools.TryGetValue(resultKey, out IObjectPool pool2))
             {
-                return await pool.GetPool<T>().Get(args);
+                var temp = pool2 as ObjectPool<T>;
+                return await temp?.Get(args);
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return await AllPools[resultKey].GetPool<T>().Get(args);
+                var temp = AllPools[resultKey] as ObjectPool<T>;
+                return await temp?.Get(args);
             }
         }
 
@@ -86,14 +88,16 @@ namespace YangTools.Scripts.Core.YangObjectPool
         {
             string resultKey = GetTypeKey<T>(poolKey);
 
-            if (AllPools.TryGetValue(resultKey, out var pool))
+            if (AllPools.TryGetValue(resultKey, out IObjectPool pool))
             {
-                return await pool.GetPool<T>().GetAutoRecycleItem();
+                var temp = pool as ObjectPool<T>;
+                return await temp?.GetAutoRecycleItem();
             }
             else
             {
                 CreatePool<T>(resultKey);
-                return await AllPools[resultKey].GetPool<T>().GetAutoRecycleItem();
+                var temp = AllPools[resultKey] as ObjectPool<T>;
+                return await temp?.GetAutoRecycleItem();
             }
         }
 
@@ -104,15 +108,8 @@ namespace YangTools.Scripts.Core.YangObjectPool
         {
             ObjectPool<T> pool = new ObjectPool<T>();
             pool.PoolKey = key;
-
-            //包裹类-为了将对象池放进字典统一管理
-            PoolPackage package = new PoolPackage();
-            package.ObjectPool = pool;
-            package.Type = typeof(T);
-            package.PoolType = pool.GetType();
-            package.Binding<T>();
-
-            AllPools.Add(key, package);
+            
+            AllPools.Add(key, pool);
         }
 
         /// <summary>
@@ -128,9 +125,10 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 key = typeof(T).FullName;
             }
 
-            if (key != null && AllPools.TryGetValue(key, out var allPool))
+            if (key != null && AllPools.TryGetValue(key, out IObjectPool allPool))
             {
-                allPool.GetPool<T>().Recycle(item);
+                var temp = allPool as ObjectPool<T>;
+                temp.Recycle(item);
                 return true;
             }
             else
@@ -139,13 +137,9 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 {
                     ObjectPool<T> pool = new ObjectPool<T>();
                     pool.PoolKey = item.PoolKey;
-                    PoolPackage package = new PoolPackage();
-                    package.ObjectPool = pool;
-                    package.Type = item.GetType();
-                    package.PoolType = pool.GetType();
-                    package.Binding<T>();
-                    AllPools.Add(key, package);
-                    AllPools[key].GetPool<T>().Recycle(item);
+                   
+                    AllPools.Add(key, pool);
+                    pool.Recycle(item);
                     return true;
                 }
             }
@@ -160,9 +154,9 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public static bool Clear<T>() where T : class, IPoolItem<T>, new()
         {
             string key = typeof(T).FullName;
-            if (key != null && AllPools.TryGetValue(key, out var pool))
+            if (key != null && AllPools.TryGetValue(key, out IObjectPool pool))
             {
-                pool.GetPool<T>().Clear();
+                pool.Clear();
                 return true;
             }
 
@@ -189,37 +183,6 @@ namespace YangTools.Scripts.Core.YangObjectPool
     }
 
     #region 对象池接口和类
-
-    /// <summary>
-    /// 对象池包裹类-将对象池放进字典统一管理
-    /// </summary>
-    internal class PoolPackage
-    {
-        public object ObjectPool;
-        public Type PoolType;
-        public Type Type;
-        private ReflectionInfo updateAction; //轮询方法
-
-        public ObjectPool<T> GetPool<T>() where T : class, IPoolItem<T>, new()
-        {
-            return (ObjectPool<T>)ObjectPool;
-        }
-
-        /// <summary>
-        /// 绑定对象池的轮询方法
-        /// </summary>
-        public void Binding<T>()
-        {
-            Type type = PoolType;
-            MethodInfo createFunc = type.GetMethod("Update");
-            updateAction = new ReflectionInfo(ObjectPool, createFunc);
-        }
-
-        public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
-        {
-            updateAction?.Invoke(delaTimeSeconds, unscaledDeltaTimeSeconds);
-        }
-    }
 
     /// <summary>
     /// 对象池
@@ -416,35 +379,8 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// <summary>
     /// 对象池
     /// </summary>
-    public interface IObjectPool<T> where T : class
+    public interface IObjectPool<T> : IObjectPool where T : class
     {
-        /// <summary>
-        /// 对象池在管理类字典里的key
-        /// </summary>
-        string PoolKey { get; set; }
-
-        /// <summary>
-        /// 不活跃的数量
-        /// </summary>
-        int InactiveCount { get; }
-
-        /// <summary>
-        /// 自动回收间隔
-        /// </summary>
-        float AutoRecycleInterval { get; set; }
-
-        /// <summary>
-        /// 自动回收计时
-        /// </summary>
-        float AutoRecycleTime { get; set; }
-
-        /// <summary>
-        /// 优先级
-        /// </summary>
-        float Priority { get; set; }
-
-        void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds);
-
         /// <summary>
         /// 获得对象
         /// </summary>
@@ -460,12 +396,35 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// </summary>
         /// <param name="element"></param>
         void Recycle(T element);
+    }
 
+    public interface IObjectPool
+    {
+        /// <summary>
+        /// 对象池在管理类字典里的key
+        /// </summary>
+        string PoolKey { get; set; }
+        /// <summary>
+        /// 不活跃的数量
+        /// </summary>
+        int InactiveCount { get; }
+        /// <summary>
+        /// 自动回收间隔
+        /// </summary>
+        float AutoRecycleInterval { get; set; }
+        /// <summary>
+        /// 自动回收计时
+        /// </summary>
+        float AutoRecycleTime { get; set; }
+        /// <summary>
+        /// 优先级
+        /// </summary>
+        float Priority { get; set; }
+        void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds);
         /// <summary>
         /// 释放对象池中的对象到默认大小
         /// </summary>
         void RecycleToDefaultCount();
-
         /// <summary>
         /// 清空对象池
         /// </summary>

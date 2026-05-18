@@ -703,8 +703,7 @@ namespace YangTools
         {
         }
 
-        // 正则表达式匹配--示例："宝箱&1204"名字
-        private readonly string RegexTextureMaxSize = @"[&]\d{2,4}";
+       private readonly string SaveTagKey = "Processed_1";
         //纹理导入之后调用
         public void OnPostprocessTexture(Texture2D tex)
         {
@@ -712,54 +711,61 @@ namespace YangTools
             if (assetPath.ToUpper().Contains("/UI/"))
             {
                 TextureImporter textureImporter = (TextureImporter)assetImporter;
+                // 防止重复处理
+                if (textureImporter.userData == SaveTagKey) return;
+
                 textureImporter.textureType = TextureImporterType.Sprite;
                 textureImporter.spriteImportMode = SpriteImportMode.Single;
                 textureImporter.alphaIsTransparency = true;
                 textureImporter.mipmapEnabled = false;
 
-                string fileName = System.IO.Path.GetFileName(assetPath);
-                Debug.LogError($"自动设置图片属性:{fileName}");
-                // 设置MaxSize尺寸
-                Regex tempRegex = new Regex(RegexTextureMaxSize);
-                if (tempRegex.IsMatch(fileName))
+                string fileName = Path.GetFileName(assetPath);
+                
+                //通过临时加载Texture2D获取宽高(此操作在预处理阶段可能较耗时，也可考虑使用System.Drawing.Image读取文件流)
+                string fullPath = Path.GetFullPath(assetPath);
+                Texture2D tempTexture = new Texture2D(2, 2);
+                byte[] fileData = File.ReadAllBytes(fullPath);
+                tempTexture.LoadImage(fileData); // 加载图片数据
+                int width = tempTexture.width;
+                int height = tempTexture.height;
+
+                int maxSize = Math.Max(width,height);
+                switch (maxSize)
                 {
-                    string maxSizeStr = tempRegex.Match(fileName).Value.Replace("&", "");
-                    int maxSize = Convert.ToInt32(maxSizeStr);
-
-                    switch (maxSize)
-                    {
-                        case int temp when temp < 50:
-                            maxSize = 32;
-                            break;
-                        case int temp when temp < 100:
-                            maxSize = 64;
-                            break;
-                        case int temp when temp < 150:
-                            maxSize = 128;
-                            break;
-                        case int temp when temp < 300:
-                            maxSize = 256;
-                            break;
-                        case int temp when temp < 600:
-                            maxSize = 512;
-                            break;
-                        case int temp when temp < 1100:
-                            maxSize = 1024;
-                            break;
-                        case int temp when temp < 2100:
-                            maxSize = 2048;
-                            break;
-                        default:
-                            Debug.LogError("自动设置图片大小失败,UI图片大小不应该大于2048");
-                            return;
-                    }
-
-                    textureImporter.maxTextureSize = maxSize;
-                    Debug.Log("设置UI图片尺寸为：" + maxSize);
+                    case < 50:
+                        maxSize = 32;
+                        break;
+                    case < 100:
+                        maxSize = 64;
+                        break;
+                    case < 200:
+                        maxSize = 128;
+                        break;
+                    case < 350:
+                        maxSize = 256;
+                        break;
+                    case < 700:
+                        maxSize = 512;
+                        break;
+                    case < 1500:
+                        maxSize = 1024;
+                        break;
+                    case < 2500:
+                        maxSize = 2048;
+                        break;
+                    default:
+                        Debug.LogError("自动设置图片大小失败,UI图片大小不应该大于2048");
+                        return;
                 }
+
+                textureImporter.maxTextureSize = maxSize;
+                // 标记已处理，避免无限循环
+                textureImporter.userData = SaveTagKey;
+                textureImporter.SaveAndReimport();
+                Debug.LogError($"自动设置图片属性:{fileName}->尺寸:{maxSize}");
             }
         }
-
+        
         //声音导入前调用
         public void OnPreprocessAudio()
         {

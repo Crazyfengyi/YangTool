@@ -309,14 +309,12 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <summary>
         /// 静态打开方法
         /// </summary>
-        /// <param name="userData"></param>
-        /// <param name="assetName"></param>
-        /// <param name="groupName"></param>
-        /// <returns></returns>
-        public static async UniTask<(int id, IUGUIPanel panel)> OpenPanel(T userData, string assetName,
-            string groupName)
-        {
-            return await UIMonoInstance.Instance.OpenPanel(assetName, groupName, userData: (object) userData);
+        public static async UniTask<(int id, PType panel)> OpenPanel<PType>( UIGroupType groupType,T userData,
+           string assetName = "") where PType : UGUIPanelBase<T>
+        { 
+            string targetAssetName = string.IsNullOrEmpty(assetName) ? typeof(PType).Name : assetName;
+            (int id, IUGUIPanel panel) temp = await UIMonoInstance.Instance.OpenPanel(targetAssetName, groupType.ToString(), userData: (object) userData);
+            return (temp.id,temp.panel as PType);
         }
     }
 }

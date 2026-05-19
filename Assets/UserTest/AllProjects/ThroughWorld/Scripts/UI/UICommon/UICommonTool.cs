@@ -99,7 +99,7 @@ public class UICommonTool : Singleton<UICommonTool>
             data.cancelCallBack = () => { };
         }
 
-        CommonConfirmPanel.OpenPanel(data, "CommonConfirmPanel", "Top");
+        CommonConfirmPanel.OpenPanel<CommonConfirmPanel>(UIGroupType.弹窗1,data,"CommonConfirmPanel");
     }
 
     #endregion 通用二级确认弹窗

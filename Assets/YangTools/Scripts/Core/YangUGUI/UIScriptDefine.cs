@@ -28,12 +28,23 @@ namespace YangTools.Scripts.Core.YangUGUI
     [Serializable]
     public sealed class UIGroupSetting
     {
-        [SerializeField] private string mName = null;
-        [Range(0, 160)] [SerializeField] private int mDepth = 0;
-        public string Name => mName;
+        [SerializeField] private UIGroupType mName;
+        [Range(0, 200)]
+        [SerializeField] private int mDepth = 0;
+        public string Name => mName.ToString();
         public int Depth => mDepth;
     }
 
+    public enum UIGroupType
+    {
+        None,
+        底层,
+        中层,
+        弹窗1,
+        弹窗2,
+        引导,
+        顶层,
+    }
     #endregion 类定义
 
     #region 接口定义

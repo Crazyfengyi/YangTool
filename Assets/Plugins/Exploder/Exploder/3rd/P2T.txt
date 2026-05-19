@@ -1,3 +1,0 @@
-Poly2Tri is a 2D constrained Delaunay triangulation library.
-
-https://code.google.com/p/poly2tri/

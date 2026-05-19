@@ -433,7 +433,7 @@ namespace YangTools.Scripts.Core.YangExtend
         }
 
         //更改回调字典
-        public static Dictionary<int,Action> ChangeleLanguageTextDic = new Dictionary<int, Action>();
+        private static Dictionary<int,Action> ChangeleLanguageTextDic = new Dictionary<int, Action>();
         /// <summary>
         /// 多语言
         /// </summary>

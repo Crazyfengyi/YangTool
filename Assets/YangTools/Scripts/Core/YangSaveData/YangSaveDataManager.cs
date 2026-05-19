@@ -22,11 +22,11 @@ namespace YangTools.Scripts.Core.YangSaveData
         private DataCenter dataCenter;
         public DataCenter DataCenter => dataCenter;
 
-        private const string PLAYER_LOCAL_SAVE_DATA_KEY = "PlayerLocalSaveData";
+        private const string PlayerLocalSaveDataKey = "PlayerLocalSaveData";
 
         public void OnEnable()
         {
-            string saveData = PlayerPrefs.GetString(PLAYER_LOCAL_SAVE_DATA_KEY);
+            string saveData = PlayerPrefs.GetString(PlayerLocalSaveDataKey);
             if (string.IsNullOrEmpty(saveData) == false)
             {
                 dataCenter = JsonUtility.FromJson<DataCenter>(saveData);
@@ -76,11 +76,11 @@ namespace YangTools.Scripts.Core.YangSaveData
             {
                 dataCenter.SaveDirtyData(force);
                 string saveData = JsonUtility.ToJson(dataCenter, true);
-                PlayerPrefs.SetString(PLAYER_LOCAL_SAVE_DATA_KEY, saveData);
+                PlayerPrefs.SetString(PlayerLocalSaveDataKey, saveData);
                 PlayerPrefs.Save();
 
 #if UNITY_EDITOR
-                string saveLocalFile = $"{Application.persistentDataPath}/{PLAYER_LOCAL_SAVE_DATA_KEY}";
+                string saveLocalFile = $"{Application.persistentDataPath}/{PlayerLocalSaveDataKey}";
                 if (!Directory.Exists(saveLocalFile))
                 {
                     Directory.CreateDirectory(saveLocalFile);
@@ -136,7 +136,7 @@ namespace YangTools.Scripts.Core.YangSaveData
         /// <summary>
         /// 获得本地数据
         /// </summary>
-        public T GetLocalSave<T>(bool isDirty = false) where T : ISaveData, new()
+        public T GetLocalSave<T>(bool isDirty = false) where T : SaveDataBase, new()
         {
             var saveTypeKey = typeof(T).Name;
             if (isDirty) DirtyKey.Add(saveTypeKey);
@@ -145,12 +145,12 @@ namespace YangTools.Scripts.Core.YangSaveData
             {
                 if (item.saveKey.Equals(saveTypeKey))
                 {
-                    if (item.saveData == null)
+                    if (item.SaveDataBase == null)
                     {
                         item.Deserialize<T>();
                     }
 
-                    if (item.saveData is T t)
+                    if (item.SaveDataBase is T t)
                     {
                         return t;
                     }
@@ -205,31 +205,31 @@ namespace YangTools.Scripts.Core.YangSaveData
     {
         public string saveKey;
         public string saveJson;
-        [NonSerialized] public ISaveData saveData;
+        [NonSerialized] public SaveDataBase SaveDataBase;
 
-        public LocalSaveData(string saveName, ISaveData _saveData)
+        public LocalSaveData(string saveName, SaveDataBase saveDataBase)
         {
             saveKey = saveName;
-            saveData = _saveData;
+            SaveDataBase = saveDataBase;
         }
 
         public void Serialize()
         {
-            if (saveData != null) saveJson = JsonUtility.ToJson(saveData);
+            if (SaveDataBase != null) saveJson = JsonUtility.ToJson(SaveDataBase);
         }
 
-        public void Deserialize<T>() where T : ISaveData, new()
+        public void Deserialize<T>() where T : SaveDataBase, new()
         {
             if (!string.IsNullOrEmpty(saveJson))
             {
-                saveData = JsonUtility.FromJson<T>(saveJson);
-                saveData.OnAfterDeserialize();
+                SaveDataBase = JsonUtility.FromJson<T>(saveJson);
+                SaveDataBase.OnAfterDeserialize();
             }
         }
     }
 
     [Serializable]
-    public abstract class ISaveData
+    public abstract class SaveDataBase
     {
         public abstract void SetDefaultData(string tableData);
 
@@ -241,32 +241,31 @@ namespace YangTools.Scripts.Core.YangSaveData
     /// <summary>
     /// 游戏设置
     /// </summary>
-    public class Save_GameSet : ISaveData
+    public class SaveGameSet : SaveDataBase
     {
         /// <summary>
         /// 音乐开关
         /// </summary>
-        public bool isOnMusic;
-        
+        public bool IsOnMusic;
+
         public override void SetDefaultData(string tableData)
         {
-            
         }
     }
-    
+
     /// <summary>
     /// 游戏信息存储
     /// </summary>
-    public class Save_GameData : ISaveData
+    public class SaveGameDataBase : SaveDataBase
     {
         /// <summary>
         /// 是否首次进入
         /// </summary>
-        public bool isFirstEnter;
-        
+        public bool IsFirstEnter;
+
         public override void SetDefaultData(string tableData)
         {
-            isFirstEnter = true;
+            IsFirstEnter = true;
         }
     }
 }

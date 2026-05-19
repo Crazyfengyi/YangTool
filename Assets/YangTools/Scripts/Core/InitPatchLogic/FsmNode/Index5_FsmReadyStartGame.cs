@@ -46,9 +46,9 @@ namespace GameMain
                 await ResourceManager.LoadAssetAsync<Object>(preloadList[i]);
             }
             
-            if (YangSaveDataManager.Instance.DataCenter.GetLocalSave<Save_GameData>().isFirstEnter)
+            if (YangSaveDataManager.Instance.DataCenter.GetLocalSave<SaveGameDataBase>().IsFirstEnter)
             {
-                YangSaveDataManager.Instance.DataCenter.GetLocalSave<Save_GameData>().isFirstEnter = false;
+                YangSaveDataManager.Instance.DataCenter.GetLocalSave<SaveGameDataBase>().IsFirstEnter = false;
                 //TODO:进入游戏
                 //await UIWindowTool.ChangeToBattleScene();
             }

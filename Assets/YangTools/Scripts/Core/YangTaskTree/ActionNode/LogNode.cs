@@ -7,6 +7,7 @@ public class LogNode : ActionNodeBase
 {
     public LogLevel logLevel;
     public string logString;
+
     protected override void OnStart()
     {
         switch (logLevel)
@@ -31,9 +32,10 @@ public class LogNode : ActionNodeBase
     {
     }
 }
+
 public enum LogLevel
 {
     Info,
-    Warning, 
+    Warning,
     Error
 }

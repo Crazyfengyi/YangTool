@@ -29,7 +29,7 @@ public class ProjectileSkillEffect : SkillEffect
         if (projectilePrefab == null) return;
 
         // 确定投射物的起始位置：若存在施法者则使用其位置，否则使用技能目标点
-        var origin = context.Caster != null ? context.Caster.transform.position : context.Point;
+        var origin = context.OriginPoint;
         // 确定投射物的移动方向：若方向向量有效则归一化，否则使用默认前方向量
         var direction = context.Direction.sqrMagnitude > 0f ? context.Direction.normalized : Vector3.forward;
         // 根据方向计算投射物的旋转角度

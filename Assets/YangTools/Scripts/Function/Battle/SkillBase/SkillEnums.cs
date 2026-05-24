@@ -70,6 +70,14 @@ public class SkillCastRequest
     /// 技能施法的方向向量
     /// </summary>
     public Vector3 Direction;
+    /// <summary>
+    /// 本次施放的武器来源
+    /// </summary>
+    public WeaponDefinition SourceWeapon;
+    /// <summary>
+    /// 武器实例句柄，用于区分同配置的不同实例
+    /// </summary>
+    public int SourceInstanceId;
 }
 
 /// <summary>
@@ -97,4 +105,16 @@ public class SkillContext
     /// 技能施放方向
     /// </summary>
     public Vector3 Direction;
+    /// <summary>
+    /// 技能施放原点
+    /// </summary>
+    public Vector3 OriginPoint;
+    /// <summary>
+    /// 本次施放的武器来源
+    /// </summary>
+    public WeaponDefinition SourceWeapon;
+    /// <summary>
+    /// 武器实例句柄
+    /// </summary>
+    public int SourceInstanceId;
 }

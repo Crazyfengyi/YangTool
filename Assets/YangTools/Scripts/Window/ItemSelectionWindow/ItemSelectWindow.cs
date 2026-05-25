@@ -174,7 +174,7 @@ public class ItemSelectWindow : UGUIPanelBase<DefaultUGUIDataBase>
             return;
         }
 
-        ToggleGroup group = selectionMode == ItemSelectionMode.Single ? singleSelectGroup : null;
+        UnityEngine.UI.ToggleGroup group = selectionMode == ItemSelectionMode.Single ? singleSelectGroup : null;
         for (int i = 0; i < itemsData.Count; i++)
         {
             ISelectableItem item = itemsData[i];

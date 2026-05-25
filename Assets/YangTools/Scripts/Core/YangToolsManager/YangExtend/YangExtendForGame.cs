@@ -690,5 +690,29 @@ namespace YangTools.Scripts.Core.YangExtend
             }
         }
         #endregion
+
+        #region 大数显示
+
+        /// <summary>
+        /// 将数字转换成带单位的字符串
+        /// </summary>
+        public static string ToBigNumStr(this double number)
+        {
+            if (number >= 1000000000)
+            {
+                return (number / 1000000000).ToString("0.##") + "B";
+            }
+            else if (number >= 1000000)
+            {
+                return (number / 1000000).ToString("0.##") + "M";
+            }
+            else if (number >= 1000)
+            {
+                return (number / 1000).ToString("0.##") + "K";
+            }
+            return number.ToString("0.##");
+        }
+
+        #endregion
     }
 }

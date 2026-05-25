@@ -24,7 +24,7 @@ public class SelectItemUI : MonoBehaviour
         }
     }
 
-    public void Init(ISelectableItem item, bool selected, ToggleGroup toggleGroup,
+    public void Init(ISelectableItem item, bool selected, UnityEngine.UI.ToggleGroup toggleGroup,
         Action<ISelectableItem, bool> onSelectionChanged)
     {
         this.item = item;

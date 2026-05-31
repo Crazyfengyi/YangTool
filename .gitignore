@@ -1,8 +1,7 @@
 Library
 Logs
-Packages
 Temp
-UserSettings
+UserSettingss
 .vsconfig
 *.csproj
 *.sln
@@ -10,22 +9,6 @@ Assembly-CSharp-Editor-firstpass.csproj
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
 Assembly-CSharp.csproj
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Actor/Base/RoleBase.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Actor/Player/PlayerAniEvent.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Actor/Player/PlayerAniEvent.cs.meta
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Actor/Player/PlayerController.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Manager/CameraManager.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Manager/GameActorManager.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Manager/GameInputManager.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Manager/GameInputManager.cs.meta
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/Manager/GameUIManager.cs
-Assets/UserTest/AllProjects/ThroughWorld/Scripts/UI/UICommon/UICommonTool.cs
-Assets/UserTest/Jammo-Character/Models/Jammo_LowPoly.fbx.meta
-Assets/UserTest/Jammo-Character/Models/Jammo_LowPolyAvatar_old.asset.meta
-Assets/YangTools/EditorStudio/Editor/AniEditor/AniEditorPlay/AniEditor.cs
-Assets/YangTools/EditorStudio/Editor/AutoTools/CommonTool/CommonEditorTool.cs
-Assets/YangTools/Scripts/Core/YangUGUI/UGUIHelper.cs
-Assets/YangTools/Scripts/Core/YangUGUI/UIMonoInstance.cs
 AstarPathfindingProject.csproj
 AstarPathfindingProjectEditor.csproj
 Cinemachine.csproj
@@ -136,3 +119,4 @@ obj/Debug/YangTool.Player.csproj.AssemblyReference.cache
 obj/Debug/YooAsset.csproj.AssemblyReference.cache
 obj/Debug/YooAsset.Editor.csproj.AssemblyReference.cache
 obj/Debug/YooAsset.Player.csproj.AssemblyReference.cache
+/UserSettings

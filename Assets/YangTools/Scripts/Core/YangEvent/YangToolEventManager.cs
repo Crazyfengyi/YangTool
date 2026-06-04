@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Manager;
+using YangTools.Scripts.Core;
 
 /*
  *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
@@ -60,22 +62,29 @@ namespace YangTools
         /// <summary>
         /// 事件字典
         /// </summary>
-        private readonly Dictionary<string, SortedList<int,EventInfo>> eventDic = new Dictionary<string, SortedList<int,EventInfo>>();
+        private readonly Dictionary<string, SortedList<int, List<EventInfo>>> eventDic = new Dictionary<string, SortedList<int, List<EventInfo>>>();
 
         /// <summary>
         /// 添加事件
         /// </summary>
         public void Add(EventInfo eventInfo)
         {
-            if (eventDic.TryGetValue(eventInfo.EventName, out var toAdd))
+            if (eventDic.TryGetValue(eventInfo.EventName, out SortedList<int, List<EventInfo>> toAdd))
             {
-                toAdd.Add(eventInfo.SortId,eventInfo);
+                if (toAdd.TryGetValue(eventInfo.SortId, out List<EventInfo> sameSortList))
+                {
+                    sameSortList.Add(eventInfo);
+                }
+                else
+                {
+                    toAdd.Add(eventInfo.SortId, new List<EventInfo> { eventInfo });
+                }
             }
             else
             {
-                toAdd = new SortedList<int, EventInfo>
+                toAdd = new SortedList<int, List<EventInfo>>
                 {
-                    {eventInfo.SortId,eventInfo}
+                    {eventInfo.SortId, new List<EventInfo> { eventInfo }}
                 };
                 eventDic.Add(eventInfo.EventName, toAdd);
             }
@@ -86,7 +95,7 @@ namespace YangTools
         /// </summary>
         public void RemoveForKey(string eventName)
         {
-            eventDic.Remove(eventName, out SortedList<int, EventInfo> list);
+            eventDic.Remove(eventName);
         }
 
         /// <summary>
@@ -94,9 +103,20 @@ namespace YangTools
         /// </summary>
         public void Remove(EventInfo eventInfo)
         {
-            foreach (var item in eventDic)
+            if (!eventDic.TryGetValue(eventInfo.EventName, out SortedList<int, List<EventInfo>> sortList))
             {
-                item.Value.Remove(eventInfo.SortId);
+                return;
+            }
+
+            if (!sortList.TryGetValue(eventInfo.SortId, out List<EventInfo> sameSortList))
+            {
+                return;
+            }
+
+            sameSortList.Remove(eventInfo);
+            if (sameSortList.Count <= 0)
+            {
+                sortList.Remove(eventInfo.SortId);
             }
         }
 
@@ -107,17 +127,25 @@ namespace YangTools
         {
             foreach (var item in eventDic)
             {
-                for (int k = item.Value.Count - 1; k >= 0; k--)
+                for (int i = item.Value.Count - 1; i >= 0; i--)
                 {
-                    EventInfo eventInfo = item.Value[k];
+                    List<EventInfo> sameSortList = item.Value.Values[i];
+                    for (int k = sameSortList.Count - 1; k >= 0; k--)
+                    {
+                        EventInfo eventInfo = sameSortList[k];
                     //绑定目标不存在
-                    if (eventInfo.Holder == null) continue;
+                        if (eventInfo.Holder == null) continue;
                     //目标不一样
-                    if (!ReferenceEquals(eventInfo.Holder, target)) continue;
-                    item.Value.RemoveAt(k);
-                    return;
+                        if (!ReferenceEquals(eventInfo.Holder, target)) continue;
+                        sameSortList.RemoveAt(k);
+                        if (sameSortList.Count <= 0)
+                        {
+                            item.Value.RemoveAt(i);
+                        }
+                        return;
                 }
             }
+        }
         }
 
         /// <summary>
@@ -127,10 +155,10 @@ namespace YangTools
         /// <param name="eventArgs">参数列表</param>
         public void Send(string eventName, EventMessageBase eventArgs)
         {
-            if (eventDic.TryGetValue(eventName, out SortedList<int, EventInfo> sortList))
+            if (eventDic.TryGetValue(eventName, out SortedList<int, List<EventInfo>> sortList))
             {
                 EventData eventData = new EventData(eventName, eventArgs);
-                List<EventInfo> temp = sortList.Values.ToList();
+                List<EventInfo> temp = sortList.Values.SelectMany(item => item).ToList();
                 for (int i = 0; i < temp.Count; i++)
                 {
                     EventInfo item = temp[i];
@@ -262,7 +290,7 @@ namespace YangTools
     {
         public void SendEvent()
         {
-            YangExtend.SendEvent(GetType(),this);
+            Extend.SendEvent(GetType(),this);
         }
     }
     
@@ -295,7 +323,7 @@ namespace YangTools
             if (key != null && groupCachedListener[key].Contains(listener) == false)
             {
                 groupCachedListener[key].Add(listener);
-                EventInfo ret = new EventInfo(GameInit.Instance.gameObject, key, listener);
+                EventInfo ret = new EventInfo(YangToolsManager.DontDestoryObject, key, listener);
                 YangEventManager.Instance.Add(ret);
             }
             else

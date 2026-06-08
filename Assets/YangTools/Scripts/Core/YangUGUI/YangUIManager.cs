@@ -4,33 +4,35 @@
  *Author:DESKTOP-AJS8G4U
  *UnityVersion：2021.2.1f1c1
  *创建时间:2022-02-19
-*/
+ */
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using YangTools.Scripts.Core.YangObjectPool;
 using YangTools.Scripts.Core;
+using Object = System.Object;
 
 namespace YangTools.Scripts.Core.YangUGUI
 {
-    public class YangUIManager : GameModuleBase, IUIManager 
+    public class YangUIManager : GameModuleBase, IUIManager
     {
-        public static Font MainFont = null;//主字体
+        public static TMP_FontAsset MainFont = null; //主字体
 
-        private readonly Dictionary<string, UIGroup> uiGroups;//UI组
-        private readonly Queue<IUIPanel> recycleQueue;//回收队列
-        private readonly IObjectPool<UIPanelInstanceObject> instancePool;//对象池
-        private int serial;//序列号
-        private bool isShutdown;//是否关闭
-        
-        public IUICreateHelper UICreateHelper;//UI界面辅助类
+        private readonly Dictionary<string, UIGroup> uiGroups; //UI组
+        private readonly Queue<IUIPanel> recycleQueue; //回收队列
+        private readonly IObjectPool<UIPanelInstanceObject> instancePool; //对象池
+        private int serial; //序列号
+        private bool isShutdown; //是否关闭
 
-        public event EventHandler<UIPanelOpenSucceedEventArgs> OpenUIPanelSuccess;//打开页面成功事件
-        public event EventHandler<UIPanelOpenFailedEventArgs> OpenUIPanelFailure;//打开页面失败事件
-        public event EventHandler<UIPanelClosedEventArgs> CloseUIPanelComplete;//关闭界面时
+        public IUICreateHelper UICreateHelper; //UI界面辅助类
+
+        public event EventHandler<UIPanelOpenSucceedEventArgs> OpenUIPanelSuccess; //打开页面成功事件
+        public event EventHandler<UIPanelOpenFailedEventArgs> OpenUIPanelFailure; //打开页面失败事件
+        public event EventHandler<UIPanelClosedEventArgs> CloseUIPanelComplete; //关闭界面时
 
         /// <summary>
         /// 获取界面组数量
@@ -44,7 +46,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
             recycleQueue = new Queue<IUIPanel>();
-            instancePool = new ObjectPool<UIPanelInstanceObject>();
+            instancePool = YangObjectPool.YangObjectPool.CreatePool<UIPanelInstanceObject>("UIPanelInstanceObject");
+
             UICreateHelper = null;
             serial = 0;
             isShutdown = false;
@@ -70,8 +73,9 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 IUIPanel uiPanel = recycleQueue.Dequeue();
                 uiPanel.OnRecycle();
-                instancePool.Recycle((UIPanelInstanceObject)uiPanel.Handle);
+                instancePool.Recycle((UIPanelInstanceObject) uiPanel.Handle);
             }
+
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
                 uiGroup.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
@@ -109,6 +113,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 throw new Exception($"UI group name is invalid:{groupName}");
             }
+
             return uiGroups.ContainsKey(groupName);
         }
 
@@ -139,6 +144,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 results[index++] = uiGroup.Value;
             }
+
             return results;
         }
 
@@ -153,6 +159,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 return false;
             }
+
             return HasPanel(uiPanel.SerialId);
         }
 
@@ -184,14 +191,17 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 throw new Exception("UI group name is invalid.");
             }
+
             if (uiGroupHelper == null)
             {
                 throw new Exception("UI group helper is invalid.");
             }
+
             if (HasGroup(groupName))
             {
                 return false;
             }
+
             uiGroups.Add(groupName, new UIGroup(groupName, uiGroupDepth, uiGroupHelper));
             return true;
         }
@@ -209,6 +219,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return uiGroup.Value.UIPanelIsOpen(assetName);
                 }
             }
+
             return (false, null);
         }
 
@@ -226,6 +237,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -244,6 +256,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -287,6 +300,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return uiPanel;
                 }
             }
+
             return null;
         }
 
@@ -307,6 +321,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 results.AddRange(uiGroup.Value.GetPanels(uiPanelAssetName));
             }
+
             return results.ToArray();
         }
 
@@ -321,13 +336,14 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 results.AddRange(uiGroup.Value.GetAllPanels());
             }
+
             return results.ToArray();
         }
 
         #endregion 获得界面
 
         #region 打开界面
-        
+
         /// <summary>
         /// 打开界面
         /// </summary>
@@ -337,37 +353,30 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="pauseCovereduiPanel">是否暂停被覆盖的界面</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>界面的序列编号</returns>
-        public async UniTask<(int id,IUGUIPanel panel)> OpenPanel(string assetName, string groupName,
+        public async UniTask<(int id, IUGUIPanel panel)> OpenPanel(string assetName, string groupName,
             int priority = UIConstDefine.DefaultPriority, bool pauseCovereduiPanel = false, object userData = null)
         {
             if (UICreateHelper == null) throw new Exception("你必须设置一个UIPanelHelper");
             if (string.IsNullOrEmpty(assetName)) throw new Exception("UI资源名为空");
             if (string.IsNullOrEmpty(groupName)) throw new Exception("UI组名为空");
-            UIGroup uiGroup = (UIGroup)GetGroup(groupName);
+            UIGroup uiGroup = (UIGroup) GetGroup(groupName);
             if (uiGroup == null) throw new Exception($"UI组是未找到{groupName}");
 
             int serialId = ++serial;
+            //资源加载
+            GameObject panelAsset = await ResourceManager.ResourceManager.LoadAssetAsync<GameObject>(assetName);
+            if (!panelAsset)
+            {
+                Debug.LogError($"UI页面加载失败:{assetName}");
+                throw new Exception();
+            }
+
             //对象池
-            UIPanelInstanceObject uiPanelInstanceObject = await instancePool.Get(assetName);
-            IUIPanel uiPanel = null;
-            if (uiPanelInstanceObject == null)
-            {
-                //资源加载
-                GameObject panelAsset = await ResourceManager.ResourceManager.LoadAssetAsync<GameObject>(assetName);
-                if (!panelAsset)
-                {
-                    Debug.LogError($"UI页面加载失败:{assetName}");
-                    throw new Exception();
-                }
-                uiPanelInstanceObject = UIPanelInstanceObject.Create(assetName, panelAsset, UICreateHelper.InstantiatePanel(panelAsset), UICreateHelper);
-                uiPanel = OpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, true, 0f, userData);
-            }
-            else
-            {
-                //打开界面
-                uiPanel = OpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject, pauseCovereduiPanel, false, 0f, userData);
-            }
-            return (serialId,(uiPanelInstanceObject.Target as GameObject)?.GetComponent<IUGUIPanel>());
+            UIPanelInstanceObject uiPanelInstanceObject = await instancePool.Get(assetName,panelAsset, UICreateHelper);
+            
+            IUIPanel uiPanel = OpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject,
+                pauseCovereduiPanel, true, 0f, userData);
+            return (serialId, (uiPanelInstanceObject.Target)?.GetComponent<IUGUIPanel>());
         }
 
         #endregion 打开界面
@@ -382,7 +391,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         public void ClosePanel(int serialId, object userData = null)
         {
             IUIPanel uiPanel = GetPanel(serialId);
-            if (uiPanel == null)throw new Exception($"Can not find UI form '{serialId.ToString()}'.");
+            if (uiPanel == null) throw new Exception($"Can not find UI form '{serialId.ToString()}'.");
             ClosePanel(uiPanel, userData);
         }
 
@@ -398,7 +407,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                 throw new Exception("UI form is invalid.");
             }
 
-            UIGroup uiGroup = (UIGroup)uiPanel.UIGroup;
+            UIGroup uiGroup = (UIGroup) uiPanel.UIGroup;
             if (uiGroup == null)
             {
                 throw new Exception("UI group is invalid.");
@@ -408,9 +417,10 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiPanel.OnClose(isShutdown, userData);
             uiGroup.Refresh();
 
-            UIPanelClosedEventArgs closeUIArgs = UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
+            UIPanelClosedEventArgs closeUIArgs =
+                UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
             CloseUIPanelComplete?.Invoke(this, closeUIArgs);
-            
+
             recycleQueue.Enqueue(uiPanel);
         }
 
@@ -427,13 +437,13 @@ namespace YangTools.Scripts.Core.YangUGUI
                 {
                     continue;
                 }
+
                 ClosePanel(uiPanel, userData);
             }
         }
 
         public void ReFocusPanel(IUIPanel uiPanel, object userData)
         {
-            
         }
 
         #endregion 关闭界面
@@ -443,7 +453,9 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <summary>
         /// 打开界面
         /// </summary>
-        private IUIPanel OpenUIPanel(int serialId, string panelAssetName, UIGroup group, object panelInstance, UIPanelInstanceObject panelInstanceObject, bool pauseCoveredPanel, bool isNewInstance, float duration, object userData)
+        private IUIPanel OpenUIPanel(int serialId, string panelAssetName, UIGroup group, object panelInstance,
+            UIPanelInstanceObject panelInstanceObject, bool pauseCoveredPanel, bool isNewInstance, float duration,
+            object userData)
         {
             try
             {
@@ -454,16 +466,18 @@ namespace YangTools.Scripts.Core.YangUGUI
                 group.AddUIPanel(uiPanel);
                 uiPanel.OnOpen(userData);
                 group.Refresh();
-                uiPanel.Handle = (object)panelInstanceObject;
-                
-                UIPanelOpenSucceedEventArgs openUIArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
+                uiPanel.Handle = (object) panelInstanceObject;
+
+                UIPanelOpenSucceedEventArgs
+                    openUIArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
                 OpenUIPanelSuccess?.Invoke(this, openUIArgs);
-                
+
                 return uiPanel;
             }
             catch (Exception exception)
             {
-                UIPanelOpenFailedEventArgs openUIArgs = UIPanelOpenFailedEventArgs.Create(serialId, panelAssetName, group.Name, pauseCoveredPanel, exception.ToString(), userData);
+                UIPanelOpenFailedEventArgs openUIArgs = UIPanelOpenFailedEventArgs.Create(serialId, panelAssetName,
+                    group.Name, pauseCoveredPanel, exception.ToString(), userData);
                 OpenUIPanelFailure?.Invoke(this, openUIArgs);
                 throw;
             }
@@ -489,12 +503,12 @@ namespace YangTools.Scripts.Core.YangUGUI
     /// </summary>
     internal sealed partial class UIGroup : IUIGroup
     {
-        private readonly string name;//名称
-        private int depth;//深度
-        private bool pause;//暂停
-        private readonly IUIGroupHelper uiGroupHelper;//ui组辅助类
-        private readonly LinkedList<UIPanelInfo> uiPanelInfos;//ui页面信息
-        private LinkedListNode<UIPanelInfo> cachedNode;//缓存节点
+        private readonly string name; //名称
+        private int depth; //深度
+        private bool pause; //暂停
+        private readonly IUIGroupHelper uiGroupHelper; //ui组辅助类
+        private readonly LinkedList<UIPanelInfo> uiPanelInfos; //ui页面信息
+        private LinkedListNode<UIPanelInfo> cachedNode; //缓存节点
 
         #region 属性
 
@@ -503,10 +517,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get { return name; }
         }
 
         /// <summary>
@@ -514,10 +525,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public int Depth
         {
-            get
-            {
-                return depth;
-            }
+            get { return depth; }
             set
             {
                 if (depth == value)
@@ -536,10 +544,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public bool Pause
         {
-            get
-            {
-                return pause;
-            }
+            get { return pause; }
             set
             {
                 if (pause == value)
@@ -557,10 +562,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public int PanelCount
         {
-            get
-            {
-                return uiPanelInfos.Count;
-            }
+            get { return uiPanelInfos.Count; }
         }
 
         /// <summary>
@@ -568,10 +570,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public IUIPanel CurrentPanel
         {
-            get
-            {
-                return uiPanelInfos.First != null ? uiPanelInfos.First.Value.UIPanel : null;
-            }
+            get { return uiPanelInfos.First != null ? uiPanelInfos.First.Value.UIPanel : null; }
         }
 
         /// <summary>
@@ -579,10 +578,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public IUIGroupHelper Helper
         {
-            get
-            {
-                return uiGroupHelper;
-            }
+            get { return uiGroupHelper; }
         }
 
         #endregion 属性
@@ -621,6 +617,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                 {
                     break;
                 }
+
                 cachedNode = current.Next;
                 current.Value.UIPanel.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
                 current = cachedNode;
@@ -660,6 +657,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return (true, uiPanelInfo);
                 }
             }
+
             return (false, null);
         }
 
@@ -709,6 +707,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                     results.Add(uiPanelInfo.UIPanel);
                 }
             }
+
             return results.ToArray();
         }
 
@@ -722,6 +721,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 results.Add(uiPanelInfo.UIPanel);
             }
+
             return results.ToArray();
         }
 
@@ -745,11 +745,13 @@ namespace YangTools.Scripts.Core.YangUGUI
             {
                 throw new Exception($"未找到界面 id:{uiPanel.SerialId.ToString()},name:{uiPanel.UIPanelAssetName}");
             }
+
             if (!uiPanelInfo.Focus)
             {
                 uiPanelInfo.Focus = true;
                 uiPanel.OnLostFocus();
             }
+
             if (!uiPanelInfo.Paused)
             {
                 uiPanelInfo.Paused = true;
@@ -763,7 +765,8 @@ namespace YangTools.Scripts.Core.YangUGUI
 
             if (!uiPanelInfos.Remove(uiPanelInfo))
             {
-                throw new Exception(string.Format("UI group '{0}' not exists specified UI form '[{1}]{2}'.", name, uiPanel.SerialId.ToString(), uiPanel.UIPanelAssetName));
+                throw new Exception(string.Format("UI group '{0}' not exists specified UI form '[{1}]{2}'.", name,
+                    uiPanel.SerialId.ToString(), uiPanel.UIPanelAssetName));
             }
 
             //ReferencePool.Release(uiPanelInfo);
@@ -776,7 +779,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             LinkedListNode<UIPanelInfo> current = uiPanelInfos.First;
             bool tempPause = this.pause;
-            bool cover = false;//覆盖
+            bool cover = false; //覆盖
             int tempDepth = PanelCount;
             while (current != null && current.Value != null)
             {
@@ -939,30 +942,30 @@ namespace YangTools.Scripts.Core.YangUGUI
     /// </summary>
     internal sealed class UIPanelInstanceObject : IPoolItem<UIPanelInstanceObject>
     {
+        public string Name { get; set; }
         public string PoolKey { get; set; }
-        private string name;//名字
-        private object target;//目标
-        private int priority;//优先级
-        private DateTime lastUseTime;//上一次使用时间
-        private object uiPanelAsset;//UI资源
-        private IUICreateHelper iuiCreateHelper;//UI页面辅助类
-        public object Target => target;
+        private string name; //名字
+        private GameObject uiPanelAsset; //UI资源
+        private GameObject target; //实例化的预制体
+        private int priority; //优先级
+        private DateTime lastUseTime; //上一次使用时间
+        private IUICreateHelper iuiCreateHelper; //UI页面辅助类
+        public GameObject Target => target;
         public bool IsInPool { get; set; }
 
         public UIPanelInstanceObject()
         {
         }
 
-        public static UIPanelInstanceObject Create(string name, object uiPanelAsset, object uiPanelInstance, IUICreateHelper iuiCreateHelper)
+        public UIPanelInstanceObject(string name, object uiPanelAsset, IUICreateHelper uiCreateHelper)
         {
             if (uiPanelAsset == null) throw new Exception("UI form asset is invalid.");
-            if (iuiCreateHelper == null) throw new Exception("UI form helper is invalid.");
+            if (uiCreateHelper == null) throw new Exception("UI form helper is invalid.");
 
-            UIPanelInstanceObject uiPanelInstanceObject = new UIPanelInstanceObject();
-            uiPanelInstanceObject.Init(name, uiPanelInstance, 0);
-            uiPanelInstanceObject.uiPanelAsset = uiPanelAsset;
-            uiPanelInstanceObject.iuiCreateHelper = iuiCreateHelper;
-            return uiPanelInstanceObject;
+            Name = name;
+            Init(name, 0);
+            this.uiPanelAsset = (GameObject)uiPanelAsset;
+            iuiCreateHelper = uiCreateHelper;
         }
 
         /// <summary>
@@ -971,10 +974,10 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="name">对象名称</param>
         /// <param name="target">对象</param>
         /// <param name="priority">对象的优先级</param>
-        public void Init(string name, object target, int priority)
+        public void Init(string name, int priority)
         {
             this.name = name ?? string.Empty;
-            this.target = target;
+            Name = this.name;
             this.priority = priority;
             lastUseTime = DateTime.UtcNow;
         }
@@ -992,7 +995,9 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         public Task OnCreate()
         {
-           return Task.CompletedTask;
+            object panel = iuiCreateHelper.InstantiatePanel(uiPanelAsset);
+            this.target = (GameObject)panel;
+            return Task.CompletedTask;
         }
 
         public void OnGet()
@@ -1001,10 +1006,12 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         public void OnRecycle()
         {
+            ((GameObject) target).SetActive(false);
         }
 
         public void OnDestroy()
         {
+            iuiCreateHelper.ReleasePanel(uiPanelAsset, target);
         }
     }
 }

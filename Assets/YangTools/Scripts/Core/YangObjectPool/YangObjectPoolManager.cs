@@ -25,8 +25,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// <summary>
         /// 是否检测回收对象(是否允许没有从对象池取出直接调用放入)
         /// </summary>
-        public static bool IsCheckRecycle { get; set; } = true;
-
+        private static bool IsCheckRecycle { get; set; } = true;
         //所有对象池
         private static readonly Dictionary<string, IObjectPool> AllPools = new Dictionary<string, IObjectPool>();
 
@@ -66,17 +65,17 @@ namespace YangTools.Scripts.Core.YangObjectPool
             where T : class, IPoolItem<T>, new()
         {
             string resultKey = GetTypeKey<T>(poolKey);
-            
+
             if (AllPools.TryGetValue(resultKey, out IObjectPool pool2))
             {
-                var temp = pool2 as ObjectPool<T>;
-                return await temp?.Get(args);
+                ObjectPool<T> temp = pool2 as ObjectPool<T>;
+                return await temp?.Get(args)!;
             }
             else
             {
                 CreatePool<T>(resultKey);
-                var temp = AllPools[resultKey] as ObjectPool<T>;
-                return await temp?.Get(args);
+                ObjectPool<T> temp = AllPools[resultKey] as ObjectPool<T>;
+                return await temp?.Get(args)!;
             }
         }
 
@@ -91,25 +90,25 @@ namespace YangTools.Scripts.Core.YangObjectPool
             if (AllPools.TryGetValue(resultKey, out IObjectPool pool))
             {
                 var temp = pool as ObjectPool<T>;
-                return await temp?.GetAutoRecycleItem();
+                return await temp?.GetAutoRecycleItem()!;
             }
             else
             {
                 CreatePool<T>(resultKey);
                 var temp = AllPools[resultKey] as ObjectPool<T>;
-                return await temp?.GetAutoRecycleItem();
+                return await temp?.GetAutoRecycleItem()!;
             }
         }
 
         /// <summary>
         /// 创建对象池
         /// </summary>
-        private static void CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
+        public static ObjectPool<T> CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
         {
             ObjectPool<T> pool = new ObjectPool<T>();
             pool.PoolKey = key;
-            
             AllPools.Add(key, pool);
+            return pool;
         }
 
         /// <summary>
@@ -127,8 +126,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
             if (key != null && AllPools.TryGetValue(key, out IObjectPool allPool))
             {
-                var temp = allPool as ObjectPool<T>;
-                temp.Recycle(item);
+                if (allPool is ObjectPool<T> temp) temp.Recycle(item);
                 return true;
             }
             else
@@ -137,8 +135,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 {
                     ObjectPool<T> pool = new ObjectPool<T>();
                     pool.PoolKey = item.PoolKey;
-                   
-                    AllPools.Add(key, pool);
+                    if (key != null) AllPools.Add(key, pool);
                     pool.Recycle(item);
                     return true;
                 }
@@ -175,7 +172,6 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 resultKey = poolKey;
             }
-
             return resultKey;
         }
 
@@ -190,9 +186,8 @@ namespace YangTools.Scripts.Core.YangObjectPool
     public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class, IPoolItem<T>, new()
     {
         public string PoolKey { get; set; }
-        private readonly Stack<T> stack; //栈
-        private readonly MethodInfo createFunc; //创建方法
-        private readonly MethodInfo createFunc2; //有参创建方法
+        private readonly Dictionary<string, List<T>> itemLists; //对象列表
+        private readonly ConstructorInfo[] constructors; //构造函数
 
         private readonly int maxSize; //最大数量
         private readonly bool collectionCheck; //回收检查(防止将已经在对象池的对象重复放进对象池)
@@ -211,7 +206,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// <summary>
         /// 未使用数量
         /// </summary>
-        public int InactiveCount => stack.Count;
+        public int InactiveCount => GetInactiveCount();
 
         /// <summary>
         /// 自动回收间隔时间
@@ -244,7 +239,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 throw new ArgumentException("Max Size must be greater than 0", "maxSize");
             }
 
-            stack = new Stack<T>(defaultCapacity);
+            itemLists = new Dictionary<string, List<T>>(StringComparer.Ordinal);
             this.defaultCapacity = defaultCapacity;
             this.maxSize = maxSize;
             AutoRecycleInterval = autoRecycleTime;
@@ -252,30 +247,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
             Priority = priority;
             this.collectionCheck = collectionCheck;
 
-            #region 反射获取方法
-
-            Type type = typeof(T);
-
-            //反射拿到静态方法PoolCreate
-            MethodInfo methodInfoCreate = null;
-            MethodInfo methodInfoCreate2 = null;
-
-            Type[] interNames = type.GetInterfaces();
-            for (int i = 0; i < interNames.Length; i++)
-            {
-                Type item = interNames[i];
-                if (item.Name.Contains("IPoolItem"))
-                {
-                    methodInfoCreate = item.GetMethod("PoolCreate", new Type[0]);
-                    methodInfoCreate2 = item.GetMethod("PoolCreate", new Type[] { typeof(object[]) });
-                    break;
-                }
-            }
-
-            createFunc = methodInfoCreate;
-            createFunc2 = methodInfoCreate2;
-
-            #endregion 反射获取方法
+            constructors = typeof(T).GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
 
         public void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
@@ -292,34 +264,188 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public async Task<T> Get(params object[] args)
         {
             T item;
-            if (stack.Count == 0)
+            string requestedName = GetRequestedName(args);
+            List<T> itemList = GetItemList(requestedName);
+            if (itemList.Count == 0)
             {
-                if (args.Length > 0)
-                {
-                    if (createFunc2 == null)
-                    {
-                        throw new InvalidOperationException();
-                    }
-                    Task<T> result = (Task<T>)createFunc2?.Invoke(null, new object[] { args });
-                    item = await result;
-                }
-                else
-                {
-                    Task<T> result =  (Task<T>)createFunc?.Invoke(null, null);
-                    item = await result;
-                }
-
-                if (item != null) item.PoolKey = PoolKey;
+                item = CreateInstanceWithArgs(args);
+                await item.OnCreate();
                 AllCount++;
             }
             else
             {
-                item = stack.Pop();
+                int lastIndex = itemList.Count - 1;
+                item = itemList[lastIndex];
+                itemList.RemoveAt(lastIndex);
             }
 
+            item.PoolKey = PoolKey;
             item.IsInPool = false;
             item.OnGet();
             return item;
+        }
+
+        private List<T> GetItemList(string itemKey)
+        {
+            if (!itemLists.TryGetValue(itemKey, out List<T> itemList))
+            {
+                itemList = new List<T>();
+                itemLists.Add(itemKey, itemList);
+            }
+
+            return itemList;
+        }
+
+        private int GetInactiveCount()
+        {
+            int count = 0;
+            foreach (List<T> itemList in itemLists.Values)
+            {
+                count += itemList.Count;
+            }
+
+            return count;
+        }
+
+        private T PopAnyInactiveItem()
+        {
+            foreach (List<T> itemList in itemLists.Values)
+            {
+                if (itemList.Count == 0)
+                {
+                    continue;
+                }
+
+                int lastIndex = itemList.Count - 1;
+                T item = itemList[lastIndex];
+                itemList.RemoveAt(lastIndex);
+                return item;
+            }
+
+            return null;
+        }
+
+        private static string GetRequestedName(object[] args)
+        {
+            if (args != null && args.Length > 0 && args[0] is string name && !string.IsNullOrEmpty(name))
+            {
+                return name;
+            }
+
+            return typeof(T).Name;
+        }
+
+        private static string GetItemName(T item)
+        {
+            if (item != null && !string.IsNullOrEmpty(item.Name))
+            {
+                return item.Name;
+            }
+
+            return typeof(T).Name;
+        }
+
+        private T CreateInstanceWithArgs(object[] args)
+        {
+            if (args == null || args.Length == 0)
+            {
+                return new T();
+            }
+
+            ConstructorInfo bestConstructor = null;
+            int bestScore = -1;
+            bool hasAmbiguousMatch = false;
+
+            foreach (ConstructorInfo constructor in constructors)
+            {
+                ParameterInfo[] parameters = constructor.GetParameters();
+                if (parameters.Length != args.Length)
+                {
+                    continue;
+                }
+
+                int score = GetConstructorMatchScore(parameters, args);
+                if (score < 0)
+                {
+                    continue;
+                }
+
+                if (score > bestScore)
+                {
+                    bestConstructor = constructor;
+                    bestScore = score;
+                    hasAmbiguousMatch = false;
+                }
+                else if (score == bestScore)
+                {
+                    hasAmbiguousMatch = true;
+                }
+            }
+
+            if (bestConstructor == null)
+            {
+                throw new MissingMethodException($"Can not find constructor on type '{typeof(T).FullName}' with args ({GetArgumentTypeNames(args)}).{args.Length}");
+            }
+
+            if (hasAmbiguousMatch)
+            {
+                throw new MissingMethodException($"Found ambiguous constructors on type '{typeof(T).FullName}' with args ({GetArgumentTypeNames(args)}).");
+            }
+
+            return (T)bestConstructor.Invoke(args);
+        }
+
+        private static int GetConstructorMatchScore(ParameterInfo[] parameters, object[] args)
+        {
+            int score = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                Type parameterType = parameters[i].ParameterType;
+                object arg = args[i];
+                if (arg == null)
+                {
+                    if (parameterType.IsValueType && Nullable.GetUnderlyingType(parameterType) == null)
+                    {
+                        return -1;
+                    }
+
+                    score += 1;
+                    continue;
+                }
+
+                Type argType = arg.GetType();
+                if (parameterType == argType)
+                {
+                    score += 3;
+                    continue;
+                }
+
+                if (parameterType.IsAssignableFrom(argType))
+                {
+                    score += 2;
+                    continue;
+                }
+
+                return -1;
+            }
+
+            return score;
+        }
+
+        private static string GetArgumentTypeNames(object[] args)
+        {
+            if (args == null || args.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            string[] typeNames = new string[args.Length];
+            for (int i = 0; i < args.Length; i++)
+            {
+                typeNames[i] = args[i]?.GetType().FullName ?? "null";
+            }
+
+            return string.Join(", ", typeNames);
         }
 
         public async Task<PooledObjectPackage<T>> GetAutoRecycleItem()
@@ -331,16 +457,25 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public void RecycleToDefaultCount()
         {
             AutoRecycleTime = 0f;
-            while (stack.Count > defaultCapacity)
+            while (InactiveCount > defaultCapacity)
             {
-                T item = stack.Peek();
-                Recycle(item);
+                T item = PopAnyInactiveItem();
+                if (item == null)
+                {
+                    return;
+                }
+
+                item.IsInPool = false;
+                item.OnDestroy();
+                AllCount--;
             }
         }
 
         public void Recycle(T item)
         {
-            if (collectionCheck && stack.Count > 0 && stack.Contains(item))
+            string itemName = GetItemName(item);
+            List<T> itemList = GetItemList(itemName);
+            if (collectionCheck && itemList.Contains(item))
             {
                 Debug.LogError($"试图回收一个已经在池中里的对象:{item}");
                 return;
@@ -350,23 +485,28 @@ namespace YangTools.Scripts.Core.YangObjectPool
             if (InactiveCount < maxSize)
             {
                 item.IsInPool = true;
-                stack.Push(item);
+                item.PoolKey = PoolKey;
+                itemList.Add(item);
             }
             else
             {
                 item.OnDestroy();
+                AllCount--;
             }
         }
 
         public void Clear()
         {
-            foreach (T item in stack)
+            foreach (List<T> itemList in itemLists.Values)
             {
-                item.IsInPool = false;
-                item.OnDestroy();
+                foreach (T item in itemList)
+                {
+                    item.IsInPool = false;
+                    item.OnDestroy();
+                }
             }
 
-            stack.Clear();
+            itemLists.Clear();
             AllCount = 0;
         }
 
@@ -404,27 +544,34 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// 对象池在管理类字典里的key
         /// </summary>
         string PoolKey { get; set; }
+
         /// <summary>
         /// 不活跃的数量
         /// </summary>
         int InactiveCount { get; }
+
         /// <summary>
         /// 自动回收间隔
         /// </summary>
         float AutoRecycleInterval { get; set; }
+
         /// <summary>
         /// 自动回收计时
         /// </summary>
         float AutoRecycleTime { get; set; }
+
         /// <summary>
         /// 优先级
         /// </summary>
         float Priority { get; set; }
+
         void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds);
+
         /// <summary>
         /// 释放对象池中的对象到默认大小
         /// </summary>
         void RecycleToDefaultCount();
+
         /// <summary>
         /// 清空对象池
         /// </summary>
@@ -455,7 +602,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         private readonly T mToReturn;
         private readonly IObjectPool<T> mPool;
         public T Data => mToReturn;
-        
+
         internal PooledObjectPackage(T value, IObjectPool<T> pool)
         {
             mToReturn = value;
@@ -473,6 +620,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// </summary>
     public interface IPoolItem<T> where T : IPoolItem<T>, new()
     {
+        string Name { get; set; }
         /// <summary>
         /// 所属对象池在管理类字典里的key
         /// </summary>
@@ -489,7 +637,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         public static async Task<T> PoolCreate(params object[] args)
         {
-            T result = (T)Activator.CreateInstance(typeof(T), args);
+            T result = args == null || args.Length == 0 ? new T() : (T) Activator.CreateInstance(typeof(T), args);
             await result.OnCreate();
             return result;
         }
@@ -533,12 +681,12 @@ namespace YangTools.Scripts.Core.YangObjectPool
         {
             if (isNull)
             {
-                return (T)func?.Invoke(instanceT, null);
+                return (T) func?.Invoke(instanceT, null);
             }
             else
             {
                 //反射调用
-                return (T)func?.Invoke(instanceT, new object[] { argList[0] });
+                return (T) func?.Invoke(instanceT, new object[] {argList[0]});
             }
         }
 
@@ -567,6 +715,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
     /// </summary>
     public class DefaultObjectPoolItem : IPoolItem<DefaultObjectPoolItem>
     {
+        public string Name { get; set; }
         public string PoolKey { get; set; }
         public bool IsInPool { get; set; }
 
@@ -614,13 +763,13 @@ namespace YangTools.Scripts.Core.YangObjectPool
             {
                 if (PoolDictionary.ContainsKey(typeof(T)))
                 {
-                    if (PoolDictionary[typeof(T)] is Stack<T> { Count: > 0 } pooledObjects)
+                    if (PoolDictionary[typeof(T)] is Stack<T> {Count: > 0} pooledObjects)
                     {
                         return pooledObjects.Pop();
                     }
                 }
 
-                newObject = (T)CreateInstance(typeof(T));
+                newObject = (T) CreateInstance(typeof(T));
             }
 
             return newObject;

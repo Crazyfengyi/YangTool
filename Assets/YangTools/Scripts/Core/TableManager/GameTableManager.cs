@@ -14,57 +14,44 @@ using System.IO;
 using Bright.Serialization;
 using cfg;
 using cfg.item;
-using cfg.player;
 using Cysharp.Threading.Tasks;
 using YangTools.Scripts.Core;
+using YooAsset;
 
 public class GameTableManager : MonoSingleton<GameTableManager>
 {
     private Tables table;
     public Tables Tables => table;
     
-    private readonly Dictionary<string, TextAsset> _bytesAssets = new ();
+    private readonly Dictionary<string, TextAsset> _jsonAssets = new();
     
-    protected override void Awake()
+    public async UniTask LoadAllConfigs()
     {
-        base.Awake();
-        table = new Tables(Loader);
-        //Player item = table.TbPlayer.Get(10000);
-        //Debug.LogError($"测试:{item.Name},{item.Desc}");
+        var package = YooAsset.YooAssets.GetPackage("DefaultPackage");
+        var assetInfos = package.GetAssetInfos("LubanData");
+        foreach (var assetInfo in assetInfos)
+        {
+            AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
+            await handle.ToUniTask();
+            if (handle.Status != EOperationStatus.Succeeded)
+            {
+                Debug.LogError(handle.Error);
+                continue;
+            }
+            TextAsset config = handle.AssetObject as TextAsset;
+            _jsonAssets[config.name.ToLower()] = config;
+        }
+        table = new Tables(LoadJson);
     }
 
-    private JSONNode Loader(string fileName)
+    private JSONNode LoadJson(string fileName)
     {
-        return JSON.Parse(File.ReadAllText(Application.dataPath + "/YangTools/LubanData/GenerateDatas/json/" + fileName + ".json"));
+        string key = fileName.ToLower();
+        if (_jsonAssets.TryGetValue(key, out TextAsset textAsset))
+        {
+            return JSON.Parse(textAsset.text);
+        }
+        Debug.LogError($"不存在的配置文件:{fileName}");
+        return null;
     }
-    
-    //备选 另一种方案
-    // public async UniTask LoadAllConfigs()
-    // {
-    //     LoadAssetsByTagOperation<TextAsset> loadExcel = new LoadAssetsByTagOperation<TextAsset>("LubanData");
-    //
-    //     YooAsset.YooAssets.StartOperation(loadExcel);
-    //
-    //     await loadExcel.ToUniTask();
-    //
-    //     foreach (var config in loadExcel.AssetObjects)
-    //     {
-    //         Debug.Log($"加载配置文件:{config.name}");
-    //         _bytesAssets.Add(config.name.ToLower(), config);
-    //     }
-    //
-    //     table = new Tables(LoadByteBuf);
-    // }
-    //
-    // private ByteBuf LoadByteBuf(string fileName)
-    // {
-    //
-    //     if (_bytesAssets.TryGetValue(fileName, out var buff))
-    //     {
-    //         return new ByteBuf(buff.bytes);
-    //     }
-    //
-    //     Debug.LogError($"不存在的配置文件:{fileName}");
-    //     return null;
-    // }
 }

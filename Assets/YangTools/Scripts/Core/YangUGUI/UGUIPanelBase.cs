@@ -7,8 +7,11 @@
 */
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools.Scripts.Core.YangExtend;
@@ -26,11 +29,28 @@ namespace YangTools.Scripts.Core.YangUGUI
         private readonly List<Canvas> cachedCanvasList = new();//缓存的Canvas列表
         private CanvasGroup canvasGroup;//缓存的CanvasGroup
         private Canvas cachedCanvas;//缓存的Canvas
+        private RectTransform bgMask;
+        private CanvasGroup bgMaskCanvasGroup;
+        
         private bool visible;//是否显示
 
         private Transform node;//页面表现节点(动画节点)
         private int originalLayer;//原始层级
 
+        [Sirenix.OdinInspector.FoldoutGroup("基础设置")]
+        [LabelText("打开动画")]
+        public bool needOpenAni;
+        [Sirenix.OdinInspector.FoldoutGroup("基础设置")]
+        [LabelText("打开动画时间")]
+        public float aniTime = 0.42f;
+        [Sirenix.OdinInspector.FoldoutGroup("基础设置")]
+        [LabelText("关闭动画")]
+        public bool needCloseAni;
+        [Sirenix.OdinInspector.FoldoutGroup("基础设置")]
+        [LabelText("关闭动画时间")]
+        public float aniTime2 = 0.42f;
+
+        public T windowData;
         #region 对外属性
 
         /// <summary>
@@ -98,23 +118,37 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <summary>
         /// 关闭自身
         /// </summary>
-        public void CloseSelfPanel(bool ignoreFade = true)
+        public void CloseSelfPanel()
         {
             StopAllCoroutines();
-            if (ignoreFade)
+            if (needCloseAni)
             {
-                UIMonoInstance.Instance.ClosePanel(this.UIPanel);
+                DOTween.Kill(this,true);
+                DOTween.Sequence()
+                    .AppendCallback(() =>
+                    {
+                        bgMaskCanvasGroup.alpha = 1f;
+                    })
+                    .Append(node.DOLocalMove(startLocalPos - new Vector3(0, Screen.height, 0), aniTime2).SetEase(Ease.Linear))
+                    .Join(bgMaskCanvasGroup.DOFade(0f, aniTime2))
+                    .OnComplete(() =>
+                    {
+                        bgMaskCanvasGroup.alpha = 0f;
+                        node.transform.localPosition = startLocalPos - new Vector3(0, Screen.height, 0);
+                        UIMonoInstance.Instance.ClosePanel(this.UIPanel);
+                    })
+                    .SetTarget(this);
             }
             else
             {
-                //StartCoroutine(CloseCo(FadeTime));//动画
+                UIMonoInstance.Instance.ClosePanel(this.UIPanel);
             }
         }
 
         /// <summary>
         /// 设置字体
         /// </summary>
-        public static void SetMainFont(Font mainFont)
+        public static void SetMainFont(TMP_FontAsset mainFont)
         {
             if (mainFont == null)
             {
@@ -151,6 +185,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             OnInit(userData as T);
         }
 
+        private Vector3 startLocalPos;
         /// <summary>
         /// 界面初始化
         /// </summary>
@@ -167,8 +202,12 @@ namespace YangTools.Scripts.Core.YangUGUI
             OriginalDepth = cachedCanvas.sortingOrder;
 
             canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-            node = transform.Find("Node");
+            node = transform.Find("WindowRoot");
+            startLocalPos = node ? node.transform.localPosition: Vector3.zero;
 
+            bgMask = transform.Find("bgMask")?.GetComponent<RectTransform>();
+            bgMaskCanvasGroup = bgMask ? bgMask.gameObject.GetOrAddComponent<CanvasGroup>() : null;
+            
             RectTransform trans = GetComponent<RectTransform>();
             trans.anchorMin = Vector2.zero;
             trans.anchorMax = Vector2.one;
@@ -176,17 +215,6 @@ namespace YangTools.Scripts.Core.YangUGUI
             trans.sizeDelta = Vector2.zero;
 
             gameObject.GetOrAddComponent<GraphicRaycaster>();
-
-            //TODO:多语言处理
-            Text[] texts = GetComponentsInChildren<Text>(true);
-            for (int i = 0; i < texts.Length; i++)
-            {
-                if (YangUIManager.MainFont) texts[i].font = YangUIManager.MainFont;
-                if (!string.IsNullOrEmpty(texts[i].text))
-                {
-                    texts[i].text = texts[i].text.ToString(); //多语言
-                }
-            }
         }
 
         /// <summary>
@@ -197,23 +225,50 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             Available = true;
             Visible = true;
-
-            DOTween.Kill(this);
-            //默认动画
-            if (node)
+            windowData = userData as T;
+            
+            //TODO:多语言处理
+            TextMeshProUGUI[] texts = GetComponentsInChildren<TextMeshProUGUI>(true);
+            for (int i = 0; i < texts.Length; i++)
             {
+                if (YangUIManager.MainFont) texts[i].font = YangUIManager.MainFont;
+                if (!string.IsNullOrEmpty(texts[i].text))
+                {
+                    texts[i].text = texts[i].text.ToString(); //多语言
+                }
+            }
+            
+            DOTween.Kill(this,true);
+            //默认动画
+            if (node && needOpenAni)
+            {
+                // DOTween.Sequence()
+                //     .AppendCallback(() =>
+                //     {
+                //         canvasGroup.alpha = 0.8f;
+                //         node.transform.localScale = new Vector3(0.3f, 0.3f, 1f);
+                //     })
+                //     .Append(node.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack))
+                //     .Join(canvasGroup.DOFade(1f, 0.3f))
+                //     .OnComplete(() =>
+                //     {
+                //         canvasGroup.alpha = 1f;
+                //         node.transform.localScale = Vector3.one;
+                //     })
+                //     .SetTarget(this);
+                
                 DOTween.Sequence()
                     .AppendCallback(() =>
                     {
-                        canvasGroup.alpha = 0.6f;
-                        node.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+                        bgMaskCanvasGroup.alpha = 0.8f;
+                        node.transform.localPosition = startLocalPos - new Vector3(0, Screen.height, 0);
                     })
-                    .Append(node.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutElastic))
-                    .Join(canvasGroup.DOFade(1f, 0.2f))
+                    .Append(node.DOLocalMove(startLocalPos, aniTime).SetEase(Ease.Linear))
+                    .Join(bgMaskCanvasGroup.DOFade(1f, aniTime))
                     .OnComplete(() =>
                     {
-                        canvasGroup.alpha = 1f;
-                        node.transform.localScale = Vector3.one;
+                        bgMaskCanvasGroup.alpha = 1f;
+                        node.transform.localPosition = startLocalPos;
                     })
                     .SetTarget(this);
             }
@@ -305,16 +360,5 @@ namespace YangTools.Scripts.Core.YangUGUI
         }
 
         #endregion 生命周期
-
-        /// <summary>
-        /// 静态打开方法
-        /// </summary>
-        public static async UniTask<(int id, PType panel)> OpenPanel<PType>( UIGroupType groupType,T userData,
-           string assetName = "") where PType : UGUIPanelBase<T>
-        { 
-            string targetAssetName = string.IsNullOrEmpty(assetName) ? typeof(PType).Name : assetName;
-            (int id, IUGUIPanel panel) temp = await UIMonoInstance.Instance.OpenPanel(targetAssetName, groupType.ToString(), userData: (object) userData);
-            return (temp.id,temp.panel as PType);
-        }
     }
 }

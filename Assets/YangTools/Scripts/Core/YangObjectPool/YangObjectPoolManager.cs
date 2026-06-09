@@ -61,7 +61,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// </summary>
         /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
         /// <param name="args"></param>
-        public static async Task<T> Get<T>(string poolKey = "", params object[] args)
+        public static async Task<(bool,T)> Get<T>(string poolKey = "", params object[] args)
             where T : class, IPoolItem<T>, new()
         {
             string resultKey = GetTypeKey<T>(poolKey);
@@ -261,15 +261,17 @@ namespace YangTools.Scripts.Core.YangObjectPool
             RecycleToDefaultCount();
         }
 
-        public async Task<T> Get(params object[] args)
+        public async Task<(bool,T)> Get(params object[] args)
         {
             T item;
             string requestedName = GetRequestedName(args);
             List<T> itemList = GetItemList(requestedName);
+            bool isNewInstance;
             if (itemList.Count == 0)
             {
                 item = CreateInstanceWithArgs(args);
                 await item.OnCreate();
+                isNewInstance = true;
                 AllCount++;
             }
             else
@@ -277,12 +279,13 @@ namespace YangTools.Scripts.Core.YangObjectPool
                 int lastIndex = itemList.Count - 1;
                 item = itemList[lastIndex];
                 itemList.RemoveAt(lastIndex);
+                isNewInstance = false;
             }
 
             item.PoolKey = PoolKey;
             item.IsInPool = false;
             item.OnGet();
-            return item;
+            return (isNewInstance,item);
         }
 
         private List<T> GetItemList(string itemKey)
@@ -450,8 +453,8 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         public async Task<PooledObjectPackage<T>> GetAutoRecycleItem()
         {
-            T target = await Get();
-            return new PooledObjectPackage<T>(target, this);
+            (bool, T) target = await Get();
+            return new PooledObjectPackage<T>(target.Item2, this);
         }
 
         public void RecycleToDefaultCount()
@@ -524,7 +527,7 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// <summary>
         /// 获得对象
         /// </summary>
-        Task<T> Get(params object[] args);
+        Task<(bool,T)> Get(params object[] args);
 
         /// <summary>
         /// 获得自动回收包裹

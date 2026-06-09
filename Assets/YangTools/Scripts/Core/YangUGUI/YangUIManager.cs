@@ -372,11 +372,11 @@ namespace YangTools.Scripts.Core.YangUGUI
             }
 
             //对象池
-            UIPanelInstanceObject uiPanelInstanceObject = await instancePool.Get(assetName,panelAsset, UICreateHelper);
+            (bool, UIPanelInstanceObject) data = await instancePool.Get(assetName,panelAsset, UICreateHelper);
             
-            IUIPanel uiPanel = OpenUIPanel(serialId, assetName, uiGroup, uiPanelInstanceObject.Target, uiPanelInstanceObject,
-                pauseCovereduiPanel, true, 0f, userData);
-            return (serialId, (uiPanelInstanceObject.Target)?.GetComponent<IUGUIPanel>());
+            IUIPanel uiPanel = OpenUIPanel(serialId, assetName, uiGroup, data.Item2.Target, data.Item2,
+                pauseCovereduiPanel, data.Item1, 0f, userData);
+            return (serialId, (data.Item2.Target)?.GetComponent<IUGUIPanel>());
         }
 
         #endregion 打开界面

@@ -16,6 +16,10 @@ namespace YangTools.Scripts.Core.YangUGUI
     {
         public static UIMonoInstance Instance { get; private set; }
 
+        public Camera uiCamera;
+        public Canvas uiCanvas;
+
+        public Material gray;
         //UI管理类
         private IUIManager uiManager;
 
@@ -23,13 +27,10 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         //UI页面辅助类
         public IUICreateHelper PanelHelper { get; } = null;
-
         //UI组辅助类
         public IUIGroupHelper GroupHelper { get; } = null;
-
         //UI组设置
         [SerializeField] private UIGroupSetting[] uiGroups = null;
-
         //UI列表
         private readonly List<IUIPanel> uiPanelResults = new List<IUIPanel>();
 
@@ -43,6 +44,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             if (Instance == null)
             {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -78,9 +80,9 @@ namespace YangTools.Scripts.Core.YangUGUI
             //根据设置添加组
             for (int i = 0; i < uiGroups.Length; i++)
             {
-                if (!AddUIGroup(uiGroups[i].Name, uiGroups[i].Depth))
+                if (!AddUIGroup(uiGroups[i].GroupName, uiGroups[i].Depth))
                 {
-                    Debug.LogWarning($"添加UI组失败:{uiGroups[i].Name}");
+                    Debug.LogWarning($"添加UI组失败:{uiGroups[i].GroupName}");
                     continue;
                 }
             }
@@ -192,10 +194,25 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="pauseCoveredPanel">是否暂停被覆盖的界面</param>
         /// <param name="userData">用户自定义数据</param>
         /// <returns>界面的序列号</returns>
-        public async UniTask<(int id, IUGUIPanel panel)> OpenPanel(string assetName, string groupName,
+        public async UniTask<(int id, IUGUIPanel panel)> OpenPanel(string assetName, GroupType groupType,
             int priority = UIConstDefine.DefaultPriority, bool pauseCoveredPanel = false, object userData = null)
         {
-            return await uiManager.OpenPanel(assetName, groupName, priority, pauseCoveredPanel, userData);
+            return await uiManager.OpenPanel(assetName, groupType.ToString(), priority, pauseCoveredPanel, userData);
+        }
+
+        /// <summary>
+        /// 静态打开方法
+        /// </summary>
+        public static async UniTask<(int id, T panel)> OpenPanel<T>(GroupType groupType, object userData = default,
+            string assetName = "") where T : class, IUGUIPanel
+        {
+            if (string.IsNullOrEmpty(assetName))
+            {
+                assetName = typeof(T).Name;
+            }
+            
+            (int id, IUGUIPanel panel) result = await UIMonoInstance.Instance.OpenPanel(assetName, groupType, userData: (object) userData);
+            return (result.id, result.panel as T);
         }
 
         #endregion 打开UI界面
@@ -222,6 +239,11 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiManager.ClosePanel(uiPanel, userData);
         }
 
+        public static void ClosePanel<T>() where T : IUGUIPanel, new()
+        {
+            IUIPanel[] panel = Instance.uiManager.GetPanels(nameof(T));
+            Instance.uiManager.ClosePanel(panel[0],null);
+        }
         #endregion 关闭界面
     }
 }

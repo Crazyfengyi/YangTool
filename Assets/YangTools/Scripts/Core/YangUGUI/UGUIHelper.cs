@@ -17,7 +17,7 @@ namespace YangTools.Scripts.Core.YangUGUI
     /// </summary>
     public class UGUIGroupHelper : MonoBehaviour, IUIGroupHelper
     {
-        public const int DepthFactor = 200;
+        public const int DepthFactor = 10;
         private int depth;//深度
         private Canvas cachedCanvas;//缓存的canvas
 

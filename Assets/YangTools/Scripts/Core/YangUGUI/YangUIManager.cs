@@ -24,6 +24,8 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         private readonly Dictionary<string, UIGroup> uiGroups; //UI组
         private readonly Queue<IUIPanel> recycleQueue; //回收队列
+        private readonly HashSet<IUIPanel> pendingRecyclePanels; //等待回收的界面
+        private readonly HashSet<int> pendingRecycleSerialIds; //等待回收的界面序列号
         private readonly IObjectPool<UIPanelInstanceObject> instancePool; //对象池
         private int serial; //序列号
         private bool isShutdown; //是否关闭
@@ -46,6 +48,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
             recycleQueue = new Queue<IUIPanel>();
+            pendingRecyclePanels = new HashSet<IUIPanel>();
+            pendingRecycleSerialIds = new HashSet<int>();
             instancePool = YangObjectPool.YangObjectPool.CreatePool<UIPanelInstanceObject>("UIPanelInstanceObject");
 
             UICreateHelper = null;
@@ -69,12 +73,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            while (recycleQueue.Count > 0)
-            {
-                IUIPanel uiPanel = recycleQueue.Dequeue();
-                uiPanel.OnRecycle();
-                instancePool.Recycle((UIPanelInstanceObject) uiPanel.Handle);
-            }
+            ProcessRecycleQueue();
 
             foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
             {
@@ -88,6 +87,8 @@ namespace YangTools.Scripts.Core.YangUGUI
             CloseAllLoadedPanels();
             uiGroups.Clear();
             recycleQueue.Clear();
+            pendingRecyclePanels.Clear();
+            pendingRecycleSerialIds.Clear();
         }
 
         #endregion 生命周期
@@ -372,6 +373,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             }
 
             //对象池
+            ProcessRecycleQueue();
             (bool, UIPanelInstanceObject) data = await instancePool.Get(assetName,panelAsset, UICreateHelper);
             
             IUIPanel uiPanel = OpenUIPanel(serialId, assetName, uiGroup, data.Item2.Target, data.Item2,
@@ -391,6 +393,11 @@ namespace YangTools.Scripts.Core.YangUGUI
         public void ClosePanel(int serialId, object userData = null)
         {
             IUIPanel uiPanel = GetPanel(serialId);
+            if (uiPanel == null && pendingRecycleSerialIds.Contains(serialId))
+            {
+                return;
+            }
+
             if (uiPanel == null) throw new Exception($"Can not find UI form '{serialId.ToString()}'.");
             ClosePanel(uiPanel, userData);
         }
@@ -407,6 +414,11 @@ namespace YangTools.Scripts.Core.YangUGUI
                 throw new Exception("UI form is invalid.");
             }
 
+            if (pendingRecyclePanels.Contains(uiPanel))
+            {
+                return;
+            }
+
             UIGroup uiGroup = (UIGroup) uiPanel.UIGroup;
             if (uiGroup == null)
             {
@@ -417,11 +429,13 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiPanel.OnClose(isShutdown, userData);
             uiGroup.Refresh();
 
+            recycleQueue.Enqueue(uiPanel);
+            pendingRecyclePanels.Add(uiPanel);
+            pendingRecycleSerialIds.Add(uiPanel.SerialId);
+
             UIPanelClosedEventArgs closeUIArgs =
                 UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
             CloseUIPanelComplete?.Invoke(this, closeUIArgs);
-
-            recycleQueue.Enqueue(uiPanel);
         }
 
         /// <summary>
@@ -480,6 +494,22 @@ namespace YangTools.Scripts.Core.YangUGUI
                     group.Name, pauseCoveredPanel, exception.ToString(), userData);
                 OpenUIPanelFailure?.Invoke(this, openUIArgs);
                 throw;
+            }
+        }
+
+        private void ProcessRecycleQueue()
+        {
+            while (recycleQueue.Count > 0)
+            {
+                IUIPanel uiPanel = recycleQueue.Dequeue();
+                if (!pendingRecyclePanels.Remove(uiPanel))
+                {
+                    continue;
+                }
+
+                pendingRecycleSerialIds.Remove(uiPanel.SerialId);
+                uiPanel.OnRecycle();
+                instancePool.Recycle((UIPanelInstanceObject) uiPanel.Handle);
             }
         }
 

@@ -242,6 +242,11 @@ namespace YangTools.Scripts.Core.YangUGUI
         public static void ClosePanel<T>() where T : IUGUIPanel, new()
         {
             IUIPanel[] panel = Instance.uiManager.GetPanels(nameof(T));
+            if (panel.Length <= 0)
+            {
+                return;
+            }
+
             Instance.uiManager.ClosePanel(panel[0],null);
         }
         #endregion 关闭界面

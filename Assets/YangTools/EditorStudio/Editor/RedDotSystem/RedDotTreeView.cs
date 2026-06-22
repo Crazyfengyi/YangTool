@@ -7,12 +7,12 @@ using YangTools.Scripts.Core.RedDotSystem;
 
 namespace GameMain
 {
-    public class RedDotTreeView : TreeView
+    public class RedDotTreeView : TreeView<int>
     {
         private RedDotTreeViewItem root;
         private int id;
         
-        public RedDotTreeView(TreeViewState state) : base(state)
+        public RedDotTreeView(TreeViewState<int> state) : base(state)
         {
             Reload();
             useScrollView = true;
@@ -22,7 +22,7 @@ namespace GameMain
             RedDotMgr.Instance.CallBackNumberChange += Repaint;
         }
 
-        public RedDotTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader)
+        public RedDotTreeView(TreeViewState<int> state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader)
         {
         }
 
@@ -41,7 +41,7 @@ namespace GameMain
         /// 构建节点
         /// </summary>
         /// <returns></returns>
-        protected override TreeViewItem BuildRoot()
+        protected override TreeViewItem<int> BuildRoot()
         {
             id = 0;
             root = PreOrder(RedDotMgr.Instance.RootNode);

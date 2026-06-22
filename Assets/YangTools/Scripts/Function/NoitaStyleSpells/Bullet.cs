@@ -86,9 +86,9 @@ namespace NoitaStyleSpells
 
             if (body != null)
             {
-                body.velocity = Vector3.zero;
+                body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
-                body.velocity = GetCurrentDirection() * runtimeConfig.Speed;
+                body.linearVelocity = GetCurrentDirection() * runtimeConfig.Speed;
             }
 
             RunLifecycle(config.OnSpawn, GetCurrentDirection());
@@ -153,7 +153,7 @@ namespace NoitaStyleSpells
         {
             if (body != null)
             {
-                body.velocity = Vector3.zero;
+                body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
             }
 
@@ -166,9 +166,9 @@ namespace NoitaStyleSpells
 
         private Vector3 GetCurrentDirection()
         {
-            if (body != null && body.velocity.sqrMagnitude > 0.001f)
+            if (body != null && body.linearVelocity.sqrMagnitude > 0.001f)
             {
-                return body.velocity.normalized;
+                return body.linearVelocity.normalized;
             }
 
             if (config != null && config.Direction.sqrMagnitude > 0f)

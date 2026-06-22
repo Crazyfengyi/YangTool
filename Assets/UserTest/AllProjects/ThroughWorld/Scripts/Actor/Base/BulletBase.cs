@@ -216,6 +216,7 @@ public class BulletBase
 /// </summary>
 public class BulletObjectPoolItem : IPoolItem<BulletObjectPoolItem>
 {
+    public string Name { get; set; }
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;

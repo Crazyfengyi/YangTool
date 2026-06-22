@@ -21,7 +21,7 @@ public class UICommonTool : Singleton<UICommonTool>
         TipsPanel panel = null;
         if (!info.have)
         {
-            UIMonoInstance.Instance.OpenPanel("TipsPanel", "Top");
+            UIMonoInstance.Instance.OpenPanel("TipsPanel",GroupType.顶部);
             panel = UIMonoInstance.Instance.GetUIPanel<TipsPanel>("TipsPanel");
         }
         else
@@ -42,7 +42,7 @@ public class UICommonTool : Singleton<UICommonTool>
         LoadingPanel panel = null;
         if (!info.have)
         {
-            UIMonoInstance.Instance.OpenPanel("LoadingPanel", "Top");
+            UIMonoInstance.Instance.OpenPanel("LoadingPanel", GroupType.顶部);
             panel = UIMonoInstance.Instance.GetUIPanel<LoadingPanel>("LoadingPanel");
         }
         else
@@ -99,7 +99,7 @@ public class UICommonTool : Singleton<UICommonTool>
             data.cancelCallBack = () => { };
         }
 
-        CommonConfirmPanel.OpenPanel<CommonConfirmPanel>(UIGroupType.弹窗1,data,"CommonConfirmPanel");
+        UIMonoInstance.Instance.OpenPanel("CommonConfirmPanel",GroupType.顶部);
     }
 
     #endregion 通用二级确认弹窗

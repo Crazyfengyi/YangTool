@@ -5,7 +5,7 @@ using YangTools.Scripts.Core.RedDotSystem;
 
 namespace GameMain
 {
-    public class RedDotTreeViewItem : TreeViewItem
+    public class RedDotTreeViewItem : TreeViewItem<int>
     {
         private readonly RedDotTreeNode redDotNode;
         public string Path { get; private set; }

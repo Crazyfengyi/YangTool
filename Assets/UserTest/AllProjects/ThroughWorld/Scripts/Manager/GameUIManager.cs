@@ -152,8 +152,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         currentCount++;
 
-        TipObjectPoolItem poolItem = YangObjectPool.Get<TipObjectPoolItem>().GetAwaiter().GetResult();
-        GameObject obj = poolItem.obj;
+        (bool, TipObjectPoolItem) poolItem = YangObjectPool.Get<TipObjectPoolItem>().GetAwaiter().GetResult();
+        GameObject obj = poolItem.Item2.obj;
         obj.transform.SetParent(tipsParent);
         obj.transform.SetAsLastSibling();
         obj.transform.localScale = Vector3.one;
@@ -183,7 +183,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                 tipObj.SetActive(false);
                 tipObj.transform.localPosition = defaultPos;
                 tipObj.GetComponent<CanvasGroup>().alpha = 1;
-                YangObjectPool.Recycle(poolItem);
+                YangObjectPool.Recycle(poolItem.Item2);
                 obj.GetComponent<LayoutElement>().preferredHeight = 100;
             })
             .SetTarget(tipObj);
@@ -210,8 +210,8 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     {
         //飘分对象
         Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, scoreData.worldPos, scoreParent);
-        ScoreObjectPoolItem poolItem = YangObjectPool.Get<ScoreObjectPoolItem>().GetAwaiter().GetResult();
-        GameObject score = poolItem.obj;
+        (bool, ScoreObjectPoolItem) poolItem = YangObjectPool.Get<ScoreObjectPoolItem>().GetAwaiter().GetResult();
+        GameObject score = poolItem.Item2.obj;
         score.transform.SetAsLastSibling();
         score.transform.localPosition = pos;
         //文字设置
@@ -244,7 +244,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         {
                             scoreText.transform.localPosition = defaultPos;
                             scoreText.transform.localScale = Vector3.one;
-                            YangObjectPool.Recycle(poolItem);
+                            YangObjectPool.Recycle(poolItem.Item2);
                         })
                         .SetTarget(score)
                         .SetEase(Ease.Linear);
@@ -269,7 +269,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         {
                             scoreText.transform.localPosition = defaultPos;
                             scoreText.transform.localScale = Vector3.one;
-                            YangObjectPool.Recycle(poolItem);
+                            YangObjectPool.Recycle(poolItem.Item2);
                         })
                         .SetTarget(score)
                         .SetEase(Ease.Linear);
@@ -293,7 +293,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
                         {
                             scoreText.transform.localPosition = defaultPos;
                             scoreText.transform.localScale = Vector3.one;
-                            YangObjectPool.Recycle(poolItem);
+                            YangObjectPool.Recycle(poolItem.Item2);
                         })
                         .SetTarget(score);
                 }
@@ -327,14 +327,14 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     private async Task<HPBarObjectPoolItem> CreateHPBar(HPBarData hpBarData)
     {
         Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
-        HPBarObjectPoolItem poolItem = await YangObjectPool.Get<HPBarObjectPoolItem>();
-        poolItem.InitData(hpBarData);
-        GameObject hpBar = poolItem.obj;
+        (bool, HPBarObjectPoolItem) poolItem = await YangObjectPool.Get<HPBarObjectPoolItem>();
+        poolItem.Item2.InitData(hpBarData);
+        GameObject hpBar = poolItem.Item2.obj;
         hpBar.transform.SetAsLastSibling();
         hpBar.transform.localPosition = pos;
-        allHPBar.Add(poolItem);
+        allHPBar.Add(poolItem.Item2);
 
-        return poolItem;
+        return poolItem.Item2;
     }
     /// <summary>
     /// 回收血条
@@ -370,6 +370,7 @@ public class GameUIManager : MonoSingleton<GameUIManager>
 /// </summary>
 public class TipObjectPoolItem : IPoolItem<TipObjectPoolItem>
 {
+    public string Name { get; set; }
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;
@@ -439,6 +440,7 @@ public enum TipsReDoType
 /// </summary>
 public class ScoreObjectPoolItem : IPoolItem<ScoreObjectPoolItem>
 {
+    public string Name { get; set; }
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
 
@@ -506,6 +508,7 @@ public enum ScoreAniType
 /// </summary>
 public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
 {
+    public string Name { get; set; }
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;

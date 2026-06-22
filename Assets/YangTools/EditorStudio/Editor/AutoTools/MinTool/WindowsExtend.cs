@@ -23,14 +23,14 @@ namespace YangTools
         [InitializeOnLoadMethod]
         static void InitializeOnLoad()
         {
-            EditorApplication.hierarchyWindowItemOnGUI -= HierarchyWindowItemOnGUI;
-            EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
+            EditorApplication.hierarchyWindowItemByEntityIdOnGUI -= HierarchyWindowItemOnGUI;
+            EditorApplication.hierarchyWindowItemByEntityIdOnGUI += HierarchyWindowItemOnGUI;
         }
 
         private static readonly List<Type> Types = new List<Type>();
-        private static void HierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
+        private static void HierarchyWindowItemOnGUI(EntityId instanceID, Rect selectionRect)
         {
-            var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+            var go = EditorUtility.EntityIdToObject(instanceID) as GameObject;
             if (go == null) return;
             Types.Clear();
             var components = go.GetComponents<Component>();

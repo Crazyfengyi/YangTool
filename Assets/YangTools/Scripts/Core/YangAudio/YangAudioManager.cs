@@ -197,15 +197,7 @@ namespace YangTools.Scripts.Core.YangAudio
 
         private static YangAudioManager instance;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            if (instance == null)
-            {
-                instance = this;
-                Init();
-            }
-        }
+        public static YangAudioManager Instance => instance;
 
         /// <summary>
         /// 模块初始化
@@ -230,6 +222,19 @@ namespace YangTools.Scripts.Core.YangAudio
 
         public void Update()
         {
+        }
+
+        internal override void InitModule()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                Init();
+            }
+        }
+
+        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
+        {
             if (isDialogueStart)
             {
                 if (!singleAudio.isPlaying)
@@ -240,13 +245,7 @@ namespace YangTools.Scripts.Core.YangAudio
             }
         }
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            CloseModule();
-        }
-
-        public void CloseModule()
+        internal override void CloseModule()
         {
             StopBGM();
             StopSingleSound();

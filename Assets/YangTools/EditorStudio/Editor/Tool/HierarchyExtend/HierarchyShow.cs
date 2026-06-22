@@ -28,22 +28,22 @@ namespace YangTools
             //开关注册回调
             if (SettingInfo.GetSO<YangSettingSO>().isOpenHierarchyShowSetting) 
             {
-                EditorApplication.hierarchyWindowItemOnGUI += HandleHierarchyWindowItemOnGUI;
+                EditorApplication.hierarchyWindowItemByEntityIdOnGUI += HandleHierarchyWindowItemOnGUI;
             }
         }
 
-        private static void HandleHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
+        private static void HandleHierarchyWindowItemOnGUI(EntityId instanceID, Rect selectionRect)
         {
             var fontColor = Color.yellow;
             var backgroundColor = new Color(.22f, .22f, .22f);
 
-            var obj = EditorUtility.InstanceIDToObject(instanceID);
+            var obj = EditorUtility.EntityIdToObject(instanceID);
             if (obj == null) return;
             
             PrefabAssetType prefabType = PrefabUtility.GetPrefabAssetType(obj);
             if (prefabType == PrefabAssetType.Regular)
             {
-                if (Selection.instanceIDs.Contains(instanceID))
+                if (Selection.entityIds.Contains(instanceID))
                 {
                     fontColor = Color.white;
                     backgroundColor = new Color(0.24f, 0.48f, 0.90f);

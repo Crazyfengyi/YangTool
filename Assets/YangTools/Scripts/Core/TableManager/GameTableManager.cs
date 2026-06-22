@@ -33,9 +33,9 @@ public class GameTableManager : MonoSingleton<GameTableManager>
         {
             AssetHandle handle = package.LoadAssetAsync<TextAsset>(assetInfo.Address);
             await handle.ToUniTask();
-            if (handle.Status != EOperationStatus.Succeeded)
+            if (handle.Status != EOperationStatus.Succeed)
             {
-                Debug.LogError(handle.Error);
+                Debug.LogError(handle.LastError);
                 continue;
             }
             TextAsset config = handle.AssetObject as TextAsset;

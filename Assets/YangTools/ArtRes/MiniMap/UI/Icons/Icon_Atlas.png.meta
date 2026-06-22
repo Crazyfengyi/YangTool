@@ -273,7 +273,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -1633,6 +1633,6 @@ TextureImporter:
       Warning_Circle: 21300086
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  userData: 
+  userData: Processed_1
   assetBundleName: 
   assetBundleVariant: 

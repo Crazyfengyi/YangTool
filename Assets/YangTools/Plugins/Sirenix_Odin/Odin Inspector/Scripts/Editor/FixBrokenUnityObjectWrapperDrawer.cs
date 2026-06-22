@@ -130,11 +130,11 @@ namespace Sirenix.OdinInspector.Editor.Drawers
 
             if (oObj != null && uObj == null)
             {
-                var instanceId = uObj.GetInstanceID();
+                var instanceId = uObj.GetEntityId();
                 if (AssetDatabase.Contains(instanceId))
                 {
                     var path = AssetDatabase.GetAssetPath(instanceId);
-                    var realWrapper = AssetDatabase.LoadAllAssetsAtPath(path).FirstOrDefault(n => n.GetInstanceID() == instanceId) as T;
+                    var realWrapper = AssetDatabase.LoadAllAssetsAtPath(path).FirstOrDefault(n => n.GetEntityId() == instanceId) as T;
                     if (realWrapper)
                     {
                         realInstance = realWrapper;

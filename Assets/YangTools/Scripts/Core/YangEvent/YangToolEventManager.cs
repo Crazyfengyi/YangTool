@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Manager;
 using YangTools.Scripts.Core;
 
 /*
@@ -290,7 +289,7 @@ namespace YangTools
     {
         public void SendEvent()
         {
-            Extend.SendEvent(GetType(),this);
+            YangExtend.SendEvent(GetType(),this);
         }
     }
     

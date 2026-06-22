@@ -14,6 +14,7 @@ using UnityEngine.UI;
 using YooAsset;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using SceneHandle = YooAsset.SceneHandle;
 
 namespace YangTools.Scripts.Core.ResourceManager
 {

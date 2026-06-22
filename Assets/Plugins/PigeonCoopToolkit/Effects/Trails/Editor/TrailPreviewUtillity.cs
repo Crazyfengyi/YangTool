@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace PigeonCoopToolkit.Effects.Trails.Editor
@@ -184,6 +185,7 @@ namespace PigeonCoopToolkit.Effects.Trails.Editor
             GL.End();
         }
 
+        [Obsolete("Obsolete")]
         public static void CreateMaterial()
         {
             if (lineMaterial != null)

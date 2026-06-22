@@ -29,7 +29,7 @@ namespace GameMain
 
         private void OnEnable()
         {
-            treeView = new RedDotTreeView(new TreeViewState());
+            treeView = new RedDotTreeView(new TreeViewState<int>());
             searchField = new SearchField();
             searchField.downOrUpArrowKeyPressed += treeView.SetFocusAndEnsureSelectedItem;
             EditorApplication.playModeStateChanged += OnPlayModeStateChange;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -14,10 +15,6 @@ namespace YangTools.Scripts.Core.YangAudio
     /// </summary>
     public class YangAudioManager : GameModuleBase
     {
-        private static YangAudioManager instance;
-
-        public static YangAudioManager Instance => instance;
-
         #region 属性
 
         //设备一般最多允许32个音源同时播放,优先级参数决定了在超出音源数目时，需要暂时关闭一些不重要的音源，优先播放更重要的音源
@@ -25,14 +22,17 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 背景优先级
         /// </summary>
         private static readonly int BackgroundPriorityDefault = 0;
+
         /// <summary>
         /// 对话优先级
         /// </summary>
         private static readonly int SinglePriorityDefault = 10;
+
         /// <summary>
         /// 声音优先级
         /// </summary>
         private static readonly int MultiplePriorityDefault = 20;
+
         /// <summary>
         /// 世界音效优先级
         /// </summary>
@@ -42,42 +42,52 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 声音的物体
         /// </summary>
         public static GameObject managerObject;
+
         /// <summary>
         /// 背景
         /// </summary>
         private static AudioSource bgmAudio;
+
         /// <summary>
         /// 对话
         /// </summary>
         private static AudioSource singleAudio;
+
         /// <summary>
         /// 音效列表
         /// </summary>
         private static List<AudioSource> soundAudios = new();
+
         /// <summary>
         /// 世界声音
         /// </summary>
         private Dictionary<GameObject, AudioSource> worldAudios = new();
-        
+
         /// <summary>
         /// 声音列表
         /// </summary>
         private static Dictionary<string, AudioClip> allAudioClipsDic = new();
-        
+
         /// <summary>
         /// 声音混合器
         /// </summary>
         private AudioMixer mixer;
+
+        const string MusicVolumeTag = "BGMVolume";
+        const string SoundVolumeTag = "SoundVolume";
+        const string DialogueVolumeTag = "DialogueVolume";
+        const string WorldVolumeTag = "WorldVolume";
+
         #endregion
 
         #region 声音管理
 
-        private bool isMute;//是否静音
+        private bool isMute; //是否静音
         private float bgmValue = 0.6f;
         private float singleValue = 1f;
         private float soundValue = 1f;
         private float worldValue = 1f;
-        
+
         /// <summary>
         /// 静音
         /// </summary>
@@ -102,35 +112,35 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(bgmValue, value)) return;
                 bgmValue = value;
-                SetValue("BGMVolume", bgmValue);
+                SetValue(MusicVolumeTag, bgmValue);
             }
         }
 
         /// <summary>
         /// 对话音量
         /// </summary>
-        public float SingleVolume
+        public float SingleValue
         {
             get => singleValue;
             set
             {
                 if (Mathf.Approximately(singleValue, value)) return;
                 singleValue = value;
-                SetValue("DialogueVolume", singleValue);
+                SetValue(DialogueVolumeTag, singleValue);
             }
         }
 
         /// <summary>
         /// 音效音量
         /// </summary>
-        public float SoundVolume
+        public float SoundValue
         {
             get => soundValue;
             set
             {
                 if (Mathf.Approximately(soundValue, value)) return;
                 soundValue = value;
-                SetValue("SoundVolume", soundValue);
+                SetValue(SoundVolumeTag, soundValue);
             }
         }
 
@@ -144,7 +154,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (Mathf.Approximately(worldValue, value)) return;
                 worldValue = value;
-                SetValue("WorldVolume", worldValue);
+                SetValue(WorldVolumeTag, worldValue);
             }
         }
 
@@ -160,61 +170,65 @@ namespace YangTools.Scripts.Core.YangAudio
 
         private void SetValue(string name, float value)
         {
+            if (mixer == null)
+            {
+                mixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
+            }
+
+            if (mixer == null)
+            {
+                Debug.LogError($"声音混合器为:{mixer}");
+            }
+
+            if (value <= 0.0001f)
+            {
+                mixer?.SetFloat(name, -80f);
+                return;
+            }
+
             //mixer是按照-80分贝->20分贝的范围  去掉前30分贝--听不到&去掉后20分贝--增加音量
-            float volume = Mathf.Lerp(-50f, 0f,value);
-            mixer.SetFloat(name, volume);
+            //float volume = Mathf.Lerp(-50f, 0f,value);
+            mixer?.SetFloat(name, Mathf.Log10(value) * 20f);
         }
+
         #endregion
 
         #region 生命周期
-        /// <summary>
-        /// 构造函数,为保证顺序必须有
-        /// </summary>
-        static YangAudioManager()
+
+        private static YangAudioManager instance;
+
+        protected override void Awake()
         {
+            base.Awake();
+            if (instance == null)
+            {
+                instance = this;
+                Init();
+            }
         }
 
         /// <summary>
         /// 模块初始化
         /// </summary>
-        internal override void InitModule()
+        public void Init()
         {
-            instance = new YangAudioManager();
             mixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
             managerObject = new GameObject("AudioManagerObject");
             managerObject.transform.SetParent(Core.YangToolsManager.DontDestoryObject.transform);
 
             bgmAudio = CreateAudioSource("BGMusic", BackgroundPriorityDefault, 0.6f, 1f, 0);
+            bgmAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("BGM")[0];
             singleAudio = CreateAudioSource("singleMusic", SinglePriorityDefault, 1f, 1f, 0);
+            singleAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("Dialogue")[0];
             for (int i = 0; i < 10; i++)
             {
                 AudioSource temp = CreateAudioSource($"soundMusic_{i}", MultiplePriorityDefault, 1f, 1f, 0);
+                temp.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
                 soundAudios.Add(temp);
             }
-
-            LoadAllAudio();
         }
 
-        /// <summary>
-        /// 加载Resources里对应位置的Audio
-        /// </summary>
-        public static void LoadAllAudio()
-        {
-            allAudioClipsDic.Clear();
-            //本地加载 
-            AudioClip[] BGAudioArray = Resources.LoadAll<AudioClip>("AudioBG");
-            AudioClip[] SoundAudioArray = Resources.LoadAll<AudioClip>("AudioSound");
-
-            IEnumerable<AudioClip> tempArray = BGAudioArray.Concat(SoundAudioArray);
-
-            //存放到字典
-            foreach (AudioClip item in tempArray)
-            {
-                allAudioClipsDic.Add(item.name, item);
-            }
-        }
-
-        internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
+        public void Update()
         {
             if (isDialogueStart)
             {
@@ -226,9 +240,15 @@ namespace YangTools.Scripts.Core.YangAudio
             }
         }
 
-        internal override void CloseModule()
+        protected override void OnDestroy()
         {
-            StopBackgroundMusic();
+            base.OnDestroy();
+            CloseModule();
+        }
+
+        public void CloseModule()
+        {
+            StopBGM();
             StopSingleSound();
             StopAllMultipleSound();
             StopAllWorldSound();
@@ -244,9 +264,9 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">音乐名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlayBackgroundMusic(string audioName, bool isLoop = true, float speed = 1f)
+        public async void PlayBGM(string audioName, bool isLoop = true, float speed = 1f)
         {
-            AudioClip clip = GetClipFromDic(audioName);
+            AudioClip clip = await GetAudioClip(audioName);
             if (clip == null) return;
 
             if (bgmAudio.isPlaying)
@@ -304,13 +324,14 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <summary>
         /// 停止播放背景音乐
         /// </summary>
-        public void StopBackgroundMusic()
+        public void StopBGM()
         {
-            if (bgmAudio.isPlaying)
+            if (bgmAudio && bgmAudio.isPlaying)
             {
                 bgmAudio.Stop();
             }
         }
+
         #endregion
 
         #region 对话音效
@@ -321,9 +342,9 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">声音名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlaySingleSound(string audioName, bool isLoop = false, float speed = 1f)
+        public async void PlaySingleSound(string audioName, bool isLoop = false, float speed = 1f)
         {
-            AudioClip clip = GetClipFromDic(audioName);
+            AudioClip clip = await GetAudioClip(audioName);
             if (clip == null) return;
             PlaySingleSound(clip, isLoop, speed);
         }
@@ -340,6 +361,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 singleAudio.Stop();
             }
+
             singleAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("Dialogue")[0];
             singleAudio.clip = clip;
             singleAudio.loop = isLoop;
@@ -360,7 +382,7 @@ namespace YangTools.Scripts.Core.YangAudio
                     .SetUpdate(true)
                     .OnComplete(() =>
                     {
-                        singleAudio.volume = SingleVolume;
+                        singleAudio.volume = SingleValue;
                         singleAudio.Pause();
                     });
             }
@@ -380,7 +402,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 singleAudio.UnPause();
                 singleAudio.volume = 0;
-                singleAudio.DOFade(SingleVolume, 2).SetUpdate(true);
+                singleAudio.DOFade(SingleValue, 2).SetUpdate(true);
             }
             else
             {
@@ -393,7 +415,7 @@ namespace YangTools.Scripts.Core.YangAudio
         /// </summary>
         public void StopSingleSound()
         {
-            if (singleAudio.isPlaying)
+            if (singleAudio && singleAudio.isPlaying)
             {
                 singleAudio.Stop();
             }
@@ -409,9 +431,9 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">声音名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlaySoundAudio(string audioName, bool isLoop = false, float speed = 1)
+        public async void PlaySoundAudio(string audioName, bool isLoop = false, float speed = 1)
         {
-            AudioClip clip = GetClipFromDic(audioName);
+            AudioClip clip = await GetAudioClip(audioName);
             if (clip == null) return;
             PlaySoundAudio(clip, isLoop, speed);
         }
@@ -427,11 +449,11 @@ namespace YangTools.Scripts.Core.YangAudio
             AudioSource audio = ExtractIdleSoundAudioSource();
             if (audio)
             {
-                if(mixer)audio.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
+                if (mixer) audio.outputAudioMixerGroup = mixer.FindMatchingGroups("Sound")[0];
                 audio.clip = clip;
                 audio.loop = isLoop;
                 audio.pitch = speed;
-                audio.Play();  
+                audio.Play();
             }
             else
             {
@@ -443,9 +465,9 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 停止播放指定的音效
         /// </summary>
         /// <param name="clip">音乐剪辑</param>
-        public void StopSoundAudio(string audioName)
+        public async void StopSoundAudio(string audioName)
         {
-            AudioClip clip = GetClipFromDic(audioName);
+            AudioClip clip = await GetAudioClip(audioName);
             if (clip == null) return;
             StopSoundAudio(clip);
         }
@@ -475,7 +497,7 @@ namespace YangTools.Scripts.Core.YangAudio
         {
             for (int i = 0; i < soundAudios.Count; i++)
             {
-                if (soundAudios[i].isPlaying)
+                if (soundAudios[i] && soundAudios[i].isPlaying)
                 {
                     soundAudios[i].Stop();
                 }
@@ -493,7 +515,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 }
             }
 
-            AudioSource audio = CreateAudioSource("SoundAudio", MultiplePriorityDefault, SoundVolume, 1, 0);
+            AudioSource audio = CreateAudioSource("SoundAudio", MultiplePriorityDefault, SoundValue, 1, 0);
             soundAudios.Add(audio);
             return audio;
         }
@@ -526,9 +548,10 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">音乐名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public void PlayWorldSound(GameObject attachTarget, string audioName, bool isLoop = false, float speed = 1)
+        public async void PlayWorldSound(GameObject attachTarget, string audioName, bool isLoop = false,
+            float speed = 1)
         {
-            AudioClip clip = GetClipFromDic(audioName);
+            AudioClip clip = await GetAudioClip(audioName);
             if (clip == null) return;
             PlayWorldSound(attachTarget, clip, isLoop, speed);
         }
@@ -548,6 +571,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 {
                     worldAudio.Stop();
                 }
+
                 worldAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
                 worldAudio.clip = clip;
                 worldAudio.loop = isLoop;
@@ -557,8 +581,8 @@ namespace YangTools.Scripts.Core.YangAudio
             else
             {
                 AudioSource audio = AttachAudioSource(attachTarget, WorldPriorityDefault, WorldVolume, 1, 1);
-                worldAudios.Add(attachTarget, audio);
                 audio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
+                worldAudios.Add(attachTarget, audio);
                 audio.clip = clip;
                 audio.loop = isLoop;
                 audio.pitch = speed;
@@ -662,6 +686,7 @@ namespace YangTools.Scripts.Core.YangAudio
             audio.mute = isMute;
             return audio;
         }
+
         #endregion
 
         #region 方法
@@ -692,22 +717,60 @@ namespace YangTools.Scripts.Core.YangAudio
             audio.mute = false;
             return audio;
         }
-        
+
         /// <summary>
-        /// 从字典里获取声音
+        /// 加载中的声音
         /// </summary>
-        public static AudioClip GetClipFromDic(string audioName)
+        private static readonly List<string> LoadingAudioNames = new List<string>();
+
+        /// <summary>
+        /// 获取声音
+        /// </summary>
+        private static async UniTask<AudioClip> GetAudioClip(string audioName)
         {
-            if (allAudioClipsDic.TryGetValue(audioName, out var dic))
+            if (allAudioClipsDic.TryGetValue(audioName, out var clip))
             {
-                return dic;
+                return clip;
             }
-            else
+
+            while (LoadingAudioNames.Contains(audioName))
             {
-                Debug.LogError($"没有声音：{audioName}");
-                return null;
+                // 等待同名音频加载完成后，优先复用已写入的缓存，避免重复加载。
+                await UniTask.WaitUntil(() => !LoadingAudioNames.Contains(audioName));
+                if (allAudioClipsDic.TryGetValue(audioName, out clip))
+                {
+                    return clip;
+                }
             }
+
+            LoadingAudioNames.Add(audioName);
+            try
+            {
+                AudioClip target = await LoadAudioClip(audioName);
+                if (target != null)
+                {
+                    allAudioClipsDic[audioName] = target;
+                    return target;
+                }
+            }
+            finally
+            {
+                LoadingAudioNames.Remove(audioName);
+            }
+
+            Debug.LogError("找不到声音资源：" + audioName);
+            return null;
         }
+
+        /// <summary>
+        /// 加载声音
+        /// </summary>
+        private static async UniTask<AudioClip> LoadAudioClip(string audioName)
+        {
+            var audioClip = await ResourceManager.ResourceManager.LoadAudioClip(audioName);
+            return audioClip;
+        }
+
         #endregion
     }
 }

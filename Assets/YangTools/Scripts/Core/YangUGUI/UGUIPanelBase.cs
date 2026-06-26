@@ -26,7 +26,7 @@ namespace YangTools.Scripts.Core.YangUGUI
     {
         private const int DepthFactor = 10;//UI界面深度系数
 
-        private readonly List<Canvas> cachedCanvasList = new();//缓存的Canvas列表
+        private Dictionary<Canvas,int> cachedCanvasDic = new();//缓存的Canvas列表
         private CanvasGroup canvasGroup;//缓存的CanvasGroup
         private Canvas cachedCanvas;//缓存的Canvas
         private RectTransform bgMask;
@@ -341,15 +341,29 @@ namespace YangTools.Scripts.Core.YangUGUI
         public virtual void OnDepthChanged(int groupDepth, int depthInUIGroup)
         {
             int oldDepth = Depth;
-            int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup - oldDepth +
-                             OriginalDepth;
-            GetComponentsInChildren(true, cachedCanvasList);
-            foreach (var item in cachedCanvasList)
-            {
-                item.sortingOrder += deltaDepth;
-            }
+            // int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup - oldDepth +
+            //                  OriginalDepth;
+            int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup  + OriginalDepth;
 
-            cachedCanvasList.Clear();
+            //清除已销毁的
+            cachedCanvasDic = cachedCanvasDic
+                .Where(kvp => kvp.Key != null) // 保留 Value 不为 null（即未被销毁）的项
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            
+            Canvas[] tempList = GetComponentsInChildren<Canvas>(true);
+            for (int i = 0; i < tempList.Length; i++)
+            {
+                Canvas tempItem = tempList[i];
+                if (!cachedCanvasDic.ContainsKey(tempItem))
+                {
+                    cachedCanvasDic.Add(tempItem,tempItem.sortingOrder);
+                }
+            }
+            
+            foreach (var item in cachedCanvasDic)
+            {
+                item.Key.sortingOrder = item.Value + deltaDepth;
+            }
         }
 
         /// <summary>

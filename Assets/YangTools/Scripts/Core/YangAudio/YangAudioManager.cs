@@ -11,6 +11,57 @@ using Object = UnityEngine.Object;
 namespace YangTools.Scripts.Core.YangAudio
 {
     /// <summary>
+    /// 音频播放句柄
+    /// </summary>
+    public class AudioHandle
+    {
+        /// <summary>
+        /// 音频播放ID
+        /// </summary>
+        public int ID { get; }
+
+        /// <summary>
+        /// 音频管理器引用
+        /// </summary>
+        public YangAudioManager Manager { get; }
+
+        /// <summary>
+        /// 创建音频播放句柄
+        /// </summary>
+        /// <param name="id">音频播放ID</param>
+        /// <param name="manager">音频管理器引用</param>
+        public AudioHandle(int id, YangAudioManager manager)
+        {
+            ID = id;
+            Manager = manager;
+        }
+
+        /// <summary>
+        /// 停止播放
+        /// </summary>
+        public void Stop()
+        {
+            Manager?.StopAudio(ID);
+        }
+
+        /// <summary>
+        /// 暂停播放
+        /// </summary>
+        public void Pause()
+        {
+            Manager?.PauseAudio(ID);
+        }
+
+        /// <summary>
+        /// 恢复播放
+        /// </summary>
+        public void Resume()
+        {
+            Manager?.ResumeAudio(ID);
+        }
+    }
+
+    /// <summary>
     /// 声音管理器
     /// </summary>
     public class YangAudioManager : GameModuleBase
@@ -62,6 +113,21 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 世界声音
         /// </summary>
         private Dictionary<GameObject, AudioSource> worldAudios = new();
+
+        /// <summary>
+        /// 正在播放的音乐容器
+        /// </summary>
+        private readonly Dictionary<int, AudioSource> playingAudioContainers = new();
+
+        /// <summary>
+        /// 已取消但还在等待加载的音频ID
+        /// </summary>
+        private readonly HashSet<int> canceledAudioHandleIds = new();
+
+        /// <summary>
+        /// 下一个音频播放ID
+        /// </summary>
+        private int nextAudioHandleId = 1;
 
         /// <summary>
         /// 声音列表
@@ -240,6 +306,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 if (!singleAudio.isPlaying)
                 {
                     isDialogueStart = false;
+                    RemoveAudioSourceHandles(singleAudio);
                     SingleSoundEndOfPlayEvent?.Invoke();
                 }
             }
@@ -263,16 +330,33 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">音乐名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public async void PlayBGM(string audioName, bool isLoop = true, float speed = 1f)
+        /// <returns>音频播放句柄</returns>
+        public AudioHandle PlayBGM(string audioName, bool isLoop = true, float speed = 1f)
+        {
+            AudioHandle handle = CreateAudioHandle();
+            PlayBGMAsync(handle.ID, audioName, isLoop, speed).Forget();
+            return handle;
+        }
+
+        /// <summary>
+        /// 异步播放背景音乐
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        /// <param name="audioName">音乐名字</param>
+        /// <param name="isLoop">是否循环</param>
+        /// <param name="speed">播放速度</param>
+        private async UniTask PlayBGMAsync(int audioId, string audioName, bool isLoop, float speed)
         {
             AudioClip clip = await GetAudioClip(audioName);
-            if (clip == null) return;
+            if (clip == null || IsAudioHandleCanceled(audioId)) return;
 
             if (bgmAudio.isPlaying)
             {
                 bgmAudio.Stop();
             }
 
+            RemoveAudioSourceHandles(bgmAudio);
+            playingAudioContainers[audioId] = bgmAudio;
             bgmAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("BGM")[0];
             bgmAudio.clip = clip;
             bgmAudio.loop = isLoop;
@@ -329,6 +413,8 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 bgmAudio.Stop();
             }
+
+            RemoveAudioSourceHandles(bgmAudio);
         }
 
         #endregion
@@ -341,11 +427,26 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">声音名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public async void PlaySingleSound(string audioName, bool isLoop = false, float speed = 1f)
+        /// <returns>音频播放句柄</returns>
+        public AudioHandle PlaySingleSound(string audioName, bool isLoop = false, float speed = 1f)
+        {
+            AudioHandle handle = CreateAudioHandle();
+            PlaySingleSoundAsync(handle.ID, audioName, isLoop, speed).Forget();
+            return handle;
+        }
+
+        /// <summary>
+        /// 异步播放对话音效
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        /// <param name="audioName">声音名字</param>
+        /// <param name="isLoop">是否循环</param>
+        /// <param name="speed">播放速度</param>
+        private async UniTask PlaySingleSoundAsync(int audioId, string audioName, bool isLoop, float speed)
         {
             AudioClip clip = await GetAudioClip(audioName);
-            if (clip == null) return;
-            PlaySingleSound(clip, isLoop, speed);
+            if (clip == null || IsAudioHandleCanceled(audioId)) return;
+            PlaySingleSound(clip, isLoop, speed, audioId);
         }
 
         /// <summary>
@@ -354,13 +455,19 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        private void PlaySingleSound(AudioClip clip, bool isLoop = false, float speed = 1f)
+        /// <param name="audioId">音频播放ID</param>
+        private void PlaySingleSound(AudioClip clip, bool isLoop = false, float speed = 1f, int audioId = 0)
         {
             if (singleAudio.isPlaying)
             {
                 singleAudio.Stop();
             }
 
+            RemoveAudioSourceHandles(singleAudio);
+            if (audioId > 0)
+            {
+                playingAudioContainers[audioId] = singleAudio;
+            }
             singleAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("Dialogue")[0];
             singleAudio.clip = clip;
             singleAudio.loop = isLoop;
@@ -418,6 +525,8 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 singleAudio.Stop();
             }
+
+            RemoveAudioSourceHandles(singleAudio);
         }
 
         #endregion
@@ -425,16 +534,42 @@ namespace YangTools.Scripts.Core.YangAudio
         #region 音效
 
         /// <summary>
+        /// 播放循环音效
+        /// </summary>
+        /// <param name="audioName">声音名字</param>
+        /// <param name="speed">播放速度</param>
+        /// <returns>音频播放句柄</returns>
+        public AudioHandle PlayLoopSoundAudio(string audioName, float speed = 1)
+        {
+            return PlaySoundAudio(audioName, true, speed);
+        }
+        
+        /// <summary>
         /// 播放音效
         /// </summary>
         /// <param name="audioName">声音名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public async void PlaySoundAudio(string audioName, bool isLoop = false, float speed = 1)
+        /// <returns>音频播放句柄</returns>
+        public AudioHandle PlaySoundAudio(string audioName, bool isLoop = false, float speed = 1)
+        {
+            AudioHandle handle = CreateAudioHandle();
+            PlaySoundAudioAsync(handle.ID, audioName, isLoop, speed).Forget();
+            return handle;
+        }
+
+        /// <summary>
+        /// 异步播放音效
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        /// <param name="audioName">声音名字</param>
+        /// <param name="isLoop">是否循环</param>
+        /// <param name="speed">播放速度</param>
+        private async UniTask PlaySoundAudioAsync(int audioId, string audioName, bool isLoop, float speed)
         {
             AudioClip clip = await GetAudioClip(audioName);
-            if (clip == null) return;
-            PlaySoundAudio(clip, isLoop, speed);
+            if (clip == null || IsAudioHandleCanceled(audioId)) return;
+            PlaySoundAudio(clip, isLoop, speed, audioId);
         }
 
         /// <summary>
@@ -443,7 +578,7 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        private void PlaySoundAudio(AudioClip clip, bool isLoop = false, float speed = 1)
+        private void PlaySoundAudio(AudioClip clip, bool isLoop = false, float speed = 1, int audioId = 0)
         {
             AudioSource audio = ExtractIdleSoundAudioSource();
             if (audio)
@@ -452,39 +587,18 @@ namespace YangTools.Scripts.Core.YangAudio
                 audio.clip = clip;
                 audio.loop = isLoop;
                 audio.pitch = speed;
+                if (audioId > 0)
+                {
+                    playingAudioContainers[audioId] = audio;
+                }
                 audio.Play();
             }
             else
             {
                 Debug.LogWarning("音效音源不足，无法播放音效");
-            }
-        }
-
-        /// <summary>
-        /// 停止播放指定的音效
-        /// </summary>
-        /// <param name="clip">音乐剪辑</param>
-        public async void StopSoundAudio(string audioName)
-        {
-            AudioClip clip = await GetAudioClip(audioName);
-            if (clip == null) return;
-            StopSoundAudio(clip);
-        }
-
-        /// <summary>
-        /// 停止播放指定的音效
-        /// </summary>
-        /// <param name="clip">音乐剪辑</param>
-        private void StopSoundAudio(AudioClip clip)
-        {
-            for (int i = 0; i < soundAudios.Count; i++)
-            {
-                if (soundAudios[i].isPlaying)
+                if (audioId > 0)
                 {
-                    if (soundAudios[i].clip == clip)
-                    {
-                        soundAudios[i].Stop();
-                    }
+                    playingAudioContainers.Remove(audioId);
                 }
             }
         }
@@ -499,6 +613,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 if (soundAudios[i] && soundAudios[i].isPlaying)
                 {
                     soundAudios[i].Stop();
+                    RemoveAudioSourceHandles(soundAudios[i]);
                 }
             }
         }
@@ -510,6 +625,7 @@ namespace YangTools.Scripts.Core.YangAudio
             {
                 if (!soundAudios[i].isPlaying)
                 {
+                    RemoveAudioSourceHandles(soundAudios[i]);
                     return soundAudios[i];
                 }
             }
@@ -529,6 +645,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 if (!soundAudios[i].isPlaying)
                 {
                     AudioSource audio = soundAudios[i];
+                    RemoveAudioSourceHandles(audio);
                     soundAudios.RemoveAt(i);
                     i -= 1;
                     GameObject.Destroy(audio.gameObject);
@@ -547,12 +664,29 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="audioName">音乐名字</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        public async void PlayWorldSound(GameObject attachTarget, string audioName, bool isLoop = false,
+        /// <returns>音频播放句柄</returns>
+        public AudioHandle PlayWorldSound(GameObject attachTarget, string audioName, bool isLoop = false,
             float speed = 1)
         {
+            AudioHandle handle = CreateAudioHandle();
+            PlayWorldSoundAsync(handle.ID, attachTarget, audioName, isLoop, speed).Forget();
+            return handle;
+        }
+
+        /// <summary>
+        /// 异步播放世界音效
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        /// <param name="attachTarget">附加目标</param>
+        /// <param name="audioName">音乐名字</param>
+        /// <param name="isLoop">是否循环</param>
+        /// <param name="speed">播放速度</param>
+        private async UniTask PlayWorldSoundAsync(int audioId, GameObject attachTarget, string audioName,
+            bool isLoop, float speed)
+        {
             AudioClip clip = await GetAudioClip(audioName);
-            if (clip == null) return;
-            PlayWorldSound(attachTarget, clip, isLoop, speed);
+            if (clip == null || IsAudioHandleCanceled(audioId)) return;
+            PlayWorldSound(attachTarget, clip, isLoop, speed, audioId);
         }
 
         /// <summary>
@@ -562,8 +696,18 @@ namespace YangTools.Scripts.Core.YangAudio
         /// <param name="clip">音乐剪辑</param>
         /// <param name="isLoop">是否循环</param>
         /// <param name="speed">播放速度</param>
-        private void PlayWorldSound(GameObject attachTarget, AudioClip clip, bool isLoop = false, float speed = 1)
+        /// <param name="audioId">音频播放ID</param>
+        private void PlayWorldSound(GameObject attachTarget, AudioClip clip, bool isLoop = false, float speed = 1,
+            int audioId = 0)
         {
+            if (attachTarget == null)
+            {
+                canceledAudioHandleIds.Remove(audioId);
+                playingAudioContainers.Remove(audioId);
+                Debug.LogWarning("世界音效挂载目标为空，无法播放音效");
+                return;
+            }
+
             if (worldAudios.TryGetValue(attachTarget, out var worldAudio))
             {
                 if (worldAudio.isPlaying)
@@ -571,6 +715,11 @@ namespace YangTools.Scripts.Core.YangAudio
                     worldAudio.Stop();
                 }
 
+                RemoveAudioSourceHandles(worldAudio);
+                if (audioId > 0)
+                {
+                    playingAudioContainers[audioId] = worldAudio;
+                }
                 worldAudio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
                 worldAudio.clip = clip;
                 worldAudio.loop = isLoop;
@@ -582,6 +731,10 @@ namespace YangTools.Scripts.Core.YangAudio
                 AudioSource audio = AttachAudioSource(attachTarget, WorldPriorityDefault, WorldVolume, 1, 1);
                 audio.outputAudioMixerGroup = mixer.FindMatchingGroups("World")[0];
                 worldAudios.Add(attachTarget, audio);
+                if (audioId > 0)
+                {
+                    playingAudioContainers[audioId] = audio;
+                }
                 audio.clip = clip;
                 audio.loop = isLoop;
                 audio.pitch = speed;
@@ -647,6 +800,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 if (audio.Value.isPlaying)
                 {
                     audio.Value.Stop();
+                    RemoveAudioSourceHandles(audio.Value);
                 }
             }
         }
@@ -662,6 +816,7 @@ namespace YangTools.Scripts.Core.YangAudio
                 if (!audio.Value.isPlaying)
                 {
                     removeSet.Add(audio.Key);
+                    RemoveAudioSourceHandles(audio.Value);
                     Object.Destroy(audio.Value);
                 }
             }
@@ -689,6 +844,96 @@ namespace YangTools.Scripts.Core.YangAudio
         #endregion
 
         #region 方法
+
+        /// <summary>
+        /// 创建音频播放句柄
+        /// </summary>
+        /// <returns>音频播放句柄</returns>
+        private AudioHandle CreateAudioHandle()
+        {
+            int id = nextAudioHandleId++;
+            canceledAudioHandleIds.Remove(id);
+            return new AudioHandle(id, this);
+        }
+
+        /// <summary>
+        /// 停止指定ID的音频
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        public void StopAudio(int audioId)
+        {
+            if (!playingAudioContainers.TryGetValue(audioId, out var audio))
+            {
+                canceledAudioHandleIds.Add(audioId);
+                return;
+            }
+
+            if (audio)
+            {
+                audio.Stop();
+            }
+
+            playingAudioContainers.Remove(audioId);
+            canceledAudioHandleIds.Remove(audioId);
+        }
+
+        /// <summary>
+        /// 暂停指定ID的音频
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        public void PauseAudio(int audioId)
+        {
+            if (playingAudioContainers.TryGetValue(audioId, out var audio) && audio)
+            {
+                audio.Pause();
+            }
+        }
+
+        /// <summary>
+        /// 恢复指定ID的音频
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        public void ResumeAudio(int audioId)
+        {
+            if (playingAudioContainers.TryGetValue(audioId, out var audio) && audio)
+            {
+                audio.UnPause();
+            }
+        }
+
+        /// <summary>
+        /// 判断音频句柄是否已经取消
+        /// </summary>
+        /// <param name="audioId">音频播放ID</param>
+        /// <returns>是否已经取消</returns>
+        private bool IsAudioHandleCanceled(int audioId)
+        {
+            if (!canceledAudioHandleIds.Remove(audioId)) return false;
+
+            playingAudioContainers.Remove(audioId);
+            return true;
+        }
+
+        /// <summary>
+        /// 移除指定音源关联的播放句柄
+        /// </summary>
+        /// <param name="audioSource">音源</param>
+        private void RemoveAudioSourceHandles(AudioSource audioSource)
+        {
+            List<int> removeIds = new List<int>();
+            foreach (var item in playingAudioContainers)
+            {
+                if (item.Value == audioSource)
+                {
+                    removeIds.Add(item.Key);
+                }
+            }
+
+            for (int i = 0; i < removeIds.Count; i++)
+            {
+                playingAudioContainers.Remove(removeIds[i]);
+            }
+        }
 
         /// <summary>
         /// 创建一个音源

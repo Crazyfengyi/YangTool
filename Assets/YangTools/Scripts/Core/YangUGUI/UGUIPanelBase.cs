@@ -7,6 +7,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -340,14 +341,11 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="depthInUIGroup">界面在界面组中的深度</param>
         public virtual void OnDepthChanged(int groupDepth, int depthInUIGroup)
         {
-            int oldDepth = Depth;
-            // int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup - oldDepth +
-            //                  OriginalDepth;
             int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup  + OriginalDepth;
 
             //清除已销毁的
             cachedCanvasDic = cachedCanvasDic
-                .Where(kvp => kvp.Key != null) // 保留 Value 不为 null（即未被销毁）的项
+                .Where(kvp => kvp.Key != null)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             
             Canvas[] tempList = GetComponentsInChildren<Canvas>(true);

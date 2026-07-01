@@ -368,7 +368,7 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 暂停播放背景音乐
         /// </summary>
         /// <param name="isGradual">是否渐进式</param>
-        public void PauseBackgroundMusic(bool isGradual = true)
+        public void PauseBGM(bool isGradual = true)
         {
             if (isGradual)
             {
@@ -390,7 +390,7 @@ namespace YangTools.Scripts.Core.YangAudio
         /// 恢复播放背景音乐
         /// </summary>
         /// <param name="isGradual">是否渐进式</param>
-        public void UnPauseBackgroundMusic(bool isGradual = true)
+        public void UnPauseBGM(bool isGradual = true)
         {
             if (isGradual)
             {

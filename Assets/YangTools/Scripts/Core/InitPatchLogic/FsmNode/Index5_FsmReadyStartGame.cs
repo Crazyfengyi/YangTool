@@ -39,12 +39,11 @@ namespace GameMain
             {
             };
 
-            for (int i = 0; i < preloadList.Count; i++)
+            await ResourceManager.PreloadAssetsAsync(preloadList, progress =>
             {
-                press.press = 0.5f + 0.5f / preloadList.Count * i;
+                press.press = 0.5f + 0.5f * progress;
                 press.SendEvent();
-                await ResourceManager.LoadAssetAsync<Object>(preloadList[i]);
-            }
+            });
             
             if (YangSaveDataManager.Instance.DataCenter.GetLocalSave<SaveGameDataBase>().IsFirstEnter)
             {

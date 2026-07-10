@@ -20,14 +20,250 @@ namespace YangTools.Scripts.Core.ResourceManager
 {
     public abstract class ResourceManager
     {
-        private static readonly Dictionary<string, Object> AssetCacheDict = new Dictionary<string, Object>();
         /// <summary>
-        /// 清除缓存
+        /// 资源缓存条目。
         /// </summary>
-        public void ClearCache()
+        private sealed class AssetCacheEntry
         {
-            AssetCacheDict.Clear();
+            public HandleBase Handle;
+            public int ReferenceCount;
+            public bool IsPreloaded;
+            public bool IsReferenceCounted;
         }
+
+        private static readonly Dictionary<string, Object> AssetCacheDict = new Dictionary<string, Object>();
+        private static readonly Dictionary<string, HandleBase> AssetHandleCacheDict = new Dictionary<string, HandleBase>();
+        private static readonly Dictionary<string, AssetCacheEntry> AssetEntryDict = new Dictionary<string, AssetCacheEntry>();
+        /// <summary>
+        /// 清理资源缓存
+        /// </summary>
+        public async UniTask ClearCache()
+        {
+            foreach (HandleBase handle in AssetHandleCacheDict.Values)
+            {
+                ReleaseHandle(handle);
+            }
+
+            AssetHandleCacheDict.Clear();
+            AssetEntryDict.Clear();
+            AssetCacheDict.Clear();
+
+            try
+            {
+                if (YooAssets.Initialized)
+                {
+                    ResourcePackage package = YooAssets.TryGetPackage("DefaultPackage");
+                    if (package != null)
+                    {
+                        await package.UnloadUnusedAssetsAsync().ToUniTask();
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    await Resources.UnloadUnusedAssets().ToUniTask();
+                }
+                finally
+                {
+                    System.GC.Collect();
+                }
+            }
+        }
+        
+        #region 清理无用资源
+
+        /// <summary>
+        /// 释放资源句柄并清理无用资源和内存。
+        /// </summary>
+        public async UniTask UnloadUnusedResourcesAsync()
+        {
+            List<KeyValuePair<string, AssetCacheEntry>> entries =
+                new List<KeyValuePair<string, AssetCacheEntry>>(AssetEntryDict);
+            for (int i = 0; i < entries.Count; i++)
+            {
+                KeyValuePair<string, AssetCacheEntry> item = entries[i];
+                AssetCacheEntry entry = item.Value;
+                if (entry.IsReferenceCounted && entry.ReferenceCount <= 0 && !entry.IsPreloaded)
+                {
+                    RemoveUnusedAsset(item.Key, entry);
+                }
+            }
+
+            try
+            {
+                if (YooAssets.Initialized)
+                {
+                    ResourcePackage package = YooAssets.TryGetPackage("DefaultPackage");
+                    if (package != null)
+                    {
+                        await package.UnloadUnusedAssetsAsync().ToUniTask();
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    await Resources.UnloadUnusedAssets().ToUniTask();
+                }
+                finally
+                {
+                    System.GC.Collect();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 获取资源并增加引用计数。
+        /// </summary>
+        /// <typeparam name="T">资源类型。</typeparam>
+        /// <param name="location">资源地址。</param>
+        /// <param name="progress">加载进度。</param>
+        /// <param name="timing">异步任务的 PlayerLoop 时机。</param>
+        /// <returns>资源对象。</returns>
+        public static async UniTask<T> AcquireAssetAsync<T>(string location,
+            System.IProgress<float> progress = null,
+            PlayerLoopTiming timing = PlayerLoopTiming.Update) where T : Object
+        {
+            T asset = await LoadAssetAsync<T>(location, progress, timing);
+            if (asset == null)
+            {
+                return null;
+            }
+
+            AssetCacheEntry entry = GetOrCreateEntry(location);
+            entry.IsReferenceCounted = true;
+            entry.ReferenceCount++;
+            return asset;
+        }
+
+        /// <summary>
+        /// 获取子资源并增加引用计数。
+        /// </summary>
+        /// <typeparam name="TObject">子资源类型。</typeparam>
+        /// <param name="location">资源地址。</param>
+        /// <param name="assetName">子资源名称。</param>
+        /// <param name="progress">加载进度。</param>
+        /// <param name="timing">异步任务的 PlayerLoop 时机。</param>
+        /// <returns>子资源对象。</returns>
+        public static async UniTask<TObject> AcquireSubAssetAsync<TObject>(string location, string assetName,
+            System.IProgress<float> progress = null,
+            PlayerLoopTiming timing = PlayerLoopTiming.Update) where TObject : Object
+        {
+            TObject asset = await LoadSubAssetAsync<TObject>(location, assetName, progress, timing);
+            if (asset == null)
+            {
+                return null;
+            }
+
+            AssetCacheEntry entry = GetOrCreateEntry(location);
+            entry.IsReferenceCounted = true;
+            entry.ReferenceCount++;
+            return asset;
+        }
+
+        /// <summary>
+        /// 释放资源引用，引用计数归零后资源会被标记为可清理。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        public static void ReleaseAsset(string location)
+        {
+            if (!AssetEntryDict.TryGetValue(location, out AssetCacheEntry entry) || !entry.IsReferenceCounted)
+            {
+                return;
+            }
+
+            entry.ReferenceCount = Mathf.Max(0, entry.ReferenceCount - 1);
+        }
+
+        /// <summary>
+        /// 取消资源的预加载保留标记。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        public static void ReleasePreloadedAsset(string location)
+        {
+            if (AssetEntryDict.TryGetValue(location, out AssetCacheEntry entry))
+            {
+                entry.IsPreloaded = false;
+            }
+        }
+        
+        /// <summary>
+        /// 安全释放资源句柄。
+        /// </summary>
+        /// <param name="handle">待释放的资源句柄。</param>
+        private static void ReleaseHandle(HandleBase handle)
+        {
+            if (handle == null || !handle.IsValid)
+            {
+                return;
+            }
+
+            try
+            {
+                handle.Release();
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"释放资源句柄失败：{exception.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 缓存资源句柄，并释放同地址的旧句柄。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        /// <param name="handle">资源句柄。</param>
+        private static void CacheHandle(string location, HandleBase handle)
+        {
+            if (AssetHandleCacheDict.TryGetValue(location, out HandleBase oldHandle) && oldHandle != handle)
+            {
+                ReleaseHandle(oldHandle);
+            }
+
+            AssetHandleCacheDict[location] = handle;
+            GetOrCreateEntry(location).Handle = handle;
+        }
+
+        /// <summary>
+        /// 获取或创建资源缓存条目。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        /// <returns>资源缓存条目。</returns>
+        private static AssetCacheEntry GetOrCreateEntry(string location)
+        {
+            if (!AssetEntryDict.TryGetValue(location, out AssetCacheEntry entry))
+            {
+                entry = new AssetCacheEntry();
+                AssetEntryDict[location] = entry;
+            }
+
+            return entry;
+        }
+
+        /// <summary>
+        /// 标记资源为预加载资源，在清理无用资源时保留。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        private static void MarkAssetAsPreloaded(string location)
+        {
+            GetOrCreateEntry(location).IsPreloaded = true;
+        }
+
+        /// <summary>
+        /// 移除指定的未使用资源缓存。
+        /// </summary>
+        /// <param name="location">资源地址。</param>
+        private static void RemoveUnusedAsset(string location, AssetCacheEntry entry)
+        {
+            ReleaseHandle(entry.Handle);
+            AssetEntryDict.Remove(location);
+            AssetHandleCacheDict.Remove(location);
+            AssetCacheDict.Remove(location);
+        }
+        #endregion
 
         #region 资源加载
 
@@ -53,16 +289,62 @@ namespace YangTools.Scripts.Core.ResourceManager
 
             Debug.Log($"加载资源:{location}");
             AssetHandle handler = YooAssets.LoadAssetAsync<T>(location);
-            await handler.ToUniTask(progress, timing);
+            try
+            {
+                await handler.ToUniTask(progress, timing);
+            }
+            catch
+            {
+                ReleaseHandle(handler);
+                throw;
+            }
+
             if (handler.AssetObject is T obj)
             {
                 AssetCacheDict[location] = obj;
+                CacheHandle(location, handler);
                 return obj;
             }
 
-            Debug.LogError($"类型转换失败location:{location}资源类型:{handler.AssetObject.GetType()}加载类型:{typeof(T)}");
+            System.Type actualType = handler.AssetObject?.GetType();
+            ReleaseHandle(handler);
+            Debug.LogError($"类型转换失败location:{location}资源类型:{actualType}加载类型:{typeof(T)}");
             return null;
         }
+
+        /// <summary>
+        /// 预加载资源，并将资源写入资源缓存。
+        /// </summary>
+        /// <param name="locations">资源地址集合。</param>
+        /// <param name="progress">预加载进度。</param>
+        /// <param name="timing">异步任务的 PlayerLoop 时机。</param>
+        public static async UniTask PreloadAssetsAsync(IEnumerable<string> locations,
+            System.IProgress<float> progress = null,
+            PlayerLoopTiming timing = PlayerLoopTiming.Update)
+        {
+            if (locations == null)
+            {
+                return;
+            }
+
+            List<string> preloadLocations = new List<string>();
+            HashSet<string> uniqueLocations = new HashSet<string>();
+            foreach (string location in locations)
+            {
+                if (!string.IsNullOrWhiteSpace(location) && uniqueLocations.Add(location))
+                {
+                    preloadLocations.Add(location);
+                }
+            }
+
+            for (int i = 0; i < preloadLocations.Count; i++)
+            {
+                await LoadAssetAsync<Object>(preloadLocations[i], timing: timing);
+                MarkAssetAsPreloaded(preloadLocations[i]);
+                progress?.Report((i + 1f) / preloadLocations.Count);
+            }
+        }
+
         /// <summary>
         /// 加载子资源
         /// </summary>
@@ -85,13 +367,26 @@ namespace YangTools.Scripts.Core.ResourceManager
 
             Debug.Log($"加载资源:{location}");
             SubAssetsHandle handler = YooAssets.LoadSubAssetsAsync<TObject>(location);
-            await handler.ToUniTask(progress, timing);
-            TObject subAsset = handler.GetSubAssetObject<TObject>(location);
-            if (subAsset == null)
+            try
             {
-                Debug.LogError($"不存在的资源类型location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
+                await handler.ToUniTask(progress, timing);
+            }
+            catch
+            {
+                ReleaseHandle(handler);
+                throw;
             }
 
+            TObject subAsset = handler.GetSubAssetObject<TObject>(assetName);
+            if (subAsset == null)
+            {
+                ReleaseHandle(handler);
+                Debug.LogError($"不存在的资源类型location:{location} assetName:{assetName} TObject:{typeof(TObject)}");
+                return null;
+            }
+
+            AssetCacheDict[location] = subAsset;
+            CacheHandle(location, handler);
             return subAsset;
         }
         /// <summary>

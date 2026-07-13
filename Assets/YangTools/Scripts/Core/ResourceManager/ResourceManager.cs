@@ -6,6 +6,7 @@
  *创建时间:         2023-12-10
 */
 
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -319,7 +320,7 @@ namespace YangTools.Scripts.Core.ResourceManager
         /// <param name="progress">预加载进度。</param>
         /// <param name="timing">异步任务的 PlayerLoop 时机。</param>
         public static async UniTask PreloadAssetsAsync(IEnumerable<string> locations,
-            System.IProgress<float> progress = null,
+            Action<float> progress = null,
             PlayerLoopTiming timing = PlayerLoopTiming.Update)
         {
             if (locations == null)
@@ -341,7 +342,7 @@ namespace YangTools.Scripts.Core.ResourceManager
             {
                 await LoadAssetAsync<Object>(preloadLocations[i], timing: timing);
                 MarkAssetAsPreloaded(preloadLocations[i]);
-                progress?.Report((i + 1f) / preloadLocations.Count);
+                progress?.Invoke((i + 1f) / preloadLocations.Count);
             }
         }
 

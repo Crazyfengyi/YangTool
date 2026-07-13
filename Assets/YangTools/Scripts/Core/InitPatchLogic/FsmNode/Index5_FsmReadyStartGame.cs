@@ -39,7 +39,7 @@ namespace GameMain
             {
             };
 
-            await ResourceManager.PreloadAssetsAsync(preloadList, progress =>
+            await ResourceManager.PreloadAssetsAsync(preloadList, (progress) =>
             {
                 press.press = 0.5f + 0.5f * progress;
                 press.SendEvent();

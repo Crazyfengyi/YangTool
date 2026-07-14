@@ -31,6 +31,15 @@ public class QuestRuntime
     }
 
     /// <summary>
+    /// 重置每日任务进度并重新开始任务。
+    /// </summary>
+    public void ResetForDailyRefresh()
+    {
+        State = QuestState.Active;
+        BuildObjectives(null);
+    }
+
+    /// <summary>
     /// 处理任务进度事件。
     /// </summary>
     /// <param name="progressEvent">任务进度事件</param>
@@ -497,6 +506,7 @@ public class ConditionRuntime
 {
     private readonly string runtimeId;
     private long startUtcSeconds;
+    private float onlineTimeMinutes;
 
     public QuestConditionData Data { get; }
     public string Id => runtimeId;
@@ -511,6 +521,11 @@ public class ConditionRuntime
         Data = data;
         CurrentCount = saveItem != null ? Math.Max(0, saveItem.currentCount) : 0;
         startUtcSeconds = saveItem != null ? Math.Max(0, saveItem.startUtcSeconds) : 0;
+        onlineTimeMinutes = saveItem != null ? Math.Max(0f, saveItem.onlineTimeSeconds) : 0f;
+        if (IsOnlineTimeCondition())
+        {
+            onlineTimeMinutes = Math.Min(TargetCount, onlineTimeMinutes);
+        }
         CurrentCount = Math.Min(CurrentCount, TargetCount);
     }
 
@@ -538,6 +553,11 @@ public class ConditionRuntime
             return false;
         }
 
+        if (IsOnlineTimeCondition())
+        {
+            return HandleOnlineTimeProgress(progressEvent);
+        }
+
         if (Data.EventType != progressEvent.EventType)
         {
             return false;
@@ -552,6 +572,26 @@ public class ConditionRuntime
         float oldCount = CurrentCount;
         CurrentCount = Math.Min(TargetCount, CurrentCount + addCount);
         return !Mathf.Approximately(CurrentCount, oldCount);
+    }
+
+    /// <summary>
+    /// 累计在线时长事件，目标值和事件数值单位均为分钟。
+    /// </summary>
+    /// <param name="progressEvent">在线时长进度事件</param>
+    /// <returns>在线时长是否发生变化</returns>
+    private bool HandleOnlineTimeProgress(QuestProgressEvent progressEvent)
+    {
+        if (progressEvent.EventType != QuestProgressEventType.OnLineTime || progressEvent.Value <= 0f)
+        {
+            return false;
+        }
+
+        float oldMinutes = onlineTimeMinutes;
+        float oldCount = CurrentCount;
+        onlineTimeMinutes = Math.Min(TargetCount, onlineTimeMinutes + progressEvent.Value);
+        CurrentCount = Mathf.Min(TargetCount, Mathf.Floor(onlineTimeMinutes));
+        return !Mathf.Approximately(onlineTimeMinutes, oldMinutes)
+               || !Mathf.Approximately(CurrentCount, oldCount);
     }
 
     /// <summary>
@@ -636,14 +676,13 @@ public class ConditionRuntime
             return !Mathf.Approximately(CurrentCount, tempOldCount);
         }
 
-        // if (BagMgr.Instance == null)
-        // {
-        //     return false;
-        // }
+        if (BagMgr.Instance == null)
+        {
+            return false;
+        }
 
         float oldCount = CurrentCount;
-        // int bagCount = Math.Max(0, (int)Math.Floor(BagMgr.Instance.GetBagPropCount(propId)));
-        int bagCount = Math.Max(0, TargetCount);
+        int bagCount = Math.Max(0, (int)Math.Floor(BagMgr.Instance.GetBagPropCount(propId)));
         CurrentCount = Math.Min(TargetCount, bagCount);
         return !Mathf.Approximately(CurrentCount, oldCount);
     }
@@ -673,11 +712,21 @@ public class ConditionRuntime
         saveItem.conditionId = Id;
         saveItem.currentCount = CurrentCount;
         saveItem.startUtcSeconds = startUtcSeconds;
+        saveItem.onlineTimeSeconds = onlineTimeMinutes;
     }
 
     private bool IsTimeCondition()
     {
         return Data != null && Data.EventType == QuestProgressEventType.Time;
+    }
+
+    /// <summary>
+    /// 判断是否为在线时长条件。
+    /// </summary>
+    /// <returns>在线时长条件返回true</returns>
+    private bool IsOnlineTimeCondition()
+    {
+        return Data != null && Data.EventType == QuestProgressEventType.OnLineTime;
     }
 
 }

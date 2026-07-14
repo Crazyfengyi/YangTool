@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameMain;
+using Manager;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core;
@@ -15,6 +16,7 @@ using YooAsset;
 public sealed class QuestManager
 {
     private const float TimeQuestRefreshInterval = 1f;
+    private const float OnlineTimeRefreshIntervalMinutes = 1f;
     private const string QuestSoTag = "SO";
 
     private static QuestManager instance;
@@ -25,7 +27,10 @@ public sealed class QuestManager
     private readonly List<ConditionRuntime> itemNumConditionCache = new List<ConditionRuntime>();
     private readonly List<ConditionRuntime> itemNumConsumeCache = new List<ConditionRuntime>();
     private bool initialized;
+    private bool isApplicationForeground = true;
     private float timeQuestRefreshTimer;
+    private float onlineTimeRefreshTimer;
+    private string dailyRefreshDate;
 
     private QuestManager()
     {
@@ -56,6 +61,7 @@ public sealed class QuestManager
         itemNumConditionCache.Clear();
         itemNumConsumeCache.Clear();
         timeQuestRefreshTimer = 0f;
+        onlineTimeRefreshTimer = 0f;
 
         Save_QuestData saveData = GetSaveData(true);
         saveData.quests = new List<SaveQuestItem>();
@@ -86,6 +92,20 @@ public sealed class QuestManager
         eventGroup.RemoveAllListener();
         initialized = false;
         timeQuestRefreshTimer = 0f;
+        onlineTimeRefreshTimer = 0f;
+    }
+
+    /// <summary>
+    /// 设置应用是否处于前台，在线时长只在前台累计。
+    /// </summary>
+    /// <param name="isForeground">应用是否处于前台</param>
+    public void SetApplicationForeground(bool isForeground)
+    {
+        isApplicationForeground = isForeground;
+        if (!isForeground)
+        {
+            onlineTimeRefreshTimer = 0f;
+        }
     }
 
     /// <summary>
@@ -99,14 +119,29 @@ public sealed class QuestManager
             return;
         }
 
+        RefreshDailyQuestsIfNeeded();
         timeQuestRefreshTimer += unscaledDeltaTime;
-        if (timeQuestRefreshTimer < TimeQuestRefreshInterval)
+        if (timeQuestRefreshTimer >= TimeQuestRefreshInterval)
+        {
+            timeQuestRefreshTimer = 0f;
+            RefreshAllTimeProgress();
+        }
+
+        if (!isApplicationForeground)
         {
             return;
         }
 
-        timeQuestRefreshTimer = 0f;
-        RefreshAllTimeProgress();
+        // 在线时长计时器按分钟累计。
+        onlineTimeRefreshTimer += unscaledDeltaTime / 60f;
+        if (onlineTimeRefreshTimer < OnlineTimeRefreshIntervalMinutes)
+        {
+            return;
+        }
+
+        float onlineMinutes = onlineTimeRefreshTimer;
+        onlineTimeRefreshTimer = 0f;
+        new QuestProgressEvent(QuestProgressEventType.OnLineTime, string.Empty, value: onlineMinutes).SendEvent();
     }
 
     /// <summary>
@@ -229,6 +264,41 @@ public sealed class QuestManager
     }
 
     /// <summary>
+    /// 发放任务奖励到玩家背包。
+    /// </summary>
+    /// <param name="rewardData">任务奖励配置。</param>
+    private static void GrantReward(QuestRewardData rewardData)
+    {
+        if (rewardData == null || rewardData.Count <= 0 || BagMgr.Instance == null)
+        {
+            return;
+        }
+
+        int propId;
+        switch (rewardData.RewardType)
+        {
+            case QuestRewardType.Money:
+                propId = GameWindow.MoneyPropId;
+                break;
+            case QuestRewardType.Gold:
+                propId = GameWindow.CoinPropId;
+                break;
+            case QuestRewardType.Item:
+                if (!int.TryParse(rewardData.TargetId, out propId))
+                {
+                    Debug.LogWarning($"任务奖励道具ID无效:{rewardData.TargetId}");
+                    return;
+                }
+
+                break;
+            default:
+                return;
+        }
+
+        BagMgr.Instance.AddBagProp(propId, rewardData.Count, true, "任务奖励");
+    }
+
+    /// <summary>
     /// 尝试准备任务目标物品数量消耗
     /// </summary>
     /// <param name="questId">任务ID</param>
@@ -286,7 +356,7 @@ public sealed class QuestManager
         for (int i = 0; i < conditions.Count; i++)
         {
             ConditionRuntime condition = conditions[i];
-            if (condition == null || !condition.IsCompleted )//|| BagMgr.Instance == null)
+            if (condition == null || !condition.IsCompleted || BagMgr.Instance == null)
             {
                 return false;
             }
@@ -306,14 +376,14 @@ public sealed class QuestManager
             consumeConditions.Add(condition);
         }
 
-        // foreach (KeyValuePair<int, float> requiredCount in requiredCounts)
-        // {
-        //     if (!BagMgr.Instance.BagPropEnough(requiredCount.Key, requiredCount.Value, false))
-        //     {
-        //         consumeConditions.Clear();
-        //         return false;
-        //     }
-        // }
+        foreach (KeyValuePair<int, float> requiredCount in requiredCounts)
+        {
+            if (!BagMgr.Instance.BagPropEnough(requiredCount.Key, requiredCount.Value, false))
+            {
+                consumeConditions.Clear();
+                return false;
+            }
+        }
 
         return true;
     }
@@ -348,14 +418,14 @@ public sealed class QuestManager
     /// <returns>可扣除返回true</returns>
     private static bool CanConsumeItemNumCondition(ConditionRuntime condition)
     {
-        if (condition == null || !condition.IsCompleted )//|| BagMgr.Instance == null)
+        if (condition == null || !condition.IsCompleted || BagMgr.Instance == null)
         {
             return false;
         }
 
         int propId;
-        return condition.TryGetItemNumPropId(out propId);
-        // && BagMgr.Instance.BagPropEnough(propId, condition.TargetCount, false);
+        return condition.TryGetItemNumPropId(out propId)
+               && BagMgr.Instance.BagPropEnough(propId, condition.TargetCount, false);
     }
 
     /// <summary>
@@ -367,7 +437,7 @@ public sealed class QuestManager
         int propId;
         if (condition != null && condition.TryGetItemNumPropId(out propId))
         {
-            //BagMgr.Instance.RemoveBagProp(propId, condition.TargetCount);
+            BagMgr.Instance.RemoveBagProp(propId, condition.TargetCount);
         }
     }
 
@@ -436,7 +506,7 @@ public sealed class QuestManager
     private void AddProgressListener()
     {
         eventGroup.AddListener<QuestProgressEvent>(OnQuestProgressEvent);
-        //eventGroup.AddListener<BagPropChange>(OnBagPropChange);
+        eventGroup.AddListener<BagPropChange>(OnBagPropChange);
     }
 
     /// <summary>
@@ -460,6 +530,8 @@ public sealed class QuestManager
             {
                 await LoadAndRegisterQuestDataAsync(package, sortedAssetInfos[i]);
             }
+
+            new QuestDataLoadedEvent().SendEvent();
         }
         catch (Exception exception)
         {
@@ -476,9 +548,9 @@ public sealed class QuestManager
     {
         AssetHandle handle = package.LoadAssetAsync<ScriptableObject>(assetInfo.Address);
         await handle.ToUniTask();
-        if (handle.Status != EOperationStatus.Succeed)
+        if (handle.Status != EOperationStatus.Succeeded)
         {
-            Debug.LogError($"加载任务SO失败:{assetInfo.Address} {handle.LastError}");
+            Debug.LogError($"加载任务SO失败:{assetInfo.Address} {handle.Error}");
             return;
         }
 
@@ -537,11 +609,11 @@ public sealed class QuestManager
     /// <param name="eventData">事件数据</param>
     private void OnBagPropChange(EventData eventData)
     {
-        // BagPropChange bagPropChange = eventData?.Args as BagPropChange;
-        // if (bagPropChange == null)
-        // {
-        //     return;
-        // }
+        BagPropChange bagPropChange = eventData?.Args as BagPropChange;
+        if (bagPropChange == null)
+        {
+            return;
+        }
 
         RefreshAllItemNumProgress();
     }
@@ -557,14 +629,51 @@ public sealed class QuestManager
         Save_QuestData saveData = GetSaveData();
         // 获取或创建任务存档项
         SaveQuestItem saveItem = saveData.GetOrCreateQuest(questData.Id);
-        // 创建并返回任务运行时实例
-        QuestRuntime runtime = new QuestRuntime(questData, saveItem);
+        string today = GetDailyDateKey();
+        bool shouldRefreshDaily = questData.TaskType == TaskType.EveryDay && saveItem.dailyRefreshDate != today;
+        QuestRuntime runtime = new QuestRuntime(questData, shouldRefreshDaily ? null : saveItem);
+        if (shouldRefreshDaily)
+        {
+            saveItem.dailyRefreshDate = today;
+            saveItem.firstObjectiveMoneyTipShown = false;
+        }
+
         if (runtime.State < QuestState.Active)
         {
             runtime.SetState(QuestState.Active);
         }
 
         return runtime;
+    }
+
+    /// <summary>
+    /// 检查日期变化并刷新每日任务。
+    /// </summary>
+    private void RefreshDailyQuestsIfNeeded()
+    {
+        string today = GetDailyDateKey();
+        if (dailyRefreshDate == today)
+        {
+            return;
+        }
+
+        dailyRefreshDate = today;
+        List<QuestRuntime> runtimes = new List<QuestRuntime>(questRuntimes.Values);
+        for (int i = 0; i < runtimes.Count; i++)
+        {
+            QuestRuntime runtime = runtimes[i];
+            if (runtime?.Data == null || runtime.Data.TaskType != TaskType.EveryDay)
+            {
+                continue;
+            }
+
+            runtime.ResetForDailyRefresh();
+            SaveQuestItem saveItem = GetSaveData(true).GetOrCreateQuest(runtime.Id);
+            saveItem.dailyRefreshDate = today;
+            saveItem.firstObjectiveMoneyTipShown = false;
+            SaveRuntime(runtime);
+            TryShowFirstObjectiveMoneyTip(runtime);
+        }
     }
 
     /// <summary>
@@ -713,7 +822,7 @@ public sealed class QuestManager
 
         saveItem = GetSaveData(true).GetOrCreateQuest(runtime.Id);
         saveItem.firstObjectiveMoneyTipShown = true;
-        //UIMonoInstance.OpenPanel<MoneyTipWindow>(GroupType.弹窗1, userData: new MoneyTipWindowData(runtime.Id));
+        UIMonoInstance.OpenPanel<MoneyTipWindow>(GroupType.弹窗1, userData: new MoneyTipWindowData(runtime.Id));
     }
 
     /// <summary>
@@ -801,6 +910,7 @@ public sealed class QuestManager
         // 遍历所有奖励并发送奖励事件
         for (int i = 0; i < runtime.Data.Rewards.Count; i++)
         {
+            GrantReward(runtime.Data.Rewards[i]);
             new QuestRewardEvent
             {
                 QuestId = runtime.Id,
@@ -850,6 +960,14 @@ public sealed class QuestManager
         DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         // 计算当前UTC时间与Unix纪元时间之间的差值，并转换为总秒数
         return (long) (DateTime.UtcNow - epoch).TotalSeconds;
+    }
+
+    /// <summary>
+    /// 获取本地自然日标识。
+    /// </summary>
+    private static string GetDailyDateKey()
+    {
+        return DateTime.Now.ToString("yyyyMMdd");
     }
 
     /// <summary>

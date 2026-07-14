@@ -22,8 +22,10 @@ public enum QuestProgressEventType
     ItemNum,
     [LabelText("通关数")]
     PassNum,
+    [LabelText("在线时间")]
+    OnLineTime,
     [LabelText("自定义")]
-    Custom
+    Custom = 10000
 }
 
 /// <summary>
@@ -119,4 +121,11 @@ public class QuestRewardEvent : EventMessageBase
     public string QuestId;
     [LabelText("奖励数据")]
     public QuestRewardData RewardData;
+}
+
+/// <summary>
+/// 任务配置加载完成事件。
+/// </summary>
+public class QuestDataLoadedEvent : EventMessageBase
+{
 }

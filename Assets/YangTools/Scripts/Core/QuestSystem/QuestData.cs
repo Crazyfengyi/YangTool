@@ -11,11 +11,17 @@ public class QuestData : ScriptableObject
 {
     public string Id;
     public TaskType TaskType;
-    [LabelText("任务标题")] [TextArea] public string Title;
-    [LabelText("任务描述")] [TextArea] public string Description;
-    [LabelText("任务前置条件ID列表")] public List<string> PrerequisiteQuestIds = new List<string>();
-    [LabelText("任务目标数据列表")] public List<QuestObjectiveData> Objectives = new List<QuestObjectiveData>();
-    [LabelText("任务奖励数据列表")] public List<QuestRewardData> Rewards = new List<QuestRewardData>();
+    [LabelText("任务标题")]
+    [TextArea]
+    public string Title;
+    [LabelText("任务描述")]
+    [TextArea] public string Description;
+    [LabelText("任务前置条件ID列表")]
+    public List<string> PrerequisiteQuestIds = new List<string>();
+    [LabelText("任务目标数据列表")]
+    public List<QuestObjectiveData> Objectives = new List<QuestObjectiveData>();
+    [LabelText("任务奖励数据列表")]
+    public List<QuestRewardData> Rewards = new List<QuestRewardData>();
 
     /// <summary>
     /// 获取指定奖励类型的总数量。
@@ -68,9 +74,12 @@ public class QuestData : ScriptableObject
 public class QuestObjectiveData
 {
     public string Id;
-    [TextArea] public string Title;
-    [TextArea] public string Description;
-    [TextArea] public string remark;
+    [TextArea] 
+    public string Title;
+    [TextArea] 
+    public string Description;
+    [TextArea] 
+    public string remark;
     public QuestConditionGroupType ConditionGroupType = QuestConditionGroupType.And;
     public List<QuestConditionData> Conditions = new List<QuestConditionData>();
 }
@@ -89,8 +98,10 @@ public enum QuestConditionGroupType
 /// </summary>
 public enum QuestConditionType
 {
-    [LabelText("计数类型-记录事件发生的次数")] EventCount,
-    [LabelText("事件类型-表示事件只发生一次")] EventOnce
+    [LabelText("计数类型-记录事件发生的次数")]
+    EventCount,
+    [LabelText("事件类型-表示事件只发生一次")]
+    EventOnce
 }
 
 [LabelText("任务条件配置数据")]

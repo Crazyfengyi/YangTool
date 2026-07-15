@@ -16,7 +16,7 @@ using YooAsset;
 public sealed class QuestManager
 {
     private const float TimeQuestRefreshInterval = 1f;
-    private const float OnlineTimeRefreshIntervalMinutes = 1f;
+    private const float OnlineTimeRefreshIntervalSeconds = 60f;
     private const string QuestSoTag = "SO";
 
     private static QuestManager instance;
@@ -80,6 +80,7 @@ public sealed class QuestManager
             questRuntimes[questData.Id] = runtime;
             EnsureAndRefreshTimeProgress(runtime, false);
             EnsureAndRefreshItemNumProgress(runtime, false);
+            RefreshRuntimeStateAfterProgress(runtime);
             SaveRuntime(runtime);
         }
     }
@@ -132,15 +133,15 @@ public sealed class QuestManager
             return;
         }
 
-        // 在线时长计时器按分钟累计。
-        onlineTimeRefreshTimer += unscaledDeltaTime / 60f;
-        if (onlineTimeRefreshTimer < OnlineTimeRefreshIntervalMinutes)
+        // 在线时长计时器按秒累计，每分钟提交一次在线时长进度。
+        onlineTimeRefreshTimer += Mathf.Max(0f, unscaledDeltaTime);
+        if (onlineTimeRefreshTimer < OnlineTimeRefreshIntervalSeconds)
         {
             return;
         }
 
-        float onlineMinutes = onlineTimeRefreshTimer;
-        onlineTimeRefreshTimer = 0f;
+        float onlineMinutes = onlineTimeRefreshTimer / OnlineTimeRefreshIntervalSeconds;
+        onlineTimeRefreshTimer %= OnlineTimeRefreshIntervalSeconds;
         new QuestProgressEvent(QuestProgressEventType.OnLineTime, string.Empty, value: onlineMinutes).SendEvent();
     }
 
@@ -161,6 +162,7 @@ public sealed class QuestManager
         questRuntimes[questData.Id] = runtime;
         EnsureAndRefreshTimeProgress(runtime);
         EnsureAndRefreshItemNumProgress(runtime);
+        RefreshRuntimeStateAfterProgress(runtime);
         TryShowFirstObjectiveMoneyTip(runtime);
         SaveRuntime(runtime);
     }
@@ -203,6 +205,7 @@ public sealed class QuestManager
         ChangeState(runtime, QuestState.Active);
         EnsureAndRefreshTimeProgress(runtime);
         EnsureAndRefreshItemNumProgress(runtime);
+        RefreshRuntimeStateAfterProgress(runtime);
         TryShowFirstObjectiveMoneyTip(runtime);
         return true;
     }
@@ -775,12 +778,21 @@ public sealed class QuestManager
     /// <param name="runtime">任务运行时实例</param>
     private void RefreshRuntimeStateAfterProgress(QuestRuntime runtime)
     {
-        if (runtime == null)
+        if (runtime == null || runtime.State != QuestState.Active)
         {
             return;
         }
 
-        if (runtime.State == QuestState.Active && runtime.IsAllObjectivesCompleted())
+        for (int i = 0; i < runtime.Objectives.Count; i++)
+        {
+            ObjectiveRuntime objective = runtime.Objectives[i];
+            if (objective != null && !objective.IsCompleted && objective.IsConditionsSatisfied)
+            {
+                objective.TryComplete(runtime.Id);
+            }
+        }
+
+        if (runtime.IsAllObjectivesCompleted())
         {
             ChangeState(runtime, QuestState.Completed);
             return;

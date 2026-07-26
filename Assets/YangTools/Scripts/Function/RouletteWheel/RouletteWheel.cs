@@ -11,6 +11,10 @@ using UnityEngine.UI;
 /// </summary>
 public class RouletteWheel : MonoBehaviour
 {
+    private const float MinSpinDuration = 0.0001f;
+    private const float MinSpinDegrees = 0.001f;
+    private const float EaseSampleTime = 0.001f;
+
     [Header("UI相关")]
     [SerializeField] private RectTransform wheelRoot; // 转盘根节点，作为整个轮盘的容器
     [SerializeField] private RouletteWheelItemUI itemPrefab; // 轮盘项目预制体，用于生成轮盘上的各个项目
@@ -33,14 +37,26 @@ public class RouletteWheel : MonoBehaviour
     [LabelText("最小旋转圈数")]
     private int minFullTurns = 5;
     [SerializeField] 
-    [LabelText("额外随机旋转圈数，增加旋转的随机性")]
+    [LabelText("额外随机旋转圈数")]
     private int extraRandomTurns = 2;
-    [SerializeField] private float spinFastDuration = 1.2f; //快速旋转持续时间
-    [SerializeField] private float spinSlowDuration = 2f; //慢速旋转持续时间
-    [SerializeField] private float overshootDegrees = 4f; //超出角度，控制轮盘停止前的超出角度
-    [SerializeField] private bool allowSpinWhileSpinning; //是否允许在旋转中再次旋转，控制旋转状态下的交互
-    [SerializeField] private Ease fastEase = Ease.Linear; //快速旋转缓动效果，设置快速旋转的动画曲线
-    [SerializeField] private Ease slowEase = Ease.OutQuart; //慢速旋转缓动效果，设置减速阶段的动画曲线
+    [SerializeField] 
+    [LabelText("快速旋转持续时间")]
+    private float spinFastDuration = 1.2f;
+    [SerializeField] 
+    [LabelText("慢速旋转持续时间")]
+    private float spinSlowDuration = 2f;
+    [SerializeField]
+    [LabelText("控制轮盘停止前的超出角度")]
+    private float overshootDegrees = 4f;
+    [SerializeField]
+    [LabelText("是否允许在旋转中再次旋转")]
+    private bool allowSpinWhileSpinning;
+    [SerializeField] 
+    [LabelText("快速旋转缓动效果")]
+    private Ease fastEase = Ease.Linear;
+    [SerializeField] 
+    [LabelText("慢速旋转缓动效果")]
+    private Ease slowEase = Ease.OutQuart;
 
     //事件声明
     public event Action OnSpinStarted; // 旋转开始事件，在轮盘开始旋转时触发
@@ -275,20 +291,57 @@ public class RouletteWheel : MonoBehaviour
         int extraTurns = extraRandomTurns > 0 ? UnityEngine.Random.Range(0, extraRandomTurns + 1) : 0;
         //总旋转角度
         float fullTurnDegrees = Mathf.Max(0, minFullTurns + extraTurns) * 360f;
-        //最终角度
-        float finalZ = currentZ + fullTurnDegrees + deltaToTarget; 
+        //最终总旋转角度
+        float totalSpinDegrees = fullTurnDegrees + deltaToTarget + Mathf.Sign(overshootDegrees == 0f ? 1f : overshootDegrees) * Mathf.Abs(overshootDegrees);
+        //快速旋转角度
+        float fastSpinDegrees = CalculateFastSpinDegrees(totalSpinDegrees);
         //快速旋转结束角度
-        float fastZ = currentZ + Mathf.Max(0, minFullTurns - 1) * 360f;
-        //计算超出角度
-        float overshootZ = finalZ + Mathf.Sign(overshootDegrees == 0f ? 1f : overshootDegrees) * Mathf.Abs(overshootDegrees);
+        float fastZ = currentZ + fastSpinDegrees;
+        //最终结束角度
+        float overshootZ = currentZ + totalSpinDegrees;
+        float currentAngle = currentZ;
 
+        bool hasTween = false;
         // 创建旋转动画序列
         spinSequence = DOTween.Sequence()
             .SetTarget(this)
             .OnStart(() => OnSpinStarted?.Invoke()) // 旋转开始时触发事件
-            .Append(wheelRoot.DOLocalRotate(new Vector3(0f, 0f, fastZ), spinFastDuration, RotateMode.FastBeyond360).SetEase(fastEase)) //快速旋转阶段
-            .Append(wheelRoot.DOLocalRotate(new Vector3(0f, 0f, overshootZ), spinSlowDuration, RotateMode.FastBeyond360).SetEase(slowEase))//减速阶段
             .OnComplete(CompleteSpin); 
+
+        if (spinFastDuration > MinSpinDuration && fastSpinDegrees > MinSpinDegrees)
+        {
+            spinSequence.Append(DOTween.To(() => currentAngle, value =>
+            {
+                currentAngle = value;
+                ApplyWheelRotation(value);
+            }, fastZ, spinFastDuration).SetEase(fastEase)); //快速旋转阶段
+            hasTween = true;
+        }
+
+        if (spinSlowDuration > MinSpinDuration && totalSpinDegrees - fastSpinDegrees > MinSpinDegrees)
+        {
+            spinSequence.Append(DOTween.To(() => currentAngle, value =>
+            {
+                currentAngle = value;
+                ApplyWheelRotation(value);
+            }, overshootZ, spinSlowDuration).SetEase(slowEase)); //减速阶段
+            hasTween = true;
+        }
+        if (hasTween)
+        {
+            spinSequence.AppendCallback(() =>
+            {
+                currentAngle = overshootZ;
+                ApplyWheelRotation(overshootZ);
+            });
+        }
+        else
+        {
+            ApplyWheelRotation(overshootZ);
+            OnSpinStarted?.Invoke();
+            CompleteSpin();
+            return;
+        }
     }
     /// <summary>
     /// 目标角度
@@ -363,6 +416,16 @@ public class RouletteWheel : MonoBehaviour
         }
     }
     /// <summary>
+    /// 应用转盘角度
+    /// </summary>
+    private void ApplyWheelRotation(float zAngle)
+    {
+        if (wheelRoot != null)
+        {
+            wheelRoot.localRotation = Quaternion.Euler(0f, 0f, zAngle);
+        }
+    }
+    /// <summary>
     /// 标准化角度
     /// </summary>
     private static float NormalizeAngle(float angle)
@@ -380,5 +443,47 @@ public class RouletteWheel : MonoBehaviour
     private static float PositiveDelta(float from, float to)
     {
         return NormalizeAngle(to - from); //计算正角度差
+    }
+    /// <summary>
+    /// 计算快速阶段角度，让两段动画交界处速度尽量连续
+    /// </summary>
+    private float CalculateFastSpinDegrees(float totalSpinDegrees)
+    {
+        if (totalSpinDegrees <= MinSpinDegrees || spinFastDuration <= MinSpinDuration)
+        {
+            return 0f;
+        }
+
+        if (spinSlowDuration <= MinSpinDuration)
+        {
+            return totalSpinDegrees;
+        }
+
+        float fastEndSlope = GetEaseEndSlope(fastEase);
+        float slowStartSlope = GetEaseStartSlope(slowEase);
+        float denominator = spinSlowDuration * fastEndSlope + spinFastDuration * slowStartSlope;
+        if (denominator <= MinSpinDuration)
+        {
+            return totalSpinDegrees;
+        }
+
+        float fastSpinDegrees = totalSpinDegrees * spinFastDuration * slowStartSlope / denominator;
+        return Mathf.Clamp(fastSpinDegrees, 0f, totalSpinDegrees);
+    }
+    /// <summary>
+    /// 缓动曲线起始速度斜率
+    /// </summary>
+    private static float GetEaseStartSlope(Ease ease)
+    {
+        float eased = DOVirtual.EasedValue(0f, 1f, EaseSampleTime, ease);
+        return Mathf.Max(MinSpinDuration, eased / EaseSampleTime);
+    }
+    /// <summary>
+    /// 缓动曲线结束速度斜率
+    /// </summary>
+    private static float GetEaseEndSlope(Ease ease)
+    {
+        float eased = DOVirtual.EasedValue(0f, 1f, 1f - EaseSampleTime, ease);
+        return Mathf.Max(MinSpinDuration, (1f - eased) / EaseSampleTime);
     }
 }

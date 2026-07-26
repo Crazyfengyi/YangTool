@@ -13,7 +13,7 @@ public class GameSoundManager : MonoSingleton<GameSoundManager>
 {
     public void PlayMusic(string name)
     {
-        YangAudioManager.Instance.PlayBackgroundMusic(name);
+        YangAudioManager.Instance.PlayBGM(name);
     }
     public void PlaySound(string name)
     {

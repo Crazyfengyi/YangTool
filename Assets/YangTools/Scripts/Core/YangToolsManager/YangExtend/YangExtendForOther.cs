@@ -433,7 +433,7 @@ namespace YangTools.Scripts.Core.YangExtend
         }
 
         //更改回调字典
-        private static Dictionary<int,Action> ChangeleLanguageTextDic = new Dictionary<int, Action>();
+        private static Dictionary<ulong,Action> LanguageTextDic = new Dictionary<ulong, Action>();
         /// <summary>
         /// 多语言
         /// </summary>
@@ -441,13 +441,13 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="textKey">多语言表Key</param>
         public static void AutoToText(this TextMeshPro text, string textKey)
         {
-            int uuidKey = text.GetInstanceID();
+            ulong uuidKey = EntityId.ToULong(text.GetEntityId());  
             Action changeAction = () =>
             {
                 text.text = LanguageManager.Instance.GetLanguage(textKey);
             };
             
-            ChangeleLanguageTextDic[uuidKey] = changeAction;
+            LanguageTextDic[uuidKey] = changeAction;
             changeAction?.Invoke();
         }
     }

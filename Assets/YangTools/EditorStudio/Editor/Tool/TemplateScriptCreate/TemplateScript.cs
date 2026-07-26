@@ -48,17 +48,16 @@ namespace YangTools
         /// <summary>
         /// 创建代码完成后的ScriptableObject回调
         /// </summary>
-        private class CreatScriptableObject : EndNameEditAction
+        private class CreatScriptableObject : AssetCreationEndAction
         {
             //当接受用户一个编辑的名字时，Unity会调用这个函数
-            public override void Action(int instanceId, string pathName, string resourceFile)
+            public override void Action(EntityId entityId, string pathName, string resourceFile)
             {
                 //pathName:Assets/YangTools/Editor/AutoScriptCreate/we.cs
                 //resourceFile:Assets/YangTools/Editor/AutoScriptCreate/81-C# Script-NewBehaviourScript.cs.txt
                 var obj = CreateScriptAssetFormTemplate(pathName, resourceFile);
                 ProjectWindowUtil.ShowCreatedAsset(obj);
             }
-
             //更改模板内容
             private static Object CreateScriptAssetFormTemplate(string pathName, string resourceFile)
             {

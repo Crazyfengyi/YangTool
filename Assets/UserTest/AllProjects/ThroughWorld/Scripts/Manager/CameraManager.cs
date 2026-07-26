@@ -6,10 +6,10 @@
  *创建时间:         2022-07-24
 */
 
-using Cinemachine;
 using UnityEngine;
 using YangTools;
 using Sirenix.OdinInspector;
+using Unity.Cinemachine;
 using YangTools.Scripts.Core;
 
 /// <summary>

@@ -703,16 +703,21 @@ namespace YangTools
         {
         }
 
-       private readonly string SaveTagKey = "Processed_1";
-        //纹理导入之后调用
-        public void OnPostprocessTexture(Texture2D tex)
+        private readonly string SaveTagKey = "Processed_1";
+        //纹理导入之前调用
+        public void OnPreprocessTexture()
         {
-            //判断导入资源的路径名中,是否含有sprites文件夹,如果有则该图片自动设置Sprite,并做一些初始化。
+            // 判断导入资源路径中是否包含UI目录，如果有则按Sprite导入。
             if (assetPath.ToUpper().Contains("/UI/"))
             {
                 TextureImporter textureImporter = (TextureImporter)assetImporter;
                 // 防止重复处理
-                if (textureImporter.userData == SaveTagKey) return;
+                if (textureImporter.userData == SaveTagKey &&
+                    textureImporter.textureType == TextureImporterType.Sprite &&
+                    textureImporter.spriteImportMode == SpriteImportMode.Single)
+                {
+                    return;
+                }
 
                 textureImporter.textureType = TextureImporterType.Sprite;
                 textureImporter.spriteImportMode = SpriteImportMode.Single;
@@ -759,10 +764,9 @@ namespace YangTools
                 }
 
                 textureImporter.maxTextureSize = maxSize;
-                // 标记已处理，避免无限循环
+                // 标记已处理，避免后续重复覆盖手动调整的导入设置。
                 textureImporter.userData = SaveTagKey;
-                textureImporter.SaveAndReimport();
-                Debug.LogError($"自动设置图片属性:{fileName}->尺寸:{maxSize}");
+                Debug.Log($"自动设置图片属性:{fileName}->尺寸:{maxSize}");
             }
         }
         

@@ -4,7 +4,7 @@
  *Author:       DESKTOP-AJS8G4U
  *UnityVersion：2022.1.0f1c1
  *创建时间:         2022-07-23
-*/
+ */
 
 using System;
 using cfg.player;
@@ -20,17 +20,19 @@ using YangToolsManager = YangTools.Scripts.Core.YangToolsManager;
 public class PlayerController : RoleBase
 {
     public Vector3 inputVector3;
-    public bool isJumpPressed;//跳跃键按下
+    public bool isJumpPressed; //跳跃键按下
 
-    public GameObject modelRoot;//模型父节点
-    public GameObject model;//模型
-    public GameObject shootPoint;//发射点
+    public GameObject modelRoot; //模型父节点
+    public GameObject model; //模型
+    public GameObject shootPoint; //发射点
 
-    private EmitterBase emitter;//发射器
-    private AdvancedWalkerController advancedWalker;//移动脚本
+    private EmitterBase emitter; //发射器
+    private AdvancedWalkerController advancedWalker; //移动脚本
 
     #region 事件
+
     protected Action<BulletBase, EmitterBase> ShootBulletEvent { get; set; }
+
     /// <summary>
     /// 子弹生成回调
     /// </summary>
@@ -38,6 +40,7 @@ public class PlayerController : RoleBase
     {
         ShootBulletEvent?.Invoke(bullet, emitterBase);
     }
+
     #endregion
 
     /// <summary>
@@ -47,6 +50,7 @@ public class PlayerController : RoleBase
     {
         get { return target; }
     }
+
     /// <summary>
     /// 目标点
     /// </summary>
@@ -59,17 +63,18 @@ public class PlayerController : RoleBase
 
     Player TBdata;
     private GameInputSet gameInput;
-    
+
     public void SetTableData(Player _TBdata)
     {
         TBdata = _TBdata;
     }
+
     public override void IInit()
     {
         base.IInit();
         campType = ActorCampType.Player;
         canAtkCamp = ActorCampType.MonsterAndBuilding;
-        
+
         gameInput = GameInputManager.Instance.GameInput;
         gameInput.Player.Move.performed += OnMove;
         gameInput.Player.Move.canceled += OnMoveEnd;
@@ -100,7 +105,7 @@ public class PlayerController : RoleBase
         if (Input.GetKeyDown(KeyCode.Q))
         {
             EmitData emitData = new EmitData();
-            emitData.bulletID = 0;//TODO:需要设置子弹ID
+            emitData.bulletID = 0; //TODO:需要设置子弹ID
             emitData.bulletCount = 6;
             emitData.timeInterval = 0;
             emitData.bulletShootType = BulletShootType.Circle;
@@ -113,6 +118,7 @@ public class PlayerController : RoleBase
         {
             Animator.SetFloat("Speed", inputVector3.magnitude);
         }
+
         if (advancedWalker && !advancedWalker.IsGrounded() && isJumpAni == false)
         {
             isJumpAni = true;
@@ -141,18 +147,20 @@ public class PlayerController : RoleBase
         GameSoundManager.Instance.PlaySound("Audio_Click");
         GameEffectManager.Instance.PlayEffect("DieEffect", transform.position);
         Destroy(gameObject);
-        UIMonoInstance.Instance.OpenPanel("GameOverPanel", "One");
+        UIMonoInstance.Instance.OpenPanel("GameOverPanel", GroupType.弹窗1);
         YangToolsManager.SetCursorLock(false);
         GameInputManager.Instance.DisablePlayer();
     }
 
     #region 搜索攻击目标
+
     /// <summary>
     /// 搜索攻击目标
     /// </summary>
     public override void SearchAtkTarget()
     {
-        Collider[] temp = Physics.OverlapSphere(transform.position, roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
+        Collider[] temp = Physics.OverlapSphere(transform.position,
+            roleAttributeControl.GetAttribute(RoleAttribute.GuardRang).Value);
         if (temp.Length > 0)
         {
             bool haveTarget = false;
@@ -179,6 +187,7 @@ public class PlayerController : RoleBase
             targetPos = null;
         }
     }
+
     #endregion
 
     #region 输入

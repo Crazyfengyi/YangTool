@@ -318,9 +318,7 @@ namespace YangToolMageEngineer
     {
         public string name;
         public SpellsType type;
-
         public BuffType buffType;
-
         public BuletsType buttleType;
 
         //多重施法次数

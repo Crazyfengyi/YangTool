@@ -36,7 +36,6 @@ public class SuperCharacterController:MonoBehaviour
 	/// Describes the Transform of the object we are standing on as well as it's CollisionType, as well
 	/// as how far the ground is below us and what angle it is in relation to the controller.
 	/// </summary>
-	[SerializeField]
 	public struct Ground
 	{
 		public RaycastHit hit { get; set; }

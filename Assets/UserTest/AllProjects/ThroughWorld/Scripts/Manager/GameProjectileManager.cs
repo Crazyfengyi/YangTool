@@ -48,9 +48,9 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
     public BulletBase CreateBullet(BulletData bulletData)
     {
         //子弹对象
-        BulletObjectPoolItem poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name).GetAwaiter().GetResult();
-        poolItem.InitData(bulletData);
-        GameObject bulletObj = poolItem.obj;
+        (bool, BulletObjectPoolItem) poolItem = YangObjectPool.Get<BulletObjectPoolItem>(bulletData.name, bulletData.name).GetAwaiter().GetResult();
+        poolItem.Item2.InitData(bulletData);
+        GameObject bulletObj = poolItem.Item2.obj;
         bulletObj.transform.position = bulletData.StartPostion;
         BulletBase bulletBase = null; //需要表里拿配置的静态数据赋值
         //TODO:更具子弹ID子弹类型
@@ -80,7 +80,7 @@ public class GameProjectileManager : MonoSingleton<GameProjectileManager>
         }
 
         bulletBase.targetCamp = bulletData.targetCampType;
-        bulletBase.SetBulletObjectPoolItem(poolItem);
+        bulletBase.SetBulletObjectPoolItem(poolItem.Item2);
         AllBullet.Add(bulletBase);
         return bulletBase;
     }

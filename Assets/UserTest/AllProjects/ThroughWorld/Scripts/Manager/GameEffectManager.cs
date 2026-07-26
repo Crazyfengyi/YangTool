@@ -56,13 +56,13 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
     private EffectObjectPoolItem CreateEffet(EffectData effectData)
     {
         //特效对象
-        EffectObjectPoolItem poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName, effectData.effectName).GetAwaiter().GetResult();
-        poolItem.InitData(effectData);
-        GameObject effectObj = poolItem.obj;
+        (bool, EffectObjectPoolItem) poolItem = YangObjectPool.Get<EffectObjectPoolItem>(effectData.effectName, effectData.effectName).GetAwaiter().GetResult();
+        poolItem.Item2.InitData(effectData);
+        GameObject effectObj = poolItem.Item2.obj;
         effectObj.transform.localPosition = effectData.worldPos;
-        allEffect.Add(poolItem);
+        allEffect.Add(poolItem.Item2);
 
-        return poolItem;
+        return poolItem.Item2;
     }
 
     /// <summary>
@@ -82,6 +82,7 @@ public class GameEffectManager : MonoSingleton<GameEffectManager>
 /// </summary>
 public class EffectObjectPoolItem : IPoolItem<EffectObjectPoolItem>
 {
+    public string Name { get; set; }
     public string PoolKey { get; set; }
     public bool IsInPool { get; set; }
     public GameObject obj;

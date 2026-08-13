@@ -268,4 +268,141 @@ namespace YangTools.Scripts.Core.YangSaveData
             IsFirstEnter = true;
         }
     }
+    
+    /// <summary>
+    /// 任务系统存档。
+    /// </summary>
+    public class Save_QuestData : SaveDataBase
+    {
+        public List<SaveQuestItem> quests;
+
+        public override void SetDefaultData(string tableData)
+        {
+            quests = new List<SaveQuestItem>();
+        }
+
+        public override void OnAfterDeserialize()
+        {
+            quests ??= new List<SaveQuestItem>();
+            for (int i = 0; i < quests.Count; i++)
+            {
+                quests[i].OnAfterDeserialize();
+            }
+        }
+
+        /// <summary>
+        /// 获取或创建任务存档。
+        /// </summary>
+        /// <param name="questId">任务ID</param>
+        /// <returns>任务存档</returns>
+        public SaveQuestItem GetOrCreateQuest(string questId)
+        {
+            quests ??= new List<SaveQuestItem>();
+            for (int i = 0; i < quests.Count; i++)
+            {
+                if (quests[i].questId == questId)
+                {
+                    return quests[i];
+                }
+            }
+
+            SaveQuestItem item = new SaveQuestItem
+            {
+                questId = questId,
+                state = QuestState.Active,
+                objectives = new List<SaveQuestObjectiveItem>()
+            };
+            quests.Add(item);
+            return item;
+        }
+    }
+    
+     /// <summary>
+    /// 单个任务存档。
+    /// </summary>
+    [Serializable]
+    public class SaveQuestItem
+    {
+        public string questId;
+        public string dailyRefreshDate;
+        public QuestState state;
+        public bool firstObjectiveMoneyTipShown;
+        public List<SaveQuestObjectiveItem> objectives;
+
+        public void OnAfterDeserialize()
+        {
+            dailyRefreshDate ??= string.Empty;
+            objectives ??= new List<SaveQuestObjectiveItem>();
+            for (int i = 0; i < objectives.Count; i++)
+            {
+                objectives[i].OnAfterDeserialize();
+            }
+        }
+
+        /// <summary>
+        /// 获取指定目标存档。
+        /// </summary>
+        /// <param name="objectiveId">目标ID</param>
+        /// <returns>目标存档</returns>
+        public SaveQuestObjectiveItem GetObjective(string objectiveId)
+        {
+            objectives ??= new List<SaveQuestObjectiveItem>();
+            for (int i = 0; i < objectives.Count; i++)
+            {
+                if (objectives[i].objectiveId == objectiveId)
+                {
+                    return objectives[i];
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 单个任务目标存档。
+    /// </summary>
+    [Serializable]
+    public class SaveQuestObjectiveItem
+    {
+        public string objectiveId;
+        public bool isCompleted;
+        public List<SaveQuestConditionItem> conditions;
+
+        public void OnAfterDeserialize()
+        {
+            conditions ??= new List<SaveQuestConditionItem>();
+        }
+
+        /// <summary>
+        /// 获取指定条件存档。
+        /// </summary>
+        /// <param name="conditionId">条件ID</param>
+        /// <returns>条件存档</returns>
+        public SaveQuestConditionItem GetCondition(string conditionId)
+        {
+            conditions ??= new List<SaveQuestConditionItem>();
+            for (int i = 0; i < conditions.Count; i++)
+            {
+                if (conditions[i].conditionId == conditionId)
+                {
+                    return conditions[i];
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 单个任务条件存档。
+    /// </summary>
+    [Serializable]
+    public class SaveQuestConditionItem
+    {
+        public string conditionId;
+        public float currentCount;
+        public long startUtcSeconds;
+        public float onlineTimeSeconds;
+    }
 }

@@ -676,13 +676,14 @@ public class ConditionRuntime
             return !Mathf.Approximately(CurrentCount, tempOldCount);
         }
 
-        if (BagMgr.Instance == null)
-        {
-            return false;
-        }
+        // if (BagMgr.Instance == null)
+        // {
+        //     return false;
+        // }
 
         float oldCount = CurrentCount;
-        int bagCount = Math.Max(0, (int)Math.Floor(BagMgr.Instance.GetBagPropCount(propId)));
+        //int bagCount = Math.Max(0, (int)Math.Floor(BagMgr.Instance.GetBagPropCount(propId)));
+        int bagCount = 0;
         CurrentCount = Math.Min(TargetCount, bagCount);
         return !Mathf.Approximately(CurrentCount, oldCount);
     }

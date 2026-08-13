@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameMain;
-using Manager;
 using UnityEngine;
 using YangTools;
 using YangTools.Scripts.Core;
@@ -272,19 +271,19 @@ public sealed class QuestManager
     /// <param name="rewardData">任务奖励配置。</param>
     private static void GrantReward(QuestRewardData rewardData)
     {
-        if (rewardData == null || rewardData.Count <= 0 || BagMgr.Instance == null)
+        if (rewardData == null || rewardData.Count <= 0 )//|| BagMgr.Instance == null)
         {
             return;
         }
 
-        int propId;
+        int propId = 0;
         switch (rewardData.RewardType)
         {
             case QuestRewardType.Money:
-                propId = GameWindow.MoneyPropId;
+                //propId = GameWindow.MoneyPropId;
                 break;
             case QuestRewardType.Gold:
-                propId = GameWindow.CoinPropId;
+               // propId = GameWindow.CoinPropId;
                 break;
             case QuestRewardType.Item:
                 if (!int.TryParse(rewardData.TargetId, out propId))
@@ -298,7 +297,7 @@ public sealed class QuestManager
                 return;
         }
 
-        BagMgr.Instance.AddBagProp(propId, rewardData.Count, true, "任务奖励");
+        //BagMgr.Instance.AddBagProp(propId, rewardData.Count, true, "任务奖励");
     }
 
     /// <summary>
@@ -359,7 +358,7 @@ public sealed class QuestManager
         for (int i = 0; i < conditions.Count; i++)
         {
             ConditionRuntime condition = conditions[i];
-            if (condition == null || !condition.IsCompleted || BagMgr.Instance == null)
+            if (condition == null || !condition.IsCompleted )//|| BagMgr.Instance == null)
             {
                 return false;
             }
@@ -379,14 +378,14 @@ public sealed class QuestManager
             consumeConditions.Add(condition);
         }
 
-        foreach (KeyValuePair<int, float> requiredCount in requiredCounts)
-        {
-            if (!BagMgr.Instance.BagPropEnough(requiredCount.Key, requiredCount.Value, false))
-            {
-                consumeConditions.Clear();
-                return false;
-            }
-        }
+        // foreach (KeyValuePair<int, float> requiredCount in requiredCounts)
+        // {
+        //     if (!BagMgr.Instance.BagPropEnough(requiredCount.Key, requiredCount.Value, false))
+        //     {
+        //         consumeConditions.Clear();
+        //         return false;
+        //     }
+        // }
 
         return true;
     }
@@ -421,14 +420,14 @@ public sealed class QuestManager
     /// <returns>可扣除返回true</returns>
     private static bool CanConsumeItemNumCondition(ConditionRuntime condition)
     {
-        if (condition == null || !condition.IsCompleted || BagMgr.Instance == null)
+        if (condition == null || !condition.IsCompleted)// || BagMgr.Instance == null)
         {
             return false;
         }
 
         int propId;
-        return condition.TryGetItemNumPropId(out propId)
-               && BagMgr.Instance.BagPropEnough(propId, condition.TargetCount, false);
+        return condition.TryGetItemNumPropId(out propId);
+               //&& BagMgr.Instance.BagPropEnough(propId, condition.TargetCount, false);
     }
 
     /// <summary>
@@ -440,7 +439,7 @@ public sealed class QuestManager
         int propId;
         if (condition != null && condition.TryGetItemNumPropId(out propId))
         {
-            BagMgr.Instance.RemoveBagProp(propId, condition.TargetCount);
+           // BagMgr.Instance.RemoveBagProp(propId, condition.TargetCount);
         }
     }
 
@@ -509,7 +508,7 @@ public sealed class QuestManager
     private void AddProgressListener()
     {
         eventGroup.AddListener<QuestProgressEvent>(OnQuestProgressEvent);
-        eventGroup.AddListener<BagPropChange>(OnBagPropChange);
+        //eventGroup.AddListener<BagPropChange>(OnBagPropChange);
     }
 
     /// <summary>
@@ -551,11 +550,11 @@ public sealed class QuestManager
     {
         AssetHandle handle = package.LoadAssetAsync<ScriptableObject>(assetInfo.Address);
         await handle.ToUniTask();
-        if (handle.Status != EOperationStatus.Succeeded)
-        {
-            Debug.LogError($"加载任务SO失败:{assetInfo.Address} {handle.Error}");
-            return;
-        }
+        // if (handle.Status != EOperationStatus.Succeeded)
+        // {
+        //     Debug.LogError($"加载任务SO失败:{assetInfo.Address} {handle.Error}");
+        //     return;
+        // }
 
         QuestData questData = handle.AssetObject as QuestData;
         if (questData == null)
@@ -612,11 +611,11 @@ public sealed class QuestManager
     /// <param name="eventData">事件数据</param>
     private void OnBagPropChange(EventData eventData)
     {
-        BagPropChange bagPropChange = eventData?.Args as BagPropChange;
-        if (bagPropChange == null)
-        {
-            return;
-        }
+        // BagPropChange bagPropChange = eventData?.Args as BagPropChange;
+        // if (bagPropChange == null)
+        // {
+        //     return;
+        // }
 
         RefreshAllItemNumProgress();
     }
@@ -834,7 +833,7 @@ public sealed class QuestManager
 
         saveItem = GetSaveData(true).GetOrCreateQuest(runtime.Id);
         saveItem.firstObjectiveMoneyTipShown = true;
-        UIMonoInstance.OpenPanel<MoneyTipWindow>(GroupType.弹窗1, userData: new MoneyTipWindowData(runtime.Id));
+        //UIMonoInstance.OpenPanel<MoneyTipWindow>(GroupType.弹窗1, userData: new MoneyTipWindowData(runtime.Id));
     }
 
     /// <summary>

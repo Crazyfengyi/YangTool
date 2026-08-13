@@ -30,7 +30,7 @@ namespace YangTools
         private static readonly List<Type> Types = new List<Type>();
         private static void HierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
-            var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+            GameObject go = EditorUtility.EntityIdToObject(instanceID) as GameObject;
             if (go == null) return;
             Types.Clear();
             var components = go.GetComponents<Component>();

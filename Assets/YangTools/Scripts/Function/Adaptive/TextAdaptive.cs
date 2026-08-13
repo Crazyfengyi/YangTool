@@ -31,10 +31,13 @@ namespace YangTools
     [AddComponentMenu(SettingInfo.MenuPath + "TextAdaptive", 20)]
     public class TextAdaptive : MonoBehaviour
     {
+        private const char NormalSpace = ' ';
+        private const char NoBreakingSpaceCharacter = '\u00A0';
+
         /// <summary>
         /// Android/iOS通用空格格式(不自动换行的空格)---space(0x0020)替换为No-break-space(0x00A0)，避免中文使用半角空格导致的提前换行问题
         /// </summary>
-        public static readonly string NoBreakingSpace = "\u00A0";
+        public static readonly string NoBreakingSpace = NoBreakingSpaceCharacter.ToString();
         /// <summary>
         /// 防止while死循环设置的上限
         /// </summary>
@@ -164,12 +167,63 @@ namespace YangTools
         /// </summary>
         public void OnTextChange()
         {
-            //TODO 中文添加，英文会有问题(会不按单词换行)
-            //if (mText.text.Contains(" "))
-            //{
-            //    mText.text = mText.text.Replace(" ", no_breaking_space);
-            //}
+            ReplaceChineseSpaces();
             isAdaptiveOver = false;
+        }
+
+        /// <summary>
+        /// 将中文相邻的半角空格替换为不换行空格，保留英文单词之间的正常换行能力
+        /// </summary>
+        private void ReplaceChineseSpaces()
+        {
+            string content = mText.text;
+            if (string.IsNullOrEmpty(content) || content.IndexOf(NormalSpace) < 0)
+            {
+                return;
+            }
+
+            char[] characters = null;
+            for (int index = 0; index < content.Length; index++)
+            {
+                if (content[index] != NormalSpace)
+                {
+                    continue;
+                }
+
+                int spaceEndIndex = index;
+                while (spaceEndIndex + 1 < content.Length && content[spaceEndIndex + 1] == NormalSpace)
+                {
+                    spaceEndIndex++;
+                }
+
+                bool hasChineseBefore = index > 0 && IsChineseCharacter(content[index - 1]);
+                bool hasChineseAfter = spaceEndIndex + 1 < content.Length && IsChineseCharacter(content[spaceEndIndex + 1]);
+                if (hasChineseBefore || hasChineseAfter)
+                {
+                    characters ??= content.ToCharArray();
+                    for (int spaceIndex = index; spaceIndex <= spaceEndIndex; spaceIndex++)
+                    {
+                        characters[spaceIndex] = NoBreakingSpaceCharacter;
+                    }
+                }
+
+                index = spaceEndIndex;
+            }
+
+            if (characters != null)
+            {
+                mText.text = new string(characters);
+            }
+        }
+
+        /// <summary>
+        /// 判断字符是否属于常用中文字符范围
+        /// </summary>
+        private static bool IsChineseCharacter(char character)
+        {
+            return character >= '\u3400' && character <= '\u4DBF'
+                   || character >= '\u4E00' && character <= '\u9FFF'
+                   || character >= '\uF900' && character <= '\uFAFF';
         }
         #endregion
     }

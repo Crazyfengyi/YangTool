@@ -2,7 +2,8 @@
     "name": "GameScript.Battle.PlayModeTests",
     "rootNamespace": "",
     "references": [
-        "GUID:18e307ffada7fde42a8d67439dd63210"
+        "GUID:18e307ffada7fde42a8d67439dd63210",
+        "GUID:ab98e0df45e64824eb60f8739a0c2a47"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

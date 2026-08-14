@@ -1,0 +1,19 @@
+{
+    "name": "GameScript.Battle.PlayModeTests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:18e307ffada7fde42a8d67439dd63210"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

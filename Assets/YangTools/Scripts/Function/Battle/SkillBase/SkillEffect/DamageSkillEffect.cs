@@ -40,6 +40,9 @@ public class DamageSkillEffect : SkillEffect
             powerType);
 
         // 让目标受到计算出的伤害
-        damageable.TakeDamage(result.Amount, context);
+        if (damageable.TakeDamage(result.Amount, context))
+        {
+            context.ReportHit(target);
+        }
     }
 }

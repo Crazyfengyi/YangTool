@@ -50,7 +50,10 @@ public class AreaDamageSkillEffect : SkillEffect
 
             Debug.LogError($"对目标{target.name}造成伤害：{result.Amount}");
             //对目标造成伤害
-            damageable.TakeDamage(result.Amount, context);
+            if (damageable.TakeDamage(result.Amount, context))
+            {
+                context.ReportHit(target);
+            }
         }
     }
 }

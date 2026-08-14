@@ -72,7 +72,10 @@ public class MeleeHitSkillEffect : SkillEffect
 
             // 计算伤害并应用
             SkillDamageResult result = SkillDamageTool.Calculate(context, target, baseDamage, powerScale, powerType);
-            damageable.TakeDamage(result.Amount, context);
+            if (damageable.TakeDamage(result.Amount, context))
+            {
+                context.ReportHit(target);
+            }
         }
     }
 }

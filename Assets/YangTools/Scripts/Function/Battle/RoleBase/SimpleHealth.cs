@@ -25,10 +25,10 @@ public class SimpleHealth : MonoBehaviour, IDamageable
     /**
      * 受到伤害
      */
-    public void TakeDamage(float amount, SkillContext context)
+    public bool TakeDamage(float amount, SkillContext context)
     {
         // 如果伤害值小于等于0或对象已经死亡，则直接返回
-        if (amount <= 0f || currentHealth <= 0f) return;
+        if (amount <= 0f || currentHealth <= 0f) return false;
 
         // 减少生命值，确保不低于0
         currentHealth = Mathf.Max(0f, currentHealth - amount);
@@ -45,6 +45,8 @@ public class SimpleHealth : MonoBehaviour, IDamageable
                 Destroy(gameObject);
             }
         }
+
+        return true;
     }
 
     /**

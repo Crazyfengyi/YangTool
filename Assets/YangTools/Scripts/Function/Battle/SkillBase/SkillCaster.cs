@@ -21,13 +21,18 @@ public class SkillCaster : MonoBehaviour
     public event Action<SkillDefinition> OnCastStarted;
     public event Action<SkillDefinition> OnCastCompleted;
     public event Action<SkillDefinition, SkillCastFailReason> OnCastFailed;
+    public event Action<SkillCastSession> OnCastSessionStarted;
+    public event Action<SkillCastSession> OnCastSessionCompleted;
+    public event Action<SkillCastSession, GameObject> OnSkillHit;
 
     private readonly Dictionary<SkillDefinition, float> cooldownEndTimes = new Dictionary<SkillDefinition, float>();
     private Coroutine castingRoutine;
     private SkillCastRequest pendingAnimationEventRequest;
     private bool receivedAnimationEvent;
+    private SkillCastSession activeSession;
+    private int castSessionSeed;
 
-    public bool IsCasting => castingRoutine != null;
+    public bool IsCasting => activeSession != null && !activeSession.IsCompleted;
 
     private void Reset()
     {
@@ -137,6 +142,15 @@ public class SkillCaster : MonoBehaviour
 
     public bool TryCast(SkillCastRequest request)
     {
+        return TryCast(request, out _);
+    }
+
+    /// <summary>
+    /// 尝试施放技能，并返回本次施放的运行时会话。
+    /// </summary>
+    public bool TryCast(SkillCastRequest request, out SkillCastSession session)
+    {
+        session = null;
         SkillCastFailReason failReason = CanCast(request);
         if (failReason != SkillCastFailReason.None)
         {
@@ -149,7 +163,12 @@ public class SkillCaster : MonoBehaviour
             resource.TryCost(request.Skill.Cost.Resource);
         }
 
-        castingRoutine = StartCoroutine(CastRoutine(request));
+        session = new SkillCastSession(++castSessionSeed, request.Skill);
+        activeSession = session;
+        OnCastSessionStarted?.Invoke(session);
+
+        Coroutine startedRoutine = StartCoroutine(CastRoutine(request, session));
+        castingRoutine = session.IsCompleted ? null : startedRoutine;
         return true;
     }
 
@@ -181,7 +200,19 @@ public class SkillCaster : MonoBehaviour
         TriggerSkillEffect();
     }
 
-    private IEnumerator CastRoutine(SkillCastRequest request)
+    /// <summary>
+    /// 处理伤害效果上报的实际命中。
+    /// </summary>
+    internal void ReportSkillHit(SkillContext context, GameObject target)
+    {
+        SkillCastSession session = context != null ? context.Session : null;
+        if (session != null && session.RegisterHit(target))
+        {
+            OnSkillHit?.Invoke(session, target);
+        }
+    }
+
+    private IEnumerator CastRoutine(SkillCastRequest request, SkillCastSession session)
     {
         SkillDefinition skill = request.Skill;
         OnCastStarted?.Invoke(skill);
@@ -208,16 +239,22 @@ public class SkillCaster : MonoBehaviour
             yield return new WaitForSeconds(skill.CastTime);
         }
 
-        ExecuteSkill(request);
+        ExecuteSkill(request, session);
         if (request.SourceWeapon == null)
         {
             StartCooldown(skill);
         }
         OnCastCompleted?.Invoke(skill);
+        session.IsCompleted = true;
+        if (activeSession == session)
+        {
+            activeSession = null;
+        }
+        OnCastSessionCompleted?.Invoke(session);
         castingRoutine = null;
     }
 
-    private void ExecuteSkill(SkillCastRequest request)
+    private void ExecuteSkill(SkillCastRequest request, SkillCastSession session)
     {
         var context = new SkillContext
         {
@@ -228,7 +265,8 @@ public class SkillCaster : MonoBehaviour
             Direction = SafeDirection(request.Direction),
             OriginPoint = GetOriginPosition(),
             SourceWeapon = request.SourceWeapon,
-            SourceInstanceId = request.SourceInstanceId
+            SourceInstanceId = request.SourceInstanceId,
+            Session = session
         };
 
         for (int i = 0; i < request.Skill.Effects.Count; i++)
@@ -314,6 +352,24 @@ public class SkillCaster : MonoBehaviour
     private Vector3 SafeDirection(Vector3 direction)
     {
         return direction.sqrMagnitude > 0f ? direction.normalized : transform.forward;
+    }
+
+    private void OnDisable()
+    {
+        if (castingRoutine != null)
+        {
+            StopCoroutine(castingRoutine);
+        }
+
+        if (activeSession != null)
+        {
+            activeSession.IsCompleted = true;
+        }
+
+        castingRoutine = null;
+        activeSession = null;
+        pendingAnimationEventRequest = null;
+        receivedAnimationEvent = false;
     }
 
 #if UNITY_EDITOR

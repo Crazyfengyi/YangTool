@@ -62,7 +62,10 @@ public class SkillProjectile : MonoBehaviour
                 powerScale,
                 powerType);
 
-            damageable.TakeDamage(result.Amount, context);
+            if (damageable.TakeDamage(result.Amount, context))
+            {
+                context.ReportHit(target);
+            }
             Destroy(gameObject);
         }
     }

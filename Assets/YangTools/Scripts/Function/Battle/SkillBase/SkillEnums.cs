@@ -117,4 +117,20 @@ public class SkillContext
     /// 武器实例句柄
     /// </summary>
     public int SourceInstanceId;
+
+    /// <summary>
+    /// 本次技能施放对应的运行时会话。
+    /// </summary>
+    public SkillCastSession Session;
+
+    /// <summary>
+    /// 向技能施放器报告一个实际受到伤害的目标。
+    /// </summary>
+    public void ReportHit(GameObject target)
+    {
+        if (Caster != null && target != null)
+        {
+            Caster.ReportSkillHit(this, target);
+        }
+    }
 }

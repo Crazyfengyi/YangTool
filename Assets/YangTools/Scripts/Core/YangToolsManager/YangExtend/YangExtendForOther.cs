@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace YangTools.Scripts.Core.YangExtend
@@ -143,18 +145,18 @@ namespace YangTools.Scripts.Core.YangExtend
                     //反射取方法调用
                     Type t = typeof(T); //获取类型
 
-                    Type[] types = new Type[] { typeof(string), type.MakeByRefType() };
-                    ParameterModifier[] modifiers = new ParameterModifier[] { new ParameterModifier(2) };
+                    Type[] types = new Type[] {typeof(string), type.MakeByRefType()};
+                    ParameterModifier[] modifiers = new ParameterModifier[] {new ParameterModifier(2)};
                     MethodInfo methodInfo = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static,
                         Type.DefaultBinder, types, modifiers); //获取方法名
 
-                    T obj = (T)t.Assembly.CreateInstance(t.FullName); //创建类实例
-                    object[] parmsObj = new object[] { str, obj };
+                    T obj = (T) t.Assembly.CreateInstance(t.FullName); //创建类实例
+                    object[] parmsObj = new object[] {str, obj};
                     object isSucceed = methodInfo.Invoke(null, parmsObj);
 
-                    if ((bool)isSucceed)
+                    if ((bool) isSucceed)
                     {
-                        return (T)parmsObj[1];
+                        return (T) parmsObj[1];
                     }
                     else
                     {
@@ -166,18 +168,18 @@ namespace YangTools.Scripts.Core.YangExtend
                     if (int.TryParse(str, out int result))
                     {
                         Type t = typeof(BoolBridge); //获取类型
-                        BoolBridge obj = (BoolBridge)t.Assembly.CreateInstance(t.FullName); //创建bool桥类实例
+                        BoolBridge obj = (BoolBridge) t.Assembly.CreateInstance(t.FullName); //创建bool桥类实例
                         //反射设置属性值
                         FieldInfo info = t.GetField("value");
                         info.SetValue(obj, result != 0);
 
-                        return (T)(object)(obj.value);
+                        return (T) (object) (obj.value);
                     }
                     else
                     {
                         if (bool.TryParse(str, out bool booResult))
                         {
-                            return (T)(object)booResult;
+                            return (T) (object) booResult;
                         }
                         else
                         {
@@ -198,10 +200,10 @@ namespace YangTools.Scripts.Core.YangExtend
                     //反射手动调用构造函数创建string
                     ConstructorInfo[] constructors = typeof(T).GetConstructors(); //获得所有构造函数
                     char[] charArray = str.ToCharArray(); //转成char数组,string构造函数只支持传char数组
-                    List<object> o = new List<object>() { (object)charArray };
+                    List<object> o = new List<object>() {(object) charArray};
                     object obj = constructors[6].Invoke(o.ToArray()); //调用第7的个构造函数
 
-                    return (T)obj;
+                    return (T) obj;
                 }
                 case TypeCode.Object:
                 {
@@ -254,10 +256,10 @@ namespace YangTools.Scripts.Core.YangExtend
                 //r和theta的生成要分别生成随机数，公式概念中明确说明，r和theta要互不相干
                 //半径
                 double randomValue1 = random.NextDouble(); //0-1的随机值
-                float r = (float)Math.Sqrt(randomValue1) * radius;
+                float r = (float) Math.Sqrt(randomValue1) * radius;
                 //角度
                 double randomValue2 = random.NextDouble(); //0-1的随机值
-                float theta = (float)(2 * Math.PI * randomValue2);
+                float theta = (float) (2 * Math.PI * randomValue2);
 
                 //生成x，y坐标
                 float xPos = r * Mathf.Cos(theta);
@@ -432,8 +434,11 @@ namespace YangTools.Scripts.Core.YangExtend
             return offsetVec3;
         }
 
+        #region 多语言
+
         //更改回调字典
-        private static Dictionary<ulong,Action> LanguageTextDic = new Dictionary<ulong, Action>();
+        private static Dictionary<ulong, Action> LanguageTextDic = new Dictionary<ulong, Action>();
+
         /// <summary>
         /// 多语言
         /// </summary>
@@ -441,15 +446,121 @@ namespace YangTools.Scripts.Core.YangExtend
         /// <param name="textKey">多语言表Key</param>
         public static void AutoToText(this TextMeshPro text, string textKey)
         {
-            ulong uuidKey = EntityId.ToULong(text.GetEntityId());  
-            Action changeAction = () =>
-            {
-                text.text = LanguageManager.Instance.GetLanguage(textKey);
-            };
-            
+            ulong uuidKey = EntityId.ToULong(text.GetEntityId());
+            Action changeAction = () => { text.text = LanguageManager.Instance.GetLanguage(textKey); };
+
             LanguageTextDic[uuidKey] = changeAction;
             changeAction?.Invoke();
         }
+
+        #endregion
+
+        #region UI添加点击事件
+
+        /// <summary>
+        /// 为UI对象添加点击事件监听器的扩展方法
+        /// </summary>
+        /// <param name="uiObject">要添加事件的UI对象的RectTransform组件</param>
+        /// <param name="eventType">事件类型，如点击、悬停等</param>
+        /// <param name="callBack">事件触发时的回调函数</param>
+        /// <returns>返回创建的事件触发条目，可用于后续操作</returns>
+        public static EventTrigger.Entry AddUIClickEventListener(this RectTransform uiObject,
+            EventTriggerType eventType, Action<BaseEventData> callBack)
+        {
+            // 获取或添加EventTrigger组件
+            EventTrigger eventTrigger = uiObject.gameObject.GetComponent<EventTrigger>();
+            if (eventTrigger == null)
+            {
+                eventTrigger = uiObject.gameObject.AddComponent<EventTrigger>();
+            }
+
+            // 创建新的事件触发条目
+            EventTrigger.Entry entry = new EventTrigger.Entry()
+            {
+                eventID = eventType
+            };
+            // 添加回调函数到事件触发条目
+            entry.callback.AddListener(new UnityAction<BaseEventData>(callBack));
+            // 将事件触发条目添加到事件触发器中
+            eventTrigger.triggers.Add(entry);
+
+            // 返回创建的事件触发条目
+            return entry;
+        }
+
+        /// <summary>
+        /// 扩展方法：用于移除UI对象的点击事件监听器
+        /// </summary>
+        /// <param name="uiObject">要移除事件监听器的UI对象的RectTransform组件</param>
+        public static void RemoveUIClickEventListener(this RectTransform uiObject)
+        {
+            // 获取UI对象上的EventTrigger组件
+            EventTrigger eventTrigger = uiObject.gameObject.GetComponent<EventTrigger>();
+            // 如果EventTrigger组件存在
+            if (eventTrigger != null)
+            {
+                // 清除所有触发器
+                eventTrigger.triggers.Clear();
+                // 销毁EventTrigger组件
+                GameObject.Destroy(eventTrigger);
+            }
+        }
+
+        #endregion
+
+        #region 射线忽略
+
+        /// <summary>
+        /// 获得Game2移动点
+        /// </summary>
+        public static (List<RaycastHit2D> rayCastList, bool result, Vector2 targetWorldPos) GetRaycastPoint(Vector2 pos, Vector2 direction, List<Collider2D> ignoredList = null,float distance = 30)
+        {
+#if UNITY_EDITOR
+            GizmosManager.Instance.GizmosDrawRay(pos, direction, distance);
+#endif
+            List<RaycastHit2D> resultList = new List<RaycastHit2D>();
+            
+            int layerId = LayerMask.GetMask("Animal");
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pos, direction, distance,layerId);
+            //返回的数组是无序的,按距离start的远近,排下序
+            Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            foreach (RaycastHit2D hit in hits)
+            {
+                //检测到的点不是起始点
+                if (hit.point != pos)
+                {
+                    //检测到的物体没有在忽略名单里
+                    if (!Contains(ignoredList, hit))
+                    {
+                        resultList.Add(hit);
+                    }
+                }
+            }
+                 
+            if (resultList.Count > 0)
+            {
+                return (resultList, true,pos + direction * distance);
+            }
+            
+            return (resultList, false,pos + direction * distance);
+        }
+
+        /// <summary>
+        /// 等于或在Collider的内部
+        /// </summary>
+        private static bool Contains(List<Collider2D> ignoredColliders, RaycastHit2D hit)
+        {
+            foreach (var collider in ignoredColliders)
+            {
+                if (collider == hit.collider || collider.bounds.Contains(hit.point))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        #endregion
     }
 
     /// <summary>

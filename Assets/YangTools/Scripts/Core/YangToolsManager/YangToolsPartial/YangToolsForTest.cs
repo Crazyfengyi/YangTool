@@ -59,5 +59,47 @@ namespace YangTools.Scripts.Core
             string outputResult = $"{logStart}\n{callStack} \n{fileName}\n{lineNumber}\n{logEnd}";
             UnityEngine.Debug.Log(outputResult);
         }
+
+        #region 参考
+
+//         //odin 面板显示下拉框
+//         [System.Serializable]
+//         public class LevelId
+//         {
+//             [ValueDropdown("GetIdList")]
+//             [LabelText("普通关卡Id")]
+//             public int levelId;
+//             public static implicit operator int(LevelId levelId)
+//             {
+//                 return levelId.levelId;
+//             }
+//
+//             public static implicit operator LevelId(int levelId)
+//             {
+//                 return new LevelId()
+//                 {
+//                     levelId = levelId
+//                 };
+//             }
+//
+// #if UNITY_EDITOR
+//
+//             private IEnumerable GetIdList()
+//             {
+//                 var bytes = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/GameMain/GameRes/LubanData/Bytes/LevelCategory.bytes");
+//                 var category = new LevelCategory(new ByteBuf(bytes.bytes));
+//                 var list = new ValueDropdownList<int>();
+//                 list.Add("None", 0);
+//                 foreach (var levelConfig in category.DataList)
+//                 {
+//                     list.Add(new ValueDropdownItem<int>($"{levelConfig.LevelName}({levelConfig.Id})", levelConfig.Id));
+//                 }
+//
+//                 return list;
+//             }
+// #endif
+//         }
+
+        #endregion
     }
 }

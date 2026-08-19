@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
 
 namespace YangTools.Scripts.Core
@@ -327,6 +329,31 @@ namespace YangTools.Scripts.Core
             return false;
         }
 
+        #endregion
+
+        #region 加密方法
+        /// <summary>
+        /// 将字符串按 UTF-8 编码后，计算其 MD5 哈希值，并返回一个 32 位的小写十六进制字符串
+        /// </summary>
+        public static string GetMd5(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                Debug.LogError("GetMd5 输入为空");
+                return input;
+            }
+            
+            using var md5 = MD5.Create();
+            byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            var builder = new StringBuilder(32);
+            foreach (byte value in data)
+            {
+                builder.Append(value.ToString("x2"));
+            }
+
+            return builder.ToString();
+        }
         #endregion
     }
 }

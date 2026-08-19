@@ -560,6 +560,67 @@ namespace YangTools.Scripts.Core.YangExtend
             return false;
         }
 
+        //是否在碰撞体里
+        public static bool IsPointInsideCollider(Vector3 point, Collider collider)
+        {
+            Vector3 closestPoint = collider.ClosestPoint(point);
+            var temp = Vector3.Distance(closestPoint, point) < 0.2f;
+            //当点在Collider内时，最近点与原点相同
+            return temp;
+        }
+        #endregion
+
+        #region 栈管理显隐
+
+        private static readonly Dictionary<string, Stack<bool>> s_VisibleStacks = new Dictionary<string, Stack<bool>>();
+        /// <summary>
+        /// 开始一个显示作用域。
+        /// </summary>
+        /// <param name="key">作用域唯一标识</param>
+        /// <param name="isVisible">当前作用域是否需要显示</param>
+        /// <returns>当前作用域最终是否可见</returns>
+        public static bool BeginVisible(string key, bool isVisible)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                Debug.LogError("BeginVisible的key不能为空。");
+                return false;
+            }
+
+            if (!s_VisibleStacks.TryGetValue(key, out Stack<bool> visibleStack))
+            {
+                visibleStack = new Stack<bool>(4);
+                s_VisibleStacks.Add(key, visibleStack);
+            }
+
+            bool currentVisible = isVisible;
+            visibleStack.Push(currentVisible);
+            return currentVisible;
+        }
+
+        /// <summary>
+        /// 结束显示作用域,返回恢复后的显示状态
+        /// </summary>
+        /// <param name="key">作用域唯一标识</param>
+        /// <returns>结束后的显示状态</returns>
+        public static bool EndVisible(string key)
+        {
+            if (string.IsNullOrEmpty(key) ||
+                !s_VisibleStacks.TryGetValue(key, out Stack<bool> visibleStack) ||
+                visibleStack.Count == 0)
+            {
+                Debug.LogError($"EndVisible调用次数多于BeginVisible，key：{key}");
+                return false;
+            }
+
+            visibleStack.Pop();
+            if (visibleStack.Count > 0)
+            {
+                return visibleStack.Peek();
+            }
+            s_VisibleStacks.Remove(key);
+            return true;
+        }
         #endregion
     }
 

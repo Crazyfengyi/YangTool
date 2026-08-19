@@ -100,6 +100,12 @@ namespace YangTools.Scripts.Core
 // #endif
 //         }
 
+
+        // 权重取值
+        // var max = list.Sum(y => y.Weight);  
+        // var rand = rnd.Next(max);   
+        // var res = list.FirstOrDefault(x => rand >= (max -= x.Weight));
+
         #endregion
     }
 }

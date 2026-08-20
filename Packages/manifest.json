@@ -2,6 +2,7 @@
   "dependencies": {
     "com.tuyoogame.yooasset": "2.3.19",
     "com.unity.2d.sprite": "1.0.0",
+    "com.unity.2d.spriteshape": "15.0.3",
     "com.unity.cinemachine": "3.1.7",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.ext.nunit": "2.0.5",

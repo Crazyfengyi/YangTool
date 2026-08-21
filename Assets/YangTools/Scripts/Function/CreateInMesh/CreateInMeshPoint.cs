@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
+/// <summary>
+/// 网格表面随机生成
+/// </summary>
 [RequireComponent(typeof(MeshFilter))]
 public class CreateInMeshPoint : MonoBehaviour
 {

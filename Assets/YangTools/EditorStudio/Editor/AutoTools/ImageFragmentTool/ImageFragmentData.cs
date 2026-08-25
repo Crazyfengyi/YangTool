@@ -6,6 +6,34 @@ using UnityEngine;
 namespace YangTools.EditorStudio.ImageFragmentTool
 {
     /// <summary>
+    /// 图片碎片的切割算法类型。
+    /// </summary>
+    public enum ImageFragmentAlgorithm
+    {
+        Voronoi = 0,
+        JitteredGrid = 1,
+        NoiseBoundary = 3,
+        AlphaContour = 4,
+        DelaunayVoronoi = 6,
+    }
+
+    /// <summary>
+    /// 图片碎片生成参数。
+    /// </summary>
+    [Serializable]
+    public sealed class ImageFragmentAlgorithmSettings
+    {
+        public ImageFragmentAlgorithm algorithm = ImageFragmentAlgorithm.Voronoi;
+        public int maxFragmentCount = 16;
+        public int seed = 12345;
+        public int gapPixels;
+        public float gridJitter = 0.35f;
+        public float noiseScale = 64f;
+        public float noiseStrength = 12f;
+        public byte alphaThreshold = 1;
+    }
+
+    /// <summary>
     /// 图片碎片的导出清单。
     /// </summary>
     [Serializable]
@@ -15,8 +43,12 @@ namespace YangTools.EditorStudio.ImageFragmentTool
         public int sourceWidth;
         public int sourceHeight;
         public int seed;
+        public ImageFragmentAlgorithm algorithm;
+        public int requestedMaxFragmentCount;
+        public int actualFragmentCount;
         public int fragmentCount;
         public int gapPixels;
+        public ImageFragmentAlgorithmSettings algorithmSettings;
         public ImageFragmentEntry[] fragments;
     }
 
@@ -41,7 +73,7 @@ namespace YangTools.EditorStudio.ImageFragmentTool
         /// 创建供 UI 复原碎片位置使用的清单数据。
         /// </summary>
         internal static ImageFragmentManifest Create(string sourceAssetPath, int sourceWidth, int sourceHeight,
-            int seed, int fragmentCount, int gapPixels, IReadOnlyList<RectInt> fragmentRects)
+            ImageFragmentAlgorithmSettings settings, IReadOnlyList<RectInt> fragmentRects)
         {
             ImageFragmentEntry[] entries = new ImageFragmentEntry[fragmentRects.Count];
             Vector2 sourceCenter = new Vector2(sourceWidth * 0.5f, sourceHeight * 0.5f);
@@ -63,9 +95,13 @@ namespace YangTools.EditorStudio.ImageFragmentTool
                 sourceAssetPath = sourceAssetPath,
                 sourceWidth = sourceWidth,
                 sourceHeight = sourceHeight,
-                seed = seed,
-                fragmentCount = fragmentCount,
-                gapPixels = gapPixels,
+                seed = settings.seed,
+                algorithm = settings.algorithm,
+                requestedMaxFragmentCount = settings.maxFragmentCount,
+                actualFragmentCount = fragmentRects.Count,
+                fragmentCount = fragmentRects.Count,
+                gapPixels = settings.gapPixels,
+                algorithmSettings = settings,
                 fragments = entries,
             };
         }

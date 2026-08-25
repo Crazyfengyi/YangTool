@@ -88,14 +88,101 @@ namespace YangTools.EditorStudio.ImageFragmentTool
                 new RectInt(10, 8, 6, 4),
             };
 
+            ImageFragmentAlgorithmSettings settings = new ImageFragmentAlgorithmSettings
+            {
+                algorithm = ImageFragmentAlgorithm.NoiseBoundary,
+                maxFragmentCount = 4,
+                seed = 123,
+                gapPixels = 0,
+            };
             ImageFragmentManifest manifest = ImageFragmentManifestFactory.Create("Assets/UI/Test.png", 20, 16,
-                123, 2, 0, rects);
+                settings, rects);
 
             Assert.AreEqual(2, manifest.fragments.Length);
+            Assert.AreEqual(ImageFragmentAlgorithm.NoiseBoundary, manifest.algorithm);
+            Assert.AreEqual(4, manifest.requestedMaxFragmentCount);
+            Assert.AreEqual(2, manifest.actualFragmentCount);
             Assert.AreEqual("Test_0.png", manifest.fragments[0].fileName);
             Assert.AreEqual("Test_1.png", manifest.fragments[1].fileName);
             Assert.AreEqual(new Vector2(-5f, -4f), manifest.fragments[0].uiLocalCenter);
             Assert.AreEqual(new Vector2(3f, 2f), manifest.fragments[1].uiLocalCenter);
+        }
+
+        /// <summary>
+        /// 所有算法都应生成连续编号、没有重叠保留像素的结果。
+        /// </summary>
+        [Test]
+        public void Generate_AllAlgorithms_ReturnsValidFragmentResult()
+        {
+            const int width = 48;
+            const int height = 32;
+            Color32[] pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte alpha = x < 4 || y < 4 ? (byte)0 : (byte)255;
+                    pixels[y * width + x] = x < width / 2
+                        ? new Color32(240, 80, 80, alpha)
+                        : new Color32(80, 120, 240, alpha);
+                }
+            }
+
+            ImageFragmentAlgorithm[] algorithms = (ImageFragmentAlgorithm[])System.Enum.GetValues(typeof(ImageFragmentAlgorithm));
+            for (int algorithmIndex = 0; algorithmIndex < algorithms.Length; algorithmIndex++)
+            {
+                ImageFragmentAlgorithmSettings settings = new ImageFragmentAlgorithmSettings
+                {
+                    algorithm = algorithms[algorithmIndex],
+                    maxFragmentCount = 6,
+                    seed = 2468,
+                };
+                VoronoiFragmentResult result = ImageFragmentAlgorithmGenerator.Generate(width, height, pixels, settings);
+
+                Assert.Greater(result.fragmentRects.Length, 0, algorithms[algorithmIndex].ToString());
+                for (int pixelIndex = 0; pixelIndex < result.owners.Length; pixelIndex++)
+                {
+                    if (result.retainedPixels[pixelIndex])
+                    {
+                        Assert.That(result.owners[pixelIndex], Is.GreaterThanOrEqualTo(0));
+                        Assert.That(result.owners[pixelIndex], Is.LessThan(result.fragmentRects.Length));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Alpha 轮廓模式不能保留低于阈值的像素。
+        /// </summary>
+        [Test]
+        public void Generate_AlphaContour_DoesNotRetainPixelsBelowThreshold()
+        {
+            const int width = 16;
+            const int height = 16;
+            Color32[] pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    pixels[y * width + x] = new Color32(255, 255, 255, x >= 4 && y >= 4 ? (byte)255 : (byte)0);
+                }
+            }
+
+            VoronoiFragmentResult result = ImageFragmentAlgorithmGenerator.Generate(width, height, pixels,
+                new ImageFragmentAlgorithmSettings
+                {
+                    algorithm = ImageFragmentAlgorithm.AlphaContour,
+                    maxFragmentCount = 4,
+                    alphaThreshold = 1,
+                });
+
+            for (int pixelIndex = 0; pixelIndex < pixels.Length; pixelIndex++)
+            {
+                if (pixels[pixelIndex].a == 0)
+                {
+                    Assert.IsFalse(result.retainedPixels[pixelIndex]);
+                }
+            }
         }
     }
 }

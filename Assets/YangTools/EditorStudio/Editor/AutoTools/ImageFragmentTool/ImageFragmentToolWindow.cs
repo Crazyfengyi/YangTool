@@ -15,13 +15,42 @@ namespace YangTools.EditorStudio.ImageFragmentTool
     public sealed class ImageFragmentToolWindow : EditorWindow
     {
         private const string DefaultFolderPath = "Assets";
-        private const int DefaultFragmentCount = 16;
-        private const int DefaultSeed = 12345;
+        private static readonly ImageFragmentAlgorithm[] AlgorithmOptions =
+        {
+            ImageFragmentAlgorithm.Voronoi,
+            ImageFragmentAlgorithm.JitteredGrid,
+            ImageFragmentAlgorithm.NoiseBoundary,
+            ImageFragmentAlgorithm.AlphaContour,
+            ImageFragmentAlgorithm.DelaunayVoronoi,
+        };
+
+        private static readonly string[] AlgorithmDisplayNames =
+        {
+            "Voronoi算法",
+            "抖动网格",
+            "噪声边界",
+            "透明轮廓分割",
+            "Delaunay+Voronoi算法",
+        };
 
         [SerializeField] private string inputFolderPath = DefaultFolderPath;
-        [SerializeField] private int fragmentCount = DefaultFragmentCount;
-        [SerializeField] private int seed = DefaultSeed;
-        [SerializeField] private int gapPixels;
+        [SerializeField] private ImageFragmentAlgorithmSettings algorithmSettings = new ImageFragmentAlgorithmSettings();
+
+        /// <summary>
+        /// 确保旧窗口序列化数据升级后仍有可用的算法配置。
+        /// </summary>
+        private void OnEnable()
+        {
+            if (algorithmSettings == null)
+            {
+                algorithmSettings = new ImageFragmentAlgorithmSettings();
+            }
+
+            if (!Enum.IsDefined(typeof(ImageFragmentAlgorithm), algorithmSettings.algorithm))
+            {
+                algorithmSettings.algorithm = ImageFragmentAlgorithm.Voronoi;
+            }
+        }
 
         /// <summary>
         /// 打开不规则图片切割窗口。
@@ -37,14 +66,16 @@ namespace YangTools.EditorStudio.ImageFragmentTool
         /// </summary>
         private void OnGUI()
         {
-            EditorGUILayout.LabelField("Voronoi 不规则图片切割", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("多算法不规则图片切割", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox("递归处理文件夹内图片，为每张原图输出透明 PNG 碎片和 UI 复原 JSON。"
                                     + "同一配置与种子可得到稳定结果。", MessageType.Info);
 
             DrawFolderField();
-            fragmentCount = EditorGUILayout.IntSlider("碎片数量", fragmentCount, 2, 512);
-            seed = EditorGUILayout.IntField("随机种子", seed);
-            gapPixels = EditorGUILayout.IntSlider("每片边缘收缩（像素）", gapPixels, 0, 32);
+            DrawAlgorithmField();
+            algorithmSettings.maxFragmentCount = EditorGUILayout.IntSlider("最大碎片数", algorithmSettings.maxFragmentCount, 2, 512);
+            algorithmSettings.seed = EditorGUILayout.IntField("随机种子", algorithmSettings.seed);
+            algorithmSettings.gapPixels = EditorGUILayout.IntSlider("每片边缘收缩（像素）", algorithmSettings.gapPixels, 0, 32);
+            DrawAlgorithmSettings();
 
             GUILayout.Space(8f);
             if (GUILayout.Button("开始生成", GUILayout.Height(30f)))
@@ -71,6 +102,36 @@ namespace YangTools.EditorStudio.ImageFragmentTool
             }
 
             EditorGUILayout.EndHorizontal();
+        }
+
+        /// <summary>
+        /// 使用中文名称绘制切割算法选择框。
+        /// </summary>
+        private void DrawAlgorithmField()
+        {
+            int selectedIndex = Array.IndexOf(AlgorithmOptions, algorithmSettings.algorithm);
+            selectedIndex = EditorGUILayout.Popup("切割算法", Mathf.Max(0, selectedIndex), AlgorithmDisplayNames);
+            algorithmSettings.algorithm = AlgorithmOptions[selectedIndex];
+        }
+
+        /// <summary>
+        /// 绘制当前算法需要的关键参数。
+        /// </summary>
+        private void DrawAlgorithmSettings()
+        {
+            switch (algorithmSettings.algorithm)
+            {
+                case ImageFragmentAlgorithm.JitteredGrid:
+                    algorithmSettings.gridJitter = EditorGUILayout.Slider("网格抖动", algorithmSettings.gridJitter, 0f, 1f);
+                    break;
+                case ImageFragmentAlgorithm.NoiseBoundary:
+                    algorithmSettings.noiseScale = EditorGUILayout.Slider("噪声尺度", algorithmSettings.noiseScale, 8f, 256f);
+                    algorithmSettings.noiseStrength = EditorGUILayout.Slider("噪声扭曲", algorithmSettings.noiseStrength, 0f, 64f);
+                    break;
+                case ImageFragmentAlgorithm.AlphaContour:
+                    algorithmSettings.alphaThreshold = (byte)EditorGUILayout.IntSlider("Alpha 阈值", algorithmSettings.alphaThreshold, 0, 255);
+                    break;
+            }
         }
 
         /// <summary>
@@ -196,14 +257,15 @@ namespace YangTools.EditorStudio.ImageFragmentTool
                 throw new InvalidOperationException("无法加载 Texture2D 资源。");
             }
 
-            int effectiveSeed = GetEffectiveSeed(seed, AssetDatabase.AssetPathToGUID(sourcePath));
-            VoronoiFragmentResult result = VoronoiImageFragmentGenerator.Generate(sourceTexture.width, sourceTexture.height,
-                fragmentCount, effectiveSeed, gapPixels);
             Color32[] sourcePixels = GetSourcePixels(sourceTexture);
+            ImageFragmentAlgorithmSettings settingsForTexture = CreateSettingsForTexture(
+                GetEffectiveSeed(algorithmSettings.seed, AssetDatabase.AssetPathToGUID(sourcePath)));
+            VoronoiFragmentResult result = ImageFragmentAlgorithmGenerator.Generate(sourceTexture.width, sourceTexture.height,
+                sourcePixels, settingsForTexture);
             string outputFolderPath = GetOutputFolderPath(sourcePath);
             string outputAbsolutePath = GetAbsolutePath(outputFolderPath);
             string temporaryAbsolutePath = outputAbsolutePath + ".__temporary_" + Guid.NewGuid().ToString("N");
-            List<string> sourceGeneratedPaths = new List<string>(fragmentCount);
+            List<string> sourceGeneratedPaths = new List<string>(result.fragmentRects.Length);
 
             try
             {
@@ -219,7 +281,7 @@ namespace YangTools.EditorStudio.ImageFragmentTool
                 }
 
                 ImageFragmentManifest manifest = ImageFragmentManifestFactory.Create(sourcePath, sourceTexture.width,
-                    sourceTexture.height, effectiveSeed, fragmentCount, gapPixels, result.fragmentRects);
+                    sourceTexture.height, settingsForTexture, result.fragmentRects);
                 string manifestPath = Path.Combine(temporaryAbsolutePath,
                     sourceName + ".fragments.json");
                 File.WriteAllText(manifestPath, JsonUtility.ToJson(manifest, true), new UTF8Encoding(false));
@@ -234,6 +296,24 @@ namespace YangTools.EditorStudio.ImageFragmentTool
                     Directory.Delete(temporaryAbsolutePath, true);
                 }
             }
+        }
+
+        /// <summary>
+        /// 复制当前窗口参数，并写入当前图片的稳定有效种子。
+        /// </summary>
+        private ImageFragmentAlgorithmSettings CreateSettingsForTexture(int effectiveSeed)
+        {
+            return new ImageFragmentAlgorithmSettings
+            {
+                algorithm = algorithmSettings.algorithm,
+                maxFragmentCount = algorithmSettings.maxFragmentCount,
+                seed = effectiveSeed,
+                gapPixels = algorithmSettings.gapPixels,
+                gridJitter = algorithmSettings.gridJitter,
+                noiseScale = algorithmSettings.noiseScale,
+                noiseStrength = algorithmSettings.noiseStrength,
+                alphaThreshold = algorithmSettings.alphaThreshold,
+            };
         }
 
         /// <summary>

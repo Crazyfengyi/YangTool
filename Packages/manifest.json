@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
     "com.tuyoogame.yooasset": "2.3.19",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.spriteshape": "15.0.3",

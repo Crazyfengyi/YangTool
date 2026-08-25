@@ -1,0 +1,150 @@
+{
+    "sourceAssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形.png",
+    "sourceWidth": 1024,
+    "sourceHeight": 2048,
+    "seed": 1512774281,
+    "fragmentCount": 10,
+    "gapPixels": 1,
+    "fragments": [
+        {
+            "index": 0,
+            "fileName": "阳光照射下形_0.png",
+            "sourceRect": {
+                "x": 416,
+                "y": 0,
+                "width": 608,
+                "height": 558
+            },
+            "uiLocalCenter": {
+                "x": 208.0,
+                "y": -745.0
+            }
+        },
+        {
+            "index": 1,
+            "fileName": "阳光照射下形_1.png",
+            "sourceRect": {
+                "x": 0,
+                "y": 1502,
+                "width": 591,
+                "height": 546
+            },
+            "uiLocalCenter": {
+                "x": -216.5,
+                "y": 751.0
+            }
+        },
+        {
+            "index": 2,
+            "fileName": "阳光照射下形_2.png",
+            "sourceRect": {
+                "x": 628,
+                "y": 746,
+                "width": 396,
+                "height": 607
+            },
+            "uiLocalCenter": {
+                "x": 314.0,
+                "y": 25.5
+            }
+        },
+        {
+            "index": 3,
+            "fileName": "阳光照射下形_3.png",
+            "sourceRect": {
+                "x": 0,
+                "y": 683,
+                "width": 372,
+                "height": 831
+            },
+            "uiLocalCenter": {
+                "x": -326.0,
+                "y": 74.5
+            }
+        },
+        {
+            "index": 4,
+            "fileName": "阳光照射下形_4.png",
+            "sourceRect": {
+                "x": 0,
+                "y": 0,
+                "width": 428,
+                "height": 403
+            },
+            "uiLocalCenter": {
+                "x": -298.0,
+                "y": -822.5
+            }
+        },
+        {
+            "index": 5,
+            "fileName": "阳光照射下形_5.png",
+            "sourceRect": {
+                "x": 579,
+                "y": 1745,
+                "width": 445,
+                "height": 303
+            },
+            "uiLocalCenter": {
+                "x": 289.5,
+                "y": 872.5
+            }
+        },
+        {
+            "index": 6,
+            "fileName": "阳光照射下形_6.png",
+            "sourceRect": {
+                "x": 0,
+                "y": 134,
+                "width": 656,
+                "height": 686
+            },
+            "uiLocalCenter": {
+                "x": -184.0,
+                "y": -547.0
+            }
+        },
+        {
+            "index": 7,
+            "fileName": "阳光照射下形_7.png",
+            "sourceRect": {
+                "x": 86,
+                "y": 984,
+                "width": 648,
+                "height": 702
+            },
+            "uiLocalCenter": {
+                "x": -102.0,
+                "y": 311.0
+            }
+        },
+        {
+            "index": 8,
+            "fileName": "阳光照射下形_8.png",
+            "sourceRect": {
+                "x": 299,
+                "y": 459,
+                "width": 725,
+                "height": 595
+            },
+            "uiLocalCenter": {
+                "x": 149.5,
+                "y": -267.5
+            }
+        },
+        {
+            "index": 9,
+            "fileName": "阳光照射下形_9.png",
+            "sourceRect": {
+                "x": 561,
+                "y": 1307,
+                "width": 463,
+                "height": 437
+            },
+            "uiLocalCenter": {
+                "x": 280.5,
+                "y": 501.5
+            }
+        }
+    ]
+}

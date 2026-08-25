@@ -42,8 +42,12 @@ namespace YangTools.Function.IrregularPuzzle
         [SerializeField] private IrregularPuzzleProgressEvent onProgress = new IrregularPuzzleProgressEvent();
         [SerializeField] private IrregularPuzzleGeneratedEvent onGenerated = new IrregularPuzzleGeneratedEvent();
         [SerializeField] private IrregularPuzzleFailedEvent onFailed = new IrregularPuzzleFailedEvent();
+#if UNITY_EDITOR
+        [SerializeField] private Texture2D editorTestTexture;
+#endif
 
         private readonly List<UnityEngine.Object> generatedObjects = new List<UnityEngine.Object>();
+        private readonly System.Diagnostics.Stopwatch generationStopwatch = new System.Diagnostics.Stopwatch();
         private Coroutine generationCoroutine;
         private IrregularPuzzleLevel generatedLevel;
 
@@ -62,6 +66,11 @@ namespace YangTools.Function.IrregularPuzzle
         /// <summary>生成失败事件。</summary>
         public IrregularPuzzleFailedEvent OnFailed => onFailed;
 
+#if UNITY_EDITOR
+        /// <summary>Inspector 测试按钮使用的图片。</summary>
+        internal Texture2D EditorTestTexture => editorTestTexture;
+#endif
+
         /// <summary>开始使用外部传入的图片生成关卡。</summary>
         public void Generate(Texture2D sourceTexture)
         {
@@ -73,6 +82,7 @@ namespace YangTools.Function.IrregularPuzzle
                 return;
             }
 
+            generationStopwatch.Restart();
             generationCoroutine = StartCoroutine(GenerateRoutine(sourceTexture));
         }
 
@@ -82,6 +92,7 @@ namespace YangTools.Function.IrregularPuzzle
             if (generationCoroutine == null) return;
             StopCoroutine(generationCoroutine);
             generationCoroutine = null;
+            LogGenerationDuration("已取消");
         }
 
         /// <summary>销毁组件禁用时遗留的生成任务和运行时资源。</summary>
@@ -110,6 +121,7 @@ namespace YangTools.Function.IrregularPuzzle
             {
                 generationCoroutine = null;
                 ClearGeneratedLevel();
+                LogGenerationDuration("失败");
                 Fail(exception.Message);
                 Debug.LogException(exception, this);
                 yield break;
@@ -130,6 +142,7 @@ namespace YangTools.Function.IrregularPuzzle
                 {
                     generationCoroutine = null;
                     ClearGeneratedLevel();
+                    LogGenerationDuration("失败");
                     Fail(exception.Message);
                     Debug.LogException(exception, this);
                     yield break;
@@ -143,6 +156,7 @@ namespace YangTools.Function.IrregularPuzzle
             generatedLevel.gameObject.SetActive(true);
             ReportProgress(1f);
             generationCoroutine = null;
+            LogGenerationDuration("完成");
             onGenerated?.Invoke(generatedLevel);
         }
 
@@ -256,6 +270,18 @@ namespace YangTools.Function.IrregularPuzzle
         private void Fail(string message)
         {
             onFailed?.Invoke(message);
+        }
+
+        /// <summary>输出本次动态生成从启动到结束的总耗时。</summary>
+        private void LogGenerationDuration(string result)
+        {
+            if (!generationStopwatch.IsRunning)
+            {
+                return;
+            }
+
+            generationStopwatch.Stop();
+            Debug.Log($"不规则拼图动态生成{result}，耗时：{generationStopwatch.Elapsed.TotalMilliseconds:F0} ms。", this);
         }
     }
 }

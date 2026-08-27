@@ -9,13 +9,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "QuestData", menuName = "Game/Quest/QuestData")]
 public class QuestData : ScriptableObject
 {
+    [LabelText("任务稳定ID")]
     public string Id;
+    [LabelText("任务类型")]
     public TaskType TaskType;
     [LabelText("任务标题")]
-    [TextArea]
+    [TextArea(1,2)]
     public string Title;
     [LabelText("任务描述")]
-    [TextArea] public string Description;
+    [TextArea(1,2)]
+    public string Description;
     [LabelText("任务前置条件ID列表")]
     public List<string> PrerequisiteQuestIds = new List<string>();
     [LabelText("任务目标数据列表")]
@@ -46,7 +49,7 @@ public class QuestData : ScriptableObject
             return 0;
         }
 
-        int count = 0;
+        long count = 0;
         for (int i = 0; i < Rewards.Count; i++)
         {
             QuestRewardData rewardData = Rewards[i];
@@ -55,15 +58,20 @@ public class QuestData : ScriptableObject
                 continue;
             }
 
-            if (!string.IsNullOrEmpty(targetId) && rewardData.TargetId != targetId)
+            if (!string.IsNullOrEmpty(targetId)
+                && !string.Equals(rewardData.TargetKey, targetId, StringComparison.Ordinal))
             {
                 continue;
             }
 
-            count += rewardData.Count;
+            count += Math.Max(0, rewardData.Count);
+            if (count >= int.MaxValue)
+            {
+                return int.MaxValue;
+            }
         }
 
-        return count;
+        return (int)count;
     }
 }
 
@@ -73,14 +81,20 @@ public class QuestData : ScriptableObject
 [Serializable]
 public class QuestObjectiveData
 {
-    public string Id;
-    [TextArea] 
-    public string Title;
-    [TextArea] 
-    public string Description;
-    [TextArea] 
+    [LabelText("备注")]
+    [TextArea(1,1)]
     public string remark;
+    [LabelText("目标标题")]
+    [TextArea(1,1)]
+    public string Title;
+    [LabelText("目标描述")]
+    [TextArea(1,1)]
+    public string Description;
+    [LabelText("条件满足后自动完成")]
+    public bool AutoComplete = true;
+    [LabelText("条件组合方式")]
     public QuestConditionGroupType ConditionGroupType = QuestConditionGroupType.And;
+    [LabelText("条件列表")]
     public List<QuestConditionData> Conditions = new List<QuestConditionData>();
 }
 
@@ -89,7 +103,9 @@ public class QuestObjectiveData
 /// </summary>
 public enum QuestConditionGroupType
 {
+    [LabelText("全部满足")]
     And,
+    [LabelText("任一满足")]
     Or
 }
 
@@ -108,10 +124,13 @@ public enum QuestConditionType
 [Serializable]
 public class QuestConditionData
 {
-    public string Id;
+    [LabelText("条件类型")]
     public QuestConditionType ConditionType = QuestConditionType.EventCount;
+    [LabelText("进度事件类型")]
     public QuestProgressEventType EventType = QuestProgressEventType.Custom;
+    [LabelText("事件目标ID（为空时匹配同类型全部事件）")]
     public string TargetId;
+    [LabelText("目标数量")]
     [Min(1)] public int TargetCount = 1;
 }
 
@@ -120,10 +139,15 @@ public class QuestConditionData
 /// </summary>
 public enum QuestRewardType
 {
+    [LabelText("自定义")]
     Custom,
+    [LabelText("现金")]
     Money,
+    [LabelText("金币")]
     Gold,
+    [LabelText("道具")]
     Item,
+    [LabelText("经验")]
     Exp
 }
 
@@ -133,16 +157,25 @@ public enum QuestRewardType
 [Serializable]
 public class QuestRewardData
 {
-    public string Id;
+    [LabelText("奖励类型")]
     public QuestRewardType RewardType = QuestRewardType.Custom;
-    public string TargetId;
-    public int Count;
+    [LabelText("奖励目标ID（道具填写道具ID，自定义奖励按业务约定）")]
+    public string TargetKey;
+    [LabelText("奖励数量")]
+    [Min(1)] public int Count = 1;
 }
 
+/// <summary>
+/// 任务业务类型
+/// </summary>
 public enum TaskType
 {
+    [LabelText("普通")]
     None,
+    [LabelText("每日")]
     EveryDay,
+    [LabelText("现金")]
     Money,
+    [LabelText("收集")]
     Collect,
 }

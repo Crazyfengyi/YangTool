@@ -286,8 +286,32 @@ namespace YangTools.Scripts.Core.YangSaveData
             quests ??= new List<SaveQuestItem>();
             for (int i = 0; i < quests.Count; i++)
             {
-                quests[i].OnAfterDeserialize();
+                quests[i]?.OnAfterDeserialize();
             }
+        }
+
+        /// <summary>
+        /// 获取指定任务存档
+        /// </summary>
+        /// <param name="questId">任务ID</param>
+        /// <returns>任务存档，不存在时返回null</returns>
+        public SaveQuestItem GetQuest(string questId)
+        {
+            if (string.IsNullOrWhiteSpace(questId) || quests == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < quests.Count; i++)
+            {
+                SaveQuestItem item = quests[i];
+                if (item != null && string.Equals(item.questId, questId, StringComparison.Ordinal))
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -297,19 +321,22 @@ namespace YangTools.Scripts.Core.YangSaveData
         /// <returns>任务存档</returns>
         public SaveQuestItem GetOrCreateQuest(string questId)
         {
-            quests ??= new List<SaveQuestItem>();
-            for (int i = 0; i < quests.Count; i++)
+            if (string.IsNullOrWhiteSpace(questId))
             {
-                if (quests[i].questId == questId)
-                {
-                    return quests[i];
-                }
+                throw new ArgumentException("任务ID不能为空", nameof(questId));
+            }
+
+            quests ??= new List<SaveQuestItem>();
+            SaveQuestItem existingItem = GetQuest(questId);
+            if (existingItem != null)
+            {
+                return existingItem;
             }
 
             SaveQuestItem item = new SaveQuestItem
             {
                 questId = questId,
-                state = QuestState.Active,
+                state = QuestState.Locked,
                 objectives = new List<SaveQuestObjectiveItem>()
             };
             quests.Add(item);
@@ -326,7 +353,6 @@ namespace YangTools.Scripts.Core.YangSaveData
         public string questId;
         public string dailyRefreshDate;
         public QuestState state;
-        public bool firstObjectiveMoneyTipShown;
         public List<SaveQuestObjectiveItem> objectives;
 
         public void OnAfterDeserialize()
@@ -335,7 +361,7 @@ namespace YangTools.Scripts.Core.YangSaveData
             objectives ??= new List<SaveQuestObjectiveItem>();
             for (int i = 0; i < objectives.Count; i++)
             {
-                objectives[i].OnAfterDeserialize();
+                objectives[i]?.OnAfterDeserialize();
             }
         }
 
@@ -349,13 +375,29 @@ namespace YangTools.Scripts.Core.YangSaveData
             objectives ??= new List<SaveQuestObjectiveItem>();
             for (int i = 0; i < objectives.Count; i++)
             {
-                if (objectives[i].objectiveId == objectiveId)
+                SaveQuestObjectiveItem item = objectives[i];
+                if (item != null && string.Equals(item.objectiveId, objectiveId, StringComparison.Ordinal))
                 {
-                    return objectives[i];
+                    return item;
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 按目标列表索引获取存档数据
+        /// </summary>
+        /// <param name="index">目标索引</param>
+        /// <returns>目标存档</returns>
+        public SaveQuestObjectiveItem GetObjectiveAt(int index)
+        {
+            if (index < 0 || objectives == null || index >= objectives.Count)
+            {
+                return null;
+            }
+
+            return objectives[index];
         }
     }
 
@@ -372,6 +414,10 @@ namespace YangTools.Scripts.Core.YangSaveData
         public void OnAfterDeserialize()
         {
             conditions ??= new List<SaveQuestConditionItem>();
+            for (int i = 0; i < conditions.Count; i++)
+            {
+                conditions[i]?.OnAfterDeserialize();
+            }
         }
 
         /// <summary>
@@ -384,13 +430,29 @@ namespace YangTools.Scripts.Core.YangSaveData
             conditions ??= new List<SaveQuestConditionItem>();
             for (int i = 0; i < conditions.Count; i++)
             {
-                if (conditions[i].conditionId == conditionId)
+                SaveQuestConditionItem item = conditions[i];
+                if (item != null && string.Equals(item.conditionId, conditionId, StringComparison.Ordinal))
                 {
-                    return conditions[i];
+                    return item;
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 按条件列表索引获取存档数据
+        /// </summary>
+        /// <param name="index">条件索引</param>
+        /// <returns>条件存档</returns>
+        public SaveQuestConditionItem GetConditionAt(int index)
+        {
+            if (index < 0 || conditions == null || index >= conditions.Count)
+            {
+                return null;
+            }
+
+            return conditions[index];
         }
     }
 
@@ -400,9 +462,31 @@ namespace YangTools.Scripts.Core.YangSaveData
     [Serializable]
     public class SaveQuestConditionItem
     {
-        public string conditionId;
-        public float currentCount;
-        public long startUtcSeconds;
-        public float onlineTimeSeconds;
+        public string conditionId; //运行时内部条件键 不需要在任务配置中填写
+        public float currentCount; //当前条件进度
+        public long startUtcSeconds; //时间条件开始时间
+        // 历史字段名保留兼容 实际存储单位为分钟
+        public float onlineTimeSeconds; //累计在线时长分钟数
+
+        /// <summary>
+        /// 修正反序列化后的非法数据
+        /// </summary>
+        public void OnAfterDeserialize()
+        {
+            conditionId ??= string.Empty;
+            currentCount = NormalizeNonNegative(currentCount);
+            startUtcSeconds = Math.Max(0L, startUtcSeconds);
+            onlineTimeSeconds = NormalizeNonNegative(onlineTimeSeconds);
+        }
+
+        /// <summary>
+        /// 将非法数值转换为非负数
+        /// </summary>
+        /// <param name="value">待转换数值</param>
+        /// <returns>有效的非负数</returns>
+        private static float NormalizeNonNegative(float value)
+        {
+            return float.IsNaN(value) || float.IsInfinity(value) ? 0f : Math.Max(0f, value);
+        }
     }
 }

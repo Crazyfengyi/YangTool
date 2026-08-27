@@ -1,25 +1,36 @@
 using System;
 using System.Collections.Generic;
-using GameMain;
 using UnityEngine;
 using YangTools.Scripts.Core.YangSaveData;
 
 /// <summary>
-/// 任务运行时数据。
+/// 任务运行时数据
 /// </summary>
 public class QuestRuntime
 {
+    private readonly Action<QuestObjectiveChangedEvent> objectiveChanged; //目标变化回调
+
     public QuestData Data { get; }
     public string Id => Data != null ? Data.Id : string.Empty;
     public QuestState State { get; private set; }
     public List<ObjectiveRuntime> Objectives { get; } = new List<ObjectiveRuntime>();
 
-    public QuestRuntime(QuestData data, SaveQuestItem saveItem)
+    /// <summary>
+    /// 创建任务运行时数据
+    /// </summary>
+    /// <param name="data">任务配置</param>
+    /// <param name="saveItem">任务存档</param>
+    /// <param name="objectiveChanged">目标变化回调</param>
+    public QuestRuntime(QuestData data, SaveQuestItem saveItem,
+        Action<QuestObjectiveChangedEvent> objectiveChanged = null)
     {
-        Data = data;
-        State = saveItem != null ? saveItem.state : QuestState.Active;
+        Data = data ?? throw new ArgumentNullException(nameof(data));
+        this.objectiveChanged = objectiveChanged;
+        State = ResolveSavedState(saveItem);
         BuildObjectives(saveItem);
     }
+
+    #region 任务进度
 
     /// <summary>
     /// 设置任务状态。
@@ -27,15 +38,21 @@ public class QuestRuntime
     /// <param name="state">目标状态</param>
     public void SetState(QuestState state)
     {
+        if (!Enum.IsDefined(typeof(QuestState), state))
+        {
+            throw new ArgumentOutOfRangeException(nameof(state), state, "无效的任务状态");
+        }
+
         State = state;
     }
 
     /// <summary>
-    /// 重置每日任务进度并重新开始任务。
+    /// 重置每日任务进度
     /// </summary>
-    public void ResetForDailyRefresh()
+    /// <param name="activate">是否保持进行中状态</param>
+    public void ResetForDailyRefresh(bool activate = true)
     {
-        State = QuestState.Active;
+        State = activate ? QuestState.Active : QuestState.Locked;
         BuildObjectives(null);
     }
 
@@ -105,8 +122,9 @@ public class QuestRuntime
     /// <summary>
     /// 刷新任务内的背包道具数量条件进度。
     /// </summary>
+    /// <param name="itemService">任务道具服务</param>
     /// <returns>是否发生变化</returns>
-    public bool RefreshItemNumProgress()
+    public bool RefreshItemNumProgress(IQuestItemService itemService)
     {
         if (State != QuestState.Active && State != QuestState.Completed)
         {
@@ -114,7 +132,7 @@ public class QuestRuntime
         }
 
         ObjectiveRuntime activeObjective = GetActiveObjective();
-        return activeObjective != null && activeObjective.RefreshItemNumProgress(Id);
+        return activeObjective != null && activeObjective.RefreshItemNumProgress(Id, itemService);
     }
 
     /// <summary>
@@ -189,6 +207,10 @@ public class QuestRuntime
         return true;
     }
 
+    #endregion
+
+    #region 存档
+
     /// <summary>
     /// 将运行时状态写回存档对象。
     /// </summary>
@@ -212,27 +234,55 @@ public class QuestRuntime
         }
     }
 
+    /// <summary>
+    /// 根据配置和存档构建任务目标
+    /// </summary>
+    /// <param name="saveItem">任务存档</param>
     private void BuildObjectives(SaveQuestItem saveItem)
     {
         Objectives.Clear();
-        if (Data?.Objectives == null)
+        if (Data.Objectives == null)
         {
             return;
         }
 
+        HashSet<string> runtimeIds = new HashSet<string>(StringComparer.Ordinal);
+        int runtimeIndex = 0;
         for (int i = 0; i < Data.Objectives.Count; i++)
         {
             QuestObjectiveData objectiveData = Data.Objectives[i];
-            string objectiveId = ResolveRuntimeId(objectiveData.Id, $"Objective_{i}");
-            SaveQuestObjectiveItem objectiveSave = saveItem?.GetObjective(objectiveId);
-            Objectives.Add(new ObjectiveRuntime(objectiveData, objectiveSave, objectiveId));
+            if (objectiveData == null)
+            {
+                Debug.LogWarning($"任务 {Id} 的目标列表第 {i} 项为空 已跳过");
+                continue;
+            }
+
+            // 目标不再要求人工ID 运行时使用列表索引生成内部键
+            string objectiveId = QuestRuntimeIdUtility.ResolveUniqueId(
+                string.Empty, $"Objective_{i}", runtimeIds, "任务目标");
+            SaveQuestObjectiveItem objectiveSave = saveItem?.GetObjective(objectiveId)
+                ?? saveItem?.GetObjectiveAt(runtimeIndex);
+            Objectives.Add(new ObjectiveRuntime(objectiveData, objectiveSave, objectiveId, objectiveChanged));
+            runtimeIndex++;
         }
     }
 
-    private static string ResolveRuntimeId(string configId, string fallbackId)
+    /// <summary>
+    /// 获得有效的存档任务状态
+    /// </summary>
+    /// <param name="saveItem">任务存档</param>
+    /// <returns>有效任务状态</returns>
+    private static QuestState ResolveSavedState(SaveQuestItem saveItem)
     {
-        return string.IsNullOrEmpty(configId) ? fallbackId : configId;
+        if (saveItem == null || !Enum.IsDefined(typeof(QuestState), saveItem.state))
+        {
+            return QuestState.Locked;
+        }
+
+        return saveItem.state;
     }
+
+    #endregion
 }
 
 /// <summary>
@@ -240,21 +290,66 @@ public class QuestRuntime
 /// </summary>
 public class ObjectiveRuntime
 {
-    private readonly string runtimeId;
-
+    private readonly string runtimeId; //运行时稳定ID
+    private readonly Action<QuestObjectiveChangedEvent> objectiveChanged; //目标变化回调
     public QuestObjectiveData Data { get; }
     public string Id => runtimeId;
     public bool IsCompleted { get; private set; }
-    public bool IsConditionsSatisfied => CheckConditionsSatisfied();
+    public bool IsConditionsSatisfied
+    {
+        get
+        {
+            if (Data == null || Conditions.Count == 0)
+            {
+                return false;
+            }
+
+            if (Data.ConditionGroupType == QuestConditionGroupType.Or)
+            {
+                for (int i = 0; i < Conditions.Count; i++)
+                {
+                    if (Conditions[i].IsCompleted)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            for (int i = 0; i < Conditions.Count; i++)
+            {
+                if (!Conditions[i].IsCompleted)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
     public List<ConditionRuntime> Conditions { get; } = new List<ConditionRuntime>();
 
-    public ObjectiveRuntime(QuestObjectiveData data, SaveQuestObjectiveItem saveItem, string runtimeId)
+    /// <summary>
+    /// 创建任务目标运行时数据
+    /// </summary>
+    /// <param name="data">目标配置</param>
+    /// <param name="saveItem">目标存档</param>
+    /// <param name="runtimeId">运行时稳定ID</param>
+    /// <param name="objectiveChanged">目标变化回调</param>
+    public ObjectiveRuntime(QuestObjectiveData data, SaveQuestObjectiveItem saveItem, string runtimeId,
+        Action<QuestObjectiveChangedEvent> objectiveChanged = null)
     {
-        this.runtimeId = runtimeId;
-        Data = data;
+        Data = data ?? throw new ArgumentNullException(nameof(data));
+        this.runtimeId = string.IsNullOrWhiteSpace(runtimeId)
+            ? throw new ArgumentException("目标运行时ID不能为空", nameof(runtimeId))
+            : runtimeId;
+        this.objectiveChanged = objectiveChanged;
         IsCompleted = saveItem != null && saveItem.isCompleted;
         BuildConditions(saveItem);
     }
+
+    #region 目标进度
 
     /// <summary>
     /// 处理目标进度事件。
@@ -280,9 +375,8 @@ public class ObjectiveRuntime
             return false;
         }
 
-        bool oldCompleted = IsCompleted;
         SendObjectiveChanged(questId);
-        return oldCompleted != IsCompleted || changed;
+        return true;
     }
 
     /// <summary>
@@ -330,17 +424,17 @@ public class ObjectiveRuntime
             return false;
         }
 
-        bool oldCompleted = IsCompleted;
         SendObjectiveChanged(questId);
-        return oldCompleted != IsCompleted || changed;
+        return true;
     }
 
     /// <summary>
     /// 刷新目标内的背包道具数量条件进度。
     /// </summary>
     /// <param name="questId">所属任务ID</param>
+    /// <param name="itemService">任务道具服务</param>
     /// <returns>是否发生变化</returns>
-    public bool RefreshItemNumProgress(string questId)
+    public bool RefreshItemNumProgress(string questId, IQuestItemService itemService)
     {
         if (IsCompleted)
         {
@@ -350,7 +444,7 @@ public class ObjectiveRuntime
         bool changed = false;
         for (int i = 0; i < Conditions.Count; i++)
         {
-            changed |= Conditions[i].RefreshItemNumProgress();
+            changed |= Conditions[i].RefreshItemNumProgress(itemService);
         }
 
         if (!changed)
@@ -358,9 +452,8 @@ public class ObjectiveRuntime
             return false;
         }
 
-        bool oldCompleted = IsCompleted;
         SendObjectiveChanged(questId);
-        return oldCompleted != IsCompleted || changed;
+        return true;
     }
 
     /// <summary>
@@ -409,20 +502,36 @@ public class ObjectiveRuntime
         }
     }
 
+    /// <summary>
+    /// 根据配置和存档构建任务条件
+    /// </summary>
+    /// <param name="saveItem">目标存档</param>
     private void BuildConditions(SaveQuestObjectiveItem saveItem)
     {
         Conditions.Clear();
-        if (Data?.Conditions == null)
+        if (Data.Conditions == null)
         {
             return;
         }
 
+        HashSet<string> runtimeIds = new HashSet<string>(StringComparer.Ordinal);
+        int runtimeIndex = 0;
         for (int i = 0; i < Data.Conditions.Count; i++)
         {
             QuestConditionData conditionData = Data.Conditions[i];
-            string conditionId = string.IsNullOrEmpty(conditionData.Id) ? $"Condition_{i}" : conditionData.Id;
-            SaveQuestConditionItem conditionSave = saveItem?.GetCondition(conditionId);
+            if (conditionData == null)
+            {
+                Debug.LogWarning($"目标 {Id} 的条件列表第 {i} 项为空 已跳过");
+                continue;
+            }
+
+            // 条件不再要求人工ID 运行时使用列表索引生成内部键
+            string conditionId = QuestRuntimeIdUtility.ResolveUniqueId(
+                string.Empty, $"Condition_{i}", runtimeIds, "任务条件");
+            SaveQuestConditionItem conditionSave = saveItem?.GetCondition(conditionId)
+                ?? saveItem?.GetConditionAt(runtimeIndex);
             Conditions.Add(new ConditionRuntime(conditionData, conditionSave, conditionId));
+            runtimeIndex++;
         }
     }
 
@@ -468,25 +577,14 @@ public class ObjectiveRuntime
         return true;
     }
 
-    private bool CheckConditionsSatisfied()
-    {
-        if (Conditions.Count == 0)
-        {
-            return false;
-        }
-
-        if (Data.ConditionGroupType == QuestConditionGroupType.Or)
-        {
-            return Conditions.Exists(condition => condition.IsCompleted);
-        }
-
-        return Conditions.TrueForAll(condition => condition.IsCompleted);
-    }
-
+    /// <summary>
+    /// 发送目标进度变化事件
+    /// </summary>
+    /// <param name="questId">所属任务ID</param>
     private void SendObjectiveChanged(string questId)
     {
         ConditionRuntime displayCondition = Conditions.Count > 0 ? Conditions[0] : null;
-        new QuestObjectiveChangedEvent
+        QuestObjectiveChangedEvent changedEvent = new QuestObjectiveChangedEvent
         {
             QuestId = questId,
             ObjectiveId = Id,
@@ -495,8 +593,11 @@ public class ObjectiveRuntime
             IsConditionsSatisfied = IsConditionsSatisfied,
             IsCompleted = IsCompleted,
             Objective = this
-        }.SendEvent();
+        };
+        objectiveChanged?.Invoke(changedEvent);
     }
+
+    #endregion
 }
 
 /// <summary>
@@ -504,9 +605,9 @@ public class ObjectiveRuntime
 /// </summary>
 public class ConditionRuntime
 {
-    private readonly string runtimeId;
-    private long startUtcSeconds;
-    private float onlineTimeMinutes;
+    private readonly string runtimeId; //运行时稳定ID
+    private long startUtcSeconds; //时间条件起始UTC秒数
+    private float onlineTimeMinutes; //累计在线分钟数
 
     public QuestConditionData Data { get; }
     public string Id => runtimeId;
@@ -515,19 +616,30 @@ public class ConditionRuntime
     public bool IsCompleted => CurrentCount >= TargetCount;
     public bool IsItemNumCondition => Data != null && Data.EventType == QuestProgressEventType.ItemNum;
 
+    /// <summary>
+    /// 创建任务条件运行时数据
+    /// </summary>
+    /// <param name="data">条件配置</param>
+    /// <param name="saveItem">条件存档</param>
+    /// <param name="runtimeId">运行时稳定ID</param>
     public ConditionRuntime(QuestConditionData data, SaveQuestConditionItem saveItem, string runtimeId)
     {
-        this.runtimeId = runtimeId;
-        Data = data;
-        CurrentCount = saveItem != null ? Math.Max(0, saveItem.currentCount) : 0;
-        startUtcSeconds = saveItem != null ? Math.Max(0, saveItem.startUtcSeconds) : 0;
-        onlineTimeMinutes = saveItem != null ? Math.Max(0f, saveItem.onlineTimeSeconds) : 0f;
+        Data = data ?? throw new ArgumentNullException(nameof(data));
+        this.runtimeId = string.IsNullOrWhiteSpace(runtimeId)
+            ? throw new ArgumentException("条件运行时ID不能为空", nameof(runtimeId))
+            : runtimeId;
+        CurrentCount = NormalizeNonNegative(saveItem?.currentCount ?? 0f);
+        startUtcSeconds = Math.Max(0L, saveItem?.startUtcSeconds ?? 0L);
+        onlineTimeMinutes = NormalizeNonNegative(saveItem?.onlineTimeSeconds ?? 0f);
         if (IsOnlineTimeCondition())
         {
             onlineTimeMinutes = Math.Min(TargetCount, onlineTimeMinutes);
         }
+
         CurrentCount = Math.Min(CurrentCount, TargetCount);
     }
+
+    #region 事件进度
 
     /// <summary>
     /// 处理条件进度事件。
@@ -541,13 +653,13 @@ public class ConditionRuntime
             return false;
         }
 
-        // 时间条件由真实UTC时间自动刷新，避免业务事件和离线补偿重复计数。
+        // 时间条件由真实UTC时间自动刷新
         if (IsTimeCondition())
         {
             return false;
         }
 
-        // 背包数量条件只读取BagMgr当前数量，业务事件仅作为刷新触发。
+        // 道具数量条件只读取外部道具服务
         if (IsItemNumCondition)
         {
             return false;
@@ -563,12 +675,14 @@ public class ConditionRuntime
             return false;
         }
 
-        if (!string.IsNullOrEmpty(Data.TargetId) && Data.TargetId != progressEvent.TargetId)
+        if (!string.IsNullOrEmpty(Data.TargetId)
+            && !string.Equals(Data.TargetId, progressEvent.TargetId, StringComparison.Ordinal))
         {
             return false;
         }
 
-        float addCount = Data.ConditionType == QuestConditionType.EventOnce ? TargetCount : Math.Max(1, progressEvent.Amount);
+        float eventAmount = NormalizePositive(progressEvent.Amount, 1f);
+        float addCount = Data.ConditionType == QuestConditionType.EventOnce ? TargetCount : eventAmount;
         float oldCount = CurrentCount;
         CurrentCount = Math.Min(TargetCount, CurrentCount + addCount);
         return !Mathf.Approximately(CurrentCount, oldCount);
@@ -581,7 +695,10 @@ public class ConditionRuntime
     /// <returns>在线时长是否发生变化</returns>
     private bool HandleOnlineTimeProgress(QuestProgressEvent progressEvent)
     {
-        if (progressEvent.EventType != QuestProgressEventType.OnLineTime || progressEvent.Value <= 0f)
+        if (progressEvent.EventType != QuestProgressEventType.OnLineTime
+            || float.IsNaN(progressEvent.Value)
+            || float.IsInfinity(progressEvent.Value)
+            || progressEvent.Value <= 0f)
         {
             return false;
         }
@@ -594,6 +711,10 @@ public class ConditionRuntime
                || !Mathf.Approximately(CurrentCount, oldCount);
     }
 
+    #endregion
+
+    #region 时间进度
+
     /// <summary>
     /// 启动时间条件计时。
     /// </summary>
@@ -601,12 +722,12 @@ public class ConditionRuntime
     /// <returns>是否发生变化</returns>
     public bool StartTimeCondition(long utcSeconds)
     {
-        if (!IsTimeCondition() || IsCompleted || startUtcSeconds > 0)
+        if (!IsTimeCondition() || IsCompleted || startUtcSeconds > 0 || utcSeconds <= 0)
         {
             return false;
         }
 
-        startUtcSeconds = Math.Max(0, utcSeconds);
+        startUtcSeconds = utcSeconds;
         return true;
     }
 
@@ -617,19 +738,19 @@ public class ConditionRuntime
     /// <returns>是否发生变化</returns>
     public bool RefreshTimeProgress(long utcSeconds)
     {
-        if (!IsTimeCondition() || IsCompleted)
+        if (!IsTimeCondition() || IsCompleted || utcSeconds <= 0)
         {
             return false;
         }
 
         if (startUtcSeconds <= 0)
         {
-            startUtcSeconds = Math.Max(0, utcSeconds);
+            startUtcSeconds = utcSeconds;
             return true;
         }
 
         long elapsedSeconds = Math.Max(0, utcSeconds - startUtcSeconds);
-        int elapsedMinutes = (int)(elapsedSeconds / 60);
+        long elapsedMinutes = elapsedSeconds / 60L;
         float oldCount = CurrentCount;
         CurrentCount = Math.Min(TargetCount, elapsedMinutes);
         return !Mathf.Approximately(CurrentCount, oldCount);
@@ -657,33 +778,31 @@ public class ConditionRuntime
         return Math.Max(0, targetSeconds - elapsedSeconds);
     }
 
+    #endregion
+
+    #region 道具数量进度
+
     /// <summary>
     /// 按背包当前道具数量刷新条件进度。
     /// </summary>
+    /// <param name="itemService">任务道具服务</param>
     /// <returns>是否发生变化</returns>
-    public bool RefreshItemNumProgress()
+    public bool RefreshItemNumProgress(IQuestItemService itemService)
     {
-        if (!IsItemNumCondition)
+        if (!IsItemNumCondition || itemService == null)
         {
             return false;
         }
 
-        int propId;
-        if (!int.TryParse(Data.TargetId, out propId))
+        if (!TryGetItemNumPropId(out int propId))
         {
-            float tempOldCount = CurrentCount;
+            float oldInvalidCount = CurrentCount;
             CurrentCount = 0;
-            return !Mathf.Approximately(CurrentCount, tempOldCount);
+            return !Mathf.Approximately(CurrentCount, oldInvalidCount);
         }
 
-        // if (BagMgr.Instance == null)
-        // {
-        //     return false;
-        // }
-
         float oldCount = CurrentCount;
-        //int bagCount = Math.Max(0, (int)Math.Floor(BagMgr.Instance.GetBagPropCount(propId)));
-        int bagCount = 0;
+        float bagCount = NormalizeNonNegative(itemService.GetItemCount(propId));
         CurrentCount = Math.Min(TargetCount, bagCount);
         return !Mathf.Approximately(CurrentCount, oldCount);
     }
@@ -696,8 +815,12 @@ public class ConditionRuntime
     public bool TryGetItemNumPropId(out int propId)
     {
         propId = 0;
-        return IsItemNumCondition && int.TryParse(Data.TargetId, out propId);
+        return IsItemNumCondition && int.TryParse(Data.TargetId, out propId) && propId > 0;
     }
+
+    #endregion
+
+    #region 存档
 
     /// <summary>
     /// 将条件运行时状态写回存档对象。
@@ -716,6 +839,10 @@ public class ConditionRuntime
         saveItem.onlineTimeSeconds = onlineTimeMinutes;
     }
 
+    /// <summary>
+    /// 判断是否为真实时间条件
+    /// </summary>
+    /// <returns>真实时间条件返回true</returns>
     private bool IsTimeCondition()
     {
         return Data != null && Data.EventType == QuestProgressEventType.Time;
@@ -730,4 +857,66 @@ public class ConditionRuntime
         return Data != null && Data.EventType == QuestProgressEventType.OnLineTime;
     }
 
+    /// <summary>
+    /// 将非法数值转换为非负数
+    /// </summary>
+    /// <param name="value">待转换数值</param>
+    /// <returns>有效的非负数</returns>
+    private static float NormalizeNonNegative(float value)
+    {
+        return float.IsNaN(value) || float.IsInfinity(value) ? 0f : Math.Max(0f, value);
+    }
+
+    /// <summary>
+    /// 将非法数值转换为正数
+    /// </summary>
+    /// <param name="value">待转换数值</param>
+    /// <param name="fallback">无效时的默认值</param>
+    /// <returns>有效的正数</returns>
+    private static float NormalizePositive(float value, float fallback)
+    {
+        return float.IsNaN(value) || float.IsInfinity(value) || value <= 0f ? fallback : value;
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// 任务运行时稳定ID工具
+/// </summary>
+internal static class QuestRuntimeIdUtility
+{
+    /// <summary>
+    /// 生成当前列表内唯一的运行时ID
+    /// </summary>
+    /// <param name="configuredId">配置ID</param>
+    /// <param name="fallbackId">配置为空时的默认ID</param>
+    /// <param name="usedIds">已使用的ID集合</param>
+    /// <param name="idType">ID类型名称</param>
+    /// <returns>唯一运行时ID</returns>
+    public static string ResolveUniqueId(string configuredId, string fallbackId, HashSet<string> usedIds,
+        string idType)
+    {
+        if (usedIds == null)
+        {
+            throw new ArgumentNullException(nameof(usedIds));
+        }
+
+        string baseId = string.IsNullOrWhiteSpace(configuredId) ? fallbackId : configuredId;
+        if (usedIds.Add(baseId))
+        {
+            return baseId;
+        }
+
+        int suffix = 1;
+        string uniqueId;
+        do
+        {
+            uniqueId = $"{baseId}_{suffix}";
+            suffix++;
+        } while (!usedIds.Add(uniqueId));
+
+        Debug.LogWarning($"{idType}ID重复 {baseId} 已自动使用 {uniqueId}");
+        return uniqueId;
+    }
 }

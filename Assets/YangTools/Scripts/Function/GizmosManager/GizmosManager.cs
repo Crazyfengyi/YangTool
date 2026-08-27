@@ -1,36 +1,57 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-//using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
+/// <summary>
+/// 管理运行时调试图形的绘制
+/// </summary>
 public class GizmosManager : MonoBehaviour
 {
-    public static GizmosManager Instance;
+    public static GizmosManager Instance; //当前实例
+
+    private const float SectorStepAngle = 5f; //扇形绘制步长
+
+    private readonly List<DrawInfo> drawInfos = new List<DrawInfo>(); //待绘制信息
+
+    /// <summary>
+    /// 初始化单例实例
+    /// </summary>
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning($"{nameof(GizmosManager)} 场景中存在多个实例", this);
+            return;
+        }
+
         Instance = this;
     }
 
-    private readonly List<DrawInfo> drawInfos = new List<DrawInfo>();
-    /*
-     * if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GizmosManager.Instance.GizmosDrawCube(Vector3.zero, new Vector3(2,2,2));
-        }
-     */
     /// <summary>
-    /// 矩形
+    /// 清理失效单例和绘制信息
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="quaternion"></param>
-    /// <param name="size"></param>
-    /// <param name="time"></param>
+    private void OnDestroy()
+    {
+        if (Instance != this)
+        {
+            return;
+        }
+
+        Instance = null;
+        drawInfos.Clear();
+    }
+
+    #region 绘制接口
+
+    /// <summary>
+    /// 绘制矩形
+    /// </summary>
+    /// <param name="center">中心位置</param>
+    /// <param name="quaternion">旋转角度</param>
+    /// <param name="size">矩形尺寸</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawCube(Vector3 center, Quaternion quaternion, Vector3 size, float time = 5f)
     {
-        drawInfos.Add(new DrawCubeInfo
+        AddDrawInfo(new DrawCubeInfo
         {
             center = center,
             rotate = quaternion,
@@ -38,12 +59,23 @@ public class GizmosManager : MonoBehaviour
             overTime = Time.unscaledTime + time
         });
     }
+
     /// <summary>
-    /// 扇形
+    /// 绘制扇形
     /// </summary>
+    /// <param name="pos">中心位置</param>
+    /// <param name="direction">朝向</param>
+    /// <param name="length">半径长度</param>
+    /// <param name="angle">扇形角度</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawSector(Vector3 pos, Vector3 direction, float length, float angle, float time = 5f)
     {
-        drawInfos.Add(new DrawSectorInfo
+        if (length <= 0f || angle <= 0f)
+        {
+            return;
+        }
+
+        AddDrawInfo(new DrawSectorInfo
         {
             pos = pos,
             direction = direction,
@@ -52,24 +84,43 @@ public class GizmosManager : MonoBehaviour
             overTime = Time.unscaledTime + time
         });
     }
+
     /// <summary>
-    /// 圆形
+    /// 绘制圆形
     /// </summary>
+    /// <param name="pos">圆心位置</param>
+    /// <param name="radius">圆形半径</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawCircle(Vector3 pos, float radius, float time = 5f)
     {
-        drawInfos.Add(new DrawCircleInfo
+        if (radius <= 0f)
+        {
+            return;
+        }
+
+        AddDrawInfo(new DrawCircleInfo
         {
             pos = pos,
             radius = radius,
             overTime = Time.unscaledTime + time
         });
     }
+
     /// <summary>
-    /// 圆环
+    /// 绘制圆环
     /// </summary>
+    /// <param name="pos">圆心位置</param>
+    /// <param name="insideRadius">内圆半径</param>
+    /// <param name="outsideRadius">外圆半径</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawRing(Vector3 pos, float insideRadius, float outsideRadius, float time = 5f)
     {
-        drawInfos.Add(new DrawRingInfo
+        if (insideRadius < 0f || outsideRadius < insideRadius)
+        {
+            return;
+        }
+
+        AddDrawInfo(new DrawRingInfo
         {
             pos = pos,
             insideRadius = insideRadius,
@@ -79,11 +130,21 @@ public class GizmosManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 球形射线
+    /// 绘制球形射线
     /// </summary>
+    /// <param name="pos">起点位置</param>
+    /// <param name="direction">射线方向</param>
+    /// <param name="distance">射线距离</param>
+    /// <param name="radius">球体半径</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawSphereRay(Vector3 pos, Vector3 direction, float distance, float radius, float time = 5f)
     {
-        drawInfos.Add(new DrawSphereRayInfo
+        if (distance <= 0f || radius <= 0f)
+        {
+            return;
+        }
+
+        AddDrawInfo(new DrawSphereRayInfo
         {
             pos = pos,
             direction = direction,
@@ -94,11 +155,20 @@ public class GizmosManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 射线
+    /// 绘制射线
     /// </summary>
+    /// <param name="pos">起点位置</param>
+    /// <param name="direction">射线方向</param>
+    /// <param name="distance">射线距离</param>
+    /// <param name="time">显示时长</param>
     public void GizmosDrawRay(Vector3 pos, Vector3 direction, float distance, float time = 5f)
     {
-        drawInfos.Add(new DrawRayInfo
+        if (distance <= 0f)
+        {
+            return;
+        }
+
+        AddDrawInfo(new DrawRayInfo
         {
             pos = pos,
             direction = direction,
@@ -107,108 +177,65 @@ public class GizmosManager : MonoBehaviour
         });
     }
 
+    #endregion
+
+    #region 绘制实现
+
+    /// <summary>
+    /// 添加待绘制信息并清理过期数据
+    /// </summary>
+    /// <param name="drawInfo">绘制信息</param>
+    private void AddDrawInfo(DrawInfo drawInfo)
+    {
+        RemoveExpiredDrawInfos();
+        drawInfos.Add(drawInfo);
+    }
+
+    /// <summary>
+    /// 绘制所有有效调试图形
+    /// </summary>
     private void OnDrawGizmos()
     {
+        RemoveExpiredDrawInfos();
+        Color previousColor = Gizmos.color;
         Gizmos.color = Color.red;
+
         foreach (DrawInfo item in drawInfos)
         {
             switch (item)
             {
-                case DrawCubeInfo temp:
-                    {
-                        #region 画矩形
-                        //中心
-                        Gizmos.DrawSphere(temp.center, 0.1f);
-                        var size = temp.size;
-                        var center = temp.center;
-                        var rotation = temp.rotate;
-
-                        var halfx = size.x / 2;
-                        var halfy = size.y / 2;
-                        var halfz = size.z / 2;
-
-                        var movedis = new Vector3(center.x, center.y, center.z);
-                        //4个顶点坐标
-                        var leftDownUpPos = rotation * new Vector3(-halfx, -halfy, halfz) + movedis;
-                        var leftDownDowns = rotation * new Vector3(-halfx, -halfy, -halfz) + movedis;
-
-                        var rightDownUpPos = rotation * new Vector3(halfx, -halfy, halfz) + movedis;
-                        var rightDownDownPos = rotation * new Vector3(halfx, -halfy, -halfz) + movedis;
-
-                        var leftUpUpPos = rotation * new Vector3(-halfx, halfy, halfz) + movedis;
-                        var leftUpDownPos = rotation * new Vector3(-halfx, halfy, -halfz) + movedis;
-
-                        var rightUpUpPos = rotation * new Vector3(halfx, halfy, halfz) + movedis;
-                        var rightUpDownPos = rotation * new Vector3(halfx, halfy, -halfz) + movedis;
-          
-                        //8个点
-                        Gizmos.DrawSphere(leftDownUpPos, 0.1f);
-                        Gizmos.DrawSphere(rightDownUpPos, 0.1f);
-                        Gizmos.DrawSphere(leftUpUpPos, 0.1f);
-                        Gizmos.DrawSphere(rightUpUpPos, 0.1f);
-                        Gizmos.DrawSphere(leftDownDowns, 0.1f);
-                        Gizmos.DrawSphere(rightDownDownPos, 0.1f);
-                        Gizmos.DrawSphere(leftUpDownPos, 0.1f);
-                        Gizmos.DrawSphere(rightUpDownPos, 0.1f);
-
-                        //线段
-                        Gizmos.DrawLine(leftDownUpPos, leftDownDowns);
-                        Gizmos.DrawLine(leftDownUpPos, leftUpUpPos);
-                        Gizmos.DrawLine(leftDownUpPos, rightDownUpPos);
-
-                        Gizmos.DrawLine(rightDownDownPos, leftDownDowns);
-                        Gizmos.DrawLine(rightDownDownPos, rightDownUpPos);
-                        Gizmos.DrawLine(rightDownDownPos, rightUpDownPos);
-
-                        Gizmos.DrawLine(leftUpDownPos, rightUpDownPos);
-                        Gizmos.DrawLine(leftUpDownPos, leftUpUpPos);
-                        Gizmos.DrawLine(leftUpDownPos, leftDownDowns);
-
-                        Gizmos.DrawLine(rightUpUpPos, leftUpUpPos);
-                        Gizmos.DrawLine(rightUpUpPos, rightDownUpPos);
-                        Gizmos.DrawLine(rightUpUpPos, rightUpDownPos);
-                        #endregion
-                    }
+                case DrawCubeInfo cubeInfo:
+                    DrawCube(cubeInfo);
                     break;
-                case DrawSectorInfo temp:
-                    for (float i = -(temp.angle / 2); i < temp.angle; i += 5)
-                    {
-                        Ray r = new Ray();
-                        r.origin = temp.pos;
-                        r.direction = Quaternion.Euler(0, i, 0) * temp.direction;
-                        Gizmos.DrawLine(temp.pos, r.GetPoint(temp.length));
-                    }
+                case DrawSectorInfo sectorInfo:
+                    DrawSector(sectorInfo);
                     break;
-                case DrawCircleInfo temp:
-                    Gizmos.DrawWireSphere(temp.pos, temp.radius);
+                case DrawCircleInfo circleInfo:
+                    Gizmos.DrawWireSphere(circleInfo.pos, circleInfo.radius);
                     break;
-                case DrawRingInfo temp:
+                case DrawRingInfo ringInfo:
                     Gizmos.color = Color.green;
-                    Gizmos.DrawWireSphere(temp.pos, temp.insideRadius);
+                    Gizmos.DrawWireSphere(ringInfo.pos, ringInfo.insideRadius);
                     Gizmos.color = Color.red;
-                    Gizmos.DrawWireSphere(temp.pos, temp.outsideRadius);
-                    Gizmos.color = Color.red;
+                    Gizmos.DrawWireSphere(ringInfo.pos, ringInfo.outsideRadius);
                     break;
-                case DrawSphereRayInfo temp:
-                    for (float i = temp.radius; i < temp.distance; i += temp.radius)
-                    {
-                        Ray r = new Ray();
-                        r.origin = temp.pos;
-                        r.direction = temp.direction;
-                        Gizmos.DrawWireSphere(r.GetPoint(i), temp.radius);
-                    }
+                case DrawSphereRayInfo sphereRayInfo:
+                    DrawSphereRay(sphereRayInfo);
                     break;
-                case DrawRayInfo temp:
-                    {
-                        Ray r = new Ray();
-                        r.origin = temp.pos;
-                        r.direction = temp.direction;
-                        Gizmos.DrawLine(temp.pos, r.GetPoint(temp.distance));
-                    }
+                case DrawRayInfo rayInfo:
+                    Gizmos.DrawLine(rayInfo.pos, rayInfo.pos + rayInfo.direction * rayInfo.distance);
                     break;
             }
         }
 
+        Gizmos.color = previousColor;
+    }
+
+    /// <summary>
+    /// 清理过期绘制信息
+    /// </summary>
+    private void RemoveExpiredDrawInfos()
+    {
         for (int i = drawInfos.Count - 1; i >= 0; i--)
         {
             if (Time.unscaledTime >= drawInfos[i].overTime)
@@ -216,68 +243,125 @@ public class GizmosManager : MonoBehaviour
                 drawInfos.RemoveAt(i);
             }
         }
-        Gizmos.color = Color.white;
     }
+
+    /// <summary>
+    /// 绘制带旋转的矩形
+    /// </summary>
+    /// <param name="drawInfo">矩形绘制信息</param>
+    private void DrawCube(DrawCubeInfo drawInfo)
+    {
+        Matrix4x4 previousMatrix = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(drawInfo.center, drawInfo.rotate, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, drawInfo.size);
+        Gizmos.matrix = previousMatrix;
+    }
+
+    /// <summary>
+    /// 绘制扇形边界和弧线
+    /// </summary>
+    /// <param name="drawInfo">扇形绘制信息</param>
+    private void DrawSector(DrawSectorInfo drawInfo)
+    {
+        float halfAngle = drawInfo.angle * 0.5f;
+        int segmentCount = Mathf.Max(1, Mathf.CeilToInt(drawInfo.angle / SectorStepAngle));
+        Vector3 previousPoint = drawInfo.pos + Quaternion.Euler(0f, -halfAngle, 0f) * drawInfo.direction * drawInfo.length;
+        Gizmos.DrawLine(drawInfo.pos, previousPoint);
+
+        for (int i = 1; i <= segmentCount; i++)
+        {
+            float angle = Mathf.Lerp(-halfAngle, halfAngle, i / (float)segmentCount);
+            Vector3 currentPoint = drawInfo.pos + Quaternion.Euler(0f, angle, 0f) * drawInfo.direction * drawInfo.length;
+            Gizmos.DrawLine(previousPoint, currentPoint);
+            previousPoint = currentPoint;
+        }
+
+        Gizmos.DrawLine(drawInfo.pos, previousPoint);
+    }
+
+    /// <summary>
+    /// 绘制球形射线的起点路径和终点
+    /// </summary>
+    /// <param name="drawInfo">球形射线绘制信息</param>
+    private void DrawSphereRay(DrawSphereRayInfo drawInfo)
+    {
+        Gizmos.DrawWireSphere(drawInfo.pos, drawInfo.radius);
+        for (float currentDistance = drawInfo.radius; currentDistance < drawInfo.distance; currentDistance += drawInfo.radius)
+        {
+            Gizmos.DrawWireSphere(drawInfo.pos + drawInfo.direction * currentDistance, drawInfo.radius);
+        }
+
+        Gizmos.DrawWireSphere(drawInfo.pos + drawInfo.direction * drawInfo.distance, drawInfo.radius);
+    }
+
+    #endregion
 }
 
+/// <summary>
+/// 调试图形的基础信息
+/// </summary>
 public class DrawInfo
 {
-    public float overTime;
+    public float overTime; //过期时间
 }
+
 /// <summary>
-/// 矩形
+/// 矩形绘制信息
 /// </summary>
 public class DrawCubeInfo : DrawInfo
 {
-    public Vector3 center;
-    public Quaternion rotate;
-    public Vector3 size;
+    public Vector3 center; //中心位置
+    public Quaternion rotate; //旋转角度
+    public Vector3 size; //矩形尺寸
 }
+
 /// <summary>
-/// 扇形
+/// 扇形绘制信息
 /// </summary>
 public class DrawSectorInfo : DrawInfo
 {
-    public Vector3 pos;
-    public Vector3 direction;
-    public float length;
-    public float angle;
+    public Vector3 pos; //中心位置
+    public Vector3 direction; //朝向
+    public float length; //半径长度
+    public float angle; //扇形角度
 }
+
 /// <summary>
-/// 园形
+/// 圆形绘制信息
 /// </summary>
 public class DrawCircleInfo : DrawInfo
 {
-    public Vector3 pos;
-    public float radius;
+    public Vector3 pos; //圆心位置
+    public float radius; //圆形半径
 }
 
 /// <summary>
-/// 园环
+/// 圆环绘制信息
 /// </summary>
 public class DrawRingInfo : DrawInfo
 {
-    public Vector3 pos;
-    public float insideRadius;
-    public float outsideRadius;
+    public Vector3 pos; //圆心位置
+    public float insideRadius; //内圆半径
+    public float outsideRadius; //外圆半径
 }
 
 /// <summary>
-/// 球形射线
+/// 球形射线绘制信息
 /// </summary>
 public class DrawSphereRayInfo : DrawInfo
 {
-    public Vector3 pos;
-    public Vector3 direction;
-    public float distance;
-    public float radius;
+    public Vector3 pos; //起点位置
+    public Vector3 direction; //射线方向
+    public float distance; //射线距离
+    public float radius; //球体半径
 }
+
 /// <summary>
-/// 射线
+/// 射线绘制信息
 /// </summary>
 public class DrawRayInfo : DrawInfo
 {
-    public Vector3 pos;
-    public Vector3 direction;
-    public float distance;
+    public Vector3 pos; //起点位置
+    public Vector3 direction; //射线方向
+    public float distance; //射线距离
 }

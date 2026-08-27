@@ -1,23 +1,27 @@
 #if UNITY_EDITOR
 using UnityEditor.IMGUI.Controls;
-using UnityEngine;
 using YangTools.Scripts.Core.RedDotSystem;
 
 namespace GameMain
 {
+    /// <summary>
+    /// 红点树视图节点
+    /// </summary>
     public class RedDotTreeViewItem : TreeViewItem<int>
     {
-        private readonly RedDotTreeNode redDotNode;
-        public string Path { get; private set; }
-        public int Value { get; private set; }
+        private readonly RedDotTreeNode redDotNode; //红点数据节点
+        public string Path => redDotNode.FullPath;
+        public int Value => redDotNode.Value;
 
+        /// <summary>
+        /// 创建红点树视图节点
+        /// </summary>
+        /// <param name="id">视图编号</param>
+        /// <param name="node">红点数据节点</param>
         public RedDotTreeViewItem(int id, RedDotTreeNode node)
         {
             base.id = id;
             redDotNode = node;
-            Path = node.FullPath;
-            Value = node.Value;
-            Debug.Log($"Id:{id} node:{node}");
         }
 
         public override string displayName

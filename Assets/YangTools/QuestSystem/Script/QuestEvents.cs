@@ -56,16 +56,27 @@ public class QuestProgressEvent : EventMessageBase
     public string TargetId;
     [LabelText("数量")]
     public float Amount;
-    [LabelText("数值")]
+    [LabelText("数值（在线时长单位为分钟）")]
     public float Value;
     [LabelText("用户数据")]
     public object UserData;
 
+    /// <summary>
+    /// 创建空的任务进度事件
+    /// </summary>
     public QuestProgressEvent()
     {
     }
 
-    public QuestProgressEvent(QuestProgressEventType eventType, string targetId, int amount = 1, float value = 0f,
+    /// <summary>
+    /// 创建任务进度事件
+    /// </summary>
+    /// <param name="eventType">事件类型</param>
+    /// <param name="targetId">事件目标ID</param>
+    /// <param name="amount">事件数量</param>
+    /// <param name="value">事件附加数值</param>
+    /// <param name="userData">业务数据</param>
+    public QuestProgressEvent(QuestProgressEventType eventType, string targetId, float amount = 1f, float value = 0f,
         object userData = null)
     {
         EventType = eventType;
@@ -119,8 +130,23 @@ public class QuestRewardEvent : EventMessageBase
 {
     [LabelText("任务ID")]
     public string QuestId;
+    [LabelText("奖励列表索引")]
+    public int RewardIndex;
     [LabelText("奖励数据")]
     public QuestRewardData RewardData;
+}
+
+/// <summary>
+/// 任务进度重置事件
+/// </summary>
+public class QuestResetEvent : EventMessageBase
+{
+    [LabelText("任务ID")]
+    public string QuestId;
+    [LabelText("是否每日重置")]
+    public bool IsDailyReset;
+    [LabelText("任务运行时数据")]
+    public QuestRuntime Quest;
 }
 
 /// <summary>
@@ -128,4 +154,6 @@ public class QuestRewardEvent : EventMessageBase
 /// </summary>
 public class QuestDataLoadedEvent : EventMessageBase
 {
+    [LabelText("已加载任务数量")]
+    public int QuestCount;
 }

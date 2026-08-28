@@ -154,6 +154,14 @@ namespace YangTools
         /// <param name="eventArgs">参数列表</param>
         public void Send(string eventName, EventMessageBase eventArgs)
         {
+            Send(eventName, (object)eventArgs);
+        }
+
+        /// <summary>
+        /// 发送任意任务或项目事件参数
+        /// </summary>
+        public void Send(string eventName, object eventArgs)
+        {
             if (eventDic.TryGetValue(eventName, out SortedList<int, List<EventInfo>> sortList))
             {
                 EventData eventData = new EventData(eventName, eventArgs);
@@ -270,13 +278,13 @@ namespace YangTools
         /// <summary>
         /// 事件参数
         /// </summary>
-        public EventMessageBase Args { get; private set; }
+        public object Args { get; private set; }
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="name">事件名称</param>
         /// <param name="args">事件参数</param>
-        public EventData(string name, EventMessageBase args)
+        public EventData(string name, object args)
         {
             Name = name;
             Args = args;

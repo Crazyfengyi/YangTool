@@ -65,7 +65,15 @@ namespace YangTools
         /// <param name="type">类型</param>
         /// <param name="eventName">事件名称</param>
         /// <param name="args">事件参数</param>
-        public static void SendEvent(Type type, EventMessageBase args,string eventName = "") 
+        public static void SendEvent(Type type, EventMessageBase args,string eventName = "")
+        {
+            SendEvent(type, (object)args, eventName);
+        }
+
+        /// <summary>
+        /// 发送不依赖项目事件基类的事件参数
+        /// </summary>
+        public static void SendEvent(Type type, object args,string eventName = "")
         {
             string targetName = type.FullName;
             if (!string.IsNullOrEmpty(eventName))

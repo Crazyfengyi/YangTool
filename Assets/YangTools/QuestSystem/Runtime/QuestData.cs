@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
@@ -9,21 +8,24 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "QuestData", menuName = "Game/Quest/QuestData")]
 public class QuestData : ScriptableObject
 {
-    [LabelText("任务稳定ID")]
+    [InspectorName("任务稳定ID")]
     public string Id;
-    [LabelText("任务类型")]
+    [InspectorName("任务类型")]
     public TaskType TaskType;
-    [LabelText("任务标题")]
+    [InspectorName("默认激活任务")]
+    [Tooltip("任务注册且前置任务满足后，是否直接进入进行中状态")]
+    public bool DefaultActive;
+    [InspectorName("任务标题")]
     [TextArea(1,2)]
     public string Title;
-    [LabelText("任务描述")]
+    [InspectorName("任务描述")]
     [TextArea(1,2)]
     public string Description;
-    [LabelText("任务前置条件ID列表")]
+    [InspectorName("任务前置条件ID列表")]
     public List<string> PrerequisiteQuestIds = new List<string>();
-    [LabelText("任务目标数据列表")]
+    [InspectorName("任务目标数据列表")]
     public List<QuestObjectiveData> Objectives = new List<QuestObjectiveData>();
-    [LabelText("任务奖励数据列表")]
+    [InspectorName("任务奖励数据列表")]
     public List<QuestRewardData> Rewards = new List<QuestRewardData>();
 
     /// <summary>
@@ -81,20 +83,20 @@ public class QuestData : ScriptableObject
 [Serializable]
 public class QuestObjectiveData
 {
-    [LabelText("备注")]
+    [InspectorName("备注")]
     [TextArea(1,1)]
     public string remark;
-    [LabelText("目标标题")]
+    [InspectorName("目标标题")]
     [TextArea(1,1)]
     public string Title;
-    [LabelText("目标描述")]
+    [InspectorName("目标描述")]
     [TextArea(1,1)]
     public string Description;
-    [LabelText("条件满足后自动完成")]
+    [InspectorName("条件满足后自动完成")]
     public bool AutoComplete = true;
-    [LabelText("条件组合方式")]
+    [InspectorName("条件组合方式")]
     public QuestConditionGroupType ConditionGroupType = QuestConditionGroupType.And;
-    [LabelText("条件列表")]
+    [InspectorName("条件列表")]
     public List<QuestConditionData> Conditions = new List<QuestConditionData>();
 }
 
@@ -103,9 +105,9 @@ public class QuestObjectiveData
 /// </summary>
 public enum QuestConditionGroupType
 {
-    [LabelText("全部满足")]
+    [InspectorName("全部满足")]
     And,
-    [LabelText("任一满足")]
+    [InspectorName("任一满足")]
     Or
 }
 
@@ -114,23 +116,22 @@ public enum QuestConditionGroupType
 /// </summary>
 public enum QuestConditionType
 {
-    [LabelText("计数类型-记录事件发生的次数")]
+    [InspectorName("计数类型-记录事件发生的次数")]
     EventCount,
-    [LabelText("事件类型-表示事件只发生一次")]
+    [InspectorName("事件类型-表示事件只发生一次")]
     EventOnce
 }
 
-[LabelText("任务条件配置数据")]
 [Serializable]
 public class QuestConditionData
 {
-    [LabelText("条件类型")]
+    [InspectorName("条件类型")]
     public QuestConditionType ConditionType = QuestConditionType.EventCount;
-    [LabelText("进度事件类型")]
+    [InspectorName("进度事件类型")]
     public QuestProgressEventType EventType = QuestProgressEventType.Custom;
-    [LabelText("事件目标ID（为空时匹配同类型全部事件）")]
+    [InspectorName("事件目标ID（为空时匹配同类型全部事件）")]
     public string TargetId;
-    [LabelText("目标数量")]
+    [InspectorName("目标数量")]
     [Min(1)] public int TargetCount = 1;
 }
 
@@ -139,15 +140,15 @@ public class QuestConditionData
 /// </summary>
 public enum QuestRewardType
 {
-    [LabelText("自定义")]
+    [InspectorName("自定义")]
     Custom,
-    [LabelText("现金")]
+    [InspectorName("现金")]
     Money,
-    [LabelText("金币")]
+    [InspectorName("金币")]
     Gold,
-    [LabelText("道具")]
+    [InspectorName("道具")]
     Item,
-    [LabelText("经验")]
+    [InspectorName("经验")]
     Exp
 }
 
@@ -157,11 +158,11 @@ public enum QuestRewardType
 [Serializable]
 public class QuestRewardData
 {
-    [LabelText("奖励类型")]
+    [InspectorName("奖励类型")]
     public QuestRewardType RewardType = QuestRewardType.Custom;
-    [LabelText("奖励目标ID（道具填写道具ID，自定义奖励按业务约定）")]
+    [InspectorName("奖励目标ID（道具填写道具ID，自定义奖励按业务约定）")]
     public string TargetKey;
-    [LabelText("奖励数量")]
+    [InspectorName("奖励数量")]
     [Min(1)] public int Count = 1;
 }
 
@@ -170,12 +171,12 @@ public class QuestRewardData
 /// </summary>
 public enum TaskType
 {
-    [LabelText("普通")]
+    [InspectorName("普通")]
     None,
-    [LabelText("每日")]
+    [InspectorName("每日")]
     EveryDay,
-    [LabelText("现金")]
+    [InspectorName("现金")]
     Money,
-    [LabelText("收集")]
+    [InspectorName("收集")]
     Collect,
 }

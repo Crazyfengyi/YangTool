@@ -1,211 +1,107 @@
 # QuestSystem 任务系统
 
-QuestSystem 是一个基于 `ScriptableObject` 配置的任务系统，负责任务状态、目标条件、进度、每日刷新、存档和奖励事件分发。
+QuestSystem 是基于 `ScriptableObject` 的任务运行时模块，负责任务状态、目标条件、进度、每日刷新、存档接口和奖励事件。系统拆分为独立核心与可选项目适配层，整个目录可以直接复制到没有 YooAsset、BagMgr、YangSaveDataManager 或 YangEventGroup 的新项目中。
 
 ## 目录结构
 
 ```text
 Assets/YangTools/QuestSystem/
-├─ Script/                         运行时代码
-│  ├─ QuestData.cs                 任务配置、目标和条件数据
-│  ├─ QuestEvents.cs               进度事件和任务事件
-│  ├─ QuestRuntime.cs              任务运行时逻辑
-│  ├─ QuestManager.cs              通用任务管理器单例
-│  ├─ QuestManagerBootstrap.cs     项目默认启动引导
-│  ├─ QuestServices.cs             服务接口和内存实现
-│  └─ QuestProjectAdapters.cs      Yang、BagMgr、YooAsset 适配器
-├─ Editor/QuestSystem/             QuestData 中文 Inspector
-└─ Data/                           任务配置资源和管理器预制体
+├─ Runtime/
+│  ├─ QuestSystem.Runtime.asmdef  独立核心程序集
+│  ├─ QuestData.cs                任务配置数据
+│  ├─ QuestEvents.cs              任务事件和状态
+│  ├─ QuestRuntime.cs             运行时进度逻辑
+│  ├─ QuestManager.cs             任务管理器单例
+│  ├─ QuestServices.cs            服务接口和内存实现
+│  ├─ QuestSaveModels.cs          独立存档模型
+│  └─ QuestEventMessageBase.cs    核心事件基类
+├─ Integration/
+│  └─ QuestProjectAdapters.cs      可选 Yang 存档、BagMgr、YangEventGroup、YooAsset 适配器
+├─ Script/
+│  └─ QuestManagerBootstrap.cs     双模式启动引导器
+├─ Editor/QuestSystem/             中文任务 Inspector
+└─ Data/                           任务资源和管理器预制体
 ```
 
-## 快速开始
+### 新项目最快上手
 
-### 1 创建管理器
+1. 复制 `QuestSystem` 目录到新项目的 `Assets` 下，不要定义 `YANGTOOLS_QUEST_INTEGRATION`。
+2. 将 `Data/QusetManager.prefab` 拖入首个场景（或创建对象并添加 `QuestManager`、`QuestManagerBootstrap`）。
+3. 通过 `Assets/Create/Game/Quest/QuestData` 创建任务，填写唯一 `Id`、标题、目标/条件和奖励；`OnLineTime` 的目标数量按秒填写。
+4. 把任务资源拖到 Bootstrap 的“通用模式本地任务”列表，运行即可。Bootstrap 会自动注入内存存档和空道具服务。
+5. 业务代码通过 `QuestManager.Instance` 调用 `AcceptQuest`、`ReportProgress`、`CompleteQuest`、`ClaimReward`；监听 `QuestChanged` 或 `DataLoaded` 更新界面。
 
-推荐直接使用 `Assets/YangTools/QuestSystem/Data/QusetManager.prefab`。手动创建时，在同一个 GameObject 上添加：
+不需要存档、背包或 YooAsset 配置即可运行。后续要接入自己的系统时，再按下方“注入接口”实现服务并在注册任务前注入。
 
-`Add Component → YangTools → Quest → Quest Manager`
+## 存档兼容
 
-`Add Component → YangTools → Quest → Quest Manager Bootstrap`
+核心层只依赖 `QuestSaveItem`、`QuestSaveObjectiveItem` 和 `QuestSaveConditionItem`。
+集成层会把它们映射到项目存档类型，任务状态、目标索引和条件索引结构保持不变；在线时长字段统一按秒读写。
+切换秒制后请清理或重置旧的在线时长存档。目标和条件不需要手动填写 ID，运行时按列表索引生成内部键，已上线任务不要随意调整列表顺序。
 
-`QuestManager` 是场景单例：
-
-- 第一个实例会成为 `QuestManager.Instance`
-- 重复实例会自动销毁
-- 默认跨场景保留
-- `Update` 会自动驱动时间条件和在线时长，不要再额外每帧调用 `Tick`
-
-`QuestManagerBootstrap` 默认会自动完成项目接入：
-
-- 注入 Yang 存档和 `BagMgr` 道具服务
-- 桥接全局 `QuestProgressEvent` 和任务状态事件
-- 等待 YooAsset 就绪后加载 `DefaultPackage` 中标签为 `SO` 的全部任务配置
-
-Bootstrap Inspector 可配置自动加载开关、资源包名称、任务资源标签和等待时长，默认值分别为开启、`DefaultPackage`、`SO` 和 30 秒。超时或加载异常时会记录错误并完成当前注册批次，管理器仍可运行，之后可以手动调用 `RegisterQuest` 和 `CompleteRegistration`。
-
-如果需要纯通用模式或自行注入服务，可以移除或禁用 `QuestManagerBootstrap`，再通过代码调用 `ConfigureServices` 和任务注册接口。
-
-
-### 2 创建任务配置
-
-在 Project 窗口选择：
-
-`Create → Game → Quest → QuestData`
-
-任务配置字段说明：
-
-| 字段 | 说明 |
-| --- | --- |
-| 任务稳定 ID | 必填且全局唯一，用于前置任务和存档索引 |
-| 任务类型 | 普通、每日、现金或收集 |
-| 前置任务 ID 列表 | 只有列表中的任务完成后才可接取 |
-| 任务目标列表 | 按顺序完成的目标 |
-| 任务奖励列表 | 完成任务后通过奖励事件发放 |
-
-任务 ID 必须全局唯一且稳定。目标和条件不需要手动填写 ID，系统会按列表索引生成内部存档键，已上线任务不要随意调整目标或条件顺序。
-
-### 3 注册任务
-
-可以直接注册任务资源：
+## 基本用法
 
 ```csharp
 QuestManager manager = QuestManager.Instance;
 manager.Initialize(new[] { questData });
-```
-
-也可以批量注册：
-
-```csharp
-manager.RegisterQuests(questDataList);
-```
-
-注册完成后会触发 `DataLoaded` 事件。启用 Bootstrap 后无需额外编写 YooAsset 加载代码。需要完全手动控制时，可以使用：
-
-```csharp
-private YooAssetQuestDataLoader questLoader;
-
-private async void Start()
-{
-    QuestManager manager = QuestManager.Instance;
-    manager.ConfigureServices(new YangQuestSaveStore(), new BagQuestItemService());
-    manager.Initialize();
-
-    questLoader = new YooAssetQuestDataLoader();
-    await questLoader.LoadAsync(manager, "DefaultPackage", "SO");
-}
-
-private void OnDestroy()
-{
-    questLoader?.Dispose();
-}
-```
-
-`ConfigureServices` 必须在注册任务数据前调用。未注入服务时，系统使用内存存档和空背包服务，适合测试但不会写入正式存档。`QuestManager.IsServicesConfigured` 可用于判断是否已注入服务。
-
-## 进度和状态
-
-### 接取和完成
-
-```csharp
 manager.AcceptQuest("quest_001");
+manager.ReportProgress(new QuestProgressEvent(QuestProgressEventType.Kill, "enemy_001"));
 manager.CompleteQuest("quest_001");
 manager.ClaimReward("quest_001");
 ```
 
-任务状态流转为：
-`锁定 → 可接取 → 进行中 → 已完成 → 已领奖`
+`QuestManager` 是场景单例，默认跨场景保留。`Update` 会自动驱动时间和在线时长条件。`DataLoaded` 在当前批次任务注册完成后触发。
 
-目标勾选“条件满足后自动完成”时，条件满足会自动完成目标；否则需要调用 `CompleteQuest`。
+`QuestData` 的“默认激活任务”用于控制任务注册时的初始状态。启用后，任务在前置任务满足时直接进入 `Active`（进行中），不需要额外调用 `AcceptQuest`；前置任务未满足时仍保持 `Locked`，满足后会自动激活。关闭时任务默认进入 `Available`（可接取）。已有 `Active`、`Completed` 或 `Rewarded` 存档状态不会被降级。
 
-### 提交进度事件
+`OnLineTime` 条件的“目标数量”单位为秒，例如 60 表示在线 1 分钟。进度事件中的 `Value` 和运行时存档字段 `onlineTimeSeconds` 也统一使用秒。
 
-```csharp
-manager.ReportProgress(new QuestProgressEvent(
-    QuestProgressEventType.Kill,
-    "enemy_001",
-    amount: 1f));
-```
+默认任务窗口的按钮会根据任务状态执行不同操作：`Locked` 显示“锁定”，`Available` 显示“接取任务”，`Active` 显示“进行中”；当 `AutoComplete` 关闭且目标条件满足时显示“确认完成”，`Completed` 显示“可领取”，`Rewarded` 显示“已领取”。
 
-条件类型：
+## 注入接口（自定义集成必读）
 
-- `EventCount`：每次匹配事件累加 `Amount`
-- `EventOnce`：第一次匹配事件后直接满足
-- `Time`：按真实 UTC 时间累计，目标数量单位为分钟
-- `OnLineTime`：仅在应用前台累计，目标数量单位为分钟
-- `ItemNum`：从 `IQuestItemService` 读取当前道具数量，`TargetId` 填道具 ID
+接口定义位于 `Runtime/QuestServices.cs`。这里是“实现接口”，不是必须继承某个 `MonoBehaviour`。使用 Bootstrap 的默认模式无需编写实现类；只有在替换默认服务或接入项目系统时才需要编写实现类：
 
-`ItemNum` 条件会由管理器自动刷新，不需要手动伪造进度事件。
+| 接口 | 是否必须 | 用途 | 必须提供的成员 |
+| --- | --- | --- | --- |
+| `IQuestSaveStore` | 管理器运行时必须有；默认由 Bootstrap 提供 | 读取、创建、清理和保存任务进度 | `GetQuest`、`GetOrCreateQuest`、`Clear`、`MarkDirty` |
+| `IQuestItemService` | 使用 `ItemNum` 条件时实现；否则可用内置空服务 | 查询和消耗道具 | `GetItemCount`、`HasItem`、`TryConsume` |
+| `IQuestTimeProvider` | 否 | 提供 UTC 秒数和本地日期键 | `UtcNowSeconds`、`LocalDateKey` |
 
-## 奖励处理
+`ConfigureServices` 必须传入非空的 `IQuestSaveStore`；`IQuestItemService` 可以传 `null`，系统会自动使用 `NullQuestItemService.Instance`。不使用道具条件时也可显式传入该空服务；不提供时间服务时使用系统时间。Bootstrap 已经自动配置服务时，不要重复覆盖。
 
-管理器只负责发送 `RewardIssued` 事件，不直接修改金币或背包，业务层负责监听并发放奖励：
+最小自定义注入示例（必须在注册任务前调用）：
 
 ```csharp
-private void OnEnable()
-{
-    if (QuestManager.Instance != null)
-    {
-        QuestManager.Instance.RewardIssued += OnRewardIssued;
-    }
-}
+public sealed class MyQuestSaveStore : IQuestSaveStore { /* 实现 4 个成员 */ }
+public sealed class MyQuestItemService : IQuestItemService { /* 实现 3 个成员 */ }
 
-private void OnDisable()
-{
-    if (QuestManager.Instance != null)
-    {
-        QuestManager.Instance.RewardIssued -= OnRewardIssued;
-    }
-}
-
-private void OnRewardIssued(QuestRewardEvent eventData)
-{
-    QuestRewardData reward = eventData.RewardData;
-    // 根据 RewardType 和 TargetKey 发放实际奖励
-}
-```
-奖励字段说明：
-
-- `RewardType.Item`：`TargetKey` 填道具 ID，`Count` 填数量
-- 其他奖励：`TargetKey` 按业务约定填写目标键，`Count` 填数量
-- 奖励列表不需要填写奖励 ID
-
-## 服务接口
-
-运行时通过接口保持解耦：
-
-- `IQuestSaveStore`：任务存档读写
-- `IQuestItemService`：道具数量查询和消耗
-- `IQuestTimeProvider`：时间来源
-
-项目已有实现：
-
-- `YangQuestSaveStore`
-- `BagQuestItemService`
-- `SystemQuestTimeProvider`
-
-需要测试时可使用 `QuestMemorySaveStore` 和 `QuestMemoryItemService`。
-
-## 查询和事件
-
-```csharp
-QuestRuntime runtime = manager.GetQuest("quest_001");
-QuestData config = manager.GetStaticData("quest_001");
-List<QuestRuntime> allQuests = manager.GetAllQuests();
+QuestManager manager = QuestManager.Instance;
+manager.ConfigureServices(new MyQuestSaveStore(), new MyQuestItemService());
+manager.Initialize();
+manager.RegisterQuests(questDatas);
+manager.CompleteRegistration();
 ```
 
-管理器事件：
+如果需要自定义时间，再实现 `IQuestTimeProvider` 并作为第三个参数传入。服务配置完成并开始注册后不能再替换；核心存档类型使用 `QuestSaveItem`、`QuestSaveObjectiveItem` 和 `QuestSaveConditionItem`，项目适配层负责与现有存档类型互转。
 
-- `QuestChanged`：任务状态变化
-- `ObjectiveChanged`：目标进度变化
-- `RewardIssued`：奖励待发放
-- `QuestReset`：每日任务重置
-- `DataLoaded`：任务配置注册完成
+## 奖励和事件
+
+管理器只发布 `RewardIssued`，不直接修改金币或背包。`QuestRewardData.TargetKey` 用于填写道具 ID 或业务自定义目标键，奖励列表不需要额外 ID。
+
+任务事件包括 `QuestChanged`、`ObjectiveChanged`、`OnlineTimeProgressed`、`RewardIssued`、`QuestReset` 和 `DataLoaded`。其中 `OnlineTimeProgressed` 每秒发送在线时长增量，`OnLineTime` 条件的目标数量、事件数值和存档字段统一使用秒。核心事件基类不依赖项目事件系统，集成模式下由适配器转发到 YangEventGroup。
+
+## 默认任务窗口
+
+`DefaultWindow/Window/TaskWindow.prefab` 的 `TaskWindow` 直接继承 `MonoBehaviour`，只使用 Unity 原生的 `Toggle`、`ToggleGroup`、`Button`、`ScrollRect` 和 `Content` 容器，不依赖 YangUGUI、`UICustomToggle`、`UICustomButton` 或 EnhancedScroller。通过 `Open()` 和 `Close()` 控制窗口显隐；打开窗口或切换分类时会直接实例化当前分类的全部 `TaskNode`，窗口会在刷新前销毁旧节点，并按任务状态和进度排序后重新生成。
+
+`TaskNode` 的本地化、广告和背包物品视图均按可选服务处理。缺少项目专属服务时仍可显示任务标题、进度并调用核心 `ClaimReward`；具备项目 UI 资源时，可在预制体中绑定对应按钮、文本和奖励视图以启用完整表现。
+
+如果只使用 QuestSystem 核心而不需要默认窗口，可以不引用 `DefaultWindow` 目录；核心运行时不依赖任何 UI 或第三方滚动列表插件。
 
 ## 注意事项
 
-1. `QuestData.Id` 必须唯一且稳定，修改后会被视为新任务并无法匹配原存档。
-2. 前置任务列表填写任务稳定 ID，不是目标或条件的内部键。
-3. 目标和条件 ID 由系统按列表索引生成，发布后请保持列表顺序稳定。
-4. 事件监听需要在 `OnDisable` 中取消订阅，避免重复回调。
-5. 奖励事件只表示需要发放奖励，实际发放由业务层完成。
-6. 中文 Inspector 使用 Unity 原生编辑器绘制，不依赖 Odin 的编辑器兼容性。
+1. `QuestData.Id` 必须全局唯一且稳定，用于前置任务和存档索引。
+2. 目标和条件 ID 由系统按列表索引生成，不是配置必填项。
+3. 事件监听应在 `OnDisable` 中取消，避免重复回调。
+4. 奖励事件只表示待发放奖励，实际发放由业务层完成。

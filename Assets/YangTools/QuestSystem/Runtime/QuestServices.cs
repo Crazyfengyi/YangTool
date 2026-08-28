@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using YangTools.Scripts.Core.YangSaveData;
 
 #region 接口
 
@@ -14,14 +13,14 @@ public interface IQuestSaveStore
     /// </summary>
     /// <param name="questId">任务ID</param>
     /// <returns>任务存档，不存在时返回null</returns>
-    SaveQuestItem GetQuest(string questId);
+    QuestSaveItem GetQuest(string questId);
 
     /// <summary>
     /// 获取或创建指定任务存档
     /// </summary>
     /// <param name="questId">任务ID</param>
     /// <returns>任务存档</returns>
-    SaveQuestItem GetOrCreateQuest(string questId);
+    QuestSaveItem GetOrCreateQuest(string questId);
 
     /// <summary>
     /// 清空全部任务存档
@@ -81,8 +80,8 @@ public interface IQuestTimeProvider
 /// </summary>
 public sealed class QuestMemorySaveStore : IQuestSaveStore
 {
-    private readonly Dictionary<string, SaveQuestItem> saveItems =
-        new Dictionary<string, SaveQuestItem>(StringComparer.Ordinal); //内存任务存档
+    private readonly Dictionary<string, QuestSaveItem> saveItems =
+        new Dictionary<string, QuestSaveItem>(StringComparer.Ordinal); //内存任务存档
 
     /// <summary>
     /// 创建内存任务存档服务
@@ -92,35 +91,35 @@ public sealed class QuestMemorySaveStore : IQuestSaveStore
     }
 
     /// <inheritdoc />
-    public SaveQuestItem GetQuest(string questId)
+    public QuestSaveItem GetQuest(string questId)
     {
         if (string.IsNullOrWhiteSpace(questId))
         {
             return null;
         }
 
-        saveItems.TryGetValue(questId, out SaveQuestItem saveItem);
+        saveItems.TryGetValue(questId, out QuestSaveItem saveItem);
         return saveItem;
     }
 
     /// <inheritdoc />
-    public SaveQuestItem GetOrCreateQuest(string questId)
+    public QuestSaveItem GetOrCreateQuest(string questId)
     {
         if (string.IsNullOrWhiteSpace(questId))
         {
             throw new ArgumentException("任务ID不能为空", nameof(questId));
         }
 
-        if (saveItems.TryGetValue(questId, out SaveQuestItem saveItem))
+        if (saveItems.TryGetValue(questId, out QuestSaveItem saveItem))
         {
             return saveItem;
         }
 
-        saveItem = new SaveQuestItem
+        saveItem = new QuestSaveItem
         {
             questId = questId,
-            state = QuestState.Locked,
-            objectives = new List<SaveQuestObjectiveItem>()
+            state = QuestState.Active,
+            objectives = new List<QuestSaveObjectiveItem>()
         };
         saveItems.Add(questId, saveItem);
         return saveItem;

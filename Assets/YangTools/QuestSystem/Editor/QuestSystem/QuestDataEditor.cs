@@ -15,6 +15,7 @@ public sealed class QuestDataEditor : Editor
 
     private SerializedProperty idProperty; //任务ID属性
     private SerializedProperty taskTypeProperty; //任务类型属性
+    private SerializedProperty defaultActiveProperty; //默认激活属性
     private SerializedProperty titleProperty; //任务标题属性
     private SerializedProperty descriptionProperty; //任务描述属性
     private SerializedProperty prerequisiteQuestIdsProperty; //前置任务属性
@@ -35,6 +36,7 @@ public sealed class QuestDataEditor : Editor
     {
         idProperty = serializedObject.FindProperty("Id");
         taskTypeProperty = serializedObject.FindProperty("TaskType");
+        defaultActiveProperty = serializedObject.FindProperty("DefaultActive");
         titleProperty = serializedObject.FindProperty("Title");
         descriptionProperty = serializedObject.FindProperty("Description");
         prerequisiteQuestIdsProperty = serializedObject.FindProperty("PrerequisiteQuestIds");
@@ -55,6 +57,7 @@ public sealed class QuestDataEditor : Editor
 
         EditorGUILayout.PropertyField(idProperty, new GUIContent("任务ID"));
         EditorGUILayout.PropertyField(taskTypeProperty, new GUIContent("任务类型"));
+        EditorGUILayout.PropertyField(defaultActiveProperty, new GUIContent("默认领取任务"));
         EditorGUILayout.PropertyField(titleProperty, new GUIContent("任务标题"));
         EditorGUILayout.PropertyField(descriptionProperty, new GUIContent("任务描述"));
         EditorGUILayout.Space();
@@ -199,10 +202,28 @@ public sealed class QuestDataEditor : Editor
 
         EditorGUI.indentLevel++;
         DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("ConditionType"), "条件类型");
-        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("EventType"), "进度事件类型");
+        SerializedProperty eventTypeProperty = conditionProperty.FindPropertyRelative("EventType");
+        DrawProperty(ref contentRect, eventTypeProperty, "进度事件类型");
         DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("TargetId"), "事件目标ID");
-        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("TargetCount"), "目标数量");
+        string targetLabel = IsOnlineTimeEvent(eventTypeProperty) ? "目标数量（秒）" : "目标数量";
+        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("TargetCount"), targetLabel);
         EditorGUI.indentLevel--;
+    }
+
+    /// <summary>
+    /// 判断条件事件是否为在线时长
+    /// </summary>
+    /// <param name="eventTypeProperty">事件类型属性</param>
+    /// <returns>在线时长事件返回true</returns>
+    private static bool IsOnlineTimeEvent(SerializedProperty eventTypeProperty)
+    {
+        if (eventTypeProperty == null || eventTypeProperty.enumNames == null
+            || eventTypeProperty.enumValueIndex < 0 || eventTypeProperty.enumValueIndex >= eventTypeProperty.enumNames.Length)
+        {
+            return false;
+        }
+
+        return eventTypeProperty.enumNames[eventTypeProperty.enumValueIndex] == nameof(QuestProgressEventType.OnLineTime);
     }
 
     /// <summary>

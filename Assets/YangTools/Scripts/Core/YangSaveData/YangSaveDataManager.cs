@@ -465,8 +465,8 @@ namespace YangTools.Scripts.Core.YangSaveData
         public string conditionId; //运行时内部条件键 不需要在任务配置中填写
         public float currentCount; //当前条件进度
         public long startUtcSeconds; //时间条件开始时间
-        // 历史字段名保留兼容 实际存储单位为分钟
-        public float onlineTimeSeconds; //累计在线时长分钟数
+        // 字段名保持兼容 实际存储单位为秒
+        public float onlineTimeSeconds; //累计在线时长秒数
 
         /// <summary>
         /// 修正反序列化后的非法数据

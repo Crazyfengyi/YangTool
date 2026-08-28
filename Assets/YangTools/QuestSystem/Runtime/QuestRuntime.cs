@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using YangTools.Scripts.Core.YangSaveData;
 
 /// <summary>
 /// 任务运行时数据
@@ -21,7 +20,7 @@ public class QuestRuntime
     /// <param name="data">任务配置</param>
     /// <param name="saveItem">任务存档</param>
     /// <param name="objectiveChanged">目标变化回调</param>
-    public QuestRuntime(QuestData data, SaveQuestItem saveItem,
+    public QuestRuntime(QuestData data, QuestSaveItem saveItem,
         Action<QuestObjectiveChangedEvent> objectiveChanged = null)
     {
         Data = data ?? throw new ArgumentNullException(nameof(data));
@@ -215,7 +214,7 @@ public class QuestRuntime
     /// 将运行时状态写回存档对象。
     /// </summary>
     /// <param name="saveItem">存档对象</param>
-    public void WriteToSave(SaveQuestItem saveItem)
+    public void WriteToSave(QuestSaveItem saveItem)
     {
         if (saveItem == null)
         {
@@ -224,11 +223,11 @@ public class QuestRuntime
 
         saveItem.questId = Id;
         saveItem.state = State;
-        saveItem.objectives ??= new List<SaveQuestObjectiveItem>();
+        saveItem.objectives ??= new List<QuestSaveObjectiveItem>();
         saveItem.objectives.Clear();
         for (int i = 0; i < Objectives.Count; i++)
         {
-            SaveQuestObjectiveItem objectiveItem = new SaveQuestObjectiveItem();
+            QuestSaveObjectiveItem objectiveItem = new QuestSaveObjectiveItem();
             Objectives[i].WriteToSave(objectiveItem);
             saveItem.objectives.Add(objectiveItem);
         }
@@ -238,7 +237,7 @@ public class QuestRuntime
     /// 根据配置和存档构建任务目标
     /// </summary>
     /// <param name="saveItem">任务存档</param>
-    private void BuildObjectives(SaveQuestItem saveItem)
+    private void BuildObjectives(QuestSaveItem saveItem)
     {
         Objectives.Clear();
         if (Data.Objectives == null)
@@ -260,7 +259,7 @@ public class QuestRuntime
             // 目标不再要求人工ID 运行时使用列表索引生成内部键
             string objectiveId = QuestRuntimeIdUtility.ResolveUniqueId(
                 string.Empty, $"Objective_{i}", runtimeIds, "任务目标");
-            SaveQuestObjectiveItem objectiveSave = saveItem?.GetObjective(objectiveId)
+            QuestSaveObjectiveItem objectiveSave = saveItem?.GetObjective(objectiveId)
                 ?? saveItem?.GetObjectiveAt(runtimeIndex);
             Objectives.Add(new ObjectiveRuntime(objectiveData, objectiveSave, objectiveId, objectiveChanged));
             runtimeIndex++;
@@ -272,7 +271,7 @@ public class QuestRuntime
     /// </summary>
     /// <param name="saveItem">任务存档</param>
     /// <returns>有效任务状态</returns>
-    private static QuestState ResolveSavedState(SaveQuestItem saveItem)
+    private static QuestState ResolveSavedState(QuestSaveItem saveItem)
     {
         if (saveItem == null || !Enum.IsDefined(typeof(QuestState), saveItem.state))
         {
@@ -337,7 +336,7 @@ public class ObjectiveRuntime
     /// <param name="saveItem">目标存档</param>
     /// <param name="runtimeId">运行时稳定ID</param>
     /// <param name="objectiveChanged">目标变化回调</param>
-    public ObjectiveRuntime(QuestObjectiveData data, SaveQuestObjectiveItem saveItem, string runtimeId,
+    public ObjectiveRuntime(QuestObjectiveData data, QuestSaveObjectiveItem saveItem, string runtimeId,
         Action<QuestObjectiveChangedEvent> objectiveChanged = null)
     {
         Data = data ?? throw new ArgumentNullException(nameof(data));
@@ -483,7 +482,7 @@ public class ObjectiveRuntime
     /// 将目标运行时状态写回存档对象。
     /// </summary>
     /// <param name="saveItem">存档对象</param>
-    public void WriteToSave(SaveQuestObjectiveItem saveItem)
+    public void WriteToSave(QuestSaveObjectiveItem saveItem)
     {
         if (saveItem == null)
         {
@@ -492,11 +491,11 @@ public class ObjectiveRuntime
 
         saveItem.objectiveId = Id;
         saveItem.isCompleted = IsCompleted;
-        saveItem.conditions ??= new List<SaveQuestConditionItem>();
+        saveItem.conditions ??= new List<QuestSaveConditionItem>();
         saveItem.conditions.Clear();
         for (int i = 0; i < Conditions.Count; i++)
         {
-            SaveQuestConditionItem conditionItem = new SaveQuestConditionItem();
+            QuestSaveConditionItem conditionItem = new QuestSaveConditionItem();
             Conditions[i].WriteToSave(conditionItem);
             saveItem.conditions.Add(conditionItem);
         }
@@ -506,7 +505,7 @@ public class ObjectiveRuntime
     /// 根据配置和存档构建任务条件
     /// </summary>
     /// <param name="saveItem">目标存档</param>
-    private void BuildConditions(SaveQuestObjectiveItem saveItem)
+    private void BuildConditions(QuestSaveObjectiveItem saveItem)
     {
         Conditions.Clear();
         if (Data.Conditions == null)
@@ -528,7 +527,7 @@ public class ObjectiveRuntime
             // 条件不再要求人工ID 运行时使用列表索引生成内部键
             string conditionId = QuestRuntimeIdUtility.ResolveUniqueId(
                 string.Empty, $"Condition_{i}", runtimeIds, "任务条件");
-            SaveQuestConditionItem conditionSave = saveItem?.GetCondition(conditionId)
+            QuestSaveConditionItem conditionSave = saveItem?.GetCondition(conditionId)
                 ?? saveItem?.GetConditionAt(runtimeIndex);
             Conditions.Add(new ConditionRuntime(conditionData, conditionSave, conditionId));
             runtimeIndex++;
@@ -607,11 +606,12 @@ public class ConditionRuntime
 {
     private readonly string runtimeId; //运行时稳定ID
     private long startUtcSeconds; //时间条件起始UTC秒数
-    private float onlineTimeMinutes; //累计在线分钟数
+    private float onlineTimeSeconds; //累计在线秒数
 
     public QuestConditionData Data { get; }
     public string Id => runtimeId;
     public float CurrentCount { get; private set; }
+    public float OnlineTimeSeconds => IsOnlineTimeCondition() ? onlineTimeSeconds : 0f;
     public int TargetCount => Data != null ? Math.Max(1, Data.TargetCount) : 1;
     public bool IsCompleted => CurrentCount >= TargetCount;
     public bool IsItemNumCondition => Data != null && Data.EventType == QuestProgressEventType.ItemNum;
@@ -622,7 +622,7 @@ public class ConditionRuntime
     /// <param name="data">条件配置</param>
     /// <param name="saveItem">条件存档</param>
     /// <param name="runtimeId">运行时稳定ID</param>
-    public ConditionRuntime(QuestConditionData data, SaveQuestConditionItem saveItem, string runtimeId)
+    public ConditionRuntime(QuestConditionData data, QuestSaveConditionItem saveItem, string runtimeId)
     {
         Data = data ?? throw new ArgumentNullException(nameof(data));
         this.runtimeId = string.IsNullOrWhiteSpace(runtimeId)
@@ -630,10 +630,10 @@ public class ConditionRuntime
             : runtimeId;
         CurrentCount = NormalizeNonNegative(saveItem?.currentCount ?? 0f);
         startUtcSeconds = Math.Max(0L, saveItem?.startUtcSeconds ?? 0L);
-        onlineTimeMinutes = NormalizeNonNegative(saveItem?.onlineTimeSeconds ?? 0f);
+        onlineTimeSeconds = NormalizeNonNegative(saveItem?.onlineTimeSeconds ?? 0f);
         if (IsOnlineTimeCondition())
         {
-            onlineTimeMinutes = Math.Min(TargetCount, onlineTimeMinutes);
+            onlineTimeSeconds = Math.Min(TargetCount, onlineTimeSeconds);
         }
 
         CurrentCount = Math.Min(CurrentCount, TargetCount);
@@ -689,7 +689,7 @@ public class ConditionRuntime
     }
 
     /// <summary>
-    /// 累计在线时长事件，目标值和事件数值单位均为分钟。
+    /// 累计在线时长事件，目标值和事件数值单位均为秒。
     /// </summary>
     /// <param name="progressEvent">在线时长进度事件</param>
     /// <returns>在线时长是否发生变化</returns>
@@ -703,11 +703,11 @@ public class ConditionRuntime
             return false;
         }
 
-        float oldMinutes = onlineTimeMinutes;
+        float oldSeconds = onlineTimeSeconds;
         float oldCount = CurrentCount;
-        onlineTimeMinutes = Math.Min(TargetCount, onlineTimeMinutes + progressEvent.Value);
-        CurrentCount = Mathf.Min(TargetCount, Mathf.Floor(onlineTimeMinutes));
-        return !Mathf.Approximately(onlineTimeMinutes, oldMinutes)
+        onlineTimeSeconds = Math.Min(TargetCount, onlineTimeSeconds + progressEvent.Value);
+        CurrentCount = Mathf.Min(TargetCount, onlineTimeSeconds);
+        return !Mathf.Approximately(onlineTimeSeconds, oldSeconds)
                || !Mathf.Approximately(CurrentCount, oldCount);
     }
 
@@ -826,7 +826,7 @@ public class ConditionRuntime
     /// 将条件运行时状态写回存档对象。
     /// </summary>
     /// <param name="saveItem">存档对象</param>
-    public void WriteToSave(SaveQuestConditionItem saveItem)
+    public void WriteToSave(QuestSaveConditionItem saveItem)
     {
         if (saveItem == null)
         {
@@ -836,7 +836,7 @@ public class ConditionRuntime
         saveItem.conditionId = Id;
         saveItem.currentCount = CurrentCount;
         saveItem.startUtcSeconds = startUtcSeconds;
-        saveItem.onlineTimeSeconds = onlineTimeMinutes;
+        saveItem.onlineTimeSeconds = onlineTimeSeconds;
     }
 
     /// <summary>

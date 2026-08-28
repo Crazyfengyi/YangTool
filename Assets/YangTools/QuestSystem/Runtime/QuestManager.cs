@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using YangTools.Scripts.Core.YangSaveData;
 
 /// <summary>
 /// 通用任务管理器。
@@ -11,7 +10,7 @@ using YangTools.Scripts.Core.YangSaveData;
 public sealed class QuestManager : MonoBehaviour
 {
     private const float TimeQuestRefreshInterval = 1f; //时间条件刷新间隔
-    private const float OnlineTimeRefreshIntervalSeconds = 60f; //在线时长提交间隔
+    private const float OnlineTimeTickIntervalSeconds = 1f; //在线时长事件间隔
 
     private static QuestManager instance; //任务管理器单例
 
@@ -36,7 +35,7 @@ public sealed class QuestManager : MonoBehaviour
     private bool dataLoaded; //是否已完成任务配置加载
     private bool isApplicationForeground = true; //应用是否处于前台
     private float timeQuestRefreshTimer; //时间条件刷新计时器
-    private float onlineTimeRefreshTimer; //在线时长累计计时器
+    private float onlineTimeTimer; //在线时长计时器
     private string dailyRefreshDate; //最近一次每日任务刷新日期
 
     /// <summary>
@@ -63,6 +62,11 @@ public sealed class QuestManager : MonoBehaviour
     /// 任务目标进度变化事件
     /// </summary>
     public event Action<QuestObjectiveChangedEvent> ObjectiveChanged;
+
+    /// <summary>
+    /// 在线时长显示刷新事件
+    /// </summary>
+    public event Action<float> OnlineTimeProgressed;
 
     /// <summary>
     /// 任务奖励发放事件
@@ -187,6 +191,7 @@ public sealed class QuestManager : MonoBehaviour
 
         initialized = true;
         dataLoaded = false;
+        onlineTimeTimer = 0f;
         dailyRefreshDate = timeProvider.LocalDateKey;
     }
 
@@ -217,7 +222,7 @@ public sealed class QuestManager : MonoBehaviour
         itemNumConditionCache.Clear();
         itemNumConsumeCache.Clear();
         timeQuestRefreshTimer = 0f;
-        onlineTimeRefreshTimer = 0f;
+        onlineTimeTimer = 0f;
 
         saveStore.Clear();
 
@@ -255,11 +260,12 @@ public sealed class QuestManager : MonoBehaviour
         dataLoaded = false;
         servicesConfigured = false;
         timeQuestRefreshTimer = 0f;
-        onlineTimeRefreshTimer = 0f;
+        onlineTimeTimer = 0f;
         dailyRefreshDate = string.Empty;
         isApplicationForeground = true;
         QuestChanged = null;
         ObjectiveChanged = null;
+        OnlineTimeProgressed = null;
         RewardIssued = null;
         QuestReset = null;
         DataLoaded = null;
@@ -274,7 +280,7 @@ public sealed class QuestManager : MonoBehaviour
         isApplicationForeground = isForeground;
         if (!isForeground)
         {
-            onlineTimeRefreshTimer = 0f;
+            onlineTimeTimer = 0f;
         }
     }
 
@@ -303,17 +309,16 @@ public sealed class QuestManager : MonoBehaviour
             return;
         }
 
-        // 在线时长计时器按秒累计，每分钟提交一次在线时长进度。
-        onlineTimeRefreshTimer += unscaledDeltaTime;
-        if (onlineTimeRefreshTimer < OnlineTimeRefreshIntervalSeconds)
+        onlineTimeTimer += unscaledDeltaTime;
+        if (onlineTimeTimer >= OnlineTimeTickIntervalSeconds)
         {
-            return;
+            float elapsedSeconds = onlineTimeTimer;
+            onlineTimeTimer %= OnlineTimeTickIntervalSeconds;
+            // 先更新真实任务进度 再刷新界面显示 保证达到目标时立即完成
+            ReportProgress(new QuestProgressEvent(QuestProgressEventType.OnLineTime, string.Empty,
+                value: elapsedSeconds));
+            OnlineTimeProgressed?.Invoke(elapsedSeconds);
         }
-
-        float onlineMinutes = onlineTimeRefreshTimer / OnlineTimeRefreshIntervalSeconds;
-        onlineTimeRefreshTimer %= OnlineTimeRefreshIntervalSeconds;
-        ReportProgress(new QuestProgressEvent(QuestProgressEventType.OnLineTime, string.Empty,
-            value: onlineMinutes));
     }
 
     #endregion
@@ -722,7 +727,7 @@ public sealed class QuestManager : MonoBehaviour
     /// <returns>返回创建的任务运行时实例</returns>
     private QuestRuntime CreateRuntime(QuestData questData)
     {
-        SaveQuestItem saveItem = saveStore.GetQuest(questData.Id);
+        QuestSaveItem saveItem = saveStore.GetQuest(questData.Id);
         bool isNewQuest = saveItem == null;
         saveItem ??= saveStore.GetOrCreateQuest(questData.Id);
         string today = timeProvider.LocalDateKey;
@@ -739,7 +744,7 @@ public sealed class QuestManager : MonoBehaviour
 
         if (questData.TaskType == TaskType.EveryDay)
         {
-            SaveQuestItem dirtySaveItem = saveStore.GetOrCreateQuest(questData.Id);
+            QuestSaveItem dirtySaveItem = saveStore.GetOrCreateQuest(questData.Id);
             dirtySaveItem.dailyRefreshDate = today;
             saveStore.MarkDirty();
         }
@@ -771,7 +776,7 @@ public sealed class QuestManager : MonoBehaviour
             QuestState oldState = runtime.State;
             bool wasAccepted = oldState >= QuestState.Active;
             runtime.ResetForDailyRefresh(wasAccepted);
-            SaveQuestItem saveItem = saveStore.GetOrCreateQuest(runtime.Id);
+            QuestSaveItem saveItem = saveStore.GetOrCreateQuest(runtime.Id);
             saveItem.dailyRefreshDate = today;
             saveStore.MarkDirty();
             SaveRuntime(runtime);
@@ -1041,7 +1046,7 @@ public sealed class QuestManager : MonoBehaviour
             return;
         }
 
-        SaveQuestItem saveItem = saveStore.GetOrCreateQuest(runtime.Id);
+        QuestSaveItem saveItem = saveStore.GetOrCreateQuest(runtime.Id);
         runtime.WriteToSave(saveItem);
         saveStore.MarkDirty();
     }
@@ -1069,7 +1074,12 @@ public sealed class QuestManager : MonoBehaviour
             return;
         }
 
-        QuestState targetState = CanAcceptQuest(runtime) ? QuestState.Available : QuestState.Locked;
+        bool canAccept = CanAcceptQuest(runtime);
+        QuestState targetState = canAccept && runtime.Data != null && runtime.Data.DefaultActive
+            ? QuestState.Active
+            : canAccept
+                ? QuestState.Available
+                : QuestState.Locked;
         if (runtime.State == targetState)
         {
             return;

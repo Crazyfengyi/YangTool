@@ -1,72 +1,90 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+#if YANGTOOLS_QUEST_INTEGRATION
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using YooAsset;
+#endif
 
 /// <summary>
-/// 任务管理器项目启动引导器
+/// 任务管理器启动引导器
 /// </summary>
+/// <remarks>
+/// 未启用项目集成宏时仅使用核心内存服务 可在本地列表中配置任务
+/// </remarks>
 [DefaultExecutionOrder(-100)]
 [DisallowMultipleComponent]
 [RequireComponent(typeof(QuestManager))]
 [AddComponentMenu("YangTools/Quest/Quest Manager Bootstrap")]
 public sealed class QuestManagerBootstrap : MonoBehaviour
 {
-    private const string DefaultPackageName = "DefaultPackage"; //默认资源包名称
-    private const string DefaultAssetTag = "SO"; //默认任务资源标签
-    private const float DefaultWaitTimeoutSeconds = 30f; //默认资源系统等待时长
-    private const int PollIntervalMilliseconds = 100; //资源系统轮询间隔
+    private const string DefaultPackageName = "DefaultPackage";
+    private const string DefaultAssetTag = "SO";
+    private const float DefaultWaitTimeoutSeconds = 30f;
+    private const int PollIntervalMilliseconds = 100;
 
     [SerializeField]
     [InspectorName("自动加载任务配置")]
-    [Tooltip("启用后会在YooAsset就绪后自动加载SO标签下的QuestData")]
-    private bool autoLoadQuestData = true; //是否自动加载任务配置
+    [Tooltip("集成模式下从YooAsset加载  通用模式下从本地任务列表加载")]
+    private bool autoLoadQuestData = true;
     [SerializeField]
     [InspectorName("资源包名称")]
-    private string packageName = DefaultPackageName; //任务资源包名称
+    private string packageName = DefaultPackageName;
     [SerializeField]
     [InspectorName("任务资源标签")]
-    private string assetTag = DefaultAssetTag; //任务资源标签
+    private string assetTag = DefaultAssetTag;
     [SerializeField]
     [InspectorName("等待资源系统秒数")]
     [Min(0f)]
-    private float waitTimeoutSeconds = DefaultWaitTimeoutSeconds; //等待资源系统的最大时长
+    private float waitTimeoutSeconds = DefaultWaitTimeoutSeconds;
+    [SerializeField]
+    [InspectorName("通用模式本地任务")]
+    private List<QuestData> localQuestDatas = new List<QuestData>();
 
-    public QuestManager manager; //任务管理器
-    private YangQuestEventBridge eventBridge; //项目事件桥接器
-    private YooAssetQuestDataLoader questLoader; //任务配置加载器
-    private bool started; //是否已启动引导流程
+    public QuestManager manager;
+    private bool started;
+
+#if YANGTOOLS_QUEST_INTEGRATION
+    private YangQuestEventBridge eventBridge;
+    private YooAssetQuestDataLoader questLoader;
+#endif
 
     /// <summary>
-    /// 组件启动时开始默认初始化流程
+    /// 组件启动时执行默认初始化
     /// </summary>
     private void Start()
     {
-        if (started)
-        {
-            return;
-        }
-
+        if (started) return;
         started = true;
-        RunBootstrapAsync().Forget(HandleBootstrapException);
+
+        if (manager == null) manager = GetComponent<QuestManager>();
+#if YANGTOOLS_QUEST_INTEGRATION
+        RunIntegratedBootstrapAsync().Forget(HandleBootstrapException);
+#else
+        RunStandaloneBootstrap();
+#endif
     }
 
     /// <summary>
-    /// 组件销毁时释放事件和资源句柄
+    /// 组件销毁时释放可选适配器
     /// </summary>
     private void OnDestroy()
     {
+#if YANGTOOLS_QUEST_INTEGRATION
         eventBridge?.Dispose();
         eventBridge = null;
         questLoader?.Dispose();
         questLoader = null;
+#endif
     }
 
+#if YANGTOOLS_QUEST_INTEGRATION
     /// <summary>
-    /// 执行项目默认任务初始化
+    /// 执行项目集成模式启动流程
     /// </summary>
-    private async UniTask RunBootstrapAsync()
+    private async UniTask RunIntegratedBootstrapAsync()
     {
         if (manager == null)
         {
@@ -75,17 +93,26 @@ public sealed class QuestManagerBootstrap : MonoBehaviour
         }
 
         manager.Initialize();
-        ConfigureProjectServices();
-        eventBridge = new YangQuestEventBridge(manager);
+        if (!manager.IsServicesConfigured)
+        {
+            try
+            {
+                manager.ConfigureServices(new YangQuestSaveStore(), new BagQuestItemService());
+            }
+            catch (InvalidOperationException exception)
+            {
+                Debug.LogWarning($"任务服务已被其他代码配置 保留现有配置 {exception.Message}", this);
+            }
+        }
 
+        eventBridge = new YangQuestEventBridge(manager);
         if (!autoLoadQuestData)
         {
+            manager.CompleteRegistration();
             return;
         }
 
-        //加载任务数据
-        CancellationToken cancellationToken = this.GetCancellationTokenOnDestroy();
-        bool resourceReady = await WaitForResourcePackageAsync(cancellationToken);
+        bool resourceReady = await WaitForResourcePackageAsync(this.GetCancellationTokenOnDestroy());
         if (!resourceReady)
         {
             CompleteRegistrationWithWarning("等待YooAsset资源包超时");
@@ -99,7 +126,6 @@ public sealed class QuestManagerBootstrap : MonoBehaviour
         }
         catch (OperationCanceledException)
         {
-            throw;
         }
         catch (Exception exception)
         {
@@ -108,112 +134,68 @@ public sealed class QuestManagerBootstrap : MonoBehaviour
     }
 
     /// <summary>
-    /// 注入项目默认服务
+    /// 等待YooAsset目标资源包就绪
     /// </summary>
-    private void ConfigureProjectServices()
-    {
-        if (manager.IsServicesConfigured)
-        {
-            return;
-        }
-
-        try
-        {
-            manager.ConfigureServices(new YangQuestSaveStore(), new BagQuestItemService());
-        }
-        catch (InvalidOperationException exception)
-        {
-            Debug.LogWarning($"任务服务已被其他代码占用 保留现有配置 {exception.Message}", this);
-        }
-    }
-
-    /// <summary>
-    /// 等待YooAsset和目标资源包就绪
-    /// </summary>
-    /// <param name="cancellationToken">对象销毁取消令牌</param>
-    /// <returns>资源系统就绪返回true</returns>
     private async UniTask<bool> WaitForResourcePackageAsync(CancellationToken cancellationToken)
     {
         float elapsedSeconds = 0f;
         float timeoutSeconds = Mathf.Max(0f, waitTimeoutSeconds);
         while (elapsedSeconds < timeoutSeconds)
         {
-            if (IsResourcePackageReady())
-            {
-                return true;
-            }
-
-            await UniTask.Delay(PollIntervalMilliseconds, DelayType.Realtime, PlayerLoopTiming.Update,
-                cancellationToken);
+            if (IsResourcePackageReady()) return true;
+            await UniTask.Delay(PollIntervalMilliseconds, DelayType.Realtime, PlayerLoopTiming.Update, cancellationToken);
             elapsedSeconds += PollIntervalMilliseconds / 1000f;
         }
-
         return IsResourcePackageReady();
     }
 
-    /// <summary>
-    /// 检查目标资源包是否已经完成初始化
-    /// </summary>
-    /// <returns>资源包可用返回true</returns>
     private bool IsResourcePackageReady()
     {
-        if (!YooAssets.Initialized)
-        {
-            return false;
-        }
-
+        if (!YooAssets.Initialized) return false;
         ResourcePackage package = YooAssets.TryGetPackage(GetPackageName());
-        return package != null
-               && package.InitializeStatus == EOperationStatus.Succeed
-               && package.PackageValid;
+        return package != null && package.InitializeStatus == EOperationStatus.Succeed && package.PackageValid;
     }
 
-    /// <summary>
-    /// 资源加载失败时完成当前注册批次
-    /// </summary>
-    /// <param name="reason">失败原因</param>
     private void CompleteRegistrationWithWarning(string reason)
     {
         Debug.LogError($"任务系统默认初始化降级 {reason}", this);
-        if (manager != null && manager.IsInitialized && !manager.IsDataLoaded)
+        if (manager != null && manager.IsInitialized && !manager.IsDataLoaded) manager.CompleteRegistration();
+    }
+
+    private void HandleBootstrapException(Exception exception)
+    {
+        if (exception is OperationCanceledException) return;
+        CompleteRegistrationWithWarning(exception.Message);
+    }
+
+    private string GetPackageName() => string.IsNullOrWhiteSpace(packageName) ? DefaultPackageName : packageName.Trim();
+    private string GetAssetTag() => string.IsNullOrWhiteSpace(assetTag) ? DefaultAssetTag : assetTag.Trim();
+#else
+    /// <summary>
+    /// 执行无项目依赖的核心模式启动流程
+    /// </summary>
+    private void RunStandaloneBootstrap()
+    {
+        if (manager == null)
+        {
+            Debug.LogError("任务启动引导器找不到QuestManager", this);
+            return;
+        }
+
+        manager.Initialize();
+        if (!manager.IsServicesConfigured)
+        {
+            manager.ConfigureServices(new QuestMemorySaveStore(), NullQuestItemService.Instance);
+        }
+
+        if (autoLoadQuestData && localQuestDatas != null)
+        {
+            manager.RegisterQuests(localQuestDatas);
+        }
+        else
         {
             manager.CompleteRegistration();
         }
     }
-    
-    #region 辅助方法
-
-    /// <summary>
-    /// 处理未捕获的启动异常
-    /// </summary>
-    /// <param name="exception">启动异常</param>
-    private void HandleBootstrapException(Exception exception)
-    {
-        if (exception is OperationCanceledException)
-        {
-            return;
-        }
-
-        CompleteRegistrationWithWarning(exception.Message);
-    }
-
-    /// <summary>
-    /// 获取有效资源包名称
-    /// </summary>
-    /// <returns>资源包名称</returns>
-    private string GetPackageName()
-    {
-        return string.IsNullOrWhiteSpace(packageName) ? DefaultPackageName : packageName.Trim();
-    }
-
-    /// <summary>
-    /// 获取有效任务资源标签
-    /// </summary>
-    /// <returns>资源标签</returns>
-    private string GetAssetTag()
-    {
-        return string.IsNullOrWhiteSpace(assetTag) ? DefaultAssetTag : assetTag.Trim();
-    }
-    
-    #endregion
+#endif
 }

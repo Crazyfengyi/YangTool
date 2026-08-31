@@ -10,18 +10,31 @@ namespace ShopSystem
     /// </summary>
     public sealed class ShopItem : MonoBehaviour
     {
+        // 商品名称文本
         [SerializeField] private TMP_Text itemName;
+        // 商品图标
         [SerializeField] private Image icon;
+        // 奖励数量文本
         [SerializeField] private TMP_Text count;
+        // 广告购买按钮
         [SerializeField] private Button adBtn;
+        // 普通购买按钮
         [SerializeField] private Button btn;
+        // 购买按钮上的消耗图标
         [SerializeField] private Image btnIcon;
+        // 购买按钮上的消耗文本
         [SerializeField] private TMP_Text btnText;
+        // 购买状态文本
         [SerializeField] private TMP_Text statusText;
+        // 售罄状态显示节点
         [SerializeField] private GameObject sellOutShow;
 
+        // 当前绑定的商品运行时数据
         private ItemData_ShopItem data;
 
+        /// <summary>
+        /// 禁用时移除按钮监听
+        /// </summary>
         private void OnDisable()
         {
             if (adBtn != null)
@@ -38,6 +51,7 @@ namespace ShopSystem
         /// <summary>
         /// 绑定商品数据并刷新显示
         /// </summary>
+        /// <param name="shopData">要显示的商品运行时数据</param>
         public void SetData(ItemData_ShopItem shopData)
         {
             data = shopData;
@@ -113,16 +127,25 @@ namespace ShopSystem
             }
         }
 
+        /// <summary>
+        /// 响应广告购买按钮点击
+        /// </summary>
         private void OnAdBtnClick()
         {
             TryPurchase();
         }
 
+        /// <summary>
+        /// 响应普通购买按钮点击
+        /// </summary>
         private void OnBtnClick()
         {
             TryPurchase();
         }
 
+        /// <summary>
+        /// 发起当前商品购买并刷新按钮状态
+        /// </summary>
         private void TryPurchase()
         {
             if (data == null)
@@ -139,6 +162,11 @@ namespace ShopSystem
             SetData(data);
         }
 
+        /// <summary>
+        /// 将奖励列表格式化为 UI 文本
+        /// </summary>
+        /// <param name="product">商品配置</param>
+        /// <returns>奖励展示文本</returns>
         private static string FormatRewards(ShopProductData product)
         {
             var builder = new StringBuilder();
@@ -161,6 +189,11 @@ namespace ShopSystem
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 将消耗列表格式化为按钮文本
+        /// </summary>
+        /// <param name="product">商品配置</param>
+        /// <returns>消耗展示文本</returns>
         private static string FormatCosts(ShopProductData product)
         {
             if (product.Costs == null || product.Costs.Count == 0)
@@ -188,6 +221,11 @@ namespace ShopSystem
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 获取商品第一个消耗项的图标
+        /// </summary>
+        /// <param name="product">商品配置</param>
+        /// <returns>第一个消耗项图标 没有时返回空</returns>
         private static Sprite GetFirstCostIcon(ShopProductData product)
         {
             return product.Costs != null && product.Costs.Count > 0

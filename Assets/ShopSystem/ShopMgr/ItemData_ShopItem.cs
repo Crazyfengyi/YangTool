@@ -5,6 +5,7 @@ namespace ShopSystem
     /// </summary>
     public sealed class ItemData_ShopItem
     {
+        // 提供购买状态查询和购买操作的商店管理器
         private readonly ShopMgr manager;
 
         public ShopProductData Config { get; }
@@ -13,6 +14,11 @@ namespace ShopSystem
         public bool CanGetAward => TotalLookAdCount > 0 && LookAdCount >= TotalLookAdCount;
         public bool IsSellOut => manager.IsSellOut(Config.Id);
 
+        /// <summary>
+        /// 创建商品运行时数据视图
+        /// </summary>
+        /// <param name="manager">所属商店管理器</param>
+        /// <param name="config">商品配置数据</param>
         internal ItemData_ShopItem(ShopMgr manager, ShopProductData config)
         {
             this.manager = manager;
@@ -36,7 +42,7 @@ namespace ShopSystem
         }
 
         /// <summary>
-        /// 增加广告进度
+        /// 发起一次当前商品的购买请求
         /// </summary>
         public void AddLookAdCount()
         {

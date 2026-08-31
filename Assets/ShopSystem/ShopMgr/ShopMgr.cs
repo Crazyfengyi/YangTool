@@ -10,19 +10,33 @@ namespace ShopSystem
     public sealed class ShopMgr : MonoBehaviour
     {
         #region FieldsAndProperties
+        /// <summary>
+        /// 当前场景中的商店管理器实例
+        /// </summary>
         public static ShopMgr Instance { get; private set; }
 
+        // Inspector 中配置的商品目录
         [SerializeField] private ShopCatalog catalog;
 
+        // 当前生效的商品副本
         private readonly List<ShopProductData> products = new();
+        // 面向 UI 的商品运行时视图
         private readonly List<ItemData_ShopItem> shopList = new();
+        // 按商品 ID 索引的购买存档
         private readonly Dictionary<string, ShopSaveItem> saveItems = new();
+        // 存档服务
         private IShopSaveStore saveStore;
+        // 道具扣除与查询服务
         private IShopInventoryService inventoryService;
+        // 奖励发放服务
         private IShopRewardService rewardService;
+        // 激励广告服务
         private IShopAdService adService;
+        // 是否已完成首次初始化
         private bool initialized;
+        // 是否正在使用运行时注入目录
         private bool runtimeDataActive;
+        // 是否已加载 Inspector 配置目录
         private bool loadedSerializedCatalog;
 
         public IReadOnlyList<ShopProductData> Products
@@ -43,12 +57,22 @@ namespace ShopSystem
             }
         }
 
+        /// <summary>
+        /// 购买流程完成时触发 包含成功或失败结果
+        /// </summary>
         public event Action<ShopPurchaseResult> PurchaseCompleted;
+
+        /// <summary>
+        /// 商品目录或购买进度变化时触发
+        /// </summary>
         public event Action ShopChanged;
         #endregion
 
         #region LifecycleAndPublicApi
 
+        /// <summary>
+        /// 初始化场景中的唯一商店管理器实例
+        /// </summary>
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -61,6 +85,9 @@ namespace ShopSystem
             EnsureInitialized();
         }
 
+        /// <summary>
+        /// 销毁时清理全局实例引用
+        /// </summary>
         private void OnDestroy()
         {
             if (Instance == this)
@@ -72,6 +99,10 @@ namespace ShopSystem
         /// <summary>
         /// 配置商店外部服务
         /// </summary>
+        /// <param name="saveStore">存档服务 为空时保留已有服务 未配置时使用 PlayerPrefs 实现</param>
+        /// <param name="inventoryService">道具服务 为空时保留已有服务 未配置时使用内存实现</param>
+        /// <param name="rewardService">奖励服务 为空时保留已有服务 未配置时使用内存实现</param>
+        /// <param name="adService">广告服务 为空时保留已有服务 未配置时使用不可用实现</param>
         public void ConfigureServices(
             IShopSaveStore saveStore = null,
             IShopInventoryService inventoryService = null,
@@ -89,14 +120,16 @@ namespace ShopSystem
         /// <summary>
         /// 单独替换存档服务
         /// </summary>
+        /// <param name="saveStore">新的存档服务</param>
         public void ConfigureSaveStore(IShopSaveStore saveStore)
         {
             ConfigureServices(saveStore: saveStore);
         }
 
         /// <summary>
-        /// 注入运行时商品数据
+        /// 注入运行时商品数据并刷新商品目录
         /// </summary>
+        /// <param name="injectedProducts">外部商品列表 为空时清除注入并恢复配置目录</param>
         public void InjectShopData(IReadOnlyList<ShopProductData> injectedProducts)
         {
             EnsureInitialized();
@@ -108,6 +141,8 @@ namespace ShopSystem
         /// <summary>
         /// 尝试购买商品
         /// </summary>
+        /// <param name="productId">要购买的商品 ID</param>
+        /// <returns>同步购买结果或广告购买的 Pending 结果</returns>
         public ShopPurchaseResult TryPurchase(string productId)
         {
             EnsureInitialized();
@@ -141,6 +176,8 @@ namespace ShopSystem
         /// <summary>
         /// 获取商品购买次数
         /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <returns>已完成的购买次数</returns>
         public int GetPurchaseCount(string productId)
         {
             EnsureInitialized();
@@ -150,6 +187,8 @@ namespace ShopSystem
         /// <summary>
         /// 获取商品广告进度
         /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <returns>已完成的广告观看次数</returns>
         public int GetAdViewCount(string productId)
         {
             EnsureInitialized();
@@ -159,6 +198,8 @@ namespace ShopSystem
         /// <summary>
         /// 判断商品是否售罄
         /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <returns>达到最大购买次数时返回 true</returns>
         public bool IsSellOut(string productId)
         {
             if (!TryGetProduct(productId, out ShopProductData product))
@@ -173,6 +214,8 @@ namespace ShopSystem
         /// <summary>
         /// 判断普通购买的消耗是否充足
         /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <returns>商品存在且消耗充足时返回 true</returns>
         public bool CanPurchase(string productId)
         {
             if (!TryGetProduct(productId, out ShopProductData product) ||
@@ -187,6 +230,9 @@ namespace ShopSystem
 
         #region InternalLogic
 
+        /// <summary>
+        /// 确保商品目录 服务和存档已完成初始化
+        /// </summary>
         private void EnsureInitialized()
         {
             if (initialized)
@@ -206,6 +252,9 @@ namespace ShopSystem
             ReloadProducts(null);
         }
 
+        /// <summary>
+        /// 为未注入的服务补充默认实现
+        /// </summary>
         private void EnsureServices()
         {
             saveStore ??= new PlayerPrefsShopSaveStore();
@@ -214,6 +263,10 @@ namespace ShopSystem
             adService ??= new UnavailableShopAdService();
         }
 
+        /// <summary>
+        /// 按数据来源优先级重建商品运行时副本
+        /// </summary>
+        /// <param name="source">优先使用的商品列表 为空时从配置资产加载</param>
         private void ReloadProducts(IReadOnlyList<ShopProductData> source)
         {
             products.Clear();
@@ -263,6 +316,12 @@ namespace ShopSystem
             }
         }
 
+        /// <summary>
+        /// 执行普通消耗购买并处理奖励和存档回滚
+        /// </summary>
+        /// <param name="product">待购买商品</param>
+        /// <param name="saveItem">商品购买进度</param>
+        /// <returns>普通购买结果</returns>
         private ShopPurchaseResult CompleteCurrencyPurchase(ShopProductData product, ShopSaveItem saveItem)
         {
             bool consumed = false;
@@ -305,6 +364,12 @@ namespace ShopSystem
             }
         }
 
+        /// <summary>
+        /// 发起激励广告购买流程
+        /// </summary>
+        /// <param name="product">待购买商品</param>
+        /// <param name="saveItem">商品购买进度</param>
+        /// <returns>广告尚未完成时返回 Pending</returns>
         private ShopPurchaseResult BeginAdPurchase(ShopProductData product, ShopSaveItem saveItem)
         {
             try
@@ -328,6 +393,12 @@ namespace ShopSystem
                 ShopPurchaseFailureReason.None, product, null);
         }
 
+        /// <summary>
+        /// 处理激励广告服务回调并推进广告购买进度
+        /// </summary>
+        /// <param name="product">广告购买商品</param>
+        /// <param name="saveItem">商品购买进度</param>
+        /// <param name="adResult">广告播放结果</param>
         private void OnAdCompleted(ShopProductData product, ShopSaveItem saveItem, ShopAdResult adResult)
         {
             if (this == null)
@@ -377,6 +448,11 @@ namespace ShopSystem
                 ShopPurchaseFailureReason.None, product, null));
         }
 
+        /// <summary>
+        /// 触发最终购买事件并返回结果
+        /// </summary>
+        /// <param name="result">购买结果</param>
+        /// <returns>传入的购买结果</returns>
         private ShopPurchaseResult Complete(ShopPurchaseResult result)
         {
             if (result.Status != ShopPurchaseStatus.Pending)
@@ -387,6 +463,15 @@ namespace ShopSystem
             return result;
         }
 
+        /// <summary>
+        /// 根据当前存档状态创建购买结果
+        /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <param name="status">购买状态</param>
+        /// <param name="reason">失败原因</param>
+        /// <param name="product">商品数据</param>
+        /// <param name="error">错误描述</param>
+        /// <returns>封装后的购买结果</returns>
         private ShopPurchaseResult CreateResult(
             string productId,
             ShopPurchaseStatus status,
@@ -406,6 +491,12 @@ namespace ShopSystem
                 error);
         }
 
+        /// <summary>
+        /// 按商品 ID 查找当前目录中的商品
+        /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <param name="product">找到的商品数据</param>
+        /// <returns>找到商品时返回 true</returns>
         private bool TryGetProduct(string productId, out ShopProductData product)
         {
             EnsureInitialized();
@@ -422,6 +513,11 @@ namespace ShopSystem
             return false;
         }
 
+        /// <summary>
+        /// 获取商品存档项 不存在时创建空记录
+        /// </summary>
+        /// <param name="productId">商品 ID</param>
+        /// <returns>商品存档项</returns>
         private ShopSaveItem GetSaveItem(string productId)
         {
             if (!saveItems.TryGetValue(productId ?? string.Empty, out ShopSaveItem item))
@@ -433,6 +529,9 @@ namespace ShopSystem
             return item;
         }
 
+        /// <summary>
+        /// 从当前存档服务加载购买次数和广告进度
+        /// </summary>
         private void LoadSaveData()
         {
             saveItems.Clear();
@@ -461,6 +560,10 @@ namespace ShopSystem
             }
         }
 
+        /// <summary>
+        /// 将当前购买进度保存到存档服务
+        /// </summary>
+        /// <returns>保存成功时返回 true</returns>
         private bool TrySaveData()
         {
             try

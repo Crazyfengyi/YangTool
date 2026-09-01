@@ -97,7 +97,8 @@ public sealed class QuestManagerBootstrap : MonoBehaviour
         {
             try
             {
-                manager.ConfigureServices(new YangQuestSaveStore(), new BagQuestItemService());
+                manager.ConfigureServices(new YangQuestSaveStore(), new BagQuestItemService(),
+                    questRewardService: new BagQuestRewardService());
             }
             catch (InvalidOperationException exception)
             {
@@ -185,7 +186,8 @@ public sealed class QuestManagerBootstrap : MonoBehaviour
         manager.Initialize();
         if (!manager.IsServicesConfigured)
         {
-            manager.ConfigureServices(new QuestMemorySaveStore(), NullQuestItemService.Instance);
+            manager.ConfigureServices(new QuestMemorySaveStore(), NullQuestItemService.Instance,
+                questRewardService: new QuestMemoryRewardService());
         }
 
         if (autoLoadQuestData && localQuestDatas != null)

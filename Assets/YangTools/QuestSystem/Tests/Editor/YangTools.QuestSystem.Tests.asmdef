@@ -1,0 +1,21 @@
+{
+    "name": "YangTools.QuestSystem.Tests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b53abab9c7920024690861da180f0702"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

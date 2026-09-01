@@ -1,36 +1,32 @@
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 /// <summary>
-/// 任务配置的中文检视器
+/// 任务配置中文检视器
 /// </summary>
 [CustomEditor(typeof(QuestData))]
 public sealed class QuestDataEditor : Editor
 {
     private const float VerticalSpacing = 2f;
 
-    #region 序列化属性
-
-    private SerializedProperty idProperty; //任务ID属性
-    private SerializedProperty taskTypeProperty; //任务类型属性
-    private SerializedProperty defaultActiveProperty; //默认激活属性
-    private SerializedProperty titleProperty; //任务标题属性
-    private SerializedProperty descriptionProperty; //任务描述属性
-    private SerializedProperty prerequisiteQuestIdsProperty; //前置任务属性
-    private SerializedProperty objectivesProperty; //任务目标属性
-    private SerializedProperty rewardsProperty; //任务奖励属性
-    private ReorderableList prerequisiteQuestIdsList; //前置任务列表
-    private ReorderableList objectivesList; //任务目标列表
-    private ReorderableList rewardsList; //任务奖励列表
-
-    #endregion
-
-    #region Unity回调
+    private SerializedProperty idProperty;
+    private SerializedProperty taskTypeProperty;
+    private SerializedProperty defaultActiveProperty;
+    private SerializedProperty titleProperty;
+    private SerializedProperty descriptionProperty;
+    private SerializedProperty prerequisiteQuestIdsProperty;
+    private SerializedProperty objectivesProperty;
+    private SerializedProperty rewardsProperty;
+    private ReorderableList prerequisiteQuestIdsList;
+    private ReorderableList objectivesList;
+    private ReorderableList rewardsList;
 
     /// <summary>
-    /// 初始化序列化属性和列表
+    /// 初始化任务配置编辑器
     /// </summary>
     private void OnEnable()
     {
@@ -42,277 +38,350 @@ public sealed class QuestDataEditor : Editor
         prerequisiteQuestIdsProperty = serializedObject.FindProperty("PrerequisiteQuestIds");
         objectivesProperty = serializedObject.FindProperty("Objectives");
         rewardsProperty = serializedObject.FindProperty("Rewards");
-
-        prerequisiteQuestIdsList = CreatePrerequisiteQuestIdsList();
+        prerequisiteQuestIdsList = CreateStringList(prerequisiteQuestIdsProperty, "前置任务ID列表", "前置任务ID");
         objectivesList = CreateObjectivesList();
-        rewardsList = CreateRewardsList();
+        rewardsList = CreateManagedList(rewardsProperty, typeof(Reward), "任务奖励列表", DrawReward);
     }
 
     /// <summary>
-    /// 绘制中文任务配置界面
+    /// 绘制任务配置
     /// </summary>
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
         EditorGUILayout.PropertyField(idProperty, new GUIContent("任务ID"));
         EditorGUILayout.PropertyField(taskTypeProperty, new GUIContent("任务类型"));
-        EditorGUILayout.PropertyField(defaultActiveProperty, new GUIContent("默认领取任务"));
+        EditorGUILayout.PropertyField(defaultActiveProperty, new GUIContent("默认激活任务"));
         EditorGUILayout.PropertyField(titleProperty, new GUIContent("任务标题"));
         EditorGUILayout.PropertyField(descriptionProperty, new GUIContent("任务描述"));
         EditorGUILayout.Space();
-
         prerequisiteQuestIdsList.DoLayoutList();
         objectivesList.DoLayoutList();
         rewardsList.DoLayoutList();
-
         serializedObject.ApplyModifiedProperties();
     }
 
-    #endregion
-
-    #region 顶层列表
-
-    /// <summary>
-    /// 创建前置任务列表
-    /// </summary>
-    private ReorderableList CreatePrerequisiteQuestIdsList()
+    private ReorderableList CreateStringList(SerializedProperty property, string header, string label)
     {
-        ReorderableList list = new ReorderableList(serializedObject, prerequisiteQuestIdsProperty, true, true, true, true);
-        list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "前置任务ID列表");
+        ReorderableList list = new ReorderableList(serializedObject, property, true, true, true, true);
+        list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, header);
         list.drawElementCallback = (rect, index, _, _) =>
-        {
-            SerializedProperty element = prerequisiteQuestIdsProperty.GetArrayElementAtIndex(index);
-            EditorGUI.PropertyField(rect, element, new GUIContent($"前置任务ID {index + 1}"));
-        };
+            EditorGUI.PropertyField(rect, property.GetArrayElementAtIndex(index), new GUIContent($"{label} {index + 1}"));
         return list;
     }
 
-    /// <summary>
-    /// 创建任务目标列表
-    /// </summary>
     private ReorderableList CreateObjectivesList()
     {
         ReorderableList list = new ReorderableList(serializedObject, objectivesProperty, true, true, true, true);
         list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "任务目标列表");
         list.drawElementCallback = (rect, index, _, _) => DrawObjective(rect, objectivesProperty.GetArrayElementAtIndex(index), index);
         list.elementHeightCallback = index => GetObjectiveHeight(objectivesProperty.GetArrayElementAtIndex(index));
-        list.onAddCallback = AddExpandedElement;
+        list.onAddCallback = AddDefaultElement;
         return list;
     }
 
-    /// <summary>
-    /// 创建任务奖励列表
-    /// </summary>
-    private ReorderableList CreateRewardsList()
+    private ReorderableList CreateManagedList(SerializedProperty property, Type baseType, string header,
+        Action<Rect, SerializedProperty, int> drawElement)
     {
-        ReorderableList list = new ReorderableList(serializedObject, rewardsProperty, true, true, true, true);
-        list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "任务奖励列表");
-        list.drawElementCallback = (rect, index, _, _) => DrawReward(rect, rewardsProperty.GetArrayElementAtIndex(index), index);
-        list.elementHeightCallback = index => GetRewardHeight(rewardsProperty.GetArrayElementAtIndex(index));
-        list.onAddCallback = AddExpandedElement;
+        ReorderableList list = new ReorderableList(serializedObject, property, true, true, true, true);
+        list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, header);
+        list.drawElementCallback = (rect, index, _, _) => drawElement(rect, property.GetArrayElementAtIndex(index), index);
+        list.elementHeightCallback = index => GetManagedElementHeight(property.GetArrayElementAtIndex(index), baseType);
+        list.onAddCallback = currentList => ShowAddTypeMenu(currentList, baseType);
         return list;
     }
 
-    /// <summary>
-    /// 添加并展开新的列表项
-    /// </summary>
-    private static void AddExpandedElement(ReorderableList list)
+    private void DrawObjective(Rect rect, SerializedProperty property, int index)
     {
-        ReorderableList.defaultBehaviours.DoAddButton(list);
-        if (list.index >= 0 && list.index < list.serializedProperty.arraySize)
-        {
-            list.serializedProperty.GetArrayElementAtIndex(list.index).isExpanded = true;
-        }
-    }
-
-    #endregion
-
-    #region 任务目标与条件
-
-    /// <summary>
-    /// 绘制单个任务目标
-    /// </summary>
-    private void DrawObjective(Rect rect, SerializedProperty objectiveProperty, int index)
-    {
-        Rect contentRect = rect;
-        objectiveProperty.isExpanded = EditorGUI.Foldout(GetNextLine(ref contentRect), objectiveProperty.isExpanded, $"任务目标 {index + 1}", true);
-        if (!objectiveProperty.isExpanded)
+        Rect content = rect;
+        property.isExpanded = EditorGUI.Foldout(NextLine(ref content), property.isExpanded, $"任务目标 {index + 1}", true);
+        if (!property.isExpanded)
         {
             return;
         }
 
         EditorGUI.indentLevel++;
-        DrawProperty(ref contentRect, objectiveProperty.FindPropertyRelative("remark"), "备注");
-        DrawProperty(ref contentRect, objectiveProperty.FindPropertyRelative("Title"), "目标标题");
-        DrawProperty(ref contentRect, objectiveProperty.FindPropertyRelative("Description"), "目标描述");
-        DrawProperty(ref contentRect, objectiveProperty.FindPropertyRelative("AutoComplete"), "条件满足后自动完成");
-        DrawProperty(ref contentRect, objectiveProperty.FindPropertyRelative("ConditionGroupType"), "条件组合方式");
-
-        ReorderableList conditionsList = CreateConditionsList(objectiveProperty.FindPropertyRelative("Conditions"));
-        float conditionsHeight = conditionsList.GetHeight();
-        conditionsList.DoList(new Rect(contentRect.x, contentRect.y, contentRect.width, conditionsHeight));
+        DrawProperty(ref content, property.FindPropertyRelative("remark"), "备注");
+        DrawProperty(ref content, property.FindPropertyRelative("Title"), "目标标题");
+        DrawProperty(ref content, property.FindPropertyRelative("Description"), "目标描述");
+        DrawProperty(ref content, property.FindPropertyRelative("AutoComplete"), "条件满足后自动完成");
+        SerializedProperty condition = property.FindPropertyRelative("Condition");
+        content.y += DrawManagedElement(content, condition, typeof(Condition), "条件");
         EditorGUI.indentLevel--;
     }
 
-    /// <summary>
-    /// 获取任务目标的显示高度
-    /// </summary>
-    private float GetObjectiveHeight(SerializedProperty objectiveProperty)
+    private static float GetObjectiveHeight(SerializedProperty property)
     {
-        float height = EditorGUIUtility.singleLineHeight + VerticalSpacing;
-        if (!objectiveProperty.isExpanded)
+        if (!property.isExpanded)
         {
-            return height;
+            return EditorGUIUtility.singleLineHeight + VerticalSpacing;
         }
 
-        height += GetPropertyHeight(objectiveProperty.FindPropertyRelative("remark"));
-        height += GetPropertyHeight(objectiveProperty.FindPropertyRelative("Title"));
-        height += GetPropertyHeight(objectiveProperty.FindPropertyRelative("Description"));
-        height += GetPropertyHeight(objectiveProperty.FindPropertyRelative("AutoComplete"));
-        height += GetPropertyHeight(objectiveProperty.FindPropertyRelative("ConditionGroupType"));
-        height += CreateConditionsList(objectiveProperty.FindPropertyRelative("Conditions")).GetHeight();
+        float height = EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        height += GetPropertyHeight(property.FindPropertyRelative("remark"));
+        height += GetPropertyHeight(property.FindPropertyRelative("Title"));
+        height += GetPropertyHeight(property.FindPropertyRelative("Description"));
+        height += GetPropertyHeight(property.FindPropertyRelative("AutoComplete"));
+        height += GetManagedElementHeight(property.FindPropertyRelative("Condition"), typeof(Condition));
         return height;
     }
 
-    /// <summary>
-    /// 创建任务条件列表
-    /// </summary>
-    private ReorderableList CreateConditionsList(SerializedProperty conditionsProperty)
+    private static void DrawReward(Rect rect, SerializedProperty property, int index)
     {
-        ReorderableList list = new ReorderableList(serializedObject, conditionsProperty, true, true, true, true);
-        list.drawHeaderCallback = rect => EditorGUI.LabelField(rect, "条件列表");
-        list.drawElementCallback = (rect, index, _, _) => DrawCondition(rect, conditionsProperty.GetArrayElementAtIndex(index), index);
-        list.elementHeightCallback = index => GetConditionHeight(conditionsProperty.GetArrayElementAtIndex(index));
-        list.onAddCallback = AddExpandedElement;
-        return list;
+        DrawManagedElement(rect, property, typeof(Reward), "奖励");
     }
 
-    /// <summary>
-    /// 绘制单个任务条件
-    /// </summary>
-    private static void DrawCondition(Rect rect, SerializedProperty conditionProperty, int index)
+    private static float DrawManagedElement(Rect rect, SerializedProperty property, Type baseType, string label)
     {
-        Rect contentRect = rect;
-        conditionProperty.isExpanded = EditorGUI.Foldout(GetNextLine(ref contentRect), conditionProperty.isExpanded, $"条件 {index + 1}", true);
-        if (!conditionProperty.isExpanded)
+        Rect content = rect;
+        property.isExpanded = EditorGUI.Foldout(NextLine(ref content), property.isExpanded, label, true);
+        if (!property.isExpanded)
+        {
+            return EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        }
+
+        EditorGUI.indentLevel++;
+        DrawTypeSelector(ref content, property, baseType);
+        DrawSerializedChildren(ref content, property, baseType);
+        EditorGUI.indentLevel--;
+        return GetManagedElementHeight(property, baseType);
+    }
+
+    private static void DrawManagedCondition(Rect rect, SerializedProperty property, int index, Type baseType)
+    {
+        DrawManagedElement(rect, property, baseType, $"条件 {index + 1}");
+    }
+
+    private static float GetManagedElementHeight(SerializedProperty property, Type baseType)
+    {
+        if (!property.isExpanded)
+        {
+            return EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        }
+
+        return EditorGUIUtility.singleLineHeight + VerticalSpacing
+               + EditorGUIUtility.singleLineHeight + VerticalSpacing
+               + GetSerializedChildrenHeight(property, baseType);
+    }
+
+    private static float GetManagedConditionHeight(SerializedProperty property, Type baseType)
+    {
+        if (!property.isExpanded)
+        {
+            return EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        }
+
+        return GetManagedElementHeight(property, baseType);
+    }
+
+    private static void DrawTypeSelector(ref Rect rect, SerializedProperty property, Type baseType)
+    {
+        Rect line = NextLine(ref rect);
+        string typeName = property.managedReferenceValue == null
+            ? "未选择类型"
+            : GetTypeDisplayName(property.managedReferenceValue.GetType());
+        if (GUI.Button(new Rect(line.x, line.y, line.width, line.height), $"类型  {typeName}", EditorStyles.popup))
+        {
+            ShowAddTypeMenu(property, baseType);
+        }
+
+        if (property.managedReferenceValue == null)
+        {
+            EditorGUI.HelpBox(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
+                "条件或奖励类型为空", MessageType.Warning);
+            rect.y += EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        }
+    }
+
+    private static void DrawSerializedChildren(ref Rect rect, SerializedProperty property, Type baseType)
+    {
+        if (property.managedReferenceValue == null)
         {
             return;
         }
 
-        EditorGUI.indentLevel++;
-        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("ConditionType"), "条件类型");
-        SerializedProperty eventTypeProperty = conditionProperty.FindPropertyRelative("EventType");
-        DrawProperty(ref contentRect, eventTypeProperty, "进度事件类型");
-        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("TargetId"), "事件目标ID");
-        string targetLabel = IsOnlineTimeEvent(eventTypeProperty) ? "目标数量（秒）" : "目标数量";
-        DrawProperty(ref contentRect, conditionProperty.FindPropertyRelative("TargetCount"), targetLabel);
-        EditorGUI.indentLevel--;
-    }
-
-    /// <summary>
-    /// 判断条件事件是否为在线时长
-    /// </summary>
-    /// <param name="eventTypeProperty">事件类型属性</param>
-    /// <returns>在线时长事件返回true</returns>
-    private static bool IsOnlineTimeEvent(SerializedProperty eventTypeProperty)
-    {
-        if (eventTypeProperty == null || eventTypeProperty.enumNames == null
-            || eventTypeProperty.enumValueIndex < 0 || eventTypeProperty.enumValueIndex >= eventTypeProperty.enumNames.Length)
+        SerializedProperty iterator = property.Copy();
+        SerializedProperty end = property.GetEndProperty();
+        bool enterChildren = true;
+        while (iterator.NextVisible(enterChildren) && !SerializedProperty.EqualContents(iterator, end))
         {
-            return false;
+            enterChildren = false;
+            if (iterator.depth != property.depth + 1 || iterator.name == "Children")
+            {
+                continue;
+            }
+
+            float height = EditorGUI.GetPropertyHeight(iterator, true);
+            EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, height), iterator, true);
+            rect.y += height + VerticalSpacing;
         }
 
-        return eventTypeProperty.enumNames[eventTypeProperty.enumValueIndex] == nameof(QuestProgressEventType.OnLineTime);
+        SerializedProperty children = property.FindPropertyRelative("Children");
+        if (children != null && children.isArray)
+        {
+            EditorGUI.LabelField(NextLine(ref rect), "子条件");
+            for (int i = 0; i < children.arraySize; i++)
+            {
+                SerializedProperty child = children.GetArrayElementAtIndex(i);
+                float height = GetManagedConditionHeight(child, typeof(Condition));
+                DrawManagedCondition(new Rect(rect.x, rect.y, rect.width, height), child, i, typeof(Condition));
+                rect.y += height;
+            }
+
+            if (GUI.Button(NextLine(ref rect), "添加子条件"))
+            {
+                ShowAddTypeMenuForArray(children, typeof(Condition));
+            }
+        }
     }
 
-    /// <summary>
-    /// 获取任务条件的显示高度
-    /// </summary>
-    private static float GetConditionHeight(SerializedProperty conditionProperty)
+    private static float GetSerializedChildrenHeight(SerializedProperty property, Type baseType)
     {
-        float height = EditorGUIUtility.singleLineHeight + VerticalSpacing;
-        if (!conditionProperty.isExpanded)
+        if (property.managedReferenceValue == null)
         {
-            return height;
+            return EditorGUIUtility.singleLineHeight + VerticalSpacing;
         }
 
-        height += GetPropertyHeight(conditionProperty.FindPropertyRelative("ConditionType"));
-        height += GetPropertyHeight(conditionProperty.FindPropertyRelative("EventType"));
-        height += GetPropertyHeight(conditionProperty.FindPropertyRelative("TargetId"));
-        height += GetPropertyHeight(conditionProperty.FindPropertyRelative("TargetCount"));
+        float height = 0f;
+        SerializedProperty iterator = property.Copy();
+        SerializedProperty end = property.GetEndProperty();
+        bool enterChildren = true;
+        while (iterator.NextVisible(enterChildren) && !SerializedProperty.EqualContents(iterator, end))
+        {
+            enterChildren = false;
+            if (iterator.depth == property.depth + 1 && iterator.name != "Children")
+            {
+                height += EditorGUI.GetPropertyHeight(iterator, true) + VerticalSpacing;
+            }
+        }
+
+        SerializedProperty children = property.FindPropertyRelative("Children");
+        if (children != null && children.isArray)
+        {
+            height += EditorGUIUtility.singleLineHeight + VerticalSpacing;
+            for (int i = 0; i < children.arraySize; i++)
+            {
+                height += GetManagedConditionHeight(children.GetArrayElementAtIndex(i), baseType);
+            }
+
+            height += EditorGUIUtility.singleLineHeight + VerticalSpacing;
+        }
+
         return height;
     }
 
-    #endregion
-
-    #region 任务奖励与绘制工具
+    private static void ShowAddTypeMenu(ReorderableList list, Type baseType)
+    {
+        ShowAddTypeMenuForArray(list.serializedProperty, baseType);
+    }
 
     /// <summary>
-    /// 绘制单个任务奖励
+    /// 为序列化数组添加一个托管引用元素并显示类型菜单
     /// </summary>
-    private static void DrawReward(Rect rect, SerializedProperty rewardProperty, int index)
+    /// <param name="arrayProperty">托管引用数组属性</param>
+    /// <param name="baseType">允许选择的基类</param>
+    private static void ShowAddTypeMenuForArray(SerializedProperty arrayProperty, Type baseType)
     {
-        Rect contentRect = rect;
-        rewardProperty.isExpanded = EditorGUI.Foldout(GetNextLine(ref contentRect), rewardProperty.isExpanded, $"奖励 {index + 1}", true);
-        if (!rewardProperty.isExpanded)
+        if (arrayProperty == null || !arrayProperty.isArray)
         {
             return;
         }
 
-        EditorGUI.indentLevel++;
-        DrawProperty(ref contentRect, rewardProperty.FindPropertyRelative("RewardType"), "奖励类型");
-        DrawProperty(ref contentRect, rewardProperty.FindPropertyRelative("TargetKey"), "奖励目标ID");
-        DrawProperty(ref contentRect, rewardProperty.FindPropertyRelative("Count"), "奖励数量");
-        EditorGUI.indentLevel--;
+        arrayProperty.serializedObject.Update();
+        arrayProperty.arraySize++;
+        SerializedProperty element = arrayProperty.GetArrayElementAtIndex(arrayProperty.arraySize - 1);
+        element.isExpanded = true;
+        arrayProperty.serializedObject.ApplyModifiedProperties();
+        ShowAddTypeMenu(element, baseType);
     }
 
-    /// <summary>
-    /// 获取任务奖励的显示高度
-    /// </summary>
-    private static float GetRewardHeight(SerializedProperty rewardProperty)
+    private static void ShowAddTypeMenu(SerializedProperty property, Type baseType)
     {
-        float height = EditorGUIUtility.singleLineHeight + VerticalSpacing;
-        if (!rewardProperty.isExpanded)
+        GenericMenu menu = new GenericMenu();
+        TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom(baseType);
+        for (int i = 0; i < types.Count; i++)
         {
-            return height;
+            Type type = types[i];
+            if (type.IsAbstract || type.ContainsGenericParameters || type.GetConstructor(Type.EmptyTypes) == null)
+            {
+                continue;
+            }
+
+            menu.AddItem(new GUIContent(GetTypeDisplayName(type)), false, () => SetManagedReference(property, type));
         }
 
-        height += GetPropertyHeight(rewardProperty.FindPropertyRelative("RewardType"));
-        height += GetPropertyHeight(rewardProperty.FindPropertyRelative("TargetKey"));
-        height += GetPropertyHeight(rewardProperty.FindPropertyRelative("Count"));
-        return height;
+        menu.ShowAsContext();
     }
 
     /// <summary>
-    /// 绘制带中文标签的序列化属性
+    /// 获取条件或奖励类型的中文名称
     /// </summary>
+    /// <param name="type">运行时类型</param>
+    /// <returns>显示名称</returns>
+    private static string GetTypeDisplayName(Type type)
+    {
+        if (type == null)
+        {
+            return "未选择类型";
+        }
+
+        switch (type.Name)
+        {
+            case nameof(ItemNumCondition): return "物品已有数量条件";
+            case nameof(CollectCondition): return "收集条件";
+            case nameof(AndCondition): return "全部条件";
+            case nameof(KillCondition): return "击杀条件";
+            case nameof(TalkCondition): return "对话条件";
+            case nameof(CustomEventCondition): return "自定义事件条件";
+            case nameof(ReachLocationCondition): return "到达地点条件";
+            case nameof(AdsCondition): return "广告条件";
+            case nameof(TimeCondition): return "时间条件";
+            case nameof(ProgressCondition): return "通用进度条件";
+            case nameof(OrCondition): return "任一条件";
+            case nameof(PassNumCondition): return "通关数量条件";
+            case nameof(OnlineTimeCondition): return "在线时长条件";
+            case nameof(MoneyReward): return "现金奖励";
+            case nameof(GoldReward): return "金币奖励";
+            case nameof(ExpReward): return "经验奖励";
+            case nameof(ItemReward): return "道具奖励";
+            case nameof(CustomReward): return "自定义奖励";
+            default: return type.Name;
+        }
+    }
+
+    private static void SetManagedReference(SerializedProperty property, Type type)
+    {
+        property.serializedObject.Update();
+        property.managedReferenceValue = Activator.CreateInstance(type);
+        property.isExpanded = true;
+        property.serializedObject.ApplyModifiedProperties();
+    }
+
+    private static void AddDefaultElement(ReorderableList list)
+    {
+        list.serializedProperty.arraySize++;
+        SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(list.serializedProperty.arraySize - 1);
+        element.isExpanded = true;
+        list.serializedProperty.serializedObject.ApplyModifiedProperties();
+    }
+
     private static void DrawProperty(ref Rect rect, SerializedProperty property, string label)
     {
         float height = EditorGUI.GetPropertyHeight(property, true);
-        Rect propertyRect = new Rect(rect.x, rect.y, rect.width, height);
-        EditorGUI.PropertyField(propertyRect, property, new GUIContent(label), true);
+        EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, height), property, new GUIContent(label), true);
         rect.y += height + VerticalSpacing;
     }
 
-    /// <summary>
-    /// 获取带间隔的属性高度
-    /// </summary>
     private static float GetPropertyHeight(SerializedProperty property)
     {
         return EditorGUI.GetPropertyHeight(property, true) + VerticalSpacing;
     }
 
-    /// <summary>
-    /// 获取下一行绘制区域
-    /// </summary>
-    private static Rect GetNextLine(ref Rect rect)
+    private static Rect NextLine(ref Rect rect)
     {
-        Rect lineRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
+        Rect line = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
         rect.y += EditorGUIUtility.singleLineHeight + VerticalSpacing;
-        return lineRect;
+        return line;
     }
-
-    #endregion
 }
 #endif

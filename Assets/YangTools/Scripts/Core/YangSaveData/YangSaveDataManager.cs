@@ -464,9 +464,11 @@ namespace YangTools.Scripts.Core.YangSaveData
     {
         public string conditionId; //运行时内部条件键 不需要在任务配置中填写
         public float currentCount; //当前条件进度
+        public bool isCompleted; //条件完成状态
         public long startUtcSeconds; //时间条件开始时间
         // 字段名保持兼容 实际存储单位为秒
         public float onlineTimeSeconds; //累计在线时长秒数
+        public List<SaveQuestConditionItem> children = new List<SaveQuestConditionItem>(); //组合条件子状态
 
         /// <summary>
         /// 修正反序列化后的非法数据
@@ -474,9 +476,11 @@ namespace YangTools.Scripts.Core.YangSaveData
         public void OnAfterDeserialize()
         {
             conditionId ??= string.Empty;
+            children ??= new List<SaveQuestConditionItem>();
             currentCount = NormalizeNonNegative(currentCount);
             startUtcSeconds = Math.Max(0L, startUtcSeconds);
             onlineTimeSeconds = NormalizeNonNegative(onlineTimeSeconds);
+            for (int i = 0; i < children.Count; i++) children[i]?.OnAfterDeserialize();
         }
 
         /// <summary>

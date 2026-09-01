@@ -1,107 +1,291 @@
 # QuestSystem 任务系统
 
-QuestSystem 是基于 `ScriptableObject` 的任务运行时模块，负责任务状态、目标条件、进度、每日刷新、存档接口和奖励事件。系统拆分为独立核心与可选项目适配层，整个目录可以直接复制到没有 YooAsset、BagMgr、YangSaveDataManager 或 YangEventGroup 的新项目中。
+QuestSystem 是一个基于 Unity `ScriptableObject` 的任务运行时模块，提供任务配置、目标条件、进度事件、每日刷新、存档、奖励发放和任务 UI 接口。
+
+系统核心不依赖 `YooAsset`、`BagMgr`、`YangSaveDataManager` 或 `YangEventGroup`。需要接入项目现有系统时，启用 `YANGTOOLS_QUEST_INTEGRATION` 并使用 `Integration` 目录中的适配器。
 
 ## 目录结构
 
 ```text
 Assets/YangTools/QuestSystem/
 ├─ Runtime/
-│  ├─ QuestSystem.Runtime.asmdef  独立核心程序集
-│  ├─ QuestData.cs                任务配置数据
-│  ├─ QuestEvents.cs              任务事件和状态
-│  ├─ QuestRuntime.cs             运行时进度逻辑
-│  ├─ QuestManager.cs             任务管理器单例
-│  ├─ QuestServices.cs            服务接口和内存实现
-│  ├─ QuestSaveModels.cs          独立存档模型
-│  └─ QuestEventMessageBase.cs    核心事件基类
+│  ├─ Core/
+│  │  ├─ QuestManager.cs          任务管理器
+│  │  └─ QuestRuntime.cs           任务运行时和条件运行时
+│  ├─ Data/
+│  │  └─ QuestData.cs              任务配置和目标配置
+│  ├─ Conditions/
+│  │  └─ QuestConditions.cs        多态条件和组合条件
+│  ├─ Events/
+│  │  ├─ QuestEventBus.cs          强类型任务事件总线
+│  │  ├─ QuestEventMessageBase.cs  项目事件扩展基类
+│  │  └─ QuestEvents.cs             进度事件和任务事件
+│  ├─ Rewards/
+│  │  └─ QuestRewards.cs            多态奖励
+│  ├─ Services/
+│  │  └─ QuestServices.cs           存档 道具 奖励 时间服务
+│  ├─ Save/
+│  │  └─ QuestSaveModels.cs         核心存档模型
+│  └─ QuestSystem.Runtime.asmdef    独立核心程序集
 ├─ Integration/
-│  └─ QuestProjectAdapters.cs      可选 Yang 存档、BagMgr、YangEventGroup、YooAsset 适配器
+│  ├─ Save/
+│  │  └─ YangQuestSaveStore.cs    项目存档适配器
+│  ├─ Items/
+│  │  └─ BagQuestItemService.cs   BagMgr 道具适配器
+│  ├─ Rewards/
+│  │  └─ BagQuestRewardService.cs BagMgr 奖励适配器
+│  ├─ Events/
+│  │  └─ YangQuestEventBridge.cs  项目事件适配器
+│  └─ Loading/
+│     └─ YooAssetQuestDataLoader.cs YooAsset 配置加载器
 ├─ Script/
-│  └─ QuestManagerBootstrap.cs     双模式启动引导器
-├─ Editor/QuestSystem/             中文任务 Inspector
-└─ Data/                           任务资源和管理器预制体
+│  └─ QuestManagerBootstrap.cs    任务系统启动引导器
+├─ Editor/QuestSystem/
+│  └─ QuestDataEditor.cs          中文任务配置 Inspector
+├─ DefaultWindow/                 默认任务窗口和任务节点
+└─ Data/                          示例任务资源和管理器预制体
 ```
 
-### 新项目最快上手
+## 快速开始
 
-1. 复制 `QuestSystem` 目录到新项目的 `Assets` 下，不要定义 `YANGTOOLS_QUEST_INTEGRATION`。
-2. 将 `Data/QusetManager.prefab` 拖入首个场景（或创建对象并添加 `QuestManager`、`QuestManagerBootstrap`）。
-3. 通过 `Assets/Create/Game/Quest/QuestData` 创建任务，填写唯一 `Id`、标题、目标/条件和奖励；`OnLineTime` 的目标数量按秒填写。
-4. 把任务资源拖到 Bootstrap 的“通用模式本地任务”列表，运行即可。Bootstrap 会自动注入内存存档和空道具服务。
-5. 业务代码通过 `QuestManager.Instance` 调用 `AcceptQuest`、`ReportProgress`、`CompleteQuest`、`ClaimReward`；监听 `QuestChanged` 或 `DataLoaded` 更新界面。
+### 使用 Bootstrap
 
-不需要存档、背包或 YooAsset 配置即可运行。后续要接入自己的系统时，再按下方“注入接口”实现服务并在注册任务前注入。
+1. 将 `Data/QusetManager.prefab` 拖入场景，或创建对象并添加 `QuestManager` 和 `QuestManagerBootstrap`。
+2. 通过 `Assets/Create/Game/Quest/QuestData` 创建任务资源。
+3. 在任务资源中配置任务 ID、标题、目标、根条件和奖励。
+4. 未启用 `YANGTOOLS_QUEST_INTEGRATION` 时，将任务资源拖入 Bootstrap 的“通用模式本地任务”列表。
+5. 运行后，Bootstrap 会自动使用内存存档、空道具服务、系统时间服务和内存奖励服务。
 
-## 存档兼容
+默认模式适合开发和功能验证。内存存档不会写入持久化文件，重新运行后进度会丢失。
 
-核心层只依赖 `QuestSaveItem`、`QuestSaveObjectiveItem` 和 `QuestSaveConditionItem`。
-集成层会把它们映射到项目存档类型，任务状态、目标索引和条件索引结构保持不变；在线时长字段统一按秒读写。
-切换秒制后请清理或重置旧的在线时长存档。目标和条件不需要手动填写 ID，运行时按列表索引生成内部键，已上线任务不要随意调整列表顺序。
-
-## 基本用法
+### 手动初始化
 
 ```csharp
 QuestManager manager = QuestManager.Instance;
+manager.ConfigureServices(
+    new QuestMemorySaveStore(),
+    NullQuestItemService.Instance,
+    SystemQuestTimeProvider.Instance,
+    new QuestMemoryRewardService());
+
 manager.Initialize(new[] { questData });
-manager.AcceptQuest("quest_001");
-manager.ReportProgress(new QuestProgressEvent(QuestProgressEventType.Kill, "enemy_001"));
-manager.CompleteQuest("quest_001");
-manager.ClaimReward("quest_001");
+
+manager.AcceptQuest(questData.Id);
+manager.ReportProgress(new QuestProgressEvent(
+    QuestProgressEventType.Kill, "slime", amount: 1f));
+
+// AutoComplete 关闭时需要手动确认当前目标
+manager.CompleteQuest(questData.Id);
+manager.ClaimReward(questData.Id);
 ```
 
-`QuestManager` 是场景单例，默认跨场景保留。`Update` 会自动驱动时间和在线时长条件。`DataLoaded` 在当前批次任务注册完成后触发。
+`Initialize(IEnumerable<QuestData>)` 会注册任务并完成当前批次加载。也可以先调用 `Initialize()`，再调用 `RegisterQuest`、`RegisterQuests` 和 `CompleteRegistration`。
 
-`QuestData` 的“默认激活任务”用于控制任务注册时的初始状态。启用后，任务在前置任务满足时直接进入 `Active`（进行中），不需要额外调用 `AcceptQuest`；前置任务未满足时仍保持 `Locked`，满足后会自动激活。关闭时任务默认进入 `Available`（可接取）。已有 `Active`、`Completed` 或 `Rewarded` 存档状态不会被降级。
+## 任务配置结构
 
-`OnLineTime` 条件的“目标数量”单位为秒，例如 60 表示在线 1 分钟。进度事件中的 `Value` 和运行时存档字段 `onlineTimeSeconds` 也统一使用秒。
+`QuestData` 使用 Unity 原生 `[SerializeReference]` 保存具体的 Condition 和 Reward 子类。
 
-默认任务窗口的按钮会根据任务状态执行不同操作：`Locked` 显示“锁定”，`Available` 显示“接取任务”，`Active` 显示“进行中”；当 `AutoComplete` 关闭且目标条件满足时显示“确认完成”，`Completed` 显示“可领取”，`Rewarded` 显示“已领取”。
-
-## 注入接口（自定义集成必读）
-
-接口定义位于 `Runtime/QuestServices.cs`。这里是“实现接口”，不是必须继承某个 `MonoBehaviour`。使用 Bootstrap 的默认模式无需编写实现类；只有在替换默认服务或接入项目系统时才需要编写实现类：
-
-| 接口 | 是否必须 | 用途 | 必须提供的成员 |
-| --- | --- | --- | --- |
-| `IQuestSaveStore` | 管理器运行时必须有；默认由 Bootstrap 提供 | 读取、创建、清理和保存任务进度 | `GetQuest`、`GetOrCreateQuest`、`Clear`、`MarkDirty` |
-| `IQuestItemService` | 使用 `ItemNum` 条件时实现；否则可用内置空服务 | 查询和消耗道具 | `GetItemCount`、`HasItem`、`TryConsume` |
-| `IQuestTimeProvider` | 否 | 提供 UTC 秒数和本地日期键 | `UtcNowSeconds`、`LocalDateKey` |
-
-`ConfigureServices` 必须传入非空的 `IQuestSaveStore`；`IQuestItemService` 可以传 `null`，系统会自动使用 `NullQuestItemService.Instance`。不使用道具条件时也可显式传入该空服务；不提供时间服务时使用系统时间。Bootstrap 已经自动配置服务时，不要重复覆盖。
-
-最小自定义注入示例（必须在注册任务前调用）：
+每个 `QuestObjectiveData` 只有一个根条件：
 
 ```csharp
-public sealed class MyQuestSaveStore : IQuestSaveStore { /* 实现 4 个成员 */ }
-public sealed class MyQuestItemService : IQuestItemService { /* 实现 3 个成员 */ }
-
-QuestManager manager = QuestManager.Instance;
-manager.ConfigureServices(new MyQuestSaveStore(), new MyQuestItemService());
-manager.Initialize();
-manager.RegisterQuests(questDatas);
-manager.CompleteRegistration();
+[SerializeReference]
+public Condition Condition;
 ```
 
-如果需要自定义时间，再实现 `IQuestTimeProvider` 并作为第三个参数传入。服务配置完成并开始注册后不能再替换；核心存档类型使用 `QuestSaveItem`、`QuestSaveObjectiveItem` 和 `QuestSaveConditionItem`，项目适配层负责与现有存档类型互转。
+不再使用目标条件列表，也不再使用额外的“条件组合方式”枚举。需要多个条件时，将根条件设置为 `AndCondition` 或 `OrCondition`，然后在其 `Children` 中添加子条件。组合条件可以继续嵌套。
 
-## 奖励和事件
+示例结构：
 
-管理器只发布 `RewardIssued`，不直接修改金币或背包。`QuestRewardData.TargetKey` 用于填写道具 ID 或业务自定义目标键，奖励列表不需要额外 ID。
+```text
+AndCondition
+├─ KillCondition       击杀 3 个 slime
+└─ OrCondition         任意满足其一
+   ├─ TalkCondition    与 merchant 对话
+   └─ ReachLocation    到达 town
+```
 
-任务事件包括 `QuestChanged`、`ObjectiveChanged`、`OnlineTimeProgressed`、`RewardIssued`、`QuestReset` 和 `DataLoaded`。其中 `OnlineTimeProgressed` 每秒发送在线时长增量，`OnLineTime` 条件的目标数量、事件数值和存档字段统一使用秒。核心事件基类不依赖项目事件系统，集成模式下由适配器转发到 YangEventGroup。
+编辑器中的条件和奖励类型菜单使用中文显示。新增自定义类型需要满足以下条件：
+
+- 继承 `Condition` 或 `Reward`
+- 添加 `[Serializable]`
+- 提供无参数构造函数
+- 条件在 `Initialize` 中订阅事件并在 `Dispose` 中取消订阅
+- 条件变化时调用 `MarkChanged` 或 `Complete`
+
+## 内置条件
+
+| 类型 | 说明 | 主要配置 |
+| --- | --- | --- |
+| `KillCondition` | 击杀指定怪物 | `MonsterId`、`TargetCount` |
+| `CollectCondition` | 收集指定道具 | `ItemId`、`TargetCount` |
+| `TalkCondition` | 与指定 NPC 对话 | `NpcId` |
+| `ReachLocationCondition` | 到达指定地点 | `LocationId` |
+| `ItemNumCondition` | 背包已有指定数量道具 | `ItemId`、`TargetCount` |
+| `ProgressCondition` | 监听通用进度事件 | `EventType`、`TargetId`、`TargetCount` |
+| `CustomEventCondition` | 监听自定义事件 | `TargetId`、`TargetCount` |
+| `AdsCondition` | 完成广告次数 | `TargetId`、`TargetCount` |
+| `PassNumCondition` | 达到通关数量 | `TargetId`、`TargetCount` |
+| `TimeCondition` | 累计真实时间 | `TargetCount`，单位为秒 |
+| `OnlineTimeCondition` | 累计在线时间 | `TargetCount`，单位为秒 |
+| `AndCondition` | 所有子条件满足 | `Children` |
+| `OrCondition` | 任一子条件满足 | `Children` |
+
+`TimeCondition` 和 `OnlineTimeCondition` 使用秒作为单位，例如目标数量填写 `60` 表示 1 分钟。
+
+## 自定义条件示例
+
+条件可以直接针对自己的事件实现逻辑：
+
+```csharp
+using System;
+
+[Serializable]
+public sealed class BossKilledCondition : CountCondition
+{
+    public string BossId;
+    public new int TargetCount = 1;
+
+    protected override int GetConfiguredTargetCount() => TargetCount;
+
+    public override void Initialize()
+    {
+        QuestEventBus.OnMonsterKilled += OnMonsterKilled;
+    }
+
+    public override void Dispose()
+    {
+        QuestEventBus.OnMonsterKilled -= OnMonsterKilled;
+    }
+
+    private void OnMonsterKilled(string monsterId)
+    {
+        if (string.Equals(monsterId, BossId, StringComparison.Ordinal))
+        {
+            AddCount(1f);
+        }
+    }
+}
+```
+
+运行时会复制配置中的 Condition，不会修改 QuestData 资源本身。只有当前激活目标的根条件会初始化和监听事件；目标完成后会释放旧条件并初始化下一个目标。
+
+## 任务事件
+
+普通业务事件可以直接发布到强类型事件总线：
+
+```csharp
+QuestEventBus.PublishMonsterKilled("slime");
+QuestEventBus.PublishItemAdded("herb", 2);
+QuestEventBus.PublishNpcTalked("merchant");
+QuestEventBus.PublishLocationEntered("town");
+```
+
+通用事件使用 `QuestProgressEvent`：
+
+```csharp
+QuestEventBus.Publish(new QuestProgressEvent(
+    QuestProgressEventType.Custom,
+    "daily_login",
+    amount: 1f));
+```
+
+`QuestManager.ReportProgress` 与直接调用 `QuestEventBus.Publish` 使用同一条分发链。`QuestEventBus` 提供以下事件：
+
+- `OnMonsterKilled`
+- `OnItemAdded`
+- `OnNpcTalked`
+- `OnLocationEntered`
+- `OnProgressReported`
+
+项目集成模式下，`YangQuestEventBridge` 负责将已有的 Yang 事件转换为 `ReportProgress` 调用；业务层也可以直接使用 `QuestEventBus`。
+
+## QuestManager 生命周期
+
+任务管理器默认是跨场景单例，主要流程如下：
+
+1. `ConfigureServices` 注入服务
+2. `Initialize` 初始化管理器
+3. `RegisterQuest` 或 `RegisterQuests` 注册任务配置
+4. `CompleteRegistration` 完成任务加载
+5. `AcceptQuest` 接取可接取任务
+6. 通过 `ReportProgress` 或 `QuestEventBus` 发布进度
+7. `AutoComplete` 开启时自动完成目标，否则调用 `CompleteQuest`
+8. 任务进入 `Completed` 后调用 `ClaimReward`
+
+`QuestManager.Update` 会自动驱动真实时间和在线时长条件。应用进入后台后不会累计在线时长，回到前台后继续累计。
+
+任务目标按顺序执行。后续目标不会提前接收事件或累计进度。
+
+## 服务注入
+
+接口定义在 `Runtime/Services/QuestServices.cs`：
+
+| 接口 | 用途 | 默认实现 |
+| --- | --- | --- |
+| `IQuestSaveStore` | 读取和保存任务进度 | `QuestMemorySaveStore` |
+| `IQuestItemService` | 查询和消耗道具 | `NullQuestItemService` |
+| `IQuestRewardService` | 发放任务奖励 | `NullQuestRewardService` 或 `QuestMemoryRewardService` |
+| `IQuestTimeProvider` | 提供 UTC 时间和日期键 | `SystemQuestTimeProvider` |
+
+`ConfigureServices` 必须传入非空的 `IQuestSaveStore`。其他服务可以传 `null`，系统会使用对应的默认服务。服务配置和任务注册开始后不能再替换。
+
+集成适配器当前提供：
+
+- `YangQuestSaveStore`：接入项目任务存档
+- `BagQuestItemService`：接入 `BagMgr` 查询和消耗道具
+- `BagQuestRewardService`：接入 `BagMgr` 发放道具奖励
+- `YangQuestEventBridge`：接入项目事件系统
+- `YooAssetQuestDataLoader`：从 YooAsset 加载任务资源
+
+当前项目的金币、现金和经验奖励仍需要由外部奖励服务实现。
+
+## 奖励发放
+
+内置奖励类型：
+
+- `MoneyReward`：现金
+- `GoldReward`：金币
+- `ExpReward`：经验
+- `ItemReward`：道具
+- `CustomReward`：自定义奖励
+
+每个奖励独立实现 `Give(IQuestRewardService)`。`ClaimReward` 会先保存 `Rewarded` 状态，再逐项发放奖励，防止回调重入导致重复领奖。单项奖励失败只记录错误并触发 `RewardIssued`，不会自动回滚或重试。
+
+## 存档
+
+核心存档模型包括：
+
+- `QuestSaveItem`
+- `QuestSaveObjectiveItem`
+- `QuestSaveConditionItem`
+
+组合条件的子条件状态会递归保存，时间条件和在线时长条件均以秒保存。运行时状态由 `QuestRuntime` 写入存档，条件配置资源只作为运行时副本的来源。
+
+当前重构不迁移旧版 QuestData 资源和旧任务存档。升级后请重新配置任务资源，并清理旧存档数据。
+
+## 任务事件回调
+
+`QuestManager` 提供以下事件：
+
+- `QuestChanged`：任务状态变化
+- `ObjectiveChanged`：目标进度或完成状态变化
+- `OnlineTimeProgressed`：在线时长增量变化
+- `RewardIssued`：单项奖励发放结果
+- `QuestReset`：任务重置
+- `DataLoaded`：当前批次任务配置加载完成
 
 ## 默认任务窗口
 
-`DefaultWindow/Window/TaskWindow.prefab` 的 `TaskWindow` 直接继承 `MonoBehaviour`，只使用 Unity 原生的 `Toggle`、`ToggleGroup`、`Button`、`ScrollRect` 和 `Content` 容器，不依赖 YangUGUI、`UICustomToggle`、`UICustomButton` 或 EnhancedScroller。通过 `Open()` 和 `Close()` 控制窗口显隐；打开窗口或切换分类时会直接实例化当前分类的全部 `TaskNode`，窗口会在刷新前销毁旧节点，并按任务状态和进度排序后重新生成。
+`DefaultWindow/Window/TaskWindow.prefab` 提供基础任务列表界面。`TaskWindow` 负责按任务类型刷新任务节点，`TaskNode` 负责显示任务状态、进度和奖励。
 
-`TaskNode` 的本地化、广告和背包物品视图均按可选服务处理。缺少项目专属服务时仍可显示任务标题、进度并调用核心 `ClaimReward`；具备项目 UI 资源时，可在预制体中绑定对应按钮、文本和奖励视图以启用完整表现。
-
-如果只使用 QuestSystem 核心而不需要默认窗口，可以不引用 `DefaultWindow` 目录；核心运行时不依赖任何 UI 或第三方滚动列表插件。
+默认 UI 只依赖 Unity 原生的 `Toggle`、`Button`、`ScrollRect` 和 `Content`。不使用默认 UI 时，可以只保留 `Runtime` 目录。
 
 ## 注意事项
 
 1. `QuestData.Id` 必须全局唯一且稳定，用于前置任务和存档索引。
-2. 目标和条件 ID 由系统按列表索引生成，不是配置必填项。
-3. 事件监听应在 `OnDisable` 中取消，避免重复回调。
-4. 奖励事件只表示待发放奖励，实际发放由业务层完成。
+2. 目标只配置一个根 `Condition`，多条件请使用 `AndCondition` 或 `OrCondition` 的 `Children`。
+3. 条件必须成对实现事件订阅和取消订阅，避免重复监听或残留监听。
+4. `ItemNumCondition` 需要有效的 `IQuestItemService` 才能刷新背包数量。
+5. 奖励发放需要有效的 `IQuestRewardService`，否则会通过 `RewardIssued` 上报失败。
+6. 自定义 Condition 和 Reward 必须使用 `[Serializable]`，并提供无参数构造函数，才能在原生 SerializeReference Inspector 中创建。
+7. 修改 Condition 或 Reward 的字段结构后，需要检查已有 SerializeReference 资源是否需要重新配置。

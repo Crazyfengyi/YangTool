@@ -111,9 +111,11 @@ public sealed class QuestSaveConditionItem
 {
     public string conditionId;
     public float currentCount;
+    public bool isCompleted;
     public long startUtcSeconds;
     // 字段名保持兼容 实际存储单位为秒
     public float onlineTimeSeconds;
+    public List<QuestSaveConditionItem> children = new List<QuestSaveConditionItem>();
 
     /// <summary>
     /// 修正反序列化后的非法数值
@@ -121,9 +123,11 @@ public sealed class QuestSaveConditionItem
     public void OnAfterDeserialize()
     {
         conditionId ??= string.Empty;
+        children ??= new List<QuestSaveConditionItem>();
         currentCount = NormalizeNonNegative(currentCount);
         startUtcSeconds = Math.Max(0L, startUtcSeconds);
         onlineTimeSeconds = NormalizeNonNegative(onlineTimeSeconds);
+        for (int i = 0; i < children.Count; i++) children[i]?.OnAfterDeserialize();
     }
 
     private static float NormalizeNonNegative(float value)

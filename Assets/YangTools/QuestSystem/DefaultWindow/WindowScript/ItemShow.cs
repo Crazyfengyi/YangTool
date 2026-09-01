@@ -11,8 +11,8 @@ public class ItemShow : MonoBehaviour
     /// <summary>
     /// 显示任务奖励的目标键和数量
     /// </summary>
-    /// <param name="reward">任务奖励数据</param>
-    public void Show(QuestRewardData reward)
+    /// <param name="reward">任务奖励</param>
+    public void Show(Reward reward)
     {
         if (reward == null)
         {
@@ -22,7 +22,7 @@ public class ItemShow : MonoBehaviour
 
         if (rewardText != null)
         {
-            rewardText.text = $"{reward.TargetKey} x{reward.Count}";
+            rewardText.text = reward.DisplayText;
         }
 
         gameObject.SetActive(true);

@@ -63,6 +63,37 @@ public interface IQuestItemService
 }
 
 /// <summary>
+/// 任务奖励服务
+/// </summary>
+public interface IQuestRewardService
+{
+    /// <summary>
+    /// 发放现金
+    /// </summary>
+    bool TryGrantMoney(int amount);
+
+    /// <summary>
+    /// 发放金币
+    /// </summary>
+    bool TryGrantGold(int amount);
+
+    /// <summary>
+    /// 发放经验
+    /// </summary>
+    bool TryGrantExp(int amount);
+
+    /// <summary>
+    /// 发放道具
+    /// </summary>
+    bool TryGrantItem(string itemId, int count);
+
+    /// <summary>
+    /// 发放自定义奖励
+    /// </summary>
+    bool TryGrantCustom(string rewardKey, int count);
+}
+
+/// <summary>
 /// 任务时间服务
 /// </summary>
 public interface IQuestTimeProvider
@@ -118,7 +149,7 @@ public sealed class QuestMemorySaveStore : IQuestSaveStore
         saveItem = new QuestSaveItem
         {
             questId = questId,
-            state = QuestState.Active,
+            state = QuestState.Locked,
             objectives = new List<QuestSaveObjectiveItem>()
         };
         saveItems.Add(questId, saveItem);
@@ -164,6 +195,59 @@ public sealed class NullQuestItemService : IQuestItemService
     public bool TryConsume(int itemId, float count)
     {
         return false;
+    }
+}
+
+/// <summary>
+/// 空任务奖励服务
+/// </summary>
+public sealed class NullQuestRewardService : IQuestRewardService
+{
+    public static NullQuestRewardService Instance { get; } = new NullQuestRewardService();
+
+    private NullQuestRewardService()
+    {
+    }
+
+    public bool TryGrantMoney(int amount) => false;
+    public bool TryGrantGold(int amount) => false;
+    public bool TryGrantExp(int amount) => false;
+    public bool TryGrantItem(string itemId, int count) => false;
+    public bool TryGrantCustom(string rewardKey, int count) => false;
+}
+
+/// <summary>
+/// 内存任务奖励服务
+/// </summary>
+public sealed class QuestMemoryRewardService : IQuestRewardService
+{
+    private readonly Dictionary<string, int> amounts = new Dictionary<string, int>(StringComparer.Ordinal);
+
+    public bool TryGrantMoney(int amount) => Add("Money", amount);
+    public bool TryGrantGold(int amount) => Add("Gold", amount);
+    public bool TryGrantExp(int amount) => Add("Exp", amount);
+    public bool TryGrantItem(string itemId, int count) => Add("Item:" + itemId, count);
+    public bool TryGrantCustom(string rewardKey, int count) => Add("Custom:" + rewardKey, count);
+
+    /// <summary>
+    /// 获取内存服务记录的奖励数量
+    /// </summary>
+    /// <param name="key">奖励键</param>
+    /// <returns>奖励数量</returns>
+    public int GetAmount(string key)
+    {
+        return !string.IsNullOrEmpty(key) && amounts.TryGetValue(key, out int amount) ? amount : 0;
+    }
+
+    private bool Add(string key, int amount)
+    {
+        if (string.IsNullOrEmpty(key) || amount <= 0)
+        {
+            return false;
+        }
+
+        amounts[key] = GetAmount(key) + amount;
+        return true;
     }
 }
 

@@ -146,7 +146,7 @@ public class TaskNode : MonoBehaviour
             case TaskType.Collect:
                 if (title != "???")
                 {
-                    string targetId = condition?.Data?.TargetId;
+            string targetId = condition?.TargetId;
                     title = FormatTaskTitle(title, "收集{0}", targetId);
                 }
 
@@ -206,12 +206,12 @@ public class TaskNode : MonoBehaviour
             displayObjective = runtime.Objectives[runtime.Objectives.Count - 1];
         }
 
-        return displayObjective?.Conditions != null && displayObjective.Conditions.Count > 0
-            ? displayObjective.Conditions[0]
-            : null;
+        return displayObjective?.Condition;
     }
 
-    /// <summary>根据任务奖励刷新最多四个通用奖励视图</summary>
+    /// <summary>
+    /// 根据任务奖励刷新最多四个通用奖励视图
+    /// </summary>
     private void RefreshRewardDisplay()
     {
         if (itemUIPropList == null)
@@ -232,7 +232,7 @@ public class TaskNode : MonoBehaviour
         int rewardCount = Mathf.Min(MaxRewardCount, runtime.Data.Rewards.Count, itemUIPropList.Count);
         for (int i = 0; i < rewardCount; i++)
         {
-            QuestRewardData reward = runtime.Data.Rewards[i];
+            Reward reward = runtime.Data.Rewards[i];
             ItemShow rewardView = itemUIPropList[i];
             if (reward == null || rewardView == null)
             {
@@ -243,7 +243,9 @@ public class TaskNode : MonoBehaviour
         }
     }
 
-    /// <summary>获取任务节点的进度文本</summary>
+    /// <summary>
+    /// 获取任务节点的进度文本
+    /// </summary>
     private string GetProgressText(ConditionRuntime condition)
     {
         if (IsOnlineTimeCondition(condition))
@@ -316,7 +318,7 @@ public class TaskNode : MonoBehaviour
     /// <summary>判断是否为在线时长条件</summary>
     private static bool IsOnlineTimeCondition(ConditionRuntime condition)
     {
-        return condition?.Data?.EventType == QuestProgressEventType.OnLineTime;
+        return condition != null && condition.IsOnlineTimeCondition;
     }
 
     /// <summary>将秒数格式化为时分秒</summary>

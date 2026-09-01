@@ -21,13 +21,19 @@ public class TaskWindow : MonoBehaviour
     public Toggle everyDayToggle;
     public Toggle taskToggle;
 
-    /// <summary>滚动区域</summary>
+    /// <summary>
+    /// 滚动区域
+    /// </summary>
     public ScrollRect scrollRect;
 
-    /// <summary>任务节点容器</summary>
+    /// <summary>
+    /// 任务节点容器
+    /// </summary>
     public RectTransform taskContent;
 
-    /// <summary>任务节点预制体</summary>
+    /// <summary>
+    /// 任务节点预制体
+    /// </summary>
     public TaskNode taskNode;
 
     public GameObject red1;
@@ -448,9 +454,7 @@ public class TaskWindow : MonoBehaviour
     private static float GetProgressRatio(QuestRuntime runtime)
     {
         ObjectiveRuntime objective = runtime?.GetActiveObjective();
-        ConditionRuntime condition = objective?.Conditions != null && objective.Conditions.Count > 0
-            ? objective.Conditions[0]
-            : null;
+        ConditionRuntime condition = objective?.Condition;
         if (condition == null || condition.TargetCount <= 0)
         {
             return 0f;

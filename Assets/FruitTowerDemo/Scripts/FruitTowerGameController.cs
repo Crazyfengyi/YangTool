@@ -36,6 +36,16 @@ namespace FruitTowerDemo
         [SerializeField] private Transform aimMarker;
 
         /// <summary>
+        /// 果盘抛射目标参考点
+        /// </summary>
+        [SerializeField] private Transform throwTarget;
+
+        /// <summary>
+        /// 抛射路线预览控制器
+        /// </summary>
+        [SerializeField] private FruitTrajectoryPreview trajectoryPreview;
+
+        /// <summary>
         /// 输入控制器
         /// </summary>
         [SerializeField] private FruitDropInput dropInput;
@@ -56,9 +66,24 @@ namespace FruitTowerDemo
         [SerializeField] private float maxDropX = 2.55f;
 
         /// <summary>
+        /// 最小落点纵深坐标
+        /// </summary>
+        [SerializeField] private float minDropZ = -1.75f;
+
+        /// <summary>
+        /// 最大落点纵深坐标
+        /// </summary>
+        [SerializeField] private float maxDropZ = 1.75f;
+
+        /// <summary>
         /// 两次投放之间的间隔
         /// </summary>
         [SerializeField] private float dropCooldown = 0.28f;
+
+        /// <summary>
+        /// 抛物线最高点相对目标的高度
+        /// </summary>
+        [SerializeField] private float throwArcHeight = 0.8f;
 
         /// <summary>
         /// 初始水果最高等级
@@ -72,6 +97,10 @@ namespace FruitTowerDemo
         private int score;
         private bool canDrop;
         private bool isGameOver;
+        /// <summary>
+        /// 当前抛射目标点
+        /// </summary>
+        private Vector3 currentAimWorldPoint;
 
         /// <summary>
         /// 当前水果等级
@@ -92,6 +121,16 @@ namespace FruitTowerDemo
         /// 当前得分
         /// </summary>
         public int Score => score;
+
+        /// <summary>
+        /// 目标点最小纵深坐标
+        /// </summary>
+        public float MinDropZ => minDropZ;
+
+        /// <summary>
+        /// 目标点最大纵深坐标
+        /// </summary>
+        public float MaxDropZ => maxDropZ;
 
         private void Start()
         {
@@ -127,34 +166,49 @@ namespace FruitTowerDemo
             {
                 dropInput.ResetAim();
             }
+
+            SetAimWorldPoint(Vector3.zero);
         }
 
         /// <summary>
-        /// 设置当前落点预览
+        /// 设置当前抛射目标点预览
         /// </summary>
-        public void SetAimWorldX(float worldX)
+        public void SetAimWorldPoint(Vector3 worldPoint)
         {
-            float clampedX = Mathf.Clamp(worldX, minDropX, maxDropX);
-            if (aimMarker != null && spawnAnchor != null)
+            Vector3 targetPosition = ClampTargetPoint(worldPoint);
+            currentAimWorldPoint = targetPosition;
+            if (aimMarker != null)
             {
-                aimMarker.position = new Vector3(clampedX, spawnAnchor.position.y, spawnAnchor.position.z);
+                aimMarker.position = targetPosition;
+            }
+
+            if (trajectoryPreview != null && CanDrop)
+            {
+                trajectoryPreview.Refresh(targetPosition);
             }
         }
 
         /// <summary>
-        /// 根据横向位置投放水果
+        /// 根据目标点抛射水果
         /// </summary>
-        public void DropAtWorldX(float worldX)
+        public void DropAtWorldPoint(Vector3 worldPoint)
         {
             if (!CanDrop || fruitPrefab == null || spawnAnchor == null)
             {
                 return;
             }
 
-            float clampedX = Mathf.Clamp(worldX, minDropX, maxDropX);
-            Vector3 spawnPosition = new Vector3(clampedX, spawnAnchor.position.y, spawnAnchor.position.z);
+            Vector3 spawnPosition = spawnAnchor.position;
+            Vector3 targetPosition = ClampTargetPoint(worldPoint);
+            currentAimWorldPoint = targetPosition;
+            if (aimMarker != null)
+            {
+                aimMarker.position = targetPosition;
+            }
+
             FruitPiece piece = Instantiate(fruitPrefab, spawnPosition, Quaternion.identity, fruitRoot);
             piece.Initialize(currentFruitType, this);
+            piece.Launch(CalculateThrowVelocity(spawnPosition, targetPosition, out _));
             activePieces.Add(piece);
 
             currentFruitType = nextFruitType;
@@ -167,6 +221,26 @@ namespace FruitTowerDemo
             }
 
             StartCoroutine(EnableDropAfterDelay());
+            if (trajectoryPreview != null)
+            {
+                trajectoryPreview.Hide();
+            }
+        }
+
+        /// <summary>
+        /// 兼容旧版横向目标接口
+        /// </summary>
+        public void SetAimWorldX(float worldX)
+        {
+            SetAimWorldPoint(new Vector3(worldX, 0f, 0f));
+        }
+
+        /// <summary>
+        /// 兼容旧版横向投放接口
+        /// </summary>
+        public void DropAtWorldX(float worldX)
+        {
+            DropAtWorldPoint(new Vector3(worldX, 0f, 0f));
         }
 
         /// <summary>
@@ -214,6 +288,10 @@ namespace FruitTowerDemo
 
             isGameOver = true;
             canDrop = false;
+            if (trajectoryPreview != null)
+            {
+                trajectoryPreview.Hide();
+            }
             if (hud != null)
             {
                 hud.ShowGameOver(score);
@@ -232,6 +310,10 @@ namespace FruitTowerDemo
         {
             yield return new WaitForSeconds(dropCooldown);
             canDrop = !isGameOver;
+            if (canDrop && trajectoryPreview != null)
+            {
+                trajectoryPreview.Refresh(currentAimWorldPoint);
+            }
         }
 
         private void ProcessPendingMerges()
@@ -288,6 +370,62 @@ namespace FruitTowerDemo
         {
             int clampedMax = Mathf.Clamp(maxType, 0, (int)FruitType.Orange);
             return (FruitType)Random.Range(0, clampedMax + 1);
+        }
+
+        /// <summary>
+        /// 限制目标点在果盘有效范围内
+        /// </summary>
+        private Vector3 ClampTargetPoint(Vector3 worldPoint)
+        {
+            float targetY = throwTarget != null ? throwTarget.position.y : 0.55f;
+            float targetZ = throwTarget != null ? worldPoint.z : 0f;
+            return new Vector3(
+                Mathf.Clamp(worldPoint.x, minDropX, maxDropX),
+                targetY,
+                Mathf.Clamp(targetZ, minDropZ, maxDropZ));
+        }
+
+        /// <summary>
+        /// 计算水果的抛射路线采样点
+        /// </summary>
+        public bool TryGetThrowTrajectory(Vector3 worldPoint, Vector3[] positions)
+        {
+            if (spawnAnchor == null || positions == null || positions.Length < 2)
+            {
+                return false;
+            }
+
+            Vector3 origin = spawnAnchor.position;
+            Vector3 target = ClampTargetPoint(worldPoint);
+            Vector3 velocity = CalculateThrowVelocity(origin, target, out float totalFlightTime);
+            for (int i = 0; i < positions.Length; i++)
+            {
+                float normalizedTime = i / (positions.Length - 1f);
+                float time = totalFlightTime * normalizedTime;
+                positions[i] = origin + velocity * time + 0.5f * Physics.gravity * time * time;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 根据目标点计算真实抛射初速度和飞行时间
+        /// </summary>
+        private Vector3 CalculateThrowVelocity(Vector3 origin, Vector3 target, out float totalFlightTime)
+        {
+            float gravityMagnitude = Mathf.Abs(Physics.gravity.y);
+            if (gravityMagnitude < 0.01f)
+            {
+                totalFlightTime = 1f;
+                return (target - origin).normalized;
+            }
+
+            float apexY = Mathf.Max(origin.y, target.y) + Mathf.Max(0.1f, throwArcHeight);
+            float timeToApex = Mathf.Sqrt(2f * (apexY - origin.y) / gravityMagnitude);
+            float timeFromApex = Mathf.Sqrt(2f * (apexY - target.y) / gravityMagnitude);
+            totalFlightTime = Mathf.Max(0.1f, timeToApex + timeFromApex);
+            Vector3 horizontalVelocity = new Vector3(target.x - origin.x, 0f, target.z - origin.z) / totalFlightTime;
+            return horizontalVelocity + Vector3.up * gravityMagnitude * timeToApex;
         }
 
         private void ClearActivePieces()

@@ -116,6 +116,22 @@ namespace FruitTowerDemo
         }
 
         /// <summary>
+        /// 设置水果抛射初速度
+        /// </summary>
+        public void Launch(Vector3 initialVelocity)
+        {
+            if (fruitRigidbody == null)
+            {
+                return;
+            }
+
+            fruitRigidbody.isKinematic = false;
+            fruitRigidbody.detectCollisions = true;
+            fruitRigidbody.linearVelocity = initialVelocity;
+            fruitRigidbody.WakeUp();
+        }
+
+        /// <summary>
         /// 锁定水果避免重复合成
         /// </summary>
         internal bool TryLockForMerge()

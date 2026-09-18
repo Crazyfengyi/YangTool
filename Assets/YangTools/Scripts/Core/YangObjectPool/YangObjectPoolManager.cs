@@ -12,6 +12,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using YangTools.Scripts.Core;
+using YangTools.Scripts.Core.YangExtend;
+using YangResourceManager = YangTools.Scripts.Core.ResourceManager.ResourceManager;
 
 namespace YangTools.Scripts.Core.YangObjectPool
 {
@@ -49,6 +51,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
         internal override void CloseModule()
         {
+            foreach (IObjectPool pool in AllPools.Values)
+            {
+                pool.Clear();
+            }
+
             AllPools.Clear();
         }
 
@@ -64,40 +71,38 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public static async Task<(bool,T)> Get<T>(string poolKey = "", params object[] args)
             where T : class, IPoolItem<T>, new()
         {
-            string resultKey = GetTypeKey<T>(poolKey);
+            return await GetPool<T>(poolKey).Get(args);
+        }
 
-            if (AllPools.TryGetValue(resultKey, out IObjectPool pool2))
-            {
-                ObjectPool<T> temp = pool2 as ObjectPool<T>;
-                return await temp?.Get(args)!;
-            }
-            else
-            {
-                CreatePool<T>(resultKey);
-                ObjectPool<T> temp = AllPools[resultKey] as ObjectPool<T>;
-                return await temp?.Get(args)!;
-            }
+        /// <summary>
+        /// 同步获得对象
+        /// </summary>
+        /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
+        /// <param name="args">创建对象时传递给构造函数的参数</param>
+        public static (bool,T) GetSync<T>(string poolKey = "", params object[] args)
+            where T : class, IPoolItem<T>, new()
+        {
+            return GetPool<T>(poolKey).GetSync(args);
         }
 
         /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        public static async Task<PooledObjectPackage<T>> GetAutoPackage<T>(string poolKey = "")
+        public static async Task<PooledObjectPackage<T>> GetAutoPackage<T>(string poolKey = "", params object[] args)
             where T : class, IPoolItem<T>, new()
         {
-            string resultKey = GetTypeKey<T>(poolKey);
+            return await GetPool<T>(poolKey).GetAutoRecycleItem(args);
+        }
 
-            if (AllPools.TryGetValue(resultKey, out IObjectPool pool))
-            {
-                var temp = pool as ObjectPool<T>;
-                return await temp?.GetAutoRecycleItem()!;
-            }
-            else
-            {
-                CreatePool<T>(resultKey);
-                var temp = AllPools[resultKey] as ObjectPool<T>;
-                return await temp?.GetAutoRecycleItem()!;
-            }
+        /// <summary>
+        /// 同步获得自动回收包裹
+        /// </summary>
+        /// <param name="poolKey">对象池key,不传默认用脚本类名</param>
+        /// <param name="args">创建对象时传递给构造函数的参数</param>
+        public static PooledObjectPackage<T> GetAutoPackageSync<T>(string poolKey = "", params object[] args)
+            where T : class, IPoolItem<T>, new()
+        {
+            return GetPool<T>(poolKey).GetAutoRecycleItemSync(args);
         }
 
         /// <summary>
@@ -105,6 +110,21 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// </summary>
         public static ObjectPool<T> CreatePool<T>(string key) where T : class, IPoolItem<T>, new()
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                key = typeof(T).FullName;
+            }
+
+            if (AllPools.TryGetValue(key, out IObjectPool existingPool))
+            {
+                if (existingPool is ObjectPool<T> existingTypedPool)
+                {
+                    return existingTypedPool;
+                }
+
+                throw new InvalidOperationException($"对象池Key已被其他类型使用:{key}");
+            }
+
             ObjectPool<T> pool = new ObjectPool<T>();
             pool.PoolKey = key;
             AllPools.Add(key, pool);
@@ -126,15 +146,20 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
             if (key != null && AllPools.TryGetValue(key, out IObjectPool allPool))
             {
-                if (allPool is ObjectPool<T> temp) temp.Recycle(item);
-                return true;
+                if (allPool is ObjectPool<T> temp)
+                {
+                    temp.Recycle(item);
+                    return true;
+                }
+
+                return false;
             }
             else
             {
                 if (IsCheckRecycle)
                 {
                     ObjectPool<T> pool = new ObjectPool<T>();
-                    pool.PoolKey = item.PoolKey;
+                    pool.PoolKey = key;
                     if (key != null) AllPools.Add(key, pool);
                     pool.Recycle(item);
                     return true;
@@ -148,9 +173,9 @@ namespace YangTools.Scripts.Core.YangObjectPool
         /// 清空对象池
         /// </summary>
         /// <returns>是否清空成功</returns>
-        public static bool Clear<T>() where T : class, IPoolItem<T>, new()
+        public static bool Clear<T>(string poolKey = "") where T : class, IPoolItem<T>, new()
         {
-            string key = typeof(T).FullName;
+            string key = GetTypeKey<T>(poolKey);
             if (key != null && AllPools.TryGetValue(key, out IObjectPool pool))
             {
                 pool.Clear();
@@ -158,6 +183,12 @@ namespace YangTools.Scripts.Core.YangObjectPool
             }
 
             return false;
+        }
+
+        private static ObjectPool<T> GetPool<T>(string poolKey)
+            where T : class, IPoolItem<T>, new()
+        {
+            return CreatePool<T>(GetTypeKey<T>(poolKey));
         }
 
         /// <summary>
@@ -270,6 +301,11 @@ namespace YangTools.Scripts.Core.YangObjectPool
             if (itemList.Count == 0)
             {
                 item = CreateInstanceWithArgs(args);
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    item.Name = requestedName;
+                }
+
                 await item.OnCreate();
                 isNewInstance = true;
                 AllCount++;
@@ -451,10 +487,28 @@ namespace YangTools.Scripts.Core.YangObjectPool
             return string.Join(", ", typeNames);
         }
 
-        public async Task<PooledObjectPackage<T>> GetAutoRecycleItem()
+        public async Task<PooledObjectPackage<T>> GetAutoRecycleItem(params object[] args)
         {
-            (bool, T) target = await Get();
+            (bool, T) target = await Get(args);
             return new PooledObjectPackage<T>(target.Item2, this);
+        }
+
+        /// <summary>
+        /// 同步获得自动回收包裹
+        /// </summary>
+        /// <param name="args">创建对象时传递给构造函数的参数</param>
+        public PooledObjectPackage<T> GetAutoRecycleItemSync(params object[] args)
+        {
+            return GetAutoRecycleItem(args).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// 同步获得对象
+        /// </summary>
+        /// <param name="args">创建对象时传递给构造函数的参数</param>
+        public (bool,T) GetSync(params object[] args)
+        {
+            return Get(args).GetAwaiter().GetResult();
         }
 
         public void RecycleToDefaultCount()
@@ -530,9 +584,19 @@ namespace YangTools.Scripts.Core.YangObjectPool
         Task<(bool,T)> Get(params object[] args);
 
         /// <summary>
+        /// 同步获得对象
+        /// </summary>
+        (bool,T) GetSync(params object[] args);
+
+        /// <summary>
         /// 获得自动回收包裹
         /// </summary>
-        Task<PooledObjectPackage<T>> GetAutoRecycleItem();
+        Task<PooledObjectPackage<T>> GetAutoRecycleItem(params object[] args);
+
+        /// <summary>
+        /// 同步获得自动回收包裹
+        /// </summary>
+        PooledObjectPackage<T> GetAutoRecycleItemSync(params object[] args);
 
         /// <summary>
         /// 回收对象
@@ -721,26 +785,90 @@ namespace YangTools.Scripts.Core.YangObjectPool
         public string Name { get; set; }
         public string PoolKey { get; set; }
         public bool IsInPool { get; set; }
+        public GameObject GameObject { get; private set; }
+
+        private string resourceLocation; //资源地址
+        private Transform parent; //对象父节点
 
         public DefaultObjectPoolItem()
         {
         }
 
-        public Task OnCreate()
+        /// <summary>
+        /// 创建默认对象池物品
+        /// </summary>
+        /// <param name="resourceLocation">资源地址</param>
+        public DefaultObjectPoolItem(string resourceLocation) : this(resourceLocation, null)
         {
-            return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 创建默认对象池物品
+        /// </summary>
+        /// <param name="resourceLocation">资源地址</param>
+        /// <param name="parent">对象父节点</param>
+        public DefaultObjectPoolItem(string resourceLocation, Transform parent)
+        {
+            if (string.IsNullOrWhiteSpace(resourceLocation))
+            {
+                throw new ArgumentException("资源地址不能为空", nameof(resourceLocation));
+            }
+
+            this.resourceLocation = resourceLocation;
+            this.parent = parent;
+            Name = resourceLocation;
+        }
+
+        /// <summary>
+        /// 创建对象池实例
+        /// </summary>
+        public async Task OnCreate()
+        {
+            if (string.IsNullOrWhiteSpace(resourceLocation))
+            {
+                throw new InvalidOperationException("DefaultObjectPoolItem未设置资源地址");
+            }
+
+            GameObject = await YangResourceManager.InstantiateGameObject(resourceLocation, parent, false);
+            if (GameObject == null)
+            {
+                throw new InvalidOperationException($"资源实例化失败:{resourceLocation}");
+            }
+        }
+
+        /// <summary>
+        /// 获取对象池实例
+        /// </summary>
         public void OnGet()
         {
+            if (GameObject != null)
+            {
+                GameObject.DefaultGameObjectOnGet(parent);
+            }
         }
 
+        /// <summary>
+        /// 回收对象池实例
+        /// </summary>
         public void OnRecycle()
         {
+            if (GameObject != null)
+            {
+                GameObject.DefaultGameObjectRecycle();
+            }
         }
 
+        /// <summary>
+        /// 销毁对象池实例
+        /// </summary>
         public void OnDestroy()
         {
+            if (GameObject != null)
+            {
+                GameObject.DefaultGameObjectDestroy();
+            }
+
+            GameObject = null;
         }
     }
 
@@ -837,3 +965,12 @@ namespace YangTools.Scripts.Core.YangObjectPool
 
     #endregion 引用池
 }
+
+/*
+var result = YangObjectPool.GetSync<DefaultObjectPoolItem>(
+    "EffectPool",
+    "Effects/Hit",
+    parent);
+
+YangObjectPool.Recycle(result.Item2);
+*/

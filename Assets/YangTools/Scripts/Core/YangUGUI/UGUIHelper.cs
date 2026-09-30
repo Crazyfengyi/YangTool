@@ -24,14 +24,12 @@ namespace YangTools.Scripts.Core.YangUGUI
         private void Awake()
         {
             cachedCanvas = gameObject.GetOrAddComponent<Canvas>();
+            cachedCanvas.overrideSorting = true;
             gameObject.GetOrAddComponent<GraphicRaycaster>();
         }
 
         private void Start()
         {
-            cachedCanvas.overrideSorting = true;
-            cachedCanvas.sortingOrder = DepthFactor * depth;
-
             RectTransform tempTransform = GetComponent<RectTransform>();
             tempTransform.anchorMin = Vector2.zero;
             tempTransform.anchorMax = Vector2.one;
@@ -47,7 +45,6 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             this.depth = depth;
             cachedCanvas.overrideSorting = true;
-            cachedCanvas.sortingOrder = DepthFactor * this.depth;
         }
     }
 

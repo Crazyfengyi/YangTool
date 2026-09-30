@@ -20,7 +20,7 @@ public sealed class YangQuestEventBridge : IDisposable
     {
         this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
         QuestEventMessageBase.Sender = SendQuestEvent;
-        eventGroup.AddListener<EventMessageBase>(OnProgressEvent);
+        eventGroup.AddListener<QuestProgressEvent>(OnProgressEvent);
         manager.QuestChanged += Publish;
         manager.ObjectiveChanged += Publish;
         manager.RewardIssued += Publish;

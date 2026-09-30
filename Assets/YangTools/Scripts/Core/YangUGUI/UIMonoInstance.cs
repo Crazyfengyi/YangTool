@@ -6,12 +6,16 @@
  *创建时间:         2022-02-20
 */
 
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace YangTools.Scripts.Core.YangUGUI
 {
+    /// <summary>
+    /// 连接 UGUI 场景配置和界面管理器
+    /// </summary>
     public class UIMonoInstance : MonoBehaviour
     {
         public static UIMonoInstance Instance { get; private set; }
@@ -22,6 +26,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         public Material gray;
         //UI管理类
         private IUIManager uiManager;
+        private readonly UniTaskCompletionSource initialization = new(); //初始化完成信号
 
         [SerializeField] private Transform instanceRoot = null;
 
@@ -49,16 +54,44 @@ namespace YangTools.Scripts.Core.YangUGUI
             else
             {
                 Debug.LogError("UIMonoInstance有重复");
+                Destroy(gameObject);
+                return;
             }
 
-            uiManager = YangToolsManager.GetModule<YangUIManager>();
-            if (uiManager == null)
+            try
             {
-                Debug.LogError("UIManager is null.");
+                uiManager = YangToolsManager.GetModule<YangUIManager>();
+                if (uiManager == null) throw new InvalidOperationException("UI管理器不存在");
+            }
+            catch (Exception exception)
+            {
+                initialization.TrySetException(exception);
+                Debug.LogException(exception);
             }
         }
 
+        /// <summary>
+        /// 根据配置完成界面辅助器和组初始化
+        /// </summary>
         private void Start()
+        {
+            if (Instance != this || uiManager == null) return;
+            try
+            {
+                InitializeUI();
+                initialization.TrySetResult();
+            }
+            catch (Exception exception)
+            {
+                initialization.TrySetException(exception);
+                Debug.LogException(exception);
+            }
+        }
+
+        /// <summary>
+        /// 复用现有运行时辅助器创建流程
+        /// </summary>
+        private void InitializeUI()
         {
             //父节点
             if (instanceRoot == null)
@@ -78,7 +111,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiManager.SetUIPanelHelper(uiPanelCreateHelperScript);
 
             //根据设置添加组
-            for (int i = 0; i < uiGroups.Length; i++)
+            for (int i = 0; uiGroups != null && i < uiGroups.Length; i++)
             {
                 if (!AddUIGroup(uiGroups[i].GroupName, uiGroups[i].Depth))
                 {
@@ -86,6 +119,15 @@ namespace YangTools.Scripts.Core.YangUGUI
                     continue;
                 }
             }
+        }
+
+        /// <summary>
+        /// 释放自身单例引用并取消尚未完成的初始化等待
+        /// </summary>
+        private void OnDestroy()
+        {
+            initialization.TrySetCanceled();
+            if (Instance == this) Instance = null;
         }
 
         /// <summary>
@@ -137,7 +179,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <returns>要获取的界面逻辑类</returns>
         public T GetUIPanel<T>(int serialId) where T : class, IUGUIPanel
         {
-            return ((UIPanel) uiManager.GetPanel(serialId)).UGUIPanel as T;
+            UIPanel panel = uiManager?.GetPanel(serialId) as UIPanel; //查询结果
+            return panel && YangUIManager.IsAlive(panel.UGUIPanel) ? panel.UGUIPanel as T : null;
         }
 
         /// <summary>
@@ -147,7 +190,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <returns>要获取的界面</returns>
         public T GetUIPanel<T>(string assetName) where T : class, IUGUIPanel
         {
-            return ((UIPanel) uiManager.GetPanel(assetName)).UGUIPanel as T;
+            UIPanel panel = uiManager?.GetPanel(assetName) as UIPanel; //查询结果
+            return panel && YangUIManager.IsAlive(panel.UGUIPanel) ? panel.UGUIPanel as T : null;
         }
 
         /// <summary>
@@ -197,6 +241,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         public async UniTask<(int id, IUGUIPanel panel)> OpenPanel(string assetName, GroupType groupType,
             int priority = UIConstDefine.DefaultPriority, bool pauseCoveredPanel = false, object userData = null)
         {
+            await initialization.Task;
+            if (!this) throw new OperationCanceledException("UI入口已销毁");
             return await uiManager.OpenPanel(assetName, groupType.ToString(), priority, pauseCoveredPanel, userData);
         }
 
@@ -211,8 +257,11 @@ namespace YangTools.Scripts.Core.YangUGUI
                 assetName = typeof(T).Name;
             }
             
-            (int id, IUGUIPanel panel) result = await UIMonoInstance.Instance.OpenPanel(assetName, groupType, userData: (object) userData);
-            return (result.id, result.panel as T);
+            if (!Instance) throw new InvalidOperationException("UI入口尚未创建");
+            (int id, IUGUIPanel panel) result = await Instance.OpenPanel(assetName, groupType, userData: userData);
+            if (result.panel is T panel) return (result.id, panel);
+            Instance.ClosePanel(result.id);
+            throw new InvalidOperationException($"UI页面类型不匹配 {assetName} {typeof(T).Name}");
         }
 
         #endregion 打开UI界面
@@ -239,9 +288,21 @@ namespace YangTools.Scripts.Core.YangUGUI
             uiManager.ClosePanel(uiPanel, userData);
         }
 
-        public static void ClosePanel<T>() where T : IUGUIPanel, new()
+        /// <summary>
+        /// 按页面类型默认资源名关闭最上方实例
+        /// </summary>
+        public static void ClosePanel<T>() where T : IUGUIPanel
         {
-            IUIPanel[] panel = Instance.uiManager.GetPanels(nameof(T));
+            ClosePanel<T>(typeof(T).Name);
+        }
+
+        /// <summary>
+        /// 按自定义资源地址关闭最上方实例
+        /// </summary>
+        public static void ClosePanel<T>(string assetName) where T : IUGUIPanel
+        {
+            if (!Instance || Instance.uiManager == null) return;
+            IUIPanel[] panel = Instance.uiManager.GetPanels(assetName);
             if (panel.Length <= 0)
             {
                 return;

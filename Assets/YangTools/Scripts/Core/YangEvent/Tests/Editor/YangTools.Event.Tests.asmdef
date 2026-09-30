@@ -1,0 +1,7 @@
+{
+    "name": "YangTools.Event.Tests",
+    "references": ["YangTool", "YangTools.QuestSystem.Runtime"],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": false,
+    "optionalUnityReferences": ["TestAssemblies"]
+}

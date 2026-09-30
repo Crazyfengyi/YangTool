@@ -29,7 +29,6 @@ namespace YangTools
         /// <param name="action">事件回调</param>
         /// <param name="sortId"></param>
         public static EventInfo AddEventListener<T>(this UnityEngine.Object thisObject, Action<EventData> action,string eventName = "",int sortId = 0)
-            where T : EventMessageBase
         {
             var targetName = typeof(T).FullName;
             if (!string.IsNullOrEmpty(eventName))
@@ -75,6 +74,7 @@ namespace YangTools
         /// </summary>
         public static void SendEvent(Type type, object args,string eventName = "")
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
             string targetName = type.FullName;
             if (!string.IsNullOrEmpty(eventName))
             {
@@ -88,15 +88,20 @@ namespace YangTools
         /// </summary>
         /// <param name="eventName">事件名称</param>
         /// <param name="args">事件参数</param>
-        public static void SendEvent<T>(EventMessageBase args,string eventName = "") 
-            where T : EventMessageBase 
+        public static void SendEvent<T>(EventMessageBase args,string eventName = "")
+            where T : EventMessageBase
         {
-            string targetName = typeof(T).FullName;
-            if (!string.IsNullOrEmpty(eventName))
-            {
-                targetName = eventName;
-            }
-            YangEventManager.Instance.Send(targetName, args);
+            SendEvent(typeof(T), (object)args, eventName);
+        }
+
+        /// <summary>
+        /// 按指定类型发送任意事件参数 无需继承项目事件基类
+        /// </summary>
+        /// <param name="args">事件参数</param>
+        /// <param name="eventName">可选事件名称覆盖</param>
+        public static void SendEvent<T>(object args, string eventName = "")
+        {
+            SendEvent(typeof(T), args, eventName);
         }
         #endregion
     }

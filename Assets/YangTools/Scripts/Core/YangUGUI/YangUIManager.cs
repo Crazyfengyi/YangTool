@@ -18,15 +18,27 @@ using Object = System.Object;
 
 namespace YangTools.Scripts.Core.YangUGUI
 {
+    /// <summary>
+    /// 管理界面生命周期和默认 UGUI 排序
+    /// </summary>
     public class YangUIManager : GameModuleBase, IUIManager
     {
         public static TMP_FontAsset MainFont = null; //主字体
 
         private readonly Dictionary<string, UIGroup> uiGroups; //UI组
-        private readonly Queue<IUIPanel> recycleQueue; //回收队列
+        private readonly Queue<RecycleEntry> recycleQueue; //回收快照队列
         private readonly HashSet<IUIPanel> pendingRecyclePanels; //等待回收的界面
         private readonly HashSet<int> pendingRecycleSerialIds; //等待回收的界面序列号
-        private readonly IObjectPool<UIPanelInstanceObject> instancePool; //对象池
+        private readonly ObjectPool<UIPanelInstanceObject> instancePool; //对象池
+        private readonly Dictionary<UIPanelInstanceObject, int> borrowedInstances = new(); //实例当前借出序列号
+        private readonly List<UIGroup> groupOrder = new(); //组注册顺序
+        private readonly List<UIGroup> updateGroups = new(); //轮询快照
+        private readonly List<UIGroup> refreshGroups = new(); //刷新快照
+        private readonly UISortingLayout sortingLayout = new(); //排序布局
+        private int lifecycleVersion; //生命周期版本
+        private bool isRefreshing; //是否正在刷新
+        private bool refreshPending; //是否需要再次刷新
+        private bool isUpdating; //是否正在轮询
         private int serial; //序列号
         private bool isShutdown; //是否关闭
 
@@ -47,7 +59,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         public YangUIManager()
         {
             uiGroups = new Dictionary<string, UIGroup>(StringComparer.Ordinal);
-            recycleQueue = new Queue<IUIPanel>();
+            recycleQueue = new Queue<RecycleEntry>();
             pendingRecyclePanels = new HashSet<IUIPanel>();
             pendingRecycleSerialIds = new HashSet<int>();
             instancePool = YangObjectPool.YangObjectPool.CreatePool<UIPanelInstanceObject>("UIPanelInstanceObject");
@@ -62,8 +74,13 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         #region 生命周期
 
+        /// <summary>
+        /// 开始新的管理器生命周期
+        /// </summary>
         internal override void InitModule()
         {
+            lifecycleVersion++;
+            isShutdown = false;
         }
 
         /// <summary>
@@ -73,22 +90,50 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="unscaledDeltaTimeSeconds">真实流逝时间,以秒为单位</param>
         internal override void Update(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
         {
-            ProcessRecycleQueue();
-
-            foreach (KeyValuePair<string, UIGroup> uiGroup in uiGroups)
+            if (isShutdown || isUpdating) return;
+            isUpdating = true;
+            try
             {
-                uiGroup.Value.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
+                ProcessRecycleQueue();
+                if (refreshPending) RefreshGroups();
+                updateGroups.Clear();
+                updateGroups.AddRange(groupOrder);
+                foreach (UIGroup group in updateGroups)
+                {
+                    if (isShutdown) break;
+                    group.Update(delaTimeSeconds, unscaledDeltaTimeSeconds);
+                }
+            }
+            finally
+            {
+                updateGroups.Clear();
+                isUpdating = false;
             }
         }
 
+        /// <summary>
+        /// 取消未完成请求并释放借出和闲置的界面实例
+        /// </summary>
         internal override void CloseModule()
         {
+            if (isShutdown) return;
             isShutdown = true;
+            lifecycleVersion++;
             CloseAllLoadedPanels();
+            ProcessRecycleQueue();
+            foreach (UIPanelInstanceObject item in borrowedInstances.Keys)
+            {
+                instancePool.DestroyBorrowed(item);
+            }
+            borrowedInstances.Clear();
+            instancePool.Clear();
             uiGroups.Clear();
+            groupOrder.Clear();
+            sortingLayout.Clear();
             recycleQueue.Clear();
             pendingRecyclePanels.Clear();
             pendingRecycleSerialIds.Clear();
+            refreshPending = false;
         }
 
         #endregion 生命周期
@@ -100,7 +145,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public void SetUIPanelHelper(IUICreateHelper uiCreateHelper)
         {
-            this.UICreateHelper = uiCreateHelper ?? throw new Exception("设置界面辅助器有问题");
+            if (!IsAlive(uiCreateHelper)) throw new ArgumentException("UI界面辅助器无效", nameof(uiCreateHelper));
+            UICreateHelper = uiCreateHelper;
         }
 
         /// <summary>
@@ -156,12 +202,12 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <returns>界面是否合法</returns>
         public bool IsValidPanel(IUIPanel uiPanel)
         {
-            if (uiPanel == null)
+            if (!IsAlive(uiPanel))
             {
                 return false;
             }
 
-            return HasPanel(uiPanel.SerialId);
+            return ReferenceEquals(GetPanel(uiPanel.SerialId), uiPanel);
         }
 
         #endregion 设置和查询
@@ -203,7 +249,21 @@ namespace YangTools.Scripts.Core.YangUGUI
                 return false;
             }
 
-            uiGroups.Add(groupName, new UIGroup(groupName, uiGroupDepth, uiGroupHelper));
+            if (isShutdown) throw new InvalidOperationException("UI管理器已关闭");
+            UIGroup group = new UIGroup(groupName, uiGroupDepth, uiGroupHelper, RefreshGroups, groupOrder.Count,
+                panel => ClosePanel(panel)); //新增组
+            uiGroups.Add(groupName, group);
+            groupOrder.Add(group);
+            try
+            {
+                RefreshGroups();
+            }
+            catch
+            {
+                uiGroups.Remove(groupName);
+                groupOrder.Remove(group);
+                throw;
+            }
             return true;
         }
 
@@ -357,28 +417,62 @@ namespace YangTools.Scripts.Core.YangUGUI
         public async UniTask<(int id, IUGUIPanel panel)> OpenPanel(string assetName, string groupName,
             int priority = UIConstDefine.DefaultPriority, bool pauseCovereduiPanel = false, object userData = null)
         {
-            if (UICreateHelper == null) throw new Exception("你必须设置一个UIPanelHelper");
+            if (isShutdown) throw new OperationCanceledException("UI管理器已关闭");
+            if (!IsAlive(UICreateHelper)) throw new Exception("你必须设置一个UIPanelHelper");
             if (string.IsNullOrEmpty(assetName)) throw new Exception("UI资源名为空");
             if (string.IsNullOrEmpty(groupName)) throw new Exception("UI组名为空");
             UIGroup uiGroup = (UIGroup) GetGroup(groupName);
             if (uiGroup == null) throw new Exception($"UI组是未找到{groupName}");
 
-            int serialId = ++serial;
-            //资源加载
-            GameObject panelAsset = await ResourceManager.ResourceManager.LoadAssetAsync<GameObject>(assetName);
-            if (!panelAsset)
+            int serialId = ++serial; //本次序列号
+            int version = lifecycleVersion; //请求版本
+            IUICreateHelper helper = UICreateHelper; //请求辅助器
+            UIPanelInstanceObject item = null; //本次借出实例
+            IUIPanel panel = null; //本次页面
+            try
             {
-                Debug.LogError($"UI页面加载失败:{assetName}");
-                throw new Exception();
-            }
+                GameObject asset = await ResourceManager.ResourceManager.LoadAssetAsync<GameObject>(assetName); //页面资源
+                ValidateOpenRequest(version, uiGroup, helper);
+                if (!asset) throw new InvalidOperationException($"UI页面加载失败 {assetName}");
 
-            //对象池
-            ProcessRecycleQueue();
-            (bool, UIPanelInstanceObject) data = await instancePool.Get(assetName,panelAsset, UICreateHelper);
-            
-            IUIPanel uiPanel = OpenUIPanel(serialId, assetName, uiGroup, data.Item2.Target, data.Item2,
-                pauseCovereduiPanel, data.Item1, 0f, userData);
-            return (serialId, (data.Item2.Target)?.GetComponent<IUGUIPanel>());
+                ProcessRecycleQueue();
+                ValidateOpenRequest(version, uiGroup, helper);
+                (bool isNew, UIPanelInstanceObject instance) data = await instancePool.Get(assetName, asset, helper); //池获取结果
+                item = data.instance;
+                borrowedInstances[item] = serialId;
+                ValidateOpenRequest(version, uiGroup, helper);
+
+                panel = helper.CreatePanel(item.Target, uiGroup, userData);
+                if (!IsAlive(panel)) throw new InvalidOperationException($"UI页面创建失败 {assetName}");
+                panel.Handle = item;
+                panel.OnInit(serialId, assetName, uiGroup, pauseCovereduiPanel, data.isNew, userData);
+                ValidateOpenRequest(version, uiGroup, helper);
+                uiGroup.AddUIPanel(panel);
+                sortingLayout.Prepare(groupOrder);
+                panel.OnOpen(userData);
+                ValidateOpenRequest(version, uiGroup, helper);
+                if (panel.SerialId != serialId || !IsValidPanel(panel)) throw new OperationCanceledException("UI页面在打开期间已关闭");
+                RefreshGroups();
+                ValidateOpenRequest(version, uiGroup, helper);
+                if (panel.SerialId != serialId || !IsValidPanel(panel)) throw new OperationCanceledException("UI页面在刷新期间已关闭");
+
+                IUGUIPanel logic = item.Target.GetComponent<IUGUIPanel>(); //页面逻辑
+                if (!IsAlive(logic)) throw new InvalidOperationException($"UI页面缺少逻辑组件 {assetName}");
+                InvokeEvent(OpenUIPanelSuccess, UIPanelOpenSucceedEventArgs.Create(panel, 0f, userData));
+                return (serialId, logic);
+            }
+            catch (OperationCanceledException)
+            {
+                RollbackOpen(serialId, panel, item, uiGroup, userData);
+                throw;
+            }
+            catch (Exception exception)
+            {
+                RollbackOpen(serialId, panel, item, uiGroup, userData);
+                InvokeEvent(OpenUIPanelFailure, UIPanelOpenFailedEventArgs.Create(serialId, assetName,
+                    groupName, pauseCovereduiPanel, exception.ToString(), userData));
+                throw;
+            }
         }
 
         #endregion 打开界面
@@ -409,7 +503,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="userData">用户自定义数据</param>
         public void ClosePanel(IUIPanel uiPanel, object userData = null)
         {
-            if (uiPanel == null)
+            if (!IsAlive(uiPanel))
             {
                 throw new Exception("UI form is invalid.");
             }
@@ -425,17 +519,17 @@ namespace YangTools.Scripts.Core.YangUGUI
                 throw new Exception("UI group is invalid.");
             }
 
-            uiGroup.RemovePanel(uiPanel);
-            uiPanel.OnClose(isShutdown, userData);
-            uiGroup.Refresh();
-
-            recycleQueue.Enqueue(uiPanel);
+            if (!IsValidPanel(uiPanel)) throw new InvalidOperationException("UI页面不属于当前管理器");
+            int serialId = uiPanel.SerialId; //关闭快照序列号
+            UIPanelInstanceObject item = uiPanel.Handle as UIPanelInstanceObject; //关闭快照句柄
+            UIPanelClosedEventArgs closeUIArgs = UIPanelClosedEventArgs.Create(serialId, uiPanel.UIPanelAssetName, uiGroup, userData); //关闭事件
             pendingRecyclePanels.Add(uiPanel);
-            pendingRecycleSerialIds.Add(uiPanel.SerialId);
-
-            UIPanelClosedEventArgs closeUIArgs =
-                UIPanelClosedEventArgs.Create(uiPanel.SerialId, uiPanel.UIPanelAssetName, uiGroup, userData);
-            CloseUIPanelComplete?.Invoke(this, closeUIArgs);
+            pendingRecycleSerialIds.Add(serialId);
+            recycleQueue.Enqueue(new RecycleEntry(uiPanel, serialId, item));
+            RunCleanup(() => uiGroup.RemovePanel(uiPanel));
+            RunCleanup(() => uiPanel.OnClose(isShutdown, userData));
+            RunCleanup(RefreshGroups);
+            InvokeEvent(CloseUIPanelComplete, closeUIArgs);
         }
 
         /// <summary>
@@ -447,7 +541,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             IUIPanel[] uiPanels = GetAllLoadedPanels();
             foreach (IUIPanel uiPanel in uiPanels)
             {
-                if (!HasPanel(uiPanel.SerialId))
+                if (!IsAlive(uiPanel) || !HasPanel(uiPanel.SerialId))
                 {
                     continue;
                 }
@@ -465,51 +559,159 @@ namespace YangTools.Scripts.Core.YangUGUI
         #region 内部方法
 
         /// <summary>
-        /// 打开界面
+        /// 检查异步请求是否仍属于当前生命周期
         /// </summary>
-        private IUIPanel OpenUIPanel(int serialId, string panelAssetName, UIGroup group, object panelInstance,
-            UIPanelInstanceObject panelInstanceObject, bool pauseCoveredPanel, bool isNewInstance, float duration,
-            object userData)
+        private void ValidateOpenRequest(int version, UIGroup group, IUICreateHelper helper)
         {
-            try
+            if (isShutdown || lifecycleVersion != version || !IsAlive(helper) ||
+                !ReferenceEquals(UICreateHelper, helper) || !IsAlive(group.Helper) ||
+                !uiGroups.TryGetValue(group.Name, out UIGroup current) || !ReferenceEquals(group, current))
             {
-                IUIPanel uiPanel = UICreateHelper.CreatePanel(panelInstance, group, userData);
-                if (uiPanel == null) throw new Exception("Can not create UI form in UI form helper.");
-
-                uiPanel.OnInit(serialId, panelAssetName, group, pauseCoveredPanel, isNewInstance, userData);
-                group.AddUIPanel(uiPanel);
-                uiPanel.OnOpen(userData);
-                group.Refresh();
-                uiPanel.Handle = (object) panelInstanceObject;
-
-                UIPanelOpenSucceedEventArgs
-                    openUIArgs = UIPanelOpenSucceedEventArgs.Create(uiPanel, duration, userData);
-                OpenUIPanelSuccess?.Invoke(this, openUIArgs);
-
-                return uiPanel;
-            }
-            catch (Exception exception)
-            {
-                UIPanelOpenFailedEventArgs openUIArgs = UIPanelOpenFailedEventArgs.Create(serialId, panelAssetName,
-                    group.Name, pauseCoveredPanel, exception.ToString(), userData);
-                OpenUIPanelFailure?.Invoke(this, openUIArgs);
-                throw;
+                throw new OperationCanceledException("UI打开请求已失效");
             }
         }
 
+        /// <summary>
+        /// 回滚未完成的打开并弃置异常实例
+        /// </summary>
+        private void RollbackOpen(int serialId, IUIPanel panel, UIPanelInstanceObject item, UIGroup group, object userData)
+        {
+            if (item == null || !borrowedInstances.TryGetValue(item, out int currentId) || currentId != serialId) return;
+            borrowedInstances.Remove(item);
+            bool wasClosed = panel != null && pendingRecyclePanels.Remove(panel); //是否已主动关闭
+            pendingRecycleSerialIds.Remove(serialId);
+            if (IsAlive(panel) && panel.SerialId == serialId)
+            {
+                group.RemovePanelSilently(panel);
+                if (!wasClosed) RunCleanup(() => panel.OnClose(isShutdown, userData));
+                RunCleanup(panel.OnRecycle);
+            }
+            RunCleanup(() => instancePool.DestroyBorrowed(item));
+            RunCleanup(RefreshGroups);
+        }
+
+        /// <summary>
+        /// 回收快照句柄 关闭管理器时直接弃置实例
+        /// </summary>
         private void ProcessRecycleQueue()
         {
             while (recycleQueue.Count > 0)
             {
-                IUIPanel uiPanel = recycleQueue.Dequeue();
-                if (!pendingRecyclePanels.Remove(uiPanel))
+                RecycleEntry entry = recycleQueue.Dequeue(); //回收快照
+                if (!pendingRecycleSerialIds.Remove(entry.SerialId))
                 {
                     continue;
                 }
 
-                pendingRecycleSerialIds.Remove(uiPanel.SerialId);
-                uiPanel.OnRecycle();
-                instancePool.Recycle((UIPanelInstanceObject) uiPanel.Handle);
+                pendingRecyclePanels.Remove(entry.Panel);
+                if (IsAlive(entry.Panel)) RunCleanup(entry.Panel.OnRecycle);
+                if (entry.Item == null || !borrowedInstances.TryGetValue(entry.Item, out int currentId) || currentId != entry.SerialId) continue;
+                borrowedInstances.Remove(entry.Item);
+                if (isShutdown || !entry.Item.Target)
+                {
+                    RunCleanup(() => instancePool.DestroyBorrowed(entry.Item));
+                }
+                else
+                {
+                    try
+                    {
+                        instancePool.Recycle(entry.Item);
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.LogException(exception);
+                        RunCleanup(() => instancePool.DestroyBorrowed(entry.Item));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 使用稳定快照刷新状态并在预校验后提交全部排序
+        /// </summary>
+        private void RefreshGroups()
+        {
+            if (isShutdown) return;
+            if (isRefreshing)
+            {
+                refreshPending = true;
+                return;
+            }
+            isRefreshing = true;
+            refreshPending = false;
+            try
+            {
+                sortingLayout.Prepare(groupOrder);
+                refreshGroups.Clear();
+                refreshGroups.AddRange(groupOrder);
+                foreach (UIGroup group in refreshGroups)
+                {
+                    if (isShutdown) return;
+                    group.RefreshState();
+                }
+                if (isShutdown) return;
+                sortingLayout.Prepare(groupOrder);
+                sortingLayout.Apply();
+            }
+            finally
+            {
+                refreshGroups.Clear();
+                isRefreshing = false;
+            }
+        }
+
+        /// <summary>
+        /// 逐个调用事件订阅者避免监听器异常改变管理器结果
+        /// </summary>
+        private void InvokeEvent<TArgs>(EventHandler<TArgs> handlers, TArgs args) where TArgs : EventArgs
+        {
+            if (handlers == null) return;
+            foreach (EventHandler<TArgs> handler in handlers.GetInvocationList())
+            {
+                RunCleanup(() => handler(this, args));
+            }
+        }
+
+        /// <summary>
+        /// 隔离清理回调异常并继续后续清理
+        /// </summary>
+        private static void RunCleanup(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+            }
+        }
+
+        /// <summary>
+        /// 同时支持普通辅助器和 Unity 对象的存活判断
+        /// </summary>
+        internal static bool IsAlive(object value)
+        {
+            return value != null && (value is not UnityEngine.Object unityObject || unityObject != null);
+        }
+
+        /// <summary>
+        /// 保存关闭时的数据避免回收回调重置页面字段
+        /// </summary>
+        private readonly struct RecycleEntry
+        {
+            public readonly IUIPanel Panel; //页面
+            public readonly int SerialId; //原序列号
+            public readonly UIPanelInstanceObject Item; //原句柄
+
+            /// <summary>
+            /// 创建回收快照
+            /// </summary>
+            public RecycleEntry(IUIPanel panel, int serialId, UIPanelInstanceObject item)
+            {
+                Panel = panel;
+                SerialId = serialId;
+                Item = item;
             }
         }
 
@@ -539,6 +741,11 @@ namespace YangTools.Scripts.Core.YangUGUI
         private readonly IUIGroupHelper uiGroupHelper; //ui组辅助类
         private readonly LinkedList<UIPanelInfo> uiPanelInfos; //ui页面信息
         private LinkedListNode<UIPanelInfo> cachedNode; //缓存节点
+        private readonly HashSet<IUIPanel> panels = new(); //组成员
+        private readonly List<UIPanelInfo> refreshPanels = new(); //状态刷新快照
+        private readonly Action requestRefresh; //请求管理器刷新
+        private readonly Action<IUIPanel> closePanel; //请求所属管理器关闭
+        internal int RegistrationOrder { get; } //注册顺序
 
         #region 属性
 
@@ -563,9 +770,19 @@ namespace YangTools.Scripts.Core.YangUGUI
                     return;
                 }
 
+                int oldDepth = depth; //变更前深度
                 depth = value;
-                uiGroupHelper.SetDepth(depth);
-                Refresh();
+                try
+                {
+                    uiGroupHelper.SetDepth(depth);
+                    Refresh();
+                }
+                catch
+                {
+                    depth = oldDepth;
+                    uiGroupHelper.SetDepth(depth);
+                    throw;
+                }
             }
         }
 
@@ -620,15 +837,28 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="depth">界面组深度</param>
         /// <param name="uiGroupHelper">界面组辅助器</param>
         public UIGroup(string name, int depth, IUIGroupHelper uiGroupHelper)
+            : this(name, depth, uiGroupHelper, null, 0)
+        {
+        }
+
+        /// <summary>
+        /// 创建由管理器协调排序的界面组
+        /// </summary>
+        internal UIGroup(string name, int depth, IUIGroupHelper uiGroupHelper, Action requestRefresh, int registrationOrder,
+            Action<IUIPanel> closePanel = null)
         {
             YangUIManager.CheckStringIsNull(name);
 
             this.name = name;
             pause = false;
             this.uiGroupHelper = uiGroupHelper ?? throw new Exception("UI group helper is invalid.");
+            this.requestRefresh = requestRefresh;
+            this.closePanel = closePanel;
+            RegistrationOrder = registrationOrder;
             uiPanelInfos = new LinkedList<UIPanelInfo>();
             cachedNode = null;
-            Depth = depth;
+            this.depth = depth;
+            uiGroupHelper.SetDepth(depth);
         }
 
         #region 方法
@@ -761,6 +991,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="uiPanel">要增加的界面</param>
         public void AddUIPanel(IUIPanel uiPanel)
         {
+            if (!panels.Add(uiPanel)) throw new InvalidOperationException("UI页面已在组中");
             uiPanelInfos.AddFirst(UIPanelInfo.Create(uiPanel));
         }
 
@@ -776,6 +1007,7 @@ namespace YangTools.Scripts.Core.YangUGUI
                 throw new Exception($"未找到界面 id:{uiPanel.SerialId.ToString()},name:{uiPanel.UIPanelAssetName}");
             }
 
+            RemovePanelSilently(uiPanel);
             if (!uiPanelInfo.Focus)
             {
                 uiPanelInfo.Focus = true;
@@ -788,18 +1020,26 @@ namespace YangTools.Scripts.Core.YangUGUI
                 uiPanel.OnPause();
             }
 
-            if (cachedNode != null && cachedNode.Value.UIPanel == uiPanel)
-            {
-                cachedNode = cachedNode.Next;
-            }
+        }
 
-            if (!uiPanelInfos.Remove(uiPanelInfo))
-            {
-                throw new Exception(string.Format("UI group '{0}' not exists specified UI form '[{1}]{2}'.", name,
-                    uiPanel.SerialId.ToString(), uiPanel.UIPanelAssetName));
-            }
+        /// <summary>
+        /// 先解除注册并修正轮询游标避免回调重入重复移除
+        /// </summary>
+        internal void RemovePanelSilently(IUIPanel uiPanel)
+        {
+            UIPanelInfo info = GetUIPanelInfo(uiPanel); //页面信息
+            if (info == null) return;
+            if (cachedNode != null && ReferenceEquals(cachedNode.Value.UIPanel, uiPanel)) cachedNode = cachedNode.Next;
+            panels.Remove(uiPanel);
+            uiPanelInfos.Remove(info);
+        }
 
-            //ReferencePool.Release(uiPanelInfo);
+        /// <summary>
+        /// 将页面的自身关闭请求交给所属管理器
+        /// </summary>
+        internal void ClosePanel(IUIPanel uiPanel)
+        {
+            closePanel?.Invoke(uiPanel);
         }
 
         /// <summary>
@@ -807,88 +1047,69 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public void Refresh()
         {
-            LinkedListNode<UIPanelInfo> current = uiPanelInfos.First;
+            if (requestRefresh != null) requestRefresh();
+            else RefreshState();
+        }
+
+        /// <summary>
+        /// 从稳定快照刷新深度和聚焦状态并跳过已移除的页面
+        /// </summary>
+        internal void RefreshState()
+        {
+            refreshPanels.Clear();
+            refreshPanels.AddRange(uiPanelInfos);
             bool tempPause = this.pause;
             bool cover = false; //覆盖
             int tempDepth = PanelCount;
-            while (current != null && current.Value != null)
+            foreach (UIPanelInfo info in refreshPanels)
             {
-                LinkedListNode<UIPanelInfo> next = current.Next;
-                current.Value.UIPanel.OnDepthChanged(Depth, tempDepth--);
-                if (current.Value == null)
-                {
-                    return;
-                }
-
+                if (!panels.Contains(info.UIPanel) || !YangUIManager.IsAlive(info.UIPanel)) continue;
+                info.UIPanel.OnDepthChanged(Depth, tempDepth--);
+                if (!panels.Contains(info.UIPanel)) continue;
                 if (tempPause)
                 {
-                    if (!current.Value.Focus)
+                    if (!info.Focus)
                     {
-                        current.Value.Focus = true;
-                        current.Value.UIPanel.OnLostFocus();
-                        if (current.Value == null)
-                        {
-                            return;
-                        }
+                        info.Focus = true;
+                        info.UIPanel.OnLostFocus();
+                        if (!panels.Contains(info.UIPanel)) continue;
                     }
-
-                    if (!current.Value.Paused)
+                    if (!info.Paused)
                     {
-                        current.Value.Paused = true;
-                        current.Value.UIPanel.OnPause();
-                        if (current.Value == null)
-                        {
-                            return;
-                        }
+                        info.Paused = true;
+                        info.UIPanel.OnPause();
                     }
                 }
                 else
                 {
-                    if (current.Value.Paused)
+                    if (info.Paused)
                     {
-                        current.Value.Paused = false;
-                        current.Value.UIPanel.OnResume();
-                        if (current.Value == null)
-                        {
-                            return;
-                        }
+                        info.Paused = false;
+                        info.UIPanel.OnResume();
+                        if (!panels.Contains(info.UIPanel)) continue;
                     }
-
-                    if (current.Value.UIPanel.PauseCoveredUIPanel)
-                    {
-                        tempPause = true;
-                    }
-
+                    if (info.UIPanel.PauseCoveredUIPanel) tempPause = true;
                     if (cover)
                     {
-                        if (!current.Value.Focus)
+                        if (!info.Focus)
                         {
-                            current.Value.Focus = true;
-                            current.Value.UIPanel.OnLostFocus();
-                            if (current.Value == null)
-                            {
-                                return;
-                            }
+                            info.Focus = true;
+                            info.UIPanel.OnLostFocus();
                         }
                     }
                     else
                     {
-                        if (current.Value.Focus)
+                        if (info.Focus)
                         {
-                            current.Value.Focus = false;
-                            current.Value.UIPanel.OnReFocus();
-                            if (current.Value == null)
-                            {
-                                return;
-                            }
+                            info.Focus = false;
+                            info.UIPanel.OnReFocus();
+                            if (!panels.Contains(info.UIPanel)) continue;
                         }
-
                         cover = true;
                     }
                 }
-
-                current = next;
             }
+            refreshPanels.Clear();
         }
 
         public void GetPanels(string uiPanelAssetName, List<IUIPanel> results)
@@ -980,13 +1201,20 @@ namespace YangTools.Scripts.Core.YangUGUI
         private int priority; //优先级
         private DateTime lastUseTime; //上一次使用时间
         private IUICreateHelper iuiCreateHelper; //UI页面辅助类
+        private bool isDestroyed; //是否已销毁
         public GameObject Target => target;
         public bool IsInPool { get; set; }
 
+        /// <summary>
+        /// 保留对象池要求的无参构造
+        /// </summary>
         public UIPanelInstanceObject()
         {
         }
 
+        /// <summary>
+        /// 保存创建实例所需的预制体和辅助器
+        /// </summary>
         public UIPanelInstanceObject(string name, object uiPanelAsset, IUICreateHelper uiCreateHelper)
         {
             if (uiPanelAsset == null) throw new Exception("UI form asset is invalid.");
@@ -1012,36 +1240,75 @@ namespace YangTools.Scripts.Core.YangUGUI
             lastUseTime = DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// 清理辅助器和资源引用
+        /// </summary>
         public void Clear()
         {
             uiPanelAsset = null;
             iuiCreateHelper = null;
         }
 
+        /// <summary>
+        /// 释放实例
+        /// </summary>
         public void Release(bool isShutdown)
         {
-            iuiCreateHelper.ReleasePanel(uiPanelAsset, target);
+            OnDestroy();
         }
 
+        /// <summary>
+        /// 创建实例并拒绝无效创建结果
+        /// </summary>
         public Task OnCreate()
         {
             object panel = iuiCreateHelper.InstantiatePanel(uiPanelAsset);
-            this.target = (GameObject)panel;
+            target = panel as GameObject;
+            if (!target) throw new InvalidOperationException($"UI实例创建失败 {Name}");
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 页面激活由打开生命周期控制
+        /// </summary>
         public void OnGet()
         {
         }
 
+        /// <summary>
+        /// 回收时禁用实例
+        /// </summary>
         public void OnRecycle()
         {
-            ((GameObject) target).SetActive(false);
+            if (target) target.SetActive(false);
         }
 
+        /// <summary>
+        /// 幂等销毁实例并保留预制体的全局缓存策略
+        /// </summary>
         public void OnDestroy()
         {
-            iuiCreateHelper.ReleasePanel(uiPanelAsset, target);
+            if (isDestroyed) return;
+            isDestroyed = true;
+            GameObject instance = target; //待销毁实例
+            target = null;
+            try
+            {
+                if (instance)
+                {
+                    if (YangUIManager.IsAlive(iuiCreateHelper)) iuiCreateHelper.ReleasePanel(uiPanelAsset, instance);
+                    else UnityEngine.Object.Destroy(instance);
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+                if (instance) UnityEngine.Object.Destroy(instance);
+            }
+            finally
+            {
+                Clear();
+            }
         }
     }
 }

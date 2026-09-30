@@ -78,6 +78,7 @@ namespace YangTools.Scripts.Core.YangUGUI
             this.UIGroup = group;
             this.DepthInUIGroup = 0;
             this.PauseCoveredUIPanel = pauseCoveredPanel;
+            IsOpening = false;
 
             if (!isNewInstance)
             {
@@ -87,18 +88,10 @@ namespace YangTools.Scripts.Core.YangUGUI
             UGUIPanel = GetComponent<IUGUIPanel>();
             if (UGUIPanel == null)
             {
-                Debug.LogError(string.Format("UI form '{0}' can not get UI form logic.", panelAssetName));
-                return;
+                throw new InvalidOperationException($"UI界面缺少逻辑组件 {panelAssetName}");
             }
 
-            try
-            {
-                UGUIPanel.OnInit(userData);
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"UI界面初始化异常---ID:{serialId},名称:{panelAssetName},异常:{exception}");
-            }
+            UGUIPanel.OnInit(userData);
         }
 
         /// <summary>
@@ -107,15 +100,8 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="userData">用户自定义数据</param>
         public void OnOpen(object userData)
         {
-            try
-            {
-                UGUIPanel.OnOpen(userData);
-            }
-            catch (Exception exception)
-            {
-                Debug.LogError($"UI界面打开异常---ID:{SerialId},名称:{UIPanelAssetName},异常:{exception}");
-            }
             IsOpening = true;
+            UGUIPanel.OnOpen(userData);
         }
 
         /// <summary>
@@ -125,15 +111,15 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="userData">用户自定义数据</param>
         public void OnClose(bool isShutdown, object userData)
         {
+            IsOpening = false;
             try
             {
-                UGUIPanel.OnClose(isShutdown, userData);
+                UGUIPanel?.OnClose(isShutdown, userData);
             }
             catch (Exception exception)
             {
                 Debug.LogError($"UI界面关闭异常---ID:{SerialId},名称:{UIPanelAssetName},异常:{exception}");
             }
-            IsOpening = false;
         }
 
         /// <summary>
@@ -239,7 +225,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         {
             try
             {
-                UGUIPanel.OnRecycle();
+                UGUIPanel?.OnRecycle();
             }
             catch (Exception exception)
             {
@@ -247,8 +233,12 @@ namespace YangTools.Scripts.Core.YangUGUI
             }
 
             SerialId = 0;
+            UIPanelAssetName = null;
+            UIGroup = null;
+            Handle = null;
+            IsOpening = false;
             DepthInUIGroup = 0;
-            PauseCoveredUIPanel = true;
+            PauseCoveredUIPanel = false;
         }
 
         #endregion 生命周期

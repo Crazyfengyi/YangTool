@@ -3,7 +3,11 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using UnityEngine;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
+/// <summary>
+/// 网络校时和兼容现有存档的日期转换工具
+/// </summary>
 public static class TimeTool
 {
     // 是否使用网络时间
@@ -11,11 +15,24 @@ public static class TimeTool
     // 网络时间更新间隔（秒）
     public static float updateInterval = 300f;// 5分钟
     // 当前网络时间
-    public static DateTime CurrentNetworkTime { get; private set; }
-    // 上次更新时间
-    private static float lastUpdateTime;
+    public static DateTime CurrentNetworkTime
+    {
+        get => networkTimeAnchor == default ? default : networkTimeAnchor.AddSeconds(RealtimeSeconds - networkTimeAnchorSeconds);
+        private set
+        {
+            networkTimeAnchor = value;
+            networkTimeAnchorSeconds = RealtimeSeconds;
+        }
+    }
+    private static DateTime networkTimeAnchor; //最近一次校时结果
+    private static double networkTimeAnchorSeconds; //校时时对应的单调时间
+    private static double lastUpdateTime; //最近一次校时尝试结束的单调时间
+    private static double RealtimeSeconds => (double)Stopwatch.GetTimestamp() / Stopwatch.Frequency;
     // 是否正在获取时间
     private static bool isFetchingTime;
+    /// <summary>
+    /// 初始化网络校时
+    /// </summary>
     public static void Init()
     {
         // 初始化时先获取一次网络时间
@@ -24,21 +41,22 @@ public static class TimeTool
             UpdateNetworkTime();
         }
     }
+    /// <summary>
+    /// 使用不受游戏暂停影响的时间调度校时
+    /// </summary>
     public static void Update()
     {
         if (!useNetworkTime) return;
-        //有获取过,本地累加模拟,等待下次网络时间覆盖
-        if (CurrentNetworkTime != default)
-        {
-            CurrentNetworkTime = CurrentNetworkTime.AddSeconds(Time.unscaledDeltaTime);
-        }
-        //定期更新网络时间
-        if (Time.time - lastUpdateTime >= updateInterval && !isFetchingTime)
+        float interval = updateInterval; //有效校时间隔
+        if (interval <= 0f || float.IsNaN(interval) || float.IsInfinity(interval)) interval = 300f;
+        if (RealtimeSeconds - lastUpdateTime >= interval && !isFetchingTime)
         {
             UpdateNetworkTime();
         }
     }
-    //异步更新网络时间
+    /// <summary>
+    /// 异步更新网络时间 成功和失败均遵守重试间隔
+    /// </summary>
     public static async void UpdateNetworkTime()
     {
         if (isFetchingTime) return;
@@ -49,7 +67,6 @@ public static class TimeTool
             //使用Task.Run 在后台线程获取网络时间
             DateTime networkTime = await Task.Run(() => GetNetworkTime());
             CurrentNetworkTime = networkTime;
-            lastUpdateTime = Time.time;
             Debug.Log($"成功获取网络时间: {networkTime}");
         }
         catch (Exception e)
@@ -60,6 +77,7 @@ public static class TimeTool
         }
         finally
         {
+            lastUpdateTime = RealtimeSeconds;
             isFetchingTime = false;
         }
     }
@@ -121,10 +139,12 @@ public static class TimeTool
                       ((x & 0xff000000) >> 24));
     }
     
-    //获取当前时间(如果启用网络时间则返回网络时间,否则返回本地时间)
+    /// <summary>
+    /// 启用网络时间且存在缓存时返回校准时间 否则返回本地时间
+    /// </summary>
     public static DateTime GetTime()
     {
-        return CurrentNetworkTime != default ? CurrentNetworkTime : DateTime.Now;
+        return useNetworkTime && networkTimeAnchor != default ? CurrentNetworkTime : DateTime.Now;
     }
   
     /// <summary>
@@ -148,6 +168,7 @@ public static class TimeTool
     /// <summary>
     /// 时间转换为时间戳--Local
     /// </summary>
+    /// <remarks>保留本地纪元的历史存档格式 此值不是标准 Unix UTC 时间戳</remarks>
     /// <return>秒</return>
     public static long DataTimeConvertToTimeStampLocal(DateTime dataTime = default)
     {

@@ -10,8 +10,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using YangTools.Scripts.Core;
 
 /*
  *  YangExtend.AddEventListener<DefaultEventMsg>(gameObject, (msg) =>
@@ -29,7 +27,7 @@ using YangTools.Scripts.Core;
 namespace YangTools
 {
     /// <summary>
-    /// 事件管理器
+    /// 主线程同步事件管理器
     /// </summary>
     public class YangEventManager
     {
@@ -61,32 +59,48 @@ namespace YangTools
         /// <summary>
         /// 事件字典
         /// </summary>
-        private readonly Dictionary<string, SortedList<int, List<EventInfo>>> eventDic = new Dictionary<string, SortedList<int, List<EventInfo>>>();
+        private readonly Dictionary<string, EventBucket> eventDic = new Dictionary<string, EventBucket>();
+
+        /// <summary>
+        /// 每次进入运行模式清理监听 兼容关闭域重载
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetListeners()
+        {
+            instance?.Clear();
+        }
 
         /// <summary>
         /// 添加事件
         /// </summary>
         public void Add(EventInfo eventInfo)
         {
-            if (eventDic.TryGetValue(eventInfo.EventName, out SortedList<int, List<EventInfo>> toAdd))
+            if (eventInfo == null)
             {
-                if (toAdd.TryGetValue(eventInfo.SortId, out List<EventInfo> sameSortList))
-                {
-                    sameSortList.Add(eventInfo);
-                }
-                else
-                {
-                    toAdd.Add(eventInfo.SortId, new List<EventInfo> { eventInfo });
-                }
+                throw new ArgumentNullException(nameof(eventInfo));
             }
-            else
+
+            if (eventInfo.RegisteredManager != null)
             {
-                toAdd = new SortedList<int, List<EventInfo>>
-                {
-                    {eventInfo.SortId, new List<EventInfo> { eventInfo }}
-                };
-                eventDic.Add(eventInfo.EventName, toAdd);
+                return;
             }
+
+            if (!eventDic.TryGetValue(eventInfo.EventName, out EventBucket bucket))
+            {
+                bucket = new EventBucket();
+                eventDic.Add(eventInfo.EventName, bucket);
+            }
+
+            if (!bucket.Listeners.TryGetValue(eventInfo.SortId, out List<EventInfo> listeners))
+            {
+                listeners = new List<EventInfo>();
+                bucket.Listeners.Add(eventInfo.SortId, listeners);
+            }
+
+            eventInfo.RegisteredManager = this;
+            eventInfo.RegistrationVersion++;
+            listeners.Add(eventInfo);
+            bucket.Snapshot = null;
         }
 
         /// <summary>
@@ -94,6 +108,8 @@ namespace YangTools
         /// </summary>
         public void RemoveForKey(string eventName)
         {
+            if (eventName == null || !eventDic.TryGetValue(eventName, out EventBucket bucket)) return;
+            bucket.UnregisterAll();
             eventDic.Remove(eventName);
         }
 
@@ -102,21 +118,19 @@ namespace YangTools
         /// </summary>
         public void Remove(EventInfo eventInfo)
         {
-            if (!eventDic.TryGetValue(eventInfo.EventName, out SortedList<int, List<EventInfo>> sortList))
+            if (eventInfo == null || eventInfo.RegisteredManager != this) return;
+            if (!eventDic.TryGetValue(eventInfo.EventName, out EventBucket bucket)) return;
+            if (!bucket.Listeners.TryGetValue(eventInfo.SortId, out List<EventInfo> listeners)) return;
+            if (!listeners.Remove(eventInfo)) return;
+
+            eventInfo.RegisteredManager = null;
+            bucket.Snapshot = null;
+            if (listeners.Count == 0)
             {
-                return;
+                bucket.Listeners.Remove(eventInfo.SortId);
             }
 
-            if (!sortList.TryGetValue(eventInfo.SortId, out List<EventInfo> sameSortList))
-            {
-                return;
-            }
-
-            sameSortList.Remove(eventInfo);
-            if (sameSortList.Count <= 0)
-            {
-                sortList.Remove(eventInfo.SortId);
-            }
+            if (bucket.Listeners.Count == 0) eventDic.Remove(eventInfo.EventName);
         }
 
         /// <summary>
@@ -124,27 +138,34 @@ namespace YangTools
         /// </summary>
         public void Remove(UnityEngine.Object target)
         {
-            foreach (var item in eventDic)
+            if (ReferenceEquals(target, null)) return;
+
+            List<string> emptyKeys = null;
+            foreach (var pair in eventDic)
             {
-                for (int i = item.Value.Count - 1; i >= 0; i--)
+                EventBucket bucket = pair.Value;
+                for (int i = bucket.Listeners.Count - 1; i >= 0; i--)
                 {
-                    List<EventInfo> sameSortList = item.Value.Values[i];
-                    for (int k = sameSortList.Count - 1; k >= 0; k--)
+                    List<EventInfo> listeners = bucket.Listeners.Values[i];
+                    for (int k = listeners.Count - 1; k >= 0; k--)
                     {
-                        EventInfo eventInfo = sameSortList[k];
-                    //绑定目标不存在
-                        if (eventInfo.Holder == null) continue;
-                    //目标不一样
+                        EventInfo eventInfo = listeners[k];
                         if (!ReferenceEquals(eventInfo.Holder, target)) continue;
-                        sameSortList.RemoveAt(k);
-                        if (sameSortList.Count <= 0)
-                        {
-                            item.Value.RemoveAt(i);
-                        }
-                        return;
+                        eventInfo.RegisteredManager = null;
+                        listeners.RemoveAt(k);
+                        bucket.Snapshot = null;
+                    }
+
+                    if (listeners.Count == 0) bucket.Listeners.RemoveAt(i);
                 }
+
+                if (bucket.Listeners.Count > 0) continue;
+                emptyKeys ??= new List<string>();
+                emptyKeys.Add(pair.Key);
             }
-        }
+
+            if (emptyKeys == null) return;
+            for (int i = 0; i < emptyKeys.Count; i++) eventDic.Remove(emptyKeys[i]);
         }
 
         /// <summary>
@@ -162,16 +183,33 @@ namespace YangTools
         /// </summary>
         public void Send(string eventName, object eventArgs)
         {
-            if (eventDic.TryGetValue(eventName, out SortedList<int, List<EventInfo>> sortList))
+            if (string.IsNullOrWhiteSpace(eventName))
             {
-                EventData eventData = new EventData(eventName, eventArgs);
-                List<EventInfo> temp = sortList.Values.SelectMany(item => item).ToList();
-                for (int i = 0; i < temp.Count; i++)
+                throw new ArgumentException("事件名称不能为空", nameof(eventName));
+            }
+
+            if (!eventDic.TryGetValue(eventName, out EventBucket bucket)) return;
+
+            ListenerSnapshot[] snapshot = bucket.GetSnapshot();
+            EventData eventData = new EventData(eventName, eventArgs);
+            for (int i = 0; i < snapshot.Length; i++)
+            {
+                EventInfo listener = snapshot[i].Listener;
+                if (listener.RegisteredManager != this || listener.RegistrationVersion != snapshot[i].Version) continue;
+                if (!listener.CanUse)
                 {
-                    EventInfo item = temp[i];
-                    if (!item.isEnabled) continue;
-                    //调用
-                    item.Invoke(eventData);
+                    Remove(listener);
+                    continue;
+                }
+
+                if (!listener.isEnabled) continue;
+                try
+                {
+                    listener.Invoke(eventData);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"事件回调异常 [{eventName}]\n{exception}", listener.Holder);
                 }
             }
         }
@@ -181,7 +219,93 @@ namespace YangTools
         /// </summary>
         public void Clear()
         {
+            foreach (EventBucket bucket in eventDic.Values) bucket.UnregisterAll();
             eventDic.Clear();
+        }
+
+        #endregion
+
+        #region 派发快照
+
+        /// <summary>
+        /// 同名事件的有序监听和缓存快照
+        /// </summary>
+        private sealed class EventBucket
+        {
+            /// <summary>
+            /// 按优先级保存监听
+            /// </summary>
+            private readonly SortedList<int, List<EventInfo>> listeners = new SortedList<int, List<EventInfo>>();
+            /// <summary>
+            /// 监听变化前复用的派发快照
+            /// </summary>
+            private ListenerSnapshot[] snapshot;
+
+            internal SortedList<int, List<EventInfo>> Listeners => listeners;
+            internal ListenerSnapshot[] Snapshot { get => snapshot; set => snapshot = value; }
+
+            /// <summary>
+            /// 只在监听变化后构建新快照 嵌套派发不会改写外层快照
+            /// </summary>
+            internal ListenerSnapshot[] GetSnapshot()
+            {
+                if (snapshot != null) return snapshot;
+                int count = 0;
+                for (int i = 0; i < listeners.Count; i++) count += listeners.Values[i].Count;
+                snapshot = new ListenerSnapshot[count];
+                int index = 0;
+                for (int i = 0; i < listeners.Count; i++)
+                {
+                    List<EventInfo> sameSortListeners = listeners.Values[i];
+                    for (int k = 0; k < sameSortListeners.Count; k++)
+                    {
+                        snapshot[index++] = new ListenerSnapshot(sameSortListeners[k]);
+                    }
+                }
+
+                return snapshot;
+            }
+
+            /// <summary>
+            /// 让已有派发快照中的监听立即失效
+            /// </summary>
+            internal void UnregisterAll()
+            {
+                for (int i = 0; i < listeners.Count; i++)
+                {
+                    List<EventInfo> sameSortListeners = listeners.Values[i];
+                    for (int k = 0; k < sameSortListeners.Count; k++)
+                    {
+                        sameSortListeners[k].RegisteredManager = null;
+                    }
+                }
+
+                snapshot = null;
+            }
+        }
+
+        /// <summary>
+        /// 监听与注册版本 防止注销后重新注册触发旧快照
+        /// </summary>
+        private readonly struct ListenerSnapshot
+        {
+            /// <summary>
+            /// 本轮派发的监听句柄
+            /// </summary>
+            internal readonly EventInfo Listener;
+            /// <summary>
+            /// 本轮捕获的注册版本
+            /// </summary>
+            internal readonly long Version;
+
+            /// <summary>
+            /// 捕获当前注册版本
+            /// </summary>
+            internal ListenerSnapshot(EventInfo listener)
+            {
+                Listener = listener;
+                Version = listener.RegistrationVersion;
+            }
         }
 
         #endregion
@@ -211,12 +335,20 @@ namespace YangTools
         /// </summary>
         private readonly System.WeakReference<UnityEngine.Object> weakObjectTarget;
         /// <summary>
+        /// 真正的空引用表示全局监听 与 Unity 已销毁对象区分
+        /// </summary>
+        private readonly bool isGlobal;
+
+        internal YangEventManager RegisteredManager { get; set; }
+        internal long RegistrationVersion { get; set; }
+        /// <summary>
         /// 是否可以使用---弱引用目标是否存活(存活--可以使用,不存活--不可使用)
         /// </summary>
         public bool CanUse
         {
             get
             {
+                if (isGlobal) return true;
                 weakObjectTarget.TryGetTarget(out var nowObj);
                 return nowObj != null;
             }
@@ -246,8 +378,11 @@ namespace YangTools
         /// <param name="sortId">触发优先级排序</param>
         public EventInfo(UnityEngine.Object holder, string eventName, Action<EventData> action,int sortId = 0)
         {
+            if (string.IsNullOrWhiteSpace(eventName)) throw new ArgumentException("事件名称不能为空", nameof(eventName));
+            if (action == null) throw new ArgumentNullException(nameof(action));
             SortId = sortId;
             EventName = eventName;
+            isGlobal = ReferenceEquals(holder, null);
             weakObjectTarget = new System.WeakReference<UnityEngine.Object>(holder);
             callback = action;
         }
@@ -258,11 +393,18 @@ namespace YangTools
         {
             if (!CanUse)
             {
-                Debug.LogWarning($"绑定物品未null,事件:{EventName}不可用");
                 return false;
             }
             callback?.Invoke(data);
             return true;
+        }
+
+        /// <summary>
+        /// 比较委托 用于同一分组的监听去重
+        /// </summary>
+        internal bool HasCallback(Action<EventData> listener)
+        {
+            return callback == listener;
         }
     }
 
@@ -295,6 +437,9 @@ namespace YangTools
     /// </summary>
     public class EventMessageBase
     {
+        /// <summary>
+        /// 按实际事件类型发送消息
+        /// </summary>
         public void SendEvent()
         {
             YangExtend.SendEvent(GetType(),this);
@@ -312,31 +457,39 @@ namespace YangTools
 
     #region 事件分组
 
-    public class YangEventGroup
+    /// <summary>
+    /// 管理一组全局监听 由持有者负责在生命周期结束时释放
+    /// </summary>
+    public class YangEventGroup : IDisposable
     {
-        private readonly Dictionary<string, List<Action<EventData>>> groupCachedListener = new Dictionary<string, List<Action<EventData>>>();
+        /// <summary>
+        /// 本组持有的监听句柄
+        /// </summary>
+        private readonly Dictionary<string, List<EventInfo>> groupCachedListener = new Dictionary<string, List<EventInfo>>();
         /// <summary>
         /// 添加一个监听
         /// </summary>
-        public void AddListener<T>(Action<EventData> listener) where T : EventMessageBase
+        public void AddListener<T>(Action<EventData> listener)
         {
-            Type eventType = typeof(T);
-            string key = eventType.FullName;
-            if (key != null && !groupCachedListener.ContainsKey(key))
+            if (listener == null) throw new ArgumentNullException(nameof(listener));
+            string key = typeof(T).FullName;
+            if (key == null) throw new ArgumentException("事件类型必须有完整名称");
+            if (!groupCachedListener.TryGetValue(key, out List<EventInfo> listeners))
             {
-                groupCachedListener.Add(key, new List<Action<EventData>>());
+                listeners = new List<EventInfo>();
+                groupCachedListener.Add(key, listeners);
             }
 
-            if (key != null && groupCachedListener[key].Contains(listener) == false)
+            for (int i = 0; i < listeners.Count; i++)
             {
-                groupCachedListener[key].Add(listener);
-                EventInfo ret = new EventInfo(YangToolsManager.DontDestoryObject, key, listener);
-                YangEventManager.Instance.Add(ret);
+                if (!listeners[i].HasCallback(listener)) continue;
+                YangEventManager.Instance.Add(listeners[i]);
+                return;
             }
-            else
-            {
-                Debug.LogWarning($"Event listener is exist : {eventType}");
-            }
+
+            EventInfo eventInfo = new EventInfo(null, key, listener);
+            listeners.Add(eventInfo);
+            YangEventManager.Instance.Add(eventInfo);
         }
 
         /// <summary>
@@ -344,16 +497,22 @@ namespace YangTools
         /// </summary>
         public void RemoveAllListener()
         {
-            foreach (var pair in groupCachedListener)
+            foreach (List<EventInfo> listeners in groupCachedListener.Values)
             {
-                string eventKey = pair.Key;
-                for (int i = 0; i < pair.Value.Count; i++)
+                for (int i = 0; i < listeners.Count; i++)
                 {
-                    YangEventManager.Instance.RemoveForKey(eventKey);
+                    YangEventManager.Instance.Remove(listeners[i]);
                 }
-                pair.Value.Clear();
             }
             groupCachedListener.Clear();
+        }
+
+        /// <summary>
+        /// 释放本组监听 重复调用安全 之后仍可重新添加监听
+        /// </summary>
+        public void Dispose()
+        {
+            RemoveAllListener();
         }
     }
     #endregion

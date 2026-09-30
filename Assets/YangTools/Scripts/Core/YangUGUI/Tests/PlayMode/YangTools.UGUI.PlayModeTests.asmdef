@@ -1,0 +1,9 @@
+{
+    "name": "YangTools.UGUI.PlayModeTests",
+    "references": ["Unity.ugui", "Unity.TextMeshPro"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_EDITOR"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

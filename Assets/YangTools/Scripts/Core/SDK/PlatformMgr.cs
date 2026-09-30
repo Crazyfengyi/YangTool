@@ -99,7 +99,8 @@ namespace GameMain
 
         public void UnInitialize()
         {
-            Debug.Log($"销毁平台成功:{Platform.GetType()}");
+            EventGroup.Dispose();
+            Debug.Log($"销毁平台成功:{Platform?.GetType()}");
             Platform?.UnInitialize();
             Platform = null;
         }
@@ -304,7 +305,7 @@ namespace GameMain
         /// </summary>
         public void Login(Action<bool, Action> resultAction)
         {
-            EventGroup.AddListener<EventMessageBase>(OnGetOpenIdSuccess);
+            EventGroup.AddListener<GetOpenIdSuccess>(OnGetOpenIdSuccess);
             resultAction?.Invoke(true, null);
 #if !UNITY_EDITOR
             if (ePlatform == EPlatform.Default)

@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace YangTools.Scripts.Core.YangTimer
 {
@@ -18,24 +17,46 @@ namespace YangTools.Scripts.Core.YangTimer
         /// 设置自动删除--告诉管理类这个计时器需要删除
         /// </summary>
         public readonly Action<YangTimer> SetAutoDestroy;
+        private bool destroyNotified; //是否已通知管理器销毁
         /// <summary>
         /// 构造函数
         /// </summary>
         public YangTimer(TimerInfo argTimerInfo, Action<YangTimer> manager)
         {
             SetAutoDestroy = manager;
-            TimerInfo = argTimerInfo;
+            TimerInfo = argTimerInfo ?? throw new ArgumentNullException(nameof(argTimerInfo));
         }
         /// <summary>
         /// 更新
         /// </summary>
         public void MyUpdate()
         {
-            TimerInfo.Update();
-            //更新完后检查是否需要销毁
-            if (TimerInfo.NeedDestroy)
+            MyUpdate(Time.deltaTime, Time.unscaledDeltaTime);
+        }
+
+        /// <summary>
+        /// 使用管理器传入的时间推进并隔离业务回调异常
+        /// </summary>
+        public void MyUpdate(float deltaTime, float unscaledDeltaTime)
+        {
+            try
             {
-                Destroy();
+                if (!TimerInfo.NeedDestroy)
+                {
+                    TimerInfo.Update(deltaTime, unscaledDeltaTime);
+                }
+            }
+            catch (Exception exception)
+            {
+                TimerInfo.NeedDestroy = true;
+                Debug.LogException(new InvalidOperationException($"计时器回调异常 [{TimerInfo.tag}]", exception));
+            }
+            finally
+            {
+                if (TimerInfo.NeedDestroy)
+                {
+                    Destroy();
+                }
             }
         }
         /// <summary>
@@ -43,6 +64,10 @@ namespace YangTools.Scripts.Core.YangTimer
         /// </summary>
         public void Destroy()
         {
+            TimerInfo.NeedDestroy = true;
+            if (destroyNotified) return;
+
+            destroyNotified = true;
             SetAutoDestroy?.Invoke(this);
         }
     }
@@ -93,14 +118,21 @@ namespace YangTools.Scripts.Core.YangTimer
         /// <param name="argIsJump">第一帧跳过</param>
         public TimerInfo(UnityEngine.Object argObject, string _tag,Action argCallback, int argExecuteCount, bool argIsScaled, bool argIsJump)
         {
-            if (argObject != null)
+            if (argExecuteCount < -1 && argExecuteCount != int.MinValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(argExecuteCount));
+            }
+
+            //保留已销毁对象的绑定信息 避免将其误当成无绑定计时器
+            if (!ReferenceEquals(argObject, null))
             {
                 WeakObject = new System.WeakReference<UnityEngine.Object>(argObject);
             }
 
             tag = _tag;
             Callback = argCallback;
-            ExecuteCount = argExecuteCount;
+            ExecuteCount = argExecuteCount == -1 ? int.MinValue : argExecuteCount;
+            NeedDestroy = ExecuteCount == 0;
             isScaled = argIsScaled;
             IsFirstUpdate = argIsJump;
         }
@@ -111,6 +143,44 @@ namespace YangTools.Scripts.Core.YangTimer
         public virtual void Update()
         {
             Debug.LogError("TimerInfo is Update,This is error");
+        }
+
+        /// <summary>
+        /// 接收更新时间并兼容已有无参更新实现
+        /// </summary>
+        public virtual void Update(float deltaTime, float unscaledDeltaTime)
+        {
+            Update();
+        }
+
+        /// <summary>
+        /// 检查终止状态和绑定对象并处理首次更新跳过
+        /// </summary>
+        protected bool CanUpdate()
+        {
+            if (NeedDestroy) return false;
+            if ((ExecuteCount <= 0 && ExecuteCount != int.MinValue) ||
+                (WeakObject != null && (!WeakObject.TryGetTarget(out UnityEngine.Object target) || target == null)))
+            {
+                NeedDestroy = true;
+                return false;
+            }
+
+            if (!IsFirstUpdate) return true;
+            IsFirstUpdate = false;
+            return false;
+        }
+
+        /// <summary>
+        /// 调用回调并更新剩余次数 回调中的取消优先于后续循环
+        /// </summary>
+        protected void ExecuteCallback()
+        {
+            Callback?.Invoke();
+            if (NeedDestroy || ExecuteCount == int.MinValue) return;
+
+            ExecuteCount--;
+            NeedDestroy = ExecuteCount <= 0;
         }
     };
     /// <summary>
@@ -127,9 +197,13 @@ namespace YangTools.Scripts.Core.YangTimer
         /// </summary>
         public int CurrentFrame;
 
+        /// <summary>
+        /// 创建帧计时器 零帧表示下次允许更新时执行
+        /// </summary>
         public FrameTimerInfo(UnityEngine.Object holder,string _tag, int argDelayFrame, Action argCallback, int count = 1, bool argIsJump = true)
             : base(holder,_tag, argCallback, count, false, argIsJump)
         {
+            if (argDelayFrame < 0) throw new ArgumentOutOfRangeException(nameof(argDelayFrame));
             TargetFrame = argDelayFrame;
             CurrentFrame = TargetFrame;
         }
@@ -138,49 +212,11 @@ namespace YangTools.Scripts.Core.YangTimer
         /// </summary>
         public override void Update()
         {
-            //如果需要删除return
-            if (NeedDestroy) return;
-
-            //如果有绑定物体，但绑定物体已经没有存活
-            if (base.WeakObject != null && !base.WeakObject.TryGetTarget(out UnityEngine.Object target))
-            {
-                base.NeedDestroy = true;
-                return;
-            }
-            //第一帧跳过
-            if (base.IsFirstUpdate)
-            {
-                base.IsFirstUpdate = false;
-                return;
-            }
-
-            //时间流逝
+            if (!CanUpdate()) return;
             CurrentFrame--;
-            //如果倒计时为0
-            if (IsTimerComplete())
-            {
-                Callback?.Invoke();
-
-                //如果是无限循环
-                if (ExecuteCount == int.MinValue)
-                {
-                    CurrentFrame = TargetFrame;
-                    return;
-                }
-                else
-                {
-                    ExecuteCount--;
-                    if (ExecuteCount <= 0)
-                    {
-                        base.NeedDestroy = true;
-                    }
-                    else
-                    {
-                        CurrentFrame = TargetFrame;
-                    }
-                }
-            }
-
+            if (!IsTimerComplete()) return;
+            ExecuteCallback();
+            if (!NeedDestroy) CurrentFrame = TargetFrame;
         }
         /// <summary>
         /// 是否计时完成
@@ -224,7 +260,7 @@ namespace YangTools.Scripts.Core.YangTimer
         public SecondTimerInfo(UnityEngine.Object holder,string _tag, float argDelayTime, Action argCallback, int count = 1, bool argIsScaled = true, bool argIsJump = true)
             : base(holder, _tag,argCallback, count, argIsScaled, argIsJump)
         {
-            tag = _tag;
+            ValidateDelay(argDelayTime);
             DelaySecond = argDelayTime;
             CurrentSecond = DelaySecond;
             isInfiniteLoop = false;
@@ -235,6 +271,7 @@ namespace YangTools.Scripts.Core.YangTimer
         public SecondTimerInfo(UnityEngine.Object holder,string _tag, float argDelayTime, Action argCallback, Func<bool> argCheckState, Action argOverBack, bool argIsScaled = true, bool argIsJump = true)
          : base(holder,_tag, argCallback, int.MinValue, argIsScaled, argIsJump)
         {
+            ValidateDelay(argDelayTime);
             DelaySecond = argDelayTime;
             CurrentSecond = DelaySecond;
 
@@ -247,72 +284,46 @@ namespace YangTools.Scripts.Core.YangTimer
         /// </summary>
         public override void Update()
         {
-            //如果需要删除return
-            if (NeedDestroy) return;
+            Update(Time.deltaTime, Time.unscaledDeltaTime);
+        }
 
-            //如果有绑定物体，但绑定物体已经没有存活
-            if (base.WeakObject != null && !base.WeakObject.TryGetTarget(out UnityEngine.Object target))
+        /// <summary>
+        /// 推进秒计时 每次更新最多触发一次并保留周期内的时间余量
+        /// </summary>
+        public override void Update(float deltaTime, float unscaledDeltaTime)
+        {
+            if (!CanUpdate()) return;
+            if (isInfiniteLoop && checkState != null)
             {
-                base.NeedDestroy = true;
-                return;
-            }
-
-            //第一帧跳过
-            if (base.IsFirstUpdate)
-            {
-                base.IsFirstUpdate = false;
-                return;
-            }
-
-            //是无限循环检查模式
-            if (isInfiniteLoop)
-            {
-                //存在检查函数回调
-                if (checkState != null)
+                bool isOver = checkState.Invoke();
+                if (NeedDestroy) return;
+                if (isOver)
                 {
-                    //检查是否需要结束
-                    if (checkState.Invoke())
-                    {
-                        base.NeedDestroy = true;
-                        overBack?.Invoke();
-                        return;
-                    }
-                }
-            }
-
-            //时间流逝
-            if (base.isScaled)
-            {
-                CurrentSecond -= Time.deltaTime;
-            }
-            else
-            {
-                CurrentSecond -= Time.unscaledDeltaTime;
-            }
-
-            //如果倒计时为0
-            if (IsTimerComplete())
-            {
-                Callback?.Invoke();
-
-                //如果是无限循环
-                if (ExecuteCount == int.MinValue)
-                {
-                    CurrentSecond = DelaySecond;
+                    NeedDestroy = true;
+                    overBack?.Invoke();
                     return;
                 }
-                else
-                {
-                    ExecuteCount--;
-                    if (ExecuteCount <= 0)
-                    {
-                        base.NeedDestroy = true;
-                    }
-                    else
-                    {
-                        CurrentSecond = DelaySecond;
-                    }
-                }
+            }
+
+            float elapsed = isScaled ? deltaTime : unscaledDeltaTime; //本次流逝时间
+            if (elapsed <= 0f || float.IsNaN(elapsed) || float.IsInfinity(elapsed)) return;
+            CurrentSecond -= elapsed;
+            if (!IsTimerComplete()) return;
+
+            ExecuteCallback();
+            if (NeedDestroy) return;
+            //跨越多个周期时舍弃补发次数 保留下一次触发的相位
+            CurrentSecond = DelaySecond > 0f ? DelaySecond + CurrentSecond % DelaySecond : 0f;
+        }
+
+        /// <summary>
+        /// 校验秒间隔 防止无效数值产生永久挂起的计时器
+        /// </summary>
+        private static void ValidateDelay(float delay)
+        {
+            if (delay < 0f || float.IsNaN(delay) || float.IsInfinity(delay))
+            {
+                throw new ArgumentOutOfRangeException(nameof(delay));
             }
         }
         /// <summary>

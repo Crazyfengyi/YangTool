@@ -6,8 +6,6 @@
  *创建时间:         2022-02-20
 */
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -25,9 +23,6 @@ namespace YangTools.Scripts.Core.YangUGUI
     /// </summary>
     public abstract class UGUIPanelBase<T> : MonoBehaviour, IUGUIPanel where T : UGUIDataBase
     {
-        private const int DepthFactor = 10;//UI界面深度系数
-
-        private Dictionary<Canvas,int> cachedCanvasDic = new();//缓存的Canvas列表
         private CanvasGroup canvasGroup;//缓存的CanvasGroup
         private Canvas cachedCanvas;//缓存的Canvas
         private RectTransform bgMask;
@@ -37,6 +32,8 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         private Transform node;//页面表现节点(动画节点)
         private int originalLayer;//原始层级
+        private Sequence transition; //当前页面动画
+        private bool isClosing; //是否正在关闭
 
         [Sirenix.OdinInspector.FoldoutGroup("基础设置")]
         [LabelText("打开动画")]
@@ -110,7 +107,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <summary>
         /// 深度
         /// </summary>
-        public int Depth => cachedCanvas.sortingOrder;
+        public int Depth => cachedCanvas ? cachedCanvas.sortingOrder : 0;
 
         #endregion 对外属性
 
@@ -121,29 +118,68 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public void CloseSelfPanel()
         {
+            if (isClosing || !Available || !UIPanel || !UIPanel.IsOpening) return;
+            isClosing = true;
             StopAllCoroutines();
-            if (needCloseAni)
+            StopTransition();
+            if (needCloseAni && CanAnimate())
             {
-                DOTween.Kill(this,true);
-                DOTween.Sequence()
-                    .AppendCallback(() =>
-                    {
-                        bgMaskCanvasGroup.alpha = 1f;
-                    })
+                int serialId = UIPanel.SerialId; //本次关闭的页面版本
+                bgMaskCanvasGroup.alpha = 1f;
+                transition = DOTween.Sequence()
                     .Append(node.DOLocalMove(startLocalPos - new Vector3(0, Screen.height, 0), aniTime2).SetEase(Ease.Linear))
                     .Join(bgMaskCanvasGroup.DOFade(0f, aniTime2))
                     .OnComplete(() =>
                     {
-                        bgMaskCanvasGroup.alpha = 0f;
-                        node.transform.localPosition = startLocalPos - new Vector3(0, Screen.height, 0);
-                        UIMonoInstance.Instance.ClosePanel(this.UIPanel);
+                        transition = null;
+                        if (this && UIPanel && UIPanel.IsOpening && UIPanel.SerialId == serialId) CloseImmediately();
                     })
-                    .SetTarget(this);
+                    .SetTarget(this)
+                    .SetUpdate(true);
             }
             else
             {
-                UIMonoInstance.Instance.ClosePanel(this.UIPanel);
+                CloseImmediately();
             }
+        }
+
+        /// <summary>
+        /// 通过所属管理器关闭页面
+        /// </summary>
+        private void CloseImmediately()
+        {
+            if (UIPanel && UIPanel.UIGroup is UIGroup group) group.ClosePanel(UIPanel);
+        }
+
+        /// <summary>
+        /// 缺少动画节点时降级为直接开关
+        /// </summary>
+        private bool CanAnimate()
+        {
+            if (node && bgMaskCanvasGroup) return true;
+            Debug.LogWarning($"UI动画节点不完整 {Name}");
+            return false;
+        }
+
+        /// <summary>
+        /// 终止动画但不执行旧完成回调
+        /// </summary>
+        private void StopTransition()
+        {
+            transition?.Kill(false);
+            transition = null;
+            DOTween.Kill(this, false);
+        }
+
+        /// <summary>
+        /// 重置默认动画表现
+        /// </summary>
+        private void ResetPresentation()
+        {
+            if (node) node.localPosition = startLocalPos;
+            if (bgMaskCanvasGroup) bgMaskCanvasGroup.alpha = 1f;
+            if (canvasGroup) canvasGroup.alpha = 1f;
+            isClosing = false;
         }
 
         /// <summary>
@@ -181,12 +217,15 @@ namespace YangTools.Scripts.Core.YangUGUI
 
         #region 生命周期
 
+        /// <summary>
+        /// 将初始化数据转换为当前页面数据类型
+        /// </summary>
         public virtual void OnInit(object userData)
         {
             OnInit(userData as T);
         }
 
-        private Vector3 startLocalPos;
+        private Vector3 startLocalPos; //动画节点初始位置
         /// <summary>
         /// 界面初始化
         /// </summary>
@@ -224,6 +263,9 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="userData">用户自定义数据</param>
         public virtual void OnOpen(object userData)
         {
+            StopTransition();
+            ResetPresentation();
+            visible = false;
             Available = true;
             Visible = true;
             windowData = userData as T;
@@ -239,39 +281,22 @@ namespace YangTools.Scripts.Core.YangUGUI
                 }
             }
             
-            DOTween.Kill(this,true);
             //默认动画
-            if (node && needOpenAni)
+            if (needOpenAni && CanAnimate())
             {
-                // DOTween.Sequence()
-                //     .AppendCallback(() =>
-                //     {
-                //         canvasGroup.alpha = 0.8f;
-                //         node.transform.localScale = new Vector3(0.3f, 0.3f, 1f);
-                //     })
-                //     .Append(node.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack))
-                //     .Join(canvasGroup.DOFade(1f, 0.3f))
-                //     .OnComplete(() =>
-                //     {
-                //         canvasGroup.alpha = 1f;
-                //         node.transform.localScale = Vector3.one;
-                //     })
-                //     .SetTarget(this);
-                
-                DOTween.Sequence()
-                    .AppendCallback(() =>
-                    {
-                        bgMaskCanvasGroup.alpha = 0.8f;
-                        node.transform.localPosition = startLocalPos - new Vector3(0, Screen.height, 0);
-                    })
+                bgMaskCanvasGroup.alpha = 0.8f;
+                node.localPosition = startLocalPos - new Vector3(0, Screen.height, 0);
+                transition = DOTween.Sequence()
                     .Append(node.DOLocalMove(startLocalPos, aniTime).SetEase(Ease.Linear))
                     .Join(bgMaskCanvasGroup.DOFade(1f, aniTime))
                     .OnComplete(() =>
                     {
                         bgMaskCanvasGroup.alpha = 1f;
                         node.transform.localPosition = startLocalPos;
+                        transition = null;
                     })
-                    .SetTarget(this);
+                    .SetTarget(this)
+                    .SetUpdate(true);
             }
         }
 
@@ -282,9 +307,14 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="userData">用户自定义数据</param>
         public virtual void OnClose(bool isShutdown, object userData)
         {
+            StopAllCoroutines();
+            StopTransition();
+            ResetPresentation();
             gameObject.SetLayerRecursively(originalLayer);
-            Visible = false;
+            visible = false;
+            SetVisible(false);
             Available = false;
+            windowData = null;
         }
 
         /// <summary>
@@ -341,27 +371,7 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// <param name="depthInUIGroup">界面在界面组中的深度</param>
         public virtual void OnDepthChanged(int groupDepth, int depthInUIGroup)
         {
-            int deltaDepth = UGUIGroupHelper.DepthFactor * groupDepth + DepthFactor * depthInUIGroup  + OriginalDepth;
-
-            //清除已销毁的
-            cachedCanvasDic = cachedCanvasDic
-                .Where(kvp => kvp.Key != null)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            
-            Canvas[] tempList = GetComponentsInChildren<Canvas>(true);
-            for (int i = 0; i < tempList.Length; i++)
-            {
-                Canvas tempItem = tempList[i];
-                if (!cachedCanvasDic.ContainsKey(tempItem))
-                {
-                    cachedCanvasDic.Add(tempItem,tempItem.sortingOrder);
-                }
-            }
-            
-            foreach (var item in cachedCanvasDic)
-            {
-                item.Key.sortingOrder = item.Value + deltaDepth;
-            }
+            //逻辑深度回调保留 实际 Canvas 排序由管理器统一提交
         }
 
         /// <summary>
@@ -369,6 +379,22 @@ namespace YangTools.Scripts.Core.YangUGUI
         /// </summary>
         public virtual void OnRecycle()
         {
+            StopAllCoroutines();
+            StopTransition();
+            ResetPresentation();
+            windowData = null;
+            Available = false;
+            visible = false;
+            SetVisible(false);
+        }
+
+        /// <summary>
+        /// 销毁时清理动画引用
+        /// </summary>
+        protected virtual void OnDestroy()
+        {
+            StopTransition();
+            windowData = null;
         }
 
         #endregion 生命周期

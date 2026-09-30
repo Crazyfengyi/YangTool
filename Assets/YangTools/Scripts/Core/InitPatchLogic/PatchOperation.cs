@@ -1,22 +1,33 @@
 ﻿using YangTools;
 using YooAsset;
+using System.Collections.Generic;
 using StateMachine = UniFramework.Machine.StateMachine;
 
 namespace GameMain
 {
+    /// <summary>
+    /// 热更新流程 仅管理自身注册的事件监听
+    /// </summary>
     public class PatchOperation : GameAsyncOperation
     {
         private readonly StateMachine machine;
         private StepsType stepsType = StepsType.None;
+        /// <summary>
+        /// 本次操作持有的监听句柄
+        /// </summary>
+        private readonly List<EventInfo> listeners = new List<EventInfo>();
 
+        /// <summary>
+        /// 注册操作事件并创建更新状态机
+        /// </summary>
         public PatchOperation(string packageName, string buildPipeline, EPlayMode playMode)
         {
             // 注册监听事件
-            YangExtend.AddEventListener<UserTryInitialize>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangExtend.AddEventListener<UserBeginDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangExtend.AddEventListener<UserTryUpdatePackageVersion>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangExtend.AddEventListener<UserTryUpdatePatchManifest>(GameInit.Instance.gameObject, OnHandleEventMessage);
-            YangExtend.AddEventListener<UserTryDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage);
+            listeners.Add(YangExtend.AddEventListener<UserTryInitialize>(GameInit.Instance.gameObject, OnHandleEventMessage));
+            listeners.Add(YangExtend.AddEventListener<UserBeginDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage));
+            listeners.Add(YangExtend.AddEventListener<UserTryUpdatePackageVersion>(GameInit.Instance.gameObject, OnHandleEventMessage));
+            listeners.Add(YangExtend.AddEventListener<UserTryUpdatePatchManifest>(GameInit.Instance.gameObject, OnHandleEventMessage));
+            listeners.Add(YangExtend.AddEventListener<UserTryDownloadWebFiles>(GameInit.Instance.gameObject, OnHandleEventMessage));
 
             // 创建状态机
             machine = new StateMachine(this);
@@ -35,12 +46,18 @@ namespace GameMain
             machine.SetBlackboardValue("BuildPipeline", buildPipeline);
         }
 
+        /// <summary>
+        /// 开始执行更新状态机
+        /// </summary>
         protected override void OnStart()
         {
             stepsType = StepsType.Update;
             machine.Run<FsmInitializePackage>();
         }
 
+        /// <summary>
+        /// 推进更新并在完成后释放监听
+        /// </summary>
         protected override void OnUpdate()
         {
             if (stepsType is StepsType.None or StepsType.Done)
@@ -53,15 +70,29 @@ namespace GameMain
                 machine.Update();
                 if (machine.CurrentNode == typeof(FsmLoadDone).FullName)
                 {
-                    YangEventManager.Instance.Clear();
+                    ReleaseListeners();
                     Status = EOperationStatus.Succeed;
                     stepsType = StepsType.Done;
                 }
             }
         }
 
+        /// <summary>
+        /// 中止操作时释放本次监听
+        /// </summary>
         protected override void OnAbort()
         {
+            ReleaseListeners();
+            stepsType = StepsType.Done;
+        }
+
+        /// <summary>
+        /// 注销自身监听 不影响其他模块 重复调用安全
+        /// </summary>
+        private void ReleaseListeners()
+        {
+            for (int i = 0; i < listeners.Count; i++) YangExtend.RemoveEventListener(listeners[i]);
+            listeners.Clear();
         }
 
         /// <summary>

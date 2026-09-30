@@ -511,6 +511,24 @@ namespace YangTools.Scripts.Core.YangObjectPool
             return Get(args).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// 弃置已借出的异常对象并同步对象池计数
+        /// </summary>
+        internal void DestroyBorrowed(T item)
+        {
+            if (item == null || item.IsInPool || item.PoolKey != PoolKey) return;
+
+            item.PoolKey = null;
+            try
+            {
+                item.OnDestroy();
+            }
+            finally
+            {
+                AllCount = Math.Max(0, AllCount - 1);
+            }
+        }
+
         public void RecycleToDefaultCount()
         {
             AutoRecycleTime = 0f;

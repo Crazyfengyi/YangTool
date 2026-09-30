@@ -24,7 +24,8 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
     public Button cancelBtn;//关闭按钮
     public TMP_Text cancelBtnText;//关闭按钮文字
 
-    private ConfirmData confirmData;
+    private ConfirmData confirmData; //本次确认数据
+    private bool isHandled; //是否已经确认或取消
     private ConfirmData ConfirmData => confirmData;
 
     private void Awake()
@@ -33,13 +34,29 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
         cancelBtn.onClick.AddListener(Cancel_OnClick);
     }
 
+    /// <summary>
+    /// 首次创建时初始化界面组件
+    /// </summary>
     public override void OnInit(ConfirmData pConfirmData)
     {
         base.OnInit(pConfirmData);
-        confirmData = pConfirmData;
+    }
+
+    /// <summary>
+    /// 每次打开刷新文案和倒计时数据
+    /// </summary>
+    public override void OnOpen(object userData)
+    {
+        if (userData is not ConfirmData data) throw new ArgumentException("确认弹窗缺少 ConfirmData", nameof(userData));
+        confirmData = data;
+        isHandled = false;
+        base.OnOpen(userData);
         Init();
     }
 
+    /// <summary>
+    /// 刷新按钮和提示文字
+    /// </summary>
     private void Init()
     {
         okBtn.gameObject.SetActive(confirmData.okCallBack != null);
@@ -47,15 +64,20 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
 
         if (okBtnText) okBtnText.text = GetOkBtnText();
         if (cancelBtnText) cancelBtnText.text = GetCancelBtnText();
+        if (text) text.text = confirmData.showMsg;
     }
 
+    /// <summary>
+    /// 推进本次弹窗的自动选择倒计时
+    /// </summary>
     public override void OnUpdate(float delaTimeSeconds, float unscaledDeltaTimeSeconds)
     {
         base.OnUpdate(delaTimeSeconds, unscaledDeltaTimeSeconds);
+        if (isHandled || confirmData == null) return;
 
         if (confirmData.isCountDownSelect)
         {
-            confirmData.countDownTime -= Time.unscaledDeltaTime;
+            confirmData.countDownTime -= unscaledDeltaTimeSeconds;
 
             if (confirmData.autoSelectOk)
             {
@@ -90,15 +112,57 @@ public class CommonConfirmPanel : UGUIPanelBase<ConfirmData>
         return string.IsNullOrEmpty(confirmData.cancelBtnText) ? "取消" : confirmData.cancelBtnText;
     }
 
+    /// <summary>
+    /// 只执行一次确认操作
+    /// </summary>
     public void OK_OnClick()
     {
-        confirmData?.okCallBack?.Invoke();
-        CloseSelfPanel(); 
+        if (isHandled) return;
+        isHandled = true;
+        try
+        {
+            confirmData?.okCallBack?.Invoke();
+        }
+        finally
+        {
+            CloseSelfPanel();
+        }
     }
 
+    /// <summary>
+    /// 只执行一次取消操作
+    /// </summary>
     public void Cancel_OnClick()
     {
-        confirmData?.cancelCallBack?.Invoke();
-        CloseSelfPanel();
+        if (isHandled) return;
+        isHandled = true;
+        try
+        {
+            confirmData?.cancelCallBack?.Invoke();
+        }
+        finally
+        {
+            CloseSelfPanel();
+        }
+    }
+
+    /// <summary>
+    /// 关闭时释放本次弹窗数据和业务回调
+    /// </summary>
+    public override void OnClose(bool isShutdown, object userData)
+    {
+        isHandled = true;
+        confirmData = null;
+        base.OnClose(isShutdown, userData);
+    }
+
+    /// <summary>
+    /// 回收时清理数据引用
+    /// </summary>
+    public override void OnRecycle()
+    {
+        isHandled = true;
+        confirmData = null;
+        base.OnRecycle();
     }
 }

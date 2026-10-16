@@ -12,6 +12,10 @@ public sealed class SkillCastSession
     public bool IsCompleted { get; internal set; }
     public int HitCount => hitCount;
     public bool HasHit => HitCount > 0;
+    /// <summary>
+    /// 最近一次命中的世界坐标
+    /// </summary>
+    public Vector3 LastHitPoint { get; private set; }
 
     internal SkillCastSession(int id, SkillDefinition skill)
     {
@@ -24,12 +28,21 @@ public sealed class SkillCastSession
     /// </summary>
     internal bool RegisterHit(GameObject target)
     {
+        return RegisterHit(target, target != null ? target.transform.position : Vector3.zero);
+    }
+
+    /// <summary>
+    /// 记录本次施放的一次有效命中及其世界坐标
+    /// </summary>
+    internal bool RegisterHit(GameObject target, Vector3 hitPoint)
+    {
         if (target == null)
         {
             return false;
         }
 
         hitCount++;
+        LastHitPoint = hitPoint;
         return true;
     }
 }

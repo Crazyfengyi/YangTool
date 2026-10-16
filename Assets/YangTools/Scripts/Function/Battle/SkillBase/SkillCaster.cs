@@ -205,8 +205,16 @@ public class SkillCaster : MonoBehaviour
     /// </summary>
     internal void ReportSkillHit(SkillContext context, GameObject target)
     {
+        ReportSkillHit(context, target, target != null ? target.transform.position : Vector3.zero);
+    }
+
+    /// <summary>
+    /// 处理伤害效果上报的实际命中与命中坐标
+    /// </summary>
+    internal void ReportSkillHit(SkillContext context, GameObject target, Vector3 hitPoint)
+    {
         SkillCastSession session = context != null ? context.Session : null;
-        if (session != null && session.RegisterHit(target))
+        if (session != null && session.RegisterHit(target, hitPoint))
         {
             OnSkillHit?.Invoke(session, target);
         }

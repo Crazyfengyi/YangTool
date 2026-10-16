@@ -12,6 +12,10 @@ public class SkillProjectile : MonoBehaviour
     private float baseDamage;
     private float powerScale;
     private SkillPowerType powerType;
+    /// <summary>
+    /// 子弹上一段移动轨迹的起点
+    /// </summary>
+    private Vector3 previousPosition;
     private bool launched;
 
     public void Launch(
@@ -29,6 +33,7 @@ public class SkillProjectile : MonoBehaviour
         this.baseDamage = baseDamage;
         this.powerScale = powerScale;
         this.powerType = powerType;
+        previousPosition = transform.position;
         launched = true;
 
         if (lifeSeconds > 0f)
@@ -40,6 +45,7 @@ public class SkillProjectile : MonoBehaviour
     private void Update()
     {
         if (!launched) return;
+        previousPosition = transform.position;
         transform.position += direction * speed * Time.deltaTime;
     }
 
@@ -61,12 +67,31 @@ public class SkillProjectile : MonoBehaviour
                 baseDamage,
                 powerScale,
                 powerType);
+            Vector3 hitPoint = GetHitPoint(other);
 
             if (damageable.TakeDamage(result.Amount, context))
             {
-                context.ReportHit(target);
+                context.ReportHit(target, hitPoint);
             }
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// 根据子弹上一段移动轨迹取得碰撞体表面的命中点
+    /// </summary>
+    private Vector3 GetHitPoint(Collider targetCollider)
+    {
+        Vector3 movement = transform.position - previousPosition;
+        if (movement.sqrMagnitude > Mathf.Epsilon)
+        {
+            Ray ray = new Ray(previousPosition, movement.normalized);
+            if (targetCollider.Raycast(ray, out RaycastHit hit, movement.magnitude))
+            {
+                return hit.point;
+            }
+        }
+
+        return targetCollider.ClosestPoint(transform.position);
     }
 }

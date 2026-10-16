@@ -130,7 +130,18 @@ public class SkillContext
     {
         if (Caster != null && target != null)
         {
-            Caster.ReportSkillHit(this, target);
+            ReportHit(target, target.transform.position);
+        }
+    }
+
+    /// <summary>
+    /// 向技能施放器报告实际命中目标与世界坐标
+    /// </summary>
+    public void ReportHit(GameObject target, Vector3 hitPoint)
+    {
+        if (Caster != null && target != null)
+        {
+            Caster.ReportSkillHit(this, target, hitPoint);
         }
     }
 }

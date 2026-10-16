@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "YangTool",
+        "Unity.TextMeshPro",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Core.Runtime"
     ],

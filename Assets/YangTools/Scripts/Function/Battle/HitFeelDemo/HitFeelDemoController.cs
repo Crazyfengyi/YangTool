@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,9 +39,9 @@ public class HitFeelDemoController : MonoBehaviour
     /// <summary>测试攻击按钮</summary>
     [SerializeField] private Button attackButton;
     /// <summary>测试状态文本</summary>
-    [SerializeField] private Text statusText;
+    [SerializeField] private TextMeshProUGUI statusText;
     /// <summary>敌人生命文本</summary>
-    [SerializeField] private Text healthText;
+    [SerializeField] private TextMeshProUGUI healthText;
     /// <summary>命中顿帧开关</summary>
     [SerializeField] private Toggle hitStopToggle;
     /// <summary>命中音效开关</summary>

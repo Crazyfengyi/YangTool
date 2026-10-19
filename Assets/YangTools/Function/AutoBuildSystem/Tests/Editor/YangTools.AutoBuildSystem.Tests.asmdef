@@ -1,0 +1,21 @@
+{
+    "name": "YangTools.AutoBuildSystem.Tests",
+    "rootNamespace": "YangTools.AutoBuildSystem.Tests",
+    "references": [
+        "YangTools.AutoBuildSystem.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

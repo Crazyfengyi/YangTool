@@ -1,0 +1,19 @@
+{
+    "name": "YangTools.AutoBuildSystem.Editor",
+    "rootNamespace": "YangTools.AutoBuildSystem",
+    "references": [
+        "YooAsset",
+        "YooAsset.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

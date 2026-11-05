@@ -54,17 +54,21 @@ public class BuffControl : ICustomLife
         for (var i = 0; i < buffList.Count; i++)
         {
             BuffBase buffBase = buffList[i];
-            if (buffBase != null)
+            if (buffBase == null)
             {
-                buffBase.Update();
-                if (buffBase.IsEnd())
-                {
-                    buffBase.OnBuffRemove(this);
-                    buffList.RemoveAt(i);
-                    OnBuffRemove(buffBase);
-                    buffBase.OnBuffDestroy(this);
-                    i--;
-                }
+                buffList.RemoveAt(i);
+                i--;
+                continue;
+            }
+
+            buffBase.Update();
+            if (buffBase.IsEnd())
+            {
+                buffBase.OnBuffRemove(this);
+                buffList.RemoveAt(i);
+                OnBuffRemove(buffBase);
+                buffBase.OnBuffDestroy(this);
+                i--;
             }
         }
     }
@@ -93,8 +97,16 @@ public class BuffControl : ICustomLife
         //Debuger.ToError($"获得Buff:{buffId}");
         //创建BUFF
         BuffBase buffBase = CreateBuff(creator == null ? handle : creator, handle, buffId);
+        if (buffBase == null || buffBase.buffEndChecker == null)
+        {
+            return null;
+        }
+
         buffBase = AddBuff(buffBase);
-        OnBuffAddCallBack?.Invoke(buffBase);
+        if (buffBase != null)
+        {
+            OnBuffAddCallBack?.Invoke(buffBase);
+        }
         return buffBase;
     }
     /// <summary>
@@ -610,10 +622,22 @@ public class BuffEndChecker
     {
         cdTimer.RefreshToMax();
     }
+    /// <summary>
+    /// 根据结束类型创建BUFF结束检测器
+    /// </summary>
+    /// <param name="buffConfig">BUFF配置信息</param>
+    /// <returns>对应结束检测器</returns>
     public static BuffEndChecker Create(BuffConfig buffConfig)
     {
+        if (buffConfig == null)
+        {
+            return null;
+        }
+
         switch (buffConfig.buffEndType)
         {
+            case BuffEndType.None:
+                return new BuffEndChecker(buffConfig);
             case BuffEndType.TimeOver:
                 return new TimeEndChecker(buffConfig);
             case BuffEndType.CountOver:
@@ -621,6 +645,8 @@ public class BuffEndChecker
             case BuffEndType.TimeOrCountOver:
                 return new CountOrTimeEndChecker(buffConfig);
         }
+
+        Debug.LogError($"不支持的BUFF结束类型:{buffConfig.buffEndType}");
         return null;
     }
 }

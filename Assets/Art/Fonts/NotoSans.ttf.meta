@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6c938b4d71d17dd4b9b024a58c03fb7c
+guid: ecbdb0f61a253164c9a3ad911bb99cb1
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Smiley Sans
+  - NotoSans
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

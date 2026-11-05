@@ -1,0 +1,944 @@
+{
+    "FileVersion": "2025.9.30",
+    "EnableAddressable": true,
+    "SupportExtensionless": true,
+    "LocationToLower": false,
+    "IncludeAssetGUID": true,
+    "ReplaceAssetPathWithAddress": false,
+    "OutputNameStyle": 0,
+    "BuildBundleType": 1,
+    "BuildPipeline": "EditorSimulateBuildPipeline",
+    "PackageName": "DefaultPackage",
+    "PackageVersion": "Simulate",
+    "PackageNote": "2026/11/5 15:45:53",
+    "AssetList": [
+        {
+            "Address": "Voodoo Lounge",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/AudioBG/Voodoo Lounge.mp3",
+            "AssetGUID": "70eb6c60d7f290047a09eb6dbab7fd92",
+            "AssetTags": [],
+            "BundleID": 0,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "Audio_BulletAtk",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/AudioSound/Audio_BulletAtk.wav",
+            "AssetGUID": "4a8b2ae36ef951244b1b6a4b6bd98cfe",
+            "AssetTags": [],
+            "BundleID": 1,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "Audio_Click",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/AudioSound/Audio_Click.wav",
+            "AssetGUID": "b69a831d255fda545a3e19589f33c8ee",
+            "AssetTags": [],
+            "BundleID": 2,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "CommonConfirmPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/CommonConfirmPanel/CommonConfirmPanel.prefab",
+            "AssetGUID": "960f31c749e828147895d95300ea70f1",
+            "AssetTags": [],
+            "BundleID": 3,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "GameOverPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/GameOverPanel/GameOverPanel.prefab",
+            "AssetGUID": "d76348123c59f394eaf43dd9d3dc15f5",
+            "AssetTags": [],
+            "BundleID": 4,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "Loading",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/Loading.anim",
+            "AssetGUID": "d51509d3b745b374093879fff7f8073a",
+            "AssetTags": [],
+            "BundleID": 5,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "LoadingAni",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/LoadingAni.controller",
+            "AssetGUID": "923e47f22364d9444a7b72ec6404a24f",
+            "AssetTags": [],
+            "BundleID": 6,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "LoadingPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/LoadingPanel/LoadingPanel.prefab",
+            "AssetGUID": "2cd586fee4044aa44936fa1d1b4a7ab9",
+            "AssetTags": [],
+            "BundleID": 7,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "SeceneLoading",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/SceneLoading/SeceneLoading.prefab",
+            "AssetGUID": "8ece96e781c0d1d4ba5dbeaa2628e29c",
+            "AssetTags": [],
+            "BundleID": 8,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "TipsPanel",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/TipsPanel/TipsPanel.prefab",
+            "AssetGUID": "b27a2fa16a1756c4a85fbe7e954bb142",
+            "AssetTags": [],
+            "BundleID": 9,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "HPBarUI",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/HPBarUI.prefab",
+            "AssetGUID": "065459738c17cb24bb13228169f8cd0b",
+            "AssetTags": [],
+            "BundleID": 10,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "TipsNode",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/TipsNode.prefab",
+            "AssetGUID": "3fad1ddc86ff4e8428259218ce89f888",
+            "AssetTags": [],
+            "BundleID": 11,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "UIRoot",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/UIRoot.prefab",
+            "AssetGUID": "8a8f053af1c816e49a6172802b65b8e0",
+            "AssetTags": [],
+            "BundleID": 12,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "WordUI",
+            "AssetPath": "Assets/UserTest/AllProjects/ThroughWorld/Resources/UI/UICommon/WordUI.prefab",
+            "AssetGUID": "eb67fefc264847e4999463dc544fd0e7",
+            "AssetTags": [],
+            "BundleID": 13,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "IrregularPuzzleLevel",
+            "AssetPath": "Assets/YangTools/AssetBunds/Level/IrregularPuzzleLevel.prefab",
+            "AssetGUID": "a5ef93b0b0a4d6746b05b880baed3dbc",
+            "AssetTags": [],
+            "BundleID": 14,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "UICircleMask",
+            "AssetPath": "Assets/YangTools/AssetBunds/Materials/UICircleMask.mat",
+            "AssetGUID": "64db51965ffcad24e97c69391b7537e9",
+            "AssetTags": [],
+            "BundleID": 15,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "UIGray_Static",
+            "AssetPath": "Assets/YangTools/AssetBunds/Materials/UIGray_Static.mat",
+            "AssetGUID": "9b93fbd4f87b001448c4f2b1d9f33015",
+            "AssetTags": [],
+            "BundleID": 15,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "bgMask",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/Common/bgMask.prefab",
+            "AssetGUID": "831017eb10b7bae43a2cc12afce3546d",
+            "AssetTags": [],
+            "BundleID": 16,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "Btn",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/Common/Btn.prefab",
+            "AssetGUID": "09a929abf2703d342b86fb6b33b87e6b",
+            "AssetTags": [],
+            "BundleID": 16,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "CommonGuideWindow",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/Common/CommonGuideWindow.prefab",
+            "AssetGUID": "2e8a35c4e6b21044ea7fb5e1c40d65f8",
+            "AssetTags": [],
+            "BundleID": 16,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "CommonMaskWindow",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/Common/CommonMaskWindow.prefab",
+            "AssetGUID": "1c3bfc6d6f9cb1744878582e60bf69ed",
+            "AssetTags": [],
+            "BundleID": 16,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "FloatTipItem",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/FloatTipWindow/FloatTipItem.prefab",
+            "AssetGUID": "213c1e383b68d484b989cde189ff38fd",
+            "AssetTags": [],
+            "BundleID": 17,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "FloatTipItem2",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/FloatTipWindow/FloatTipItem2.prefab",
+            "AssetGUID": "64ca4f1d0af6e894794ddf0a1b52a240",
+            "AssetTags": [],
+            "BundleID": 17,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "FloatTipWindow",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/FloatTipWindow/FloatTipWindow.prefab",
+            "AssetGUID": "6324b0cf48f14dca9ef2a7fcb2a2fb85",
+            "AssetTags": [],
+            "BundleID": 17,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "ItemSelectionWindow",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/ItemSelectionWindow/ItemSelectionWindow.prefab",
+            "AssetGUID": "52669834af5d17a41854657235af4c19",
+            "AssetTags": [],
+            "BundleID": 18,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "SelectItemUI",
+            "AssetPath": "Assets/YangTools/AssetBunds/Prefabs/ItemSelectionWindow/SelectItemUI.prefab",
+            "AssetGUID": "74577ca1cfed4d441b85897486690ccb",
+            "AssetTags": [],
+            "BundleID": 18,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "btn1",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/btn1.png",
+            "AssetGUID": "a206815451de71042b991aa62536cef8",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "btn2",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/btn2.png",
+            "AssetGUID": "556efed28e20a2b4fac6c5e93d1b2aa4",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "geren_x17_cha",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/geren_x17_cha.png",
+            "AssetGUID": "a80765a1291f0ef4c826fad46f74e614",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "geren_x17_di",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/geren_x17_di.png",
+            "AssetGUID": "d6345960cba42c7459296c3045e3403c",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "linghaoli_x17_jdt01",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/linghaoli_x17_jdt01.png",
+            "AssetGUID": "92c65afb867b38c448c97099ee7086f1",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "linghaoli_x17_jdt02",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/linghaoli_x17_jdt02.png",
+            "AssetGUID": "ff9f0cd00bf306a4fa9c04a466de02d3",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "zhujiemian_x17_tishi",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Common/zhujiemian_x17_tishi.png",
+            "AssetGUID": "b835a6d990d4be04b9e209b453db3fca",
+            "AssetTags": [],
+            "BundleID": 20,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形.png",
+            "AssetGUID": "df484691ed98501489e9d6910c5cc383",
+            "AssetTags": [],
+            "BundleID": 21,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形.fragments",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形.fragments.json",
+            "AssetGUID": "7736e8267823d4a479539c9790345579",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_0",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_0.png",
+            "AssetGUID": "30f6b11de4c21244892d67b023611d08",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_1",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_1.png",
+            "AssetGUID": "96c61ddb6dc5c054b9d66ca625b74aff",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_10",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_10.png",
+            "AssetGUID": "a21116999446ba8479e86b2e4ebe19a3",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_11",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_11.png",
+            "AssetGUID": "749471d8d3d144d43bd37b93160cbf02",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_12",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_12.png",
+            "AssetGUID": "ca4ec5a02874fb64eb0bc3eeeebae420",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_13",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_13.png",
+            "AssetGUID": "4cc21f8002a7f7c439107dec9dd8a9f5",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_14",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_14.png",
+            "AssetGUID": "3362223de9df23545ac68da5bd0355ba",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_15",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_15.png",
+            "AssetGUID": "c896328ddeead654bb42111c10954bdf",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_2",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_2.png",
+            "AssetGUID": "07fb72a937c4a764d9a765eedb3e1707",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_3",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_3.png",
+            "AssetGUID": "18cebb70bf0a5b24d95a3bc28fceca3d",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_4",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_4.png",
+            "AssetGUID": "f2541c41f5d29fb48ad7cb2853a85d32",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_5",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_5.png",
+            "AssetGUID": "f493149f2fb6ae54bb0eeb14cbf62109",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_6",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_6.png",
+            "AssetGUID": "6a7e17061080eb246abd81d620c02eae",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_7",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_7.png",
+            "AssetGUID": "af50bf9ef4efbae489263a2ed66da038",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_8",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_8.png",
+            "AssetGUID": "454b3a8269381454eb5f596d7a28d70b",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "阳光照射下形_9",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/Image/阳光照射下形_Fragments/阳光照射下形_9.png",
+            "AssetGUID": "64c21f7d49a22f84f8a5a6754ddc2d61",
+            "AssetTags": [],
+            "BundleID": 22,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "jiesuan_fk_libao",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/jiesuan_fk_libao.png",
+            "AssetGUID": "45ca8cde6a2415248938fbc32b9d7ee8",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "主页",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/主页.png",
+            "AssetGUID": "7ea91fa024fd9a146bd7b88742d828fc",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "关闭",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/关闭.png",
+            "AssetGUID": "59255851c1058624f92b77afaaa46be8",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "声音_关",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/声音_关.png",
+            "AssetGUID": "75ccdf6c44da65b4395ed261c762aaab",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "声音_开",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/声音_开.png",
+            "AssetGUID": "b0b91c3a1a1ea0b4e8b486e56dd03132",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "左滑按钮",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/左滑按钮.png",
+            "AssetGUID": "cc61aa6c6231b17439195c8d64071bee",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "按钮_2",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/按钮_2.png",
+            "AssetGUID": "bae2f98442458734db5c832433c1923b",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "新纪录",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/新纪录.png",
+            "AssetGUID": "ac4fa2a60c07a334d89bf34a6d636313",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "最高纪录",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/最高纪录.png",
+            "AssetGUID": "e1abf2abbb8352540830357bda1d7e80",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "设置",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/设置.png",
+            "AssetGUID": "359851e649262ea42ba00b2b6e68f0ca",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "谷歌",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/谷歌.png",
+            "AssetGUID": "cfcca5eb9c92b484681224b7bf9c48bf",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "金币",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/金币.png",
+            "AssetGUID": "c3127d829c6c3bf488cdda93f330a219",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "音乐_关",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/音乐_关.png",
+            "AssetGUID": "87865177b5267ae4c8e1c9e0375676fa",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "音乐_开",
+            "AssetPath": "Assets/YangTools/AssetBunds/UI/音乐_开.png",
+            "AssetGUID": "f26f8811846bbaf4994d35fb294b7880",
+            "AssetTags": [],
+            "BundleID": 19,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "area_tbarea",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/area_tbarea.json",
+            "AssetGUID": "b92f1de8bdd9a4040a224461b6805be8",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 23,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "guide_tbguideset",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/guide_tbguideset.json",
+            "AssetGUID": "0714bd83335e85c4cae2b85a3188f071",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 24,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "item_tbitem",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/item_tbitem.json",
+            "AssetGUID": "dcb81e156c697c742b5a00929a503cfc",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 25,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "language_tblanguage",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/language_tblanguage.json",
+            "AssetGUID": "877b2cdd5efcab3488c65436fc232053",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 26,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "monster_tbmonster",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/monster_tbmonster.json",
+            "AssetGUID": "30d1f148c8f6ecb49a092ab033571066",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 27,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "player_tbplayer",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/player_tbplayer.json",
+            "AssetGUID": "118af39dd5bbd7341b3c62d3b33c34a4",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 28,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "skill_tbskill",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/skill_tbskill.json",
+            "AssetGUID": "1f1ffd16698ca104d81bef5b87d6bb1f",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 29,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "tips_tbtips",
+            "AssetPath": "Assets/YangTools/LubanData/GenerateDatas/json/tips_tbtips.json",
+            "AssetGUID": "4260b26770d928545a631dd9156379dc",
+            "AssetTags": [
+                "LubanData"
+            ],
+            "BundleID": 30,
+            "DependBundleIDs": []
+        }
+    ],
+    "BundleList": [
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_audiobg_voodoo_lounge.bundle",
+            "UnityCRC": 0,
+            "FileHash": "19104c3eb1af632447848d481f23a388",
+            "FileCRC": 0,
+            "FileSize": 7406235,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_audiosound_audio_bulletatk.bundle",
+            "UnityCRC": 0,
+            "FileHash": "fe3dac2f53d205906eb80dc1f0b1e458",
+            "FileCRC": 0,
+            "FileSize": 5428,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_audiosound_audio_click.bundle",
+            "UnityCRC": 0,
+            "FileHash": "a3b8b115eeb039f4b4138253db90ddbe",
+            "FileCRC": 0,
+            "FileSize": 25296,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_commonconfirmpanel_commonconfirmpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "be502f76c2270155b9d8eacb93df3776",
+            "FileCRC": 0,
+            "FileSize": 33896,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_gameoverpanel_gameoverpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "94d8a37512df302fc9512bb57227209e",
+            "FileCRC": 0,
+            "FileSize": 29480,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loading.bundle",
+            "UnityCRC": 0,
+            "FileHash": "2f708822063d3c0336f5478672f09cdd",
+            "FileCRC": 0,
+            "FileSize": 15508,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingani.bundle",
+            "UnityCRC": 0,
+            "FileHash": "5ac518d7a1d15591a17df4af66775253",
+            "FileCRC": 0,
+            "FileSize": 9376,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_loadingpanel_loadingpanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "00f2852c1e47a6fcd6c4de4ff85ba0a6",
+            "FileCRC": 0,
+            "FileSize": 22120,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_sceneloading_seceneloading.bundle",
+            "UnityCRC": 0,
+            "FileHash": "349044f2f6ec3e4bfb500e3d900a24f3",
+            "FileCRC": 0,
+            "FileSize": 18328,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_tipspanel_tipspanel.bundle",
+            "UnityCRC": 0,
+            "FileHash": "4969cd040af5639b9f538a3da52cce60",
+            "FileCRC": 0,
+            "FileSize": 19420,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_hpbarui.bundle",
+            "UnityCRC": 0,
+            "FileHash": "2a1d4a7ee1bed77e2ad6d00ef8035ff2",
+            "FileCRC": 0,
+            "FileSize": 29792,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_tipsnode.bundle",
+            "UnityCRC": 0,
+            "FileHash": "0607c6b635f50a69b869adecdb62150d",
+            "FileCRC": 0,
+            "FileSize": 20816,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_uiroot.bundle",
+            "UnityCRC": 0,
+            "FileHash": "d17d8b3320f5af47f22518d7aae94de6",
+            "FileCRC": 0,
+            "FileSize": 72100,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_usertest_allprojects_throughworld_resources_ui_uicommon_wordui.bundle",
+            "UnityCRC": 0,
+            "FileHash": "d765c525086ca3baf94736beffb8787c",
+            "FileCRC": 0,
+            "FileSize": 15024,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_level.bundle",
+            "UnityCRC": 0,
+            "FileHash": "d4b46aa86da5b40d56ebc5d5462f7b0d",
+            "FileCRC": 0,
+            "FileSize": 29296,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_materials.bundle",
+            "UnityCRC": 0,
+            "FileHash": "03d296f7c80b4dce84c19a7564f04db6",
+            "FileCRC": 0,
+            "FileSize": 7483,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_prefabs_common.bundle",
+            "UnityCRC": 0,
+            "FileHash": "f1e8bae631c605be645e57b35967a62a",
+            "FileCRC": 0,
+            "FileSize": 85185,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_prefabs_floattipwindow.bundle",
+            "UnityCRC": 0,
+            "FileHash": "6ab723c9737c45a1f1952e3ea8244180",
+            "FileCRC": 0,
+            "FileSize": 31769,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_prefabs_itemselectionwindow.bundle",
+            "UnityCRC": 0,
+            "FileHash": "e70f4ab49f6be89e6744ca2750a89a2f",
+            "FileCRC": 0,
+            "FileSize": 44153,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_ui.bundle",
+            "UnityCRC": 0,
+            "FileHash": "f3427612a2be3611ab91fb22cccc2df5",
+            "FileCRC": 0,
+            "FileSize": 44764,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_ui_common.bundle",
+            "UnityCRC": 0,
+            "FileHash": "efaf10bac05784876f34ac0f8d9e33f6",
+            "FileCRC": 0,
+            "FileSize": 27030,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_ui_image.bundle",
+            "UnityCRC": 0,
+            "FileHash": "991247160cb14378ff48c2cf1036ae6a",
+            "FileCRC": 0,
+            "FileSize": 5121678,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_assetbunds_ui_image_阳光照射下形_fragments.bundle",
+            "UnityCRC": 0,
+            "FileHash": "823949c524cf46b12f72d5197333dc27",
+            "FileCRC": 0,
+            "FileSize": 2735816,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_area_tbarea.bundle",
+            "UnityCRC": 0,
+            "FileHash": "7d0bab645aeafcb69f74cdb70db7d6f0",
+            "FileCRC": 0,
+            "FileSize": 246,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_guide_tbguideset.bundle",
+            "UnityCRC": 0,
+            "FileHash": "be04d1e452d8866e63290c0a6b30af6b",
+            "FileCRC": 0,
+            "FileSize": 948,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_item_tbitem.bundle",
+            "UnityCRC": 0,
+            "FileHash": "2ab4db48187812bf62cb4c9bf04ba488",
+            "FileCRC": 0,
+            "FileSize": 9457,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_language_tblanguage.bundle",
+            "UnityCRC": 0,
+            "FileHash": "ab186e3e8da8f06c5e6c193c91ae3112",
+            "FileCRC": 0,
+            "FileSize": 285,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_monster_tbmonster.bundle",
+            "UnityCRC": 0,
+            "FileHash": "e53fe4b48f6fe9f42fdb04bbee87d5c0",
+            "FileCRC": 0,
+            "FileSize": 1922,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_player_tbplayer.bundle",
+            "UnityCRC": 0,
+            "FileHash": "df355df05c0b3802392586daad171e43",
+            "FileCRC": 0,
+            "FileSize": 524,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_skill_tbskill.bundle",
+            "UnityCRC": 0,
+            "FileHash": "975eed9167defdabadc6ff60f3a96e57",
+            "FileCRC": 0,
+            "FileSize": 1715,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        },
+        {
+            "BundleName": "defaultpackage_assets_yangtools_lubandata_generatedatas_json_tips_tbtips.bundle",
+            "UnityCRC": 0,
+            "FileHash": "b05e5cd7c0e57e9227b75845d0c1a0b3",
+            "FileCRC": 0,
+            "FileSize": 264,
+            "Encrypted": false,
+            "Tags": [
+                "LubanData"
+            ],
+            "DependBundleIDs": []
+        }
+    ]
+}

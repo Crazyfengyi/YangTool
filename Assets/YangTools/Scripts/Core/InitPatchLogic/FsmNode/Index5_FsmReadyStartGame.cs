@@ -27,7 +27,7 @@ namespace GameMain
             press.SendEvent();
            
             //配置表
-            // await .Instance.LoadAllConfigs();
+            await GameTableManager.Instance.LoadAllConfigs();
 
             press.press = 0.5f;
             press.SendEvent();

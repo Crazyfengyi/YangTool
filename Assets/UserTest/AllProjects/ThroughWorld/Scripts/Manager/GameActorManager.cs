@@ -48,19 +48,40 @@ public class GameActorManager : MonoSingleton<GameActorManager>
     /// </summary>
     public void CreateMainPlayer()
     {
-        ICustomLife script = Instantiate(playerPrefab);
-        if (script != null)
+        if (playerPrefab == null)
         {
-            mainPlayer = script as PlayerController;
-            customLives.Add(script);
-            CameraManager.Instance.SetMainPlayer(mainPlayer);
-            MiniMapManager.Instance.SetMainPlayer(mainPlayer.modelRoot);
-            var tableData = GameTableManager.Instance.Tables.TbPlayer.Get(1000);
-            mainPlayer.SetTableData(tableData);
-            mainPlayer.IInit();
-
-            DontDestroyOnLoad(mainPlayer);
+            Debug.LogError("主角预制体未配置");
+            return;
         }
+
+        var tables = GameTableManager.Instance.Tables;
+        if (tables == null)
+        {
+            Debug.LogError("配置表尚未加载，无法创建主角");
+            return;
+        }
+
+        var tableData = tables.TbPlayer.Get(1000);
+        if (tableData == null)
+        {
+            Debug.LogError("未找到主角配置 1000");
+            return;
+        }
+
+        mainPlayer = Instantiate(playerPrefab);
+        if (mainPlayer == null)
+        {
+            Debug.LogError("主角实例创建失败");
+            return;
+        }
+
+        mainPlayer.SetTableData(tableData);
+        customLives.Add(mainPlayer);
+        CameraManager.Instance.SetMainPlayer(mainPlayer);
+        MiniMapManager.Instance.SetMainPlayer(mainPlayer.modelRoot);
+        mainPlayer.IInit();
+
+        DontDestroyOnLoad(mainPlayer);
     }
     public void Update()
     {

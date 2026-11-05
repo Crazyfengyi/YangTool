@@ -421,10 +421,14 @@ namespace YangTools.Scripts.Core.YangMiniMap
 
         #region 内部方法
         /// <summary>
-        /// 设置主角
+        /// 设置主角并恢复小地图相机和 UI 根节点引用。
         /// </summary>
         public void SetMainPlayer(GameObject target)
         {
+            if (target == null || managerCamera == null || MMUIRoot == null) return;
+
+            miniMapCamera = managerCamera;
+            mapUIRoot = MMUIRoot;
             mainTarget = target;
             managerCamera.transform.position = target.transform.position + new Vector3(0, 20, 0);
         }

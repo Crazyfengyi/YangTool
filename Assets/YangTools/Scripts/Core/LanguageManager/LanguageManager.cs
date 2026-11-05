@@ -5,6 +5,9 @@ using cfg.language;
 using UnityEngine;
 using YangTools.Scripts.Core;
 
+/// <summary>
+/// 多语言表查询管理器
+/// </summary>
 public class LanguageManager : MonoSingleton<LanguageManager>
 {
     public cfg.language.LanguageType languageType;
@@ -12,9 +15,19 @@ public class LanguageManager : MonoSingleton<LanguageManager>
     private Dictionary<string, PropertyInfo> languageDic = new ();
     private TBLanguage tableData;
 
+    /// <summary>
+    /// 初始化语言表和语言字段映射
+    /// </summary>
     public void Start()
     {
-        tableData = GameTableManager.Instance.Tables.TBLanguage;
+        var tables = GameTableManager.Instance.Tables;
+        if (tables == null || tables.TBLanguage == null)
+        {
+            Debug.LogError("配置表尚未加载，无法初始化多语言表");
+            return;
+        }
+
+        tableData = tables.TBLanguage;
         Type type = typeof(Language);
         //获取所有实例属性
         PropertyInfo[] allFields = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -22,10 +35,11 @@ public class LanguageManager : MonoSingleton<LanguageManager>
         {
             languageDic.Add(field.Name, field);
         }
-        
-        Debug.LogError($"测试:{GetLanguage("textStrId_1")}");
     }
 
+    /// <summary>
+    /// 根据键值获取当前语言文本
+    /// </summary>
     public string GetLanguage(string key)
     {
         // switch (languageType)
@@ -39,11 +53,22 @@ public class LanguageManager : MonoSingleton<LanguageManager>
         // }
         
         //考虑反射获取字段或其它自动化高的配表方案
-        string typeStr = languageType.ToString();
-        if (languageDic.TryGetValue(typeStr,out PropertyInfo fieldInfo))
+        if (tableData == null)
         {
-            object temp = fieldInfo.GetValue(tableData.GetOrDefault(key));
-            return temp.ToString();
+            return $"{key}:多语言表未初始化";
+        }
+
+        string typeStr = languageType.ToString();
+        if (languageDic.TryGetValue(typeStr, out PropertyInfo fieldInfo))
+        {
+            Language language = tableData.GetOrDefault(key);
+            if (language == null)
+            {
+                return $"{key}:未找到多语言值";
+            }
+
+            object value = fieldInfo.GetValue(language);
+            return value?.ToString() ?? string.Empty;
         }
         return $"{key}:未找到多语言值";
     } 

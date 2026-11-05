@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using GameMain;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using YangTools;
@@ -17,12 +18,12 @@ namespace YangTools
         // UGUI相关
         private GameObject _messageBoxObj;
         private Slider _slider;
-        private Text _tips;
+        private TMP_Text _tips;
 
         void Start()
         {
             _slider = transform.Find("UIWindow/Slider").GetComponent<Slider>();
-            _tips = transform.Find("UIWindow/Slider/txt_tips").GetComponent<Text>();
+            _tips = transform.Find("UIWindow/Slider/txt_tips").GetComponent<TMP_Text>();
             _tips.text = "Initializing the game world !";
             _messageBoxObj = transform.Find("UIWindow/MessgeBox").gameObject;
             _messageBoxObj.SetActive(false);
@@ -156,14 +157,14 @@ namespace YangTools
         public bool ActiveSelf => _cloneObject.activeSelf;
 
         private GameObject _cloneObject;
-        private Text _content;
+        private TMP_Text _content;
         private Button _btnOK;
         private System.Action _clickOK;
 
         public void Create(GameObject cloneObject)
         {
             _cloneObject = cloneObject;
-            _content = cloneObject.transform.Find("txt_content").GetComponent<Text>();
+            _content = cloneObject.transform.Find("txt_content").GetComponent<TMP_Text>();
             _btnOK = cloneObject.transform.Find("btn_ok").GetComponent<Button>();
             _btnOK.onClick.AddListener(OnClickYes);
         }

@@ -99,22 +99,42 @@ public class GameUIManager : MonoSingleton<GameUIManager>
             tipDatas.RemoveAt(0);
         }
 
-        for (int i = 0; i < allHPBar.Count; i++)
+        for (int i = allHPBar.Count - 1; i >= 0; i--)
         {
-            if (allHPBar[i] != null)
+            HPBarObjectPoolItem hpBar = allHPBar[i];
+            if (hpBar == null)
             {
-                allHPBar[i]?.UpdatePos();
+                allHPBar.RemoveAt(i);
+                continue;
             }
+
+            if (!hpBar.HasValidTarget)
+            {
+                RecycleHPBar(hpBar);
+                continue;
+            }
+
+            hpBar.UpdatePos();
         }
     }
     public void LateUpdate()
     {
-        for (int i = 0; i < allHPBar.Count; i++)
+        for (int i = allHPBar.Count - 1; i >= 0; i--)
         {
-            if (allHPBar[i] != null)
+            HPBarObjectPoolItem hpBar = allHPBar[i];
+            if (hpBar == null)
             {
-                allHPBar[i]?.UpdatePos();
+                allHPBar.RemoveAt(i);
+                continue;
             }
+
+            if (!hpBar.HasValidTarget)
+            {
+                RecycleHPBar(hpBar);
+                continue;
+            }
+
+            hpBar.UpdatePos();
         }
     }
 
@@ -311,6 +331,11 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// <param name="color">颜色</param>
     public async Task<HPBarObjectPoolItem> GetHPBar(Transform _target, string text, Color color = default)
     {
+        if (!_target)
+        {
+            return null;
+        }
+
         HPBarData data = new HPBarData();
         data.target = _target;
         data.text = text;
@@ -326,8 +351,24 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     private async Task<HPBarObjectPoolItem> CreateHPBar(HPBarData hpBarData)
     {
-        Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
+        if (hpBarData == null || !hpBarData.target)
+        {
+            return null;
+        }
+
         (bool, HPBarObjectPoolItem) poolItem = await YangObjectPool.Get<HPBarObjectPoolItem>();
+        if (poolItem.Item2 == null)
+        {
+            return null;
+        }
+
+        if (!hpBarData.target)
+        {
+            YangObjectPool.Recycle(poolItem.Item2);
+            return null;
+        }
+
+        Vector3 pos = YangExtend.WorldPosToUILocalPos(CameraManager.Instance.PlayerCamera, GameUIManager.Instance.uiCanvas.worldCamera, hpBarData.target.position, hpBarParent);
         poolItem.Item2.InitData(hpBarData);
         GameObject hpBar = poolItem.Item2.obj;
         hpBar.transform.SetAsLastSibling();
@@ -341,7 +382,17 @@ public class GameUIManager : MonoSingleton<GameUIManager>
     /// </summary>
     public void RecycleHPBar(HPBarObjectPoolItem poolItem)
     {
+        if (poolItem == null)
+        {
+            return;
+        }
+
         allHPBar.Remove(poolItem);
+        if (poolItem.IsInPool)
+        {
+            return;
+        }
+
         YangObjectPool.Recycle(poolItem);
     }
     #endregion
@@ -519,6 +570,7 @@ public class HPBarObjectPoolItem : IPoolItem<HPBarObjectPoolItem>
     public Vector3 targetPos;
 
     private HPBarData hpBarData;
+    internal bool HasValidTarget => hpBarData != null && hpBarData.target;
     public HPBarObjectPoolItem()
     {
 

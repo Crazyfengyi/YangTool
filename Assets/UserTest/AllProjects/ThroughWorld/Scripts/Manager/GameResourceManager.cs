@@ -16,8 +16,19 @@ public class GameResourceManager : MonoSingleton<GameResourceManager>
         buffConfigSave?.Init();
     }
 
+    /// <summary>
+    /// 根据编号获取BUFF配置
+    /// </summary>
+    /// <param name="id">BUFF编号</param>
+    /// <returns>找到的BUFF配置</returns>
     public BuffConfig GetBuffConfig(int id = 0)
     {
+        if (buffConfigSave == null)
+        {
+            Debuger.ToError("BUFF配置资源未配置");
+            return null;
+        }
+
         BuffConfig data = buffConfigSave.TryGet(id);
         if (data == null)
         {

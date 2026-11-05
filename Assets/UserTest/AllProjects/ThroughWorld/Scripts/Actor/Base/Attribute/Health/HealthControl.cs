@@ -41,10 +41,23 @@ public class HealthControl
         Create();
     }
 
+    /// <summary>
+    /// 异步创建角色血条并处理创建期间角色被销毁的情况
+    /// </summary>
     public async void Create()
     {
+        if (!gameActor)
+        {
+            return;
+        }
+
         Transform hpPoint = gameActor.transform.Find("HPBarPoint");
         healthBar = await GameUIManager.Instance.GetHPBar(hpPoint ?? gameActor.transform, "血条");
+        if (!gameActor && healthBar != null)
+        {
+            GameUIManager.Instance.RecycleHPBar(healthBar);
+            healthBar = null;
+        }
     }
 
 #region 方法
@@ -84,14 +97,28 @@ public class HealthControl
     public void DieEvent()
     {
         dieCallBack?.Invoke();
-        GameUIManager.Instance.RecycleHPBar(healthBar);
+        RecycleHealthBar();
     }
     /// <summary>
     /// 场景切换删除  
     /// </summary>
     public void IDestroy()
     {
+        RecycleHealthBar();
+    }
+
+    /// <summary>
+    /// 回收血条并清除当前引用
+    /// </summary>
+    private void RecycleHealthBar()
+    {
+        if (healthBar == null)
+        {
+            return;
+        }
+
         GameUIManager.Instance.RecycleHPBar(healthBar);
+        healthBar = null;
     }
     /// <summary>
     /// 设置血条显隐

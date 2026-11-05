@@ -137,7 +137,10 @@ public abstract class BuffBase
         creator = _creator;
         target = _target;
         BuffConfig data = GameResourceManager.Instance.GetBuffConfig(configId);
-        Init(data);
+        if (data != null)
+        {
+            Init(data);
+        }
     }
     /// <summary>
     /// 初始化
@@ -156,14 +159,14 @@ public abstract class BuffBase
     /// </summary>
     public virtual void Update()
     {
-        buffEndChecker.Update(Time.deltaTime);
+        buffEndChecker?.Update(Time.deltaTime);
     }
     /// <summary>
     /// 是否结束
     /// </summary>
     public virtual bool IsEnd()
     {
-        return buffEndChecker.IsEnd();
+        return buffEndChecker == null || buffEndChecker.IsEnd();
     }
 
     /// <summary>

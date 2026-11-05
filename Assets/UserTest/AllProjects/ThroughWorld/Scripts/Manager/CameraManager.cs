@@ -11,6 +11,8 @@ using YangTools;
 using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using YangTools.Scripts.Core;
+using YangTools.Scripts.Core.YangMiniMap;
+using UnityEngine.Rendering.Universal;
 
 /// <summary>
 /// 相机管理器
@@ -111,6 +113,14 @@ public class CameraManager : MonoSingleton<CameraManager>
         HandleCameraRotation();
     }
 
+    /// <summary>
+    /// 在所有管理器完成 Awake 后初始化相机叠加关系。
+    /// </summary>
+    private void Start()
+    {
+        ConfigureCameraStack();
+    }
+
     #region 内部方法
     private void Init()
     {
@@ -121,11 +131,12 @@ public class CameraManager : MonoSingleton<CameraManager>
         mainCM = cameraRoot.GetComponentInChildren<CinemachineVirtualCameraBase>();
     }
     /// <summary>
-    /// 相机旋转
+    /// 根据玩家输入旋转相机；输入管理器尚未初始化时跳过本帧。
     /// </summary>
     protected virtual void HandleCameraRotation()
     {
-        if (GameInputManager.Instance.GameInput.Player.enabled == false) return;
+        GameInputManager inputManager = GameInputManager.Instance;
+        if (inputManager == null || inputManager.GameInput == null || !inputManager.GameInput.Player.enabled) return;
 
         float inputHorizontal = Input.GetAxisRaw("Mouse X");
         float inputVertical = Input.GetAxisRaw("Mouse Y");
@@ -179,6 +190,7 @@ public class CameraManager : MonoSingleton<CameraManager>
         mainCM.LookAt = mainPlayer.transform;
         cameraRoot.transform.SetParent(mainPlayer.transform);
         cameraRoot.transform.localPosition = Vector3.zero;
+        ConfigureCameraStack();
         mainPlayer.OnDieAction += DieAction;
 
         void DieAction()
@@ -188,6 +200,76 @@ public class CameraManager : MonoSingleton<CameraManager>
             cameraRoot.transform.parent = null;
             mainPlayer.OnDieAction -= DieAction;
         };
+    }
+
+    /// <summary>
+    /// 将 HUD 和小地图 UI 相机作为主相机叠加层，避免基础 UI 相机清除场景画面。
+    /// </summary>
+    private void ConfigureCameraStack()
+    {
+        if (mainCamera == null || GameUIManager.Instance == null) return;
+
+        UniversalAdditionalCameraData mainCameraData = GetOrAddCameraData(mainCamera);
+        if (mainCameraData == null) return;
+
+        mainCameraData.renderType = CameraRenderType.Base;
+        mainCameraData.cameraStack.Clear();
+
+        if (cameraRoot != null)
+        {
+            Camera[] cameraRootCameras = cameraRoot.GetComponentsInChildren<Camera>(true);
+            for (int i = 0; i < cameraRootCameras.Length; i++)
+            {
+                Camera camera = cameraRootCameras[i];
+                if (camera != mainCamera) AddOverlayCamera(mainCameraData, camera);
+            }
+        }
+
+        AddOverlayCamera(mainCameraData, GameUIManager.Instance.UICamera);
+
+        MiniMapManager miniMapManager = MiniMapManager.Instance;
+        if (miniMapManager != null && miniMapManager.m_Canvas != null)
+        {
+            UniversalAdditionalCameraData miniMapCameraData = GetOrAddCameraData(miniMapManager.managerCamera);
+            if (miniMapCameraData != null) miniMapCameraData.renderType = CameraRenderType.Base;
+
+            AddOverlayCamera(mainCameraData, miniMapManager.m_Canvas.worldCamera);
+        }
+    }
+
+    /// <summary>
+    /// 确保相机具有 URP 数据组件；资源包实例缺少该组件时会在运行时补齐。
+    /// </summary>
+    private UniversalAdditionalCameraData GetOrAddCameraData(Camera camera)
+    {
+        if (camera == null) return null;
+
+        UniversalAdditionalCameraData cameraData = camera.GetComponent<UniversalAdditionalCameraData>();
+        if (cameraData == null)
+        {
+            cameraData = camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
+        }
+
+        return cameraData;
+    }
+
+    /// <summary>
+    /// 将相机配置为叠加相机并加入主相机的渲染栈。
+    /// </summary>
+    private void AddOverlayCamera(UniversalAdditionalCameraData baseCameraData, Camera overlayCamera)
+    {
+        if (baseCameraData == null || overlayCamera == null || overlayCamera == mainCamera) return;
+
+        UniversalAdditionalCameraData overlayCameraData = GetOrAddCameraData(overlayCamera);
+        if (overlayCameraData == null) return;
+
+        if (overlayCameraData.renderType == CameraRenderType.Base && overlayCameraData.cameraStack != null)
+        {
+            overlayCameraData.cameraStack.Clear();
+        }
+
+        overlayCameraData.renderType = CameraRenderType.Overlay;
+        if (!baseCameraData.cameraStack.Contains(overlayCamera)) baseCameraData.cameraStack.Add(overlayCamera);
     }
 
     /// <summary>

@@ -8,20 +8,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Area Damage")]
 public class AreaDamageSkillEffect : SkillEffect
 {
-    [LabelText("范围半径")]
-    [SerializeField] private float radius = 3f; //技能影响半径
-    [LabelText("目标层级")]
-    [SerializeField] private LayerMask targetMask = ~0; //目标层级掩码，~0表示所有层级
-    [LabelText("基础伤害")]
-    [SerializeField] private float baseDamage = 10f; //基础伤害值
-    [LabelText("属性加成系数")]
-    [PropertyTooltip("基础伤害加上所选属性乘以此系数后再参与后续伤害计算")]
-    [SerializeField] private float powerScale = 1f; //伤害系数
-    [LabelText("加成属性")]
-    [SerializeField] private SkillPowerType powerType = SkillPowerType.MagicPower; //技能伤害类型
-    [LabelText("以目标为中心")]
-    [PropertyTooltip("勾选且存在目标时以目标为中心 否则以技能指定点为中心")]
-    [SerializeField] private bool centerOnTarget = true; // 是否以目标为中心
+    [LabelText("范围半径")] [SerializeField] private float radius = 3f; //技能影响半径
+    [LabelText("目标层级")] [SerializeField] private LayerMask targetMask = ~0; //目标层级掩码，~0表示所有层级
+    [LabelText("基础伤害")] [SerializeField] private float baseDamage = 10f; //基础伤害值
+
+    [LabelText("属性加成系数")] [PropertyTooltip("基础伤害加上所选属性乘以此系数后再参与后续伤害计算")] [SerializeField]
+    private float powerScale = 1f; //伤害系数
+
+    [LabelText("加成属性")] [SerializeField] private SkillPowerType powerType = SkillPowerType.MagicPower; //技能伤害类型
+
+    [LabelText("以目标为中心")] [PropertyTooltip("勾选且存在目标时以目标为中心 否则以技能指定点为中心")] [SerializeField]
+    private bool centerOnTarget = true; // 是否以目标为中心
 
     /// <summary>
     /// 执行技能效果的方法

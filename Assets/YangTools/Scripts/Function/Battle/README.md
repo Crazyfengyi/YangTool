@@ -81,3 +81,7 @@ bool accepted = skillCaster.TryCast(skillDefinition, target);
 
 对你这个项目，建议先完善**三段普攻＋输入缓冲＋后摇衔接＋受击打断**，确认操作手感，再增加轻重分支、挑空和空中连招。现有控制器已经具备步骤推进、输入缓存和会话关联，适合作为起点。
 */
+
+## 弹幕排列与子弹链
+
+[ProjectilePatternDemo](ProjectilePatternDemo/README.md) 提供 7 种排列、10 种轨迹、命中换目标、消亡散射和沿途派生的独立演示。打开 [ProjectilePatternDemo.unity](ProjectilePatternDemo/ProjectilePatternDemo.unity) 运行，在左侧面板切换模式并发射。配置位于 ProjectileSkillEffect 的中文 Odin 面板。

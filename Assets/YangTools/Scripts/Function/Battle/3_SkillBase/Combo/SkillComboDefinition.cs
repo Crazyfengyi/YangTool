@@ -9,6 +9,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Skill Combo Definition")]
 public class SkillComboDefinition : ScriptableObject
 {
+    [LabelText("技能效果名称")] [SerializeField] private string effectName;
+    [LabelText("技能效果描述")] [SerializeField] private string effectDescription;
     // 连击输入缓冲时间（单位：秒）,玩家在这个时间内按下下一个技能键，会被视为有效输入
     [LabelText("输入缓冲时间（秒）")]
     [Tooltip("提前输入会在此时间内保留 满足接招条件时自动尝试释放下一段技能")]
@@ -55,7 +57,7 @@ public class SkillComboStep
     //下一个步骤的有效时间窗口（单位：秒）,在这个时间内必须触发下一个步骤，否则连击中断
     [LabelText("接招窗口（秒）")]
     [Tooltip("本段技能施放完成后允许衔接下一段的时间 最后一段使用此时间作为收招等待时间")]
-    [SerializeField, MinValue(0f)] private float nextStepWindow = 0.8f;
+    [SerializeField, MinValue(0f)] private float nextStepWindow = 1f;
     //是否需要命中敌人才能进入下一步
     [LabelText("需要命中")]
     [Tooltip("勾选后本段技能需要命中目标才能衔接下一段 最后一段需要命中才会判定连招完成")]

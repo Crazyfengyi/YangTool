@@ -103,3 +103,8 @@ Assets/
 5. 保留资源 `.meta` 文件以维护 GUID 引用；修改第三方插件前保留原版及必要配置，避免同时导入重复程序集。
 6. 当前 Odin 3.3.1.13 使用针对 Unity 6000.5 的本地兼容修补，脚本为 [Patch-OdinUnity6.ps1](Tools/OdinCompatibility/Patch-OdinUnity6.ps1)。它修正 IMGUI 内部成员迁移引用；重新覆盖插件时需核对修补状态，这不等同于插件全部功能已获得官方兼容保证。
 7. 新增功能和示例时，优先在模块内补充说明，并更新本页的目录或入口链接。
+
+
+### 投射物模式演示
+
+Battle 新增 [ProjectilePatternDemo](Assets/YangTools/Scripts/Function/Battle/ProjectilePatternDemo/README.md)，包含 7 种发射排列、10 种飞行轨迹和三个生命周期效果列表。场景入口为 [ProjectilePatternDemo.unity](Assets/YangTools/Scripts/Function/Battle/ProjectilePatternDemo/ProjectilePatternDemo.unity)。

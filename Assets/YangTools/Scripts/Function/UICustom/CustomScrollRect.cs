@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// 支持嵌套滚动区域的自定义滚动组件--消息传递--继承Scroll Rect重写传递消息给父节点 
+/// 支持嵌套滚动区域的自定义滚动组件--消息传递--继承Scroll Rect重写传递消息给父节点
 /// </summary>
 public class CustomScrollRect : ScrollRect
 {

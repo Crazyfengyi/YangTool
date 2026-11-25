@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 角色属性类，用于管理游戏角色的各种属性值
+/// 角色属性类 用于管理游戏角色的各种属性值
 /// </summary>
 public class CharacterStats : MonoBehaviour
 {
-    /// <summary>
-    /// 初始属性列表，包含角色创建时的基础属性值
-    /// </summary>
+    // 初始属性列表 包含角色创建时的基础属性值
     [SerializeField] private List<CharacterStat> initialStats = new List<CharacterStat>
     {
         new CharacterStat(StatType.MaxHealth, 100f),      // 最大生命值
@@ -21,13 +19,9 @@ public class CharacterStats : MonoBehaviour
         new CharacterStat(StatType.SkillDamageMultiplier, 0f) // 技能伤害倍率
     };
 
-    /// <summary>
-    /// 属性字典
-    /// </summary>
+    // 属性字典
     private readonly Dictionary<StatType, CharacterStat> statsDic = new Dictionary<StatType, CharacterStat>();
-    /// <summary>
-    /// 属性值变更事件
-    /// </summary>
+    // 属性值变更事件
     public event Action<StatType, float> OnStatChanged;
 
     /// <summary>
@@ -55,7 +49,7 @@ public class CharacterStats : MonoBehaviour
     }
     
     /// <summary>
-    /// 确保类型属性存在，如果不存在则创建
+    /// 确保类型属性存在 如果不存在则创建
     /// </summary>
     private void CheckStat(StatType type)
     {

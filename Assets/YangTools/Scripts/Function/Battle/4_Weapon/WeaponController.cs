@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 武器控制器类，负责管理武器的装备、射击、装弹等功能
+/// 武器控制器类 负责管理武器的装备 射击 装弹等功能
 /// </summary>
 [DisallowMultipleComponent]
 public class WeaponController : MonoBehaviour
@@ -548,6 +548,9 @@ public class WeaponController : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    /// <summary>
+    /// 从编辑器按钮触发武器控制器的测试射击
+    /// </summary>
     [Button("测试射击")]
     public void TestBtn()
     {

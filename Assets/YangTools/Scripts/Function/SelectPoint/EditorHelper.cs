@@ -4,6 +4,9 @@ using System.Text;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// 提供网格射线拾取 共面面片查询和物体吸附的几何辅助方法
+/// </summary>
 public abstract class EditorHelper
 {
     /// <summary>
@@ -137,11 +140,11 @@ public abstract class EditorHelper
         }
     }
     /// <summary>
-    /// 误差一定范围内的认为是同一个顶点
+    /// 任一坐标轴差值小于阈值时视为同一顶点 当前实现不是三轴同时比较
     /// </summary>
-    /// <param name="v1"></param>
-    /// <param name="v2"></param>
-    /// <returns></returns>
+    /// <param name="v1">待比较的第一个顶点</param>
+    /// <param name="v2">待比较的第二个顶点</param>
+    /// <returns>任一轴差值小于阈值时返回 true</returns>
     public static bool IsSameVertex(Vector3 v1, Vector3 v2)
     {
         //return (v1 - v2).sqrMagnitude < 0.000001f;
@@ -150,8 +153,8 @@ public abstract class EditorHelper
     /// <summary>
     /// 通过面索引获取平面三角形
     /// </summary>
-    /// <param name="meshCollider"></param>
-    /// <param name="index"></param>
+    /// <param name="meshCollider">提供原始网格与坐标变换的碰撞体</param>
+    /// <param name="index">从零开始的元素索引</param>
     public static HashSet<int> GetPlaneTrianglesByFaceIndex(MeshCollider meshCollider, int index)
     {
         Vector3[] vertices = meshCollider.sharedMesh.vertices;//顶点
@@ -208,7 +211,7 @@ public abstract class EditorHelper
         return outTriangles;
     }
     /// <summary>
-    /// 获得垂直射线
+    /// 计算三角面的中心位置与法线方向
     /// </summary>
     public static void GetVerticalRay(Vector3 p0, Vector3 p1, Vector3 p2, out Vector3 center, out Vector3 dir)
     {
@@ -218,7 +221,7 @@ public abstract class EditorHelper
     /// <summary>
     /// 获取Mesh上多个三角面的中心点
     /// </summary>
-    /// <param name="mesh"></param>
+    /// <param name="mesh">参与计算的网格</param>
     /// <param name="trianglesIndex">三角面索引集合</param>
     public static Vector3 GetMeshLocalCenter(Mesh mesh, HashSet<int> trianglesIndex)
     {
@@ -239,8 +242,8 @@ public abstract class EditorHelper
     /// <summary>
     /// 沿着连线将from按三角面贴附到to
     /// </summary>
-    /// <param name="from"></param>
-    /// <param name="to"></param>
+    /// <param name="from">需要移动的吸附源物体</param>
+    /// <param name="to">保持位置的吸附目标物体</param>
     public static void AttachTwoGameObject(GameObject from, GameObject to)
     {
         Collider colliderFrom = from.GetComponent<Collider>();
@@ -291,8 +294,8 @@ public abstract class EditorHelper
     /// <summary>
     /// 根据选择的模型顶点吸附物体
     /// </summary>
-    /// <param name="from"></param>
-    /// <param name="to"></param>
+    /// <param name="from">需要移动的吸附源物体</param>
+    /// <param name="to">保持位置的吸附目标物体</param>
     public static void AttachTwoGameObjectByVertice(GameObject from, GameObject to, Vector3 fromVertice, Vector3 toVertice)
     {
         //将模型空间的顶点转换成世界空间顶点

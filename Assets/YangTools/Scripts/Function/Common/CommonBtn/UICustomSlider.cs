@@ -13,14 +13,20 @@ namespace GameMain
     /// </summary>
     public class UICustomSlider : MonoBehaviour
     {
+        // 计算滑块位置使用的父级矩形
         public RectTransform sliderParent;
+        // 显示进度的填充图像
         public Image imgSlider;
+        // 显示当前位置的滑块图像
         public Image imgHandler;
+        // 显示数值的文本组件
         public TextMeshProUGUI text;
 
+        // 当前归一化进度
         [OnValueChanged("Refersh")] [Range(0, 1)]
         public float currentProgress;
 
+        // 动画中的当前数值
         private float currentValue;
 
         /// <summary>
@@ -36,9 +42,9 @@ namespace GameMain
         /// <summary>
         /// 设置进度(动画)
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="maxValue"></param>
-        /// <param name="aniTime"></param>
+        /// <param name="value">本次设置的数值</param>
+        /// <param name="maxValue">用于归一化的最大数值</param>
+        /// <param name="aniTime">过渡动画的持续秒数</param>
         public void SetProgressAni(float value, float maxValue, float aniTime)
         {
             currentValue = Mathf.Min(value, currentValue);
@@ -65,6 +71,10 @@ namespace GameMain
 
 #if UNITY_EDITOR
 
+        /// <summary>
+        /// 将编辑器中修改的进度同步到滑动条显示
+        /// </summary>
+        /// <param name="newProgress">归一化显示进度</param>
         private void Refersh(float newProgress)
         {
             SetProgress(newProgress);

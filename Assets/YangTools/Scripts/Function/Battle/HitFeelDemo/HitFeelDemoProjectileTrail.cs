@@ -6,21 +6,28 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class HitFeelDemoProjectileTrail : MonoBehaviour
 {
+    // 是否启用弹体拖尾表现
     private static bool isEnabled;
+    // 当前拖尾反馈预设
     private static HitFeelDemoFeedbackPreset activePreset;
 
+    // 弹体拖尾渲染器
     [Header("拖尾引用")]
     /// <summary>弹体拖尾渲染器</summary>
     [SerializeField] private TrailRenderer trailRenderer;
 
+    // 强反馈下的拖尾宽度倍率
     [Header("强打击拖尾")]
     /// <summary>强打击拖尾宽度倍率</summary>
     [SerializeField, Min(1f)] private float strongWidthMultiplier = 1.35f;
-    /// <summary>强打击拖尾时长倍率</summary>
+    // 强打击拖尾时长倍率
     [SerializeField, Min(1f)] private float strongTimeMultiplier = 1.25f;
 
+    // 拖尾原始宽度
     private float originalWidth;
+    // 拖尾原始消散时长
     private float originalTime;
+    // 拖尾是否已从弹体脱离
     private bool hasDetachedTrail;
 
     /// <summary>

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+/// <summary>
+/// 定义角色可参与数值计算的属性种类
+/// </summary>
 public enum StatType
 {
     [LabelText("最大生命值")]
@@ -21,6 +24,9 @@ public enum StatType
     SkillDamageMultiplier
 }
 
+/// <summary>
+/// 定义属性修正值的叠加方式
+/// </summary>
 public enum StatModifierType
 {
     [LabelText("固定值")]
@@ -35,28 +41,21 @@ public enum StatModifierType
 [Serializable]
 public class StatModifier
 {
-    /// <summary>
-    /// 要修饰的属性类型，表示需要被修改的具体属性
-    /// </summary>
+    // 要修饰的属性类型 表示需要被修改的具体属性
     [LabelText("属性类型")]
     public StatType Stat;
-    /// <summary>
-    /// 修饰符类型，默认为Flat（固定值）类型
-    /// 可以是固定值(Flat)、百分比(Percent)或倍率(Multiply)等类型
-    /// </summary>
+    // 修饰符类型 默认为Flat（固定值）类型 可以是固定值(Flat) 百分比(Percent)或倍率(Multiply)等类型
     [LabelText("修饰方式")]
     public StatModifierType Type = StatModifierType.Flat;
-    /// <summary>
-    /// 修饰符的数值，根据Type的不同，有不同的计算方式
-    /// </summary>
+    // 修饰符的数值 根据Type的不同 有不同的计算方式
     [LabelText("修饰数值")]
     public float Value;
 }
 
-/**
- * 角色属性类，用于管理和计算角色的各种属性值
- * 包含基础值、修饰符，并提供计算最终值的功能
- */
+/// <summary>
+/// 角色属性类 用于管理和计算角色的各种属性值 包含基础值 修饰符 并提供计算最终值的功能
+/// </summary>
+
 [Serializable]
 public class CharacterStat
 {
@@ -77,20 +76,22 @@ public class CharacterStat
     //基础值只读访问器
     public float BaseValue => baseValue;
 
-    /**
-     * 构造函数，初始化角色属性
-     * @param type 属性类型
-     * @param baseValue 基础值
-     */
+    /// <summary>
+    /// 构造函数 初始化角色属性
+    /// </summary>
+    /// <param name="type">属性类型</param>
+    /// <param name="baseValue">基础值</param>
+
     public CharacterStat(StatType type, float baseValue)
     {
         this.type = type;
         this.baseValue = baseValue;
     }
 
-    /**
-     * 设置基础值
-     */
+    /// <summary>
+    /// 设置基础值
+    /// </summary>
+
     public void SetBaseValue(float value)
     {
         // 如果新值与当前值近似，则不做修改
@@ -99,9 +100,10 @@ public class CharacterStat
         dirty = true;  // 值被修改，标记为需要重新计算
     }
 
-    /**
-     * 获取属性最终值
-     */
+    /// <summary>
+    /// 获取属性最终值
+    /// </summary>
+
     public float GetValue()
     {
         // 如果值未被修改，直接返回缓存值
@@ -124,19 +126,21 @@ public class CharacterStat
         return cachedValue;
     }
 
-    /**
-     * 添加属性修饰符
-     * @param modifier 要添加的修饰符
-     */
+    /// <summary>
+    /// 添加属性修饰符
+    /// </summary>
+    /// <param name="modifier">要添加的修饰符</param>
+
     public void AddModifier(RuntimeStatModifier modifier)
     {
         modifiers.Add(modifier);
         dirty = true;  // 添加了新修饰符，标记为需要重新计算
     }
 
-    /**
-     * 移除指定来源的所有修饰符
-     */
+    /// <summary>
+    /// 移除指定来源的所有修饰符
+    /// </summary>
+
     public void RemoveModifiersFrom(object source)
     {
         // 移除所有与指定来源匹配的修饰符
@@ -150,17 +154,11 @@ public class CharacterStat
 /// </summary>
 public class RuntimeStatModifier
 {
-    /// <summary>
-    /// 状态修改器类型
-    /// </summary>
+    // 状态修改器类型
     public StatModifierType Type;
-    /// <summary>
-    /// 修改器的数值
-    /// </summary>
+    // 修改器的数值
     public float Value;
-    /// <summary>
-    /// 修改器的来源对象，可以是技能、装备、buff等
-    /// </summary>
+    // 修改器的来源对象 可以是技能 装备 buff等
     public object Source;
 
     /// <summary>

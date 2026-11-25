@@ -8,20 +8,33 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Projectile")]
 public class ProjectileSkillEffect : SkillEffect
 {
+    // 投射物预制体
     [Title("基础配置"), LabelText("投射物预制体")]
     [SerializeField] private SkillProjectile projectilePrefab;
+    // 弹体飞行速度
     [LabelText("飞行速度"), MinValue(0)] [SerializeField] private float speed = 12f;
+    // 基础伤害
     [LabelText("基础伤害")] [SerializeField] private float baseDamage = 10f;
+    // 属性加成系数
     [LabelText("属性加成系数")] [SerializeField] private float powerScale = 1f;
+    // 加成属性
     [LabelText("加成属性")] [SerializeField] private SkillPowerType powerType = SkillPowerType.Attack;
+    // 弹体最大存活秒数 非正值不按寿命消亡
     [LabelText("存活时间（秒）"), PropertyTooltip("小于等于零时不按寿命消亡 且不触发飞行节点")]
     [SerializeField] private float lifeSeconds = 5f;
+    // 投射物出生位置与排列方式配置
     [Title("发射配置"), InlineProperty, HideLabel] [SerializeField] private ProjectileEmissionSettings emission = new ProjectileEmissionSettings();
+    // 投射物运动轨迹配置
     [Title("飞行配置"), InlineProperty, HideLabel] [SerializeField] private ProjectileFlightSettings flight = new ProjectileFlightSettings();
+    // 目标层级
     [Title("命中配置"), LabelText("目标层级")] [SerializeField] private LayerMask targetMask = ~0;
+    // 阻挡层级
     [LabelText("阻挡层级")] [SerializeField] private LayerMask blockingMask;
+    // 额外穿透次数
     [LabelText("额外穿透次数"), MinValue(0)] [SerializeField] private int piercing;
+    // 扫掠半径
     [LabelText("扫掠半径"), MinValue(0.001f)] [SerializeField] private float sweepRadius = 0.1f;
+    // 投射物生命周期触发配置
     [Title("生命周期"), InlineProperty, HideLabel, InfoBox("无限寿命不会执行飞行节点效果", "InvalidNodes")]
     [SerializeField] private ProjectileLifecycleSettings lifecycle = new ProjectileLifecycleSettings();
     private bool InvalidNodes => lifeSeconds <= 0 && lifecycle.onNode.Count > 0;

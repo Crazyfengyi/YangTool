@@ -9,15 +9,17 @@ using UnityEngine;
 namespace YangTools
 {
     /// <summary>
-    /// 循环特效删除--先停止,等播完再删除
+    /// 循环特效删除--先停止 等播完再删除
     /// </summary>
     public class LoopEffectDestroy : MonoBehaviour
     {
-        /// <summary>
-        /// 最大生命周期
-        /// </summary>
+        // 最大生命周期
         private float maxLifeTime;
+        // 需要停止发射并等待消散的粒子组件
         ParticleSystem[] list;
+        /// <summary>
+        /// 缓存粒子组件并计算停止发射后需要等待的消散时间
+        /// </summary>
         public void Awake()
         {
             list = transform.GetComponentsInChildren<ParticleSystem>(true);
@@ -49,7 +51,7 @@ namespace YangTools
             }
         }
         /// <summary>
-        /// 删除循环特效--先停止,等播完再删除
+        /// 删除循环特效--先停止 等播完再删除
         /// </summary>
         public void DestoryLoopEffect()
         {

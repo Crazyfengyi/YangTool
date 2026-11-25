@@ -6,19 +6,32 @@ using TMPro;
 using UnityEngine;
 using YangTools.Scripts.Core.YangSaveData;
 
+/// <summary>
+/// 按非缩放时间间隔刷新体力数量和恢复倒计时
+/// </summary>
 public class CostPowerUI : MonoBehaviour
 {
+    // 体力数量显示文本
     public TextMeshProUGUI powerCount;
+    // 体力恢复倒计时文本
     public TextMeshProUGUI powerTime;
 
+    // 累计的非缩放刷新时间
     private float time;
+    // 体力界面刷新间隔秒数
     private float timeInterval = 0.02f;
 
+    /// <summary>
+    /// 重置刷新计时器
+    /// </summary>
     public void OnEnable()
     {
         time = 0;
     }
 
+    /// <summary>
+    /// 按刷新间隔检查体力恢复并更新数量与倒计时显示
+    /// </summary>
     public void Update()
     {
         time += Time.unscaledDeltaTime;

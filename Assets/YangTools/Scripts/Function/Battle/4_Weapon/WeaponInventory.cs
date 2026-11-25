@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/**
- * 武器库存管理类
- */
+/// <summary>
+/// 武器库存管理类
+/// </summary>
+
 [System.Serializable]
 public class WeaponInventory
 {
@@ -20,9 +21,10 @@ public class WeaponInventory
     public WeaponDefinition CurrentWeapon =>
         currentIndex >= 0 && currentIndex < equippedWeapons.Count ? equippedWeapons[currentIndex] : null;
 
-    /**
-     * 设置武器列表
-     */
+    /// <summary>
+    /// 设置武器列表
+    /// </summary>
+
     public void SetWeapons(IEnumerable<WeaponDefinition> weapons)
     {
         equippedWeapons.Clear();
@@ -35,11 +37,12 @@ public class WeaponInventory
         currentIndex = equippedWeapons.Count > 0 ? 0 : -1;
     }
 
-    /**
-     * 添加武器到库存
-     * @param weapon 要添加的武器
-     * @return 是否添加成功
-     */
+    /// <summary>
+    /// 添加武器到库存
+    /// </summary>
+    /// <param name="weapon">要添加的武器</param>
+    /// <returns>是否添加成功</returns>
+
     public bool AddWeapon(WeaponDefinition weapon)
     {
         // 如果武器为空或已存在，则返回false
@@ -58,11 +61,12 @@ public class WeaponInventory
         return true;
     }
 
-    /**
-     * 从库存中移除武器
-     * @param weapon 要移除的武器
-     * @return 是否移除成功
-     */
+    /// <summary>
+    /// 从库存中移除武器
+    /// </summary>
+    /// <param name="weapon">要移除的武器</param>
+    /// <returns>是否移除成功</returns>
+
     public bool RemoveWeapon(WeaponDefinition weapon)
     {
         if (weapon == null)
@@ -94,11 +98,12 @@ public class WeaponInventory
         return true;
     }
 
-    /**
-     * 装备指定武器
-     * @param weapon 要装备的武器
-     * @return 是否装备成功
-     */
+    /// <summary>
+    /// 装备指定武器
+    /// </summary>
+    /// <param name="weapon">要装备的武器</param>
+    /// <returns>是否装备成功</returns>
+
     public bool Equip(WeaponDefinition weapon)
     {
         if (weapon == null)
@@ -119,11 +124,12 @@ public class WeaponInventory
         return true;
     }
 
-    /**
-     * 通过索引装备武器
-     * @param index 武器在列表中的索引
-     * @return 是否装备成功
-     */
+    /// <summary>
+    /// 通过索引装备武器
+    /// </summary>
+    /// <param name="index">武器在列表中的索引</param>
+    /// <returns>是否装备成功</returns>
+
     public bool EquipByIndex(int index)
     {
         if (index < 0 || index >= equippedWeapons.Count)
@@ -135,11 +141,12 @@ public class WeaponInventory
         return true;
     }
 
-    /**
-     * 通过装备槽位装备武器
-     * @param slot 武器装备槽位
-     * @return 是否装备成功
-     */
+    /// <summary>
+    /// 通过装备槽位装备武器
+    /// </summary>
+    /// <param name="slot">武器装备槽位</param>
+    /// <returns>是否装备成功</returns>
+
     public bool EquipBySlot(WeaponEquipSlot slot)
     {
         for (int i = 0; i < equippedWeapons.Count; i++)

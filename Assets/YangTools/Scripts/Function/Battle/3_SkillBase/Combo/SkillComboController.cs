@@ -2,11 +2,13 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 线性技能连击控制器，负责步骤推进、输入缓存和命中确认。
+/// 线性技能连击控制器 负责步骤推进 输入缓存和命中确认
 /// </summary>
 public class SkillComboController : MonoBehaviour
 {
-    //连招状态枚举，定义了角色在连招过程中的不同状态
+    /// <summary>
+    /// 区分空闲 施法 等待接招与末段恢复阶段
+    /// </summary>
     private enum ComboState
     {
         Idle, // 空闲状态，角色未执行连招
@@ -15,7 +17,9 @@ public class SkillComboController : MonoBehaviour
         FinalRecovery // 最终恢复状态，连招结束后的恢复阶段
     }
 
-    //连招输入模式枚举，定义了不同的连招输入方式
+    /// <summary>
+    /// 区分目标 坐标与方向三种连招输入
+    /// </summary>
     private enum ComboInputMode
     {
         Target, // 目标模式，以游戏对象为目标进行连招
@@ -23,7 +27,9 @@ public class SkillComboController : MonoBehaviour
         Direction // 方向模式，以某个方向为目标进行连招
     }
 
-    //连招输入结构体，存储连招所需的输入信息
+    /// <summary>
+    /// 保存一次连招输入的目标与瞄准数据
+    /// </summary>
     private struct ComboInput
     {
         public ComboInputMode Mode; // 输入模式，使用上述枚举定义
@@ -32,9 +38,7 @@ public class SkillComboController : MonoBehaviour
         public Vector3 Direction; // 目标方向，当Mode为Direction时使用
     }
 
-    /// <summary>
-    /// 技能连招系统的相关变量和事件定义
-    /// </summary>
+    // 技能连招系统的相关变量和事件定义
     [SerializeField] private SkillCaster skillCaster; //设置技能施放器
 
     [SerializeField] private SkillComboDefinition comboDefinition; //设置技能连招的定义
@@ -65,7 +69,7 @@ public class SkillComboController : MonoBehaviour
     private float bufferedInputExpireTime; // 缓冲输入的过期时间
 
     /// <summary>
-    /// 重置组件，获取必要的组件引用
+    /// 重置组件 获取必要的组件引用
     /// </summary>
     private void Reset()
     {
@@ -76,7 +80,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 游戏对象初始化时调用，解决依赖关系并注册连招技能
+    /// 游戏对象初始化时调用 解决依赖关系并注册连招技能
     /// </summary>
     private void Awake()
     {
@@ -87,7 +91,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 当游戏对象启用时调用，解决依赖关系、订阅施放器事件并注册连招技能
+    /// 当游戏对象启用时调用 解决依赖关系 订阅施放器事件并注册连招技能
     /// </summary>
     private void OnEnable()
     {
@@ -100,7 +104,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 当游戏对象禁用时调用，取消订阅施放器事件并清除连招状态
+    /// 当游戏对象禁用时调用 取消订阅施放器事件并清除连招状态
     /// </summary>
     private void OnDisable()
     {
@@ -111,7 +115,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 每帧更新调用，处理缓冲输入和连招超时逻辑
+    /// 每帧更新调用 处理缓冲输入和连招超时逻辑
     /// </summary>
     private void Update()
     {
@@ -133,7 +137,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 使用目标触发当前连击。
+    /// 使用目标触发当前连击
     /// </summary>
     public bool TryTrigger(GameObject target = null)
     {
@@ -145,7 +149,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 使用指定位置触发当前连击。
+    /// 使用指定位置触发当前连击
     /// </summary>
     public bool TryTriggerAtPoint(Vector3 point)
     {
@@ -157,7 +161,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 使用指定方向触发当前连击。
+    /// 使用指定方向触发当前连击
     /// </summary>
     public bool TryTriggerInDirection(Vector3 direction)
     {
@@ -169,7 +173,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 更换当前连击配置并清空进度。
+    /// 更换当前连击配置并清空进度
     /// </summary>
     public void SetCombo(SkillComboDefinition combo)
     {
@@ -179,7 +183,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 手动重置当前连击进度。
+    /// 手动重置当前连击进度
     /// </summary>
     public void ResetCombo()
     {
@@ -187,7 +191,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 处理连招输入，检查连招状态并执行相应的连招步骤
+    /// 处理连招输入 检查连招状态并执行相应的连招步骤
     /// </summary>
     /// <param name="input">连招输入信息</param>
     /// <returns>是否成功处理输入并开始连招步骤</returns>
@@ -324,7 +328,7 @@ public class SkillComboController : MonoBehaviour
     }
 
     /// <summary>
-    /// 打开连续技能窗口，处理连招的下一步操作
+    /// 打开连续技能窗口 处理连招的下一步操作
     /// </summary>
     private void OpenContinuationWindow()
     {

@@ -2,6 +2,9 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+/// <summary>
+/// 定义武器类别
+/// </summary>
 public enum WeaponType
 {
     [LabelText("远程")]
@@ -10,6 +13,9 @@ public enum WeaponType
     Melee
 }
 
+/// <summary>
+/// 定义武器射击的触发方式
+/// </summary>
 public enum WeaponFireMode
 {
     [LabelText("单发")]
@@ -20,6 +26,9 @@ public enum WeaponFireMode
     Burst
 }
 
+/// <summary>
+/// 定义武器可装备的槽位
+/// </summary>
 public enum WeaponEquipSlot
 {
     [LabelText("主武器")]
@@ -30,6 +39,9 @@ public enum WeaponEquipSlot
     Melee
 }
 
+/// <summary>
+/// 说明一次武器射击请求未被接受的原因
+/// </summary>
 public enum WeaponFireFailReason
 {
     None,
@@ -47,21 +59,13 @@ public enum WeaponFireFailReason
 [Serializable]
 public class WeaponRuntimeState
 {
-    /// <summary>
-    /// 当前弹夹中的弹药数量
-    /// </summary>
+    // 当前弹夹中的弹药数量
     public int ClipAmmo;
-    /// <summary>
-    /// 是否正在重新装弹的状态标志
-    /// </summary>
+    // 是否正在重新装弹的状态标志
     public bool IsReloading;
-    /// <summary>
-    /// 下一次可以射击的时间点
-    /// </summary>
+    // 下一次可以射击的时间点
     public float NextFireTime;
-    /// <summary>
-    /// 待发射的连发射击次数
-    /// </summary>
+    // 待发射的连发射击次数
     public int PendingBurstShots;
 
     /// <summary>
@@ -91,6 +95,13 @@ public readonly struct FireRequest
     public readonly Vector3 Direction; // 射击方向
     public readonly RequestMode Mode; // 请求模式
 
+    /// <summary>
+    /// 保存指定请求模式和瞄准数据
+    /// </summary>
+    /// <param name="target">目标对象</param>
+    /// <param name="point">世界空间目标坐标</param>
+    /// <param name="direction">世界空间方向</param>
+    /// <param name="mode">目标 坐标或方向瞄准模式</param>
     public FireRequest(GameObject target, Vector3 point, Vector3 direction, RequestMode mode = RequestMode.Target)
     {
         Target = target;
@@ -99,17 +110,30 @@ public readonly struct FireRequest
         Mode = mode;
     }
 
+    /// <summary>
+    /// 创建沿指定方向射击的请求
+    /// </summary>
+    /// <param name="direction">世界空间方向</param>
+    /// <param name="point">世界空间目标坐标</param>
     public static FireRequest ForDirection(Vector3 direction, Vector3 point)
     {
         return new FireRequest(null, point, direction, RequestMode.Direction);
     }
 
+    /// <summary>
+    /// 创建向世界坐标射击的请求
+    /// </summary>
+    /// <param name="point">世界空间目标坐标</param>
+    /// <param name="direction">世界空间方向</param>
     public static FireRequest ForPoint(Vector3 point, Vector3 direction)
     {
         return new FireRequest(null, point, direction, RequestMode.Point);
     }
 }  
 
+/// <summary>
+/// 区分武器射击请求的瞄准方式
+/// </summary>
 public enum RequestMode
 {
     Target,

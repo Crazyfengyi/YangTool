@@ -42,9 +42,7 @@ public enum SkillCastFailReason
 [Serializable]
 public class SkillCost
 {
-    /// <summary>
-    /// 技能消耗的资源值
-    /// </summary>
+    // 技能消耗的资源值
     [MinValue(0f)]
     [LabelText("资源消耗")]
     public float Resource = 0f;
@@ -55,29 +53,17 @@ public class SkillCost
 /// </summary>
 public class SkillCastRequest
 {
-    /// <summary>
-    /// 要施放的技能定义
-    /// </summary>
+    // 要施放的技能定义
     public SkillDefinition Skill;
-    /// <summary>
-    /// 技能施法的目标对象（如果有）
-    /// </summary>
+    // 技能施法的目标对象（如果有）
     public GameObject Target;
-    /// <summary>
-    /// 技能施法的位置点（如果是区域技能）
-    /// </summary>
+    // 技能施法的位置点（如果是区域技能）
     public Vector3 Point;
-    /// <summary>
-    /// 技能施法的方向向量
-    /// </summary>
+    // 技能施法的方向向量
     public Vector3 Direction;
-    /// <summary>
-    /// 本次施放的武器来源
-    /// </summary>
+    // 本次施放的武器来源
     public WeaponDefinition SourceWeapon;
-    /// <summary>
-    /// 武器实例句柄，用于区分同配置的不同实例
-    /// </summary>
+    // 武器实例句柄 用于区分同配置的不同实例
     public int SourceInstanceId;
 }
 
@@ -86,46 +72,28 @@ public class SkillCastRequest
 /// </summary>
 public class SkillContext
 {
-    /// <summary>
-    /// 技能施放者
-    /// </summary>
+    // 技能施放者
     public SkillCaster Caster;
-    /// <summary>
-    /// 技能定义，包含技能的各种属性和行为
-    /// </summary>
+    // 技能定义 包含技能的各种属性和行为
     public SkillDefinition Skill;
-    /// <summary>
-    /// 技能目标对象
-    /// </summary>
+    // 技能目标对象
     public GameObject Target;
-    /// <summary>
-    /// 技能目标点位置
-    /// </summary>
+    // 技能目标点位置
     public Vector3 Point;
-    /// <summary>
-    /// 技能施放方向
-    /// </summary>
+    // 技能施放方向
     public Vector3 Direction;
-    /// <summary>
-    /// 技能施放原点
-    /// </summary>
+    // 技能施放原点
     public Vector3 OriginPoint;
-    /// <summary>
-    /// 本次施放的武器来源
-    /// </summary>
+    // 本次施放的武器来源
     public WeaponDefinition SourceWeapon;
-    /// <summary>
-    /// 武器实例句柄
-    /// </summary>
+    // 武器实例句柄
     public int SourceInstanceId;
 
-    /// <summary>
-    /// 本次技能施放对应的运行时会话。
-    /// </summary>
+    // 本次技能施放对应的运行时会话
     public SkillCastSession Session;
 
     /// <summary>
-    /// 向技能施放器报告一个实际受到伤害的目标。
+    /// 向技能施放器报告一个实际受到伤害的目标
     /// </summary>
     public void ReportHit(GameObject target)
     {

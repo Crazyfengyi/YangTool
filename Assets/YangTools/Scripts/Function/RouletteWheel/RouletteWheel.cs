@@ -11,8 +11,11 @@ using UnityEngine.UI;
 /// </summary>
 public class RouletteWheel : MonoBehaviour
 {
+    // 转盘旋转最短秒数
     private const float MinSpinDuration = 0.0001f;
+    // 转盘旋转最小角度
     private const float MinSpinDegrees = 0.001f;
+    // 用于采样缓动曲线的时间间隔
     private const float EaseSampleTime = 0.001f;
 
     [Header("UI相关")]
@@ -21,39 +24,50 @@ public class RouletteWheel : MonoBehaviour
     [SerializeField] private RectTransform pointerRoot; // 指针根节点，用于指示中奖位置
     [SerializeField] private Button spinButton; // 旋转按钮，触发轮盘旋转
 
+    // 轮盘半径
     [Header("布局相关")]
     [SerializeField]
     [LabelText("轮盘半径")]
     private float radius = 160f;
+    // 起始角度偏移
     [SerializeField] 
     [LabelText("起始角度偏移")]
     private float startAngleOffset;
+    // 指针角度
     [SerializeField] 
     [LabelText("指针角度")]
     private float pointerAngle;
 
+    // 最小旋转圈数
     [Header("旋转相关参数")]
     [SerializeField]
     [LabelText("最小旋转圈数")]
     private int minFullTurns = 5;
+    // 额外随机旋转圈数
     [SerializeField] 
     [LabelText("额外随机旋转圈数")]
     private int extraRandomTurns = 2;
+    // 快速旋转持续时间
     [SerializeField] 
     [LabelText("快速旋转持续时间")]
     private float spinFastDuration = 1.2f;
+    // 慢速旋转持续时间
     [SerializeField] 
     [LabelText("慢速旋转持续时间")]
     private float spinSlowDuration = 2f;
+    // 控制轮盘停止前的超出角度
     [SerializeField]
     [LabelText("控制轮盘停止前的超出角度")]
     private float overshootDegrees = 4f;
+    // 是否允许在旋转中再次旋转
     [SerializeField]
     [LabelText("是否允许在旋转中再次旋转")]
     private bool allowSpinWhileSpinning;
+    // 快速旋转缓动效果
     [SerializeField] 
     [LabelText("快速旋转缓动效果")]
     private Ease fastEase = Ease.Linear;
+    // 慢速旋转缓动效果
     [SerializeField] 
     [LabelText("慢速旋转缓动效果")]
     private Ease slowEase = Ease.OutQuart;
@@ -75,6 +89,9 @@ public class RouletteWheel : MonoBehaviour
     public bool IsSpinning => isSpinning; // 是否正在旋转的只读属性，外部可查询旋转状态
     public IReadOnlyList<WheelItemData> Items => items; // 轮盘项目的只读列表，外部可访问项目数据
 
+    /// <summary>
+    /// 准备转盘根节点 指针角度与可选的旋转按钮
+    /// </summary>
     private void Awake()
     {
         if (wheelRoot == null)
@@ -94,10 +111,16 @@ public class RouletteWheel : MonoBehaviour
     {
         ApplyPointerAngle(); //在编辑器模式下应用指针角度
     }
+    /// <summary>
+    /// 停用时立即终止当前旋转
+    /// </summary>
     private void OnDisable()
     {
         StopImmediately(); // 当对象禁用时立即停止旋转
     }
+    /// <summary>
+    /// 销毁时立即终止当前旋转
+    /// </summary>
     private void OnDestroy()
     {
         StopImmediately(); // 当对象销毁时立即停止旋转
@@ -445,7 +468,7 @@ public class RouletteWheel : MonoBehaviour
         return NormalizeAngle(to - from); //计算正角度差
     }
     /// <summary>
-    /// 计算快速阶段角度，让两段动画交界处速度尽量连续
+    /// 计算快速阶段角度 让两段动画交界处速度尽量连续
     /// </summary>
     private float CalculateFastSpinDegrees(float totalSpinDegrees)
     {

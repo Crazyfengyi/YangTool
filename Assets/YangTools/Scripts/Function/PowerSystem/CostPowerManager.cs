@@ -8,10 +8,16 @@ using YangTools.Scripts.Core;
 using YangTools.Scripts.Core.ResourceManager;
 using YangTools.Scripts.Core.YangSaveData;
 
+/// <summary>
+/// 连接体力本地存档并提供消耗 增加与恢复入口
+/// </summary>
 public class CostPowerManager : MonoSingleton<CostPowerManager>
 {
     public bool IsInfiniteCostPower => YangSaveDataManager.Instance.DataCenter.GetLocalSave<Save_CostPower>().IsInfiniteCostPower;
 
+    /// <summary>
+    /// 初始化单例后检查存档中的体力恢复
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
@@ -27,7 +33,7 @@ public class CostPowerManager : MonoSingleton<CostPowerManager>
     }
 
     /// <summary>
-    /// 尝试消耗体力 
+    /// 尝试消耗体力
     /// </summary>
     public bool TryUseCostPower(int useCostPower)
     {
@@ -114,7 +120,7 @@ public class CostPowerManager : MonoSingleton<CostPowerManager>
     }
 
     /// <summary>
-    /// 通用关卡消耗体力和道具
+    /// 保留关卡扣费流程模板 当前费用字典为空并直接回调成功
     /// </summary>
     public void CommonLevelCostPower(Transform btnTransform, Action<bool> result)
     {
@@ -172,7 +178,7 @@ public class CostPowerManager : MonoSingleton<CostPowerManager>
     }
 
     /// <summary>
-    /// 显示飘分动画
+    /// 保留体力飘字入口 当前仅在数量为零时执行完成回调
     /// </summary>
     public async void ShowCostPowerAniTips(Transform parent, Vector2 pos, int num, Action overCallBack = null)
     {

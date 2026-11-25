@@ -19,114 +19,131 @@ public class HitFeelDemoController : MonoBehaviour
 {
     #region 引用与参数
 
+    // 演示玩家的技能施放器
     [Header("战斗引用")]
     /// <summary>玩家技能施放器</summary>
     [SerializeField] private SkillCaster playerCaster;
-    /// <summary>测试攻击技能</summary>
+    // 测试攻击技能
     [SerializeField] private SkillDefinition attackSkill;
-    /// <summary>测试敌人对象</summary>
+    // 测试敌人对象
     [SerializeField] private GameObject targetEnemy;
-    /// <summary>敌人生命组件</summary>
+    // 敌人生命组件
     [SerializeField] private SimpleHealth targetHealth;
-    /// <summary>敌人移动根节点</summary>
+    // 敌人移动根节点
     [SerializeField] private Transform targetTransform;
-    /// <summary>敌人显示组件</summary>
+    // 敌人显示组件
     [SerializeField] private Renderer targetRenderer;
-    /// <summary>测试场景摄像机</summary>
+    // 测试场景摄像机
     [SerializeField] private Camera demoCamera;
 
+    // 触发演示攻击的 UI 按钮
     [Header("界面")]
     /// <summary>测试攻击按钮</summary>
     [SerializeField] private Button attackButton;
-    /// <summary>测试状态文本</summary>
+    // 测试状态文本
     [SerializeField] private TextMeshProUGUI statusText;
-    /// <summary>敌人生命文本</summary>
+    // 敌人生命文本
     [SerializeField] private TextMeshProUGUI healthText;
-    /// <summary>命中顿帧开关</summary>
+    // 命中顿帧开关
     [SerializeField] private Toggle hitStopToggle;
-    /// <summary>命中音效开关</summary>
+    // 命中音效开关
     [SerializeField] private Toggle hitSoundToggle;
-    /// <summary>命中特效开关</summary>
+    // 命中特效开关
     [SerializeField] private Toggle hitVfxToggle;
-    /// <summary>敌人闪白开关</summary>
+    // 敌人闪白开关
     [SerializeField] private Toggle enemyFlashToggle;
-    /// <summary>敌人击退开关</summary>
+    // 敌人击退开关
     [SerializeField] private Toggle enemyKnockbackToggle;
-    /// <summary>镜头震动开关</summary>
+    // 镜头震动开关
     [SerializeField] private Toggle cameraShakeToggle;
-    /// <summary>弹体拖尾开关</summary>
+    // 弹体拖尾开关
     [SerializeField] private Toggle projectileTrailToggle;
-    /// <summary>局部径向模糊开关</summary>
+    // 局部径向模糊开关
     [SerializeField] private Toggle radialBlurToggle;
-    /// <summary>黑白效果开关</summary>
+    // 黑白效果开关
     [SerializeField] private Toggle grayscaleToggle;
-    /// <summary>反色与色彩失真开关</summary>
+    // 反色与色彩失真开关
     [SerializeField] private Toggle colorDistortionToggle;
-    /// <summary>冲击光圈开关</summary>
+    // 冲击光圈开关
     [SerializeField] private Toggle shockwaveToggle;
-    /// <summary>水墨效果开关</summary>
+    // 水墨效果开关
     [SerializeField] private Toggle inkEffectToggle;
 
+    // 命中时驱动的屏幕效果控制器
     [Header("命中效果组件")]
     /// <summary>主摄像机上的屏幕反馈组件</summary>
     [SerializeField] private HitFeelDemoScreenEffects screenEffects;
-    /// <summary>水墨命中特效预制体</summary>
+    // 水墨命中特效预制体
     [SerializeField] private HitFeelDemoInkEffect inkEffectPrefab;
 
+    // 命中位置生成的特效模板
     [Header("反馈资源")]
     /// <summary>命中特效预制体</summary>
     [SerializeField] private GameObject hitVfxPrefab;
-    /// <summary>命中音源</summary>
+    // 命中音源
     [SerializeField] private AudioSource hitAudioSource;
-    /// <summary>命中音效资源</summary>
+    // 命中音效资源
     [SerializeField] private AudioClip hitAudioClip;
 
+    // 命中停顿持续秒数
     [Header("反馈参数")]
     /// <summary>命中顿帧时长</summary>
     [SerializeField, Min(0f)] private float hitStopDuration = 0.06f;
-    /// <summary>命中特效清理时长</summary>
+    // 命中特效清理时长
     [SerializeField, Min(0.1f)] private float hitVfxLifetime = 2f;
-    /// <summary>敌人闪白时长</summary>
+    // 敌人闪白时长
     [SerializeField, Min(0f)] private float enemyFlashDuration = 0.12f;
-    /// <summary>敌人击退距离</summary>
+    // 敌人击退距离
     [SerializeField, Min(0f)] private float enemyKnockbackDistance = 0.25f;
-    /// <summary>敌人击退时长</summary>
+    // 敌人击退时长
     [SerializeField, Min(0f)] private float enemyKnockbackDuration = 0.12f;
-    /// <summary>镜头震动幅度</summary>
+    // 镜头震动幅度
     [SerializeField, Min(0f)] private float cameraShakeAmplitude = 0.08f;
-    /// <summary>镜头震动时长</summary>
+    // 镜头震动时长
     [SerializeField, Min(0f)] private float cameraShakeDuration = 0.12f;
 
+    // 当前演示使用的反馈强度预设
     [Header("强度预设")]
     /// <summary>选择用于下一次测试攻击的命中强度</summary>
     [SerializeField] private HitFeelDemoFeedbackPreset feedbackPreset = HitFeelDemoFeedbackPreset.Normal;
-    /// <summary>强打击顿帧时长</summary>
+    // 强打击顿帧时长
     [SerializeField, Min(0f)] private float strongHitStopDuration = 0.16f;
-    /// <summary>强打击命中特效缩放</summary>
+    // 强打击命中特效缩放
     [SerializeField, Min(0f)] private float strongHitVfxScale = 1.25f;
-    /// <summary>强打击音量倍率</summary>
+    // 强打击音量倍率
     [SerializeField, Min(0f)] private float strongHitSoundVolumeScale = 1.15f;
-    /// <summary>强打击敌人闪白时长</summary>
+    // 强打击敌人闪白时长
     [SerializeField, Min(0f)] private float strongEnemyFlashDuration = 0.16f;
-    /// <summary>强打击击退距离</summary>
+    // 强打击击退距离
     [SerializeField, Min(0f)] private float strongEnemyKnockbackDistance = 0.4f;
-    /// <summary>强打击击退时长</summary>
+    // 强打击击退时长
     [SerializeField, Min(0f)] private float strongEnemyKnockbackDuration = 0.16f;
-    /// <summary>强打击镜头震动幅度</summary>
+    // 强打击镜头震动幅度
     [SerializeField, Min(0f)] private float strongCameraShakeAmplitude = 0.15f;
-    /// <summary>强打击镜头震动时长</summary>
+    // 强打击镜头震动时长
     [SerializeField, Min(0f)] private float strongCameraShakeDuration = 0.16f;
 
+    // 用于目标闪色的材质实例
     private Material targetMaterial;
+    // 恢复闪色使用的原始颜色
     private Color targetOriginalColor;
+    // 恢复击退使用的目标初始位置
     private Vector3 targetOriginalPosition;
+    // 恢复相机抖动使用的初始局部位置
     private Vector3 cameraOriginalLocalPosition;
+    // 当前命中停顿协程
     private Coroutine hitStopRoutine;
+    // 当前目标闪色协程
     private Coroutine flashRoutine;
+    // 当前击退协程
     private Coroutine knockbackRoutine;
+    // 当前相机抖动协程
     private Coroutine cameraShakeRoutine;
+    // 停顿开始前的时间缩放
     private float previousTimeScale = 1f;
+    // 演示累计攻击次数
     private int attackCount;
+    // 演示累计实际命中次数
     private int hitCount;
 
     #endregion

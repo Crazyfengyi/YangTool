@@ -1,10 +1,11 @@
 using UnityEngine;
 
 /// <summary>
-/// 单次技能施放的运行时会话。
+/// 单次技能施放的运行时会话
 /// </summary>
 public sealed class SkillCastSession
 {
+    // 本次会话记录的实际命中次数
     private int hitCount;
 
     public int Id { get; }
@@ -17,6 +18,11 @@ public sealed class SkillCastSession
     /// </summary>
     public Vector3 LastHitPoint { get; private set; }
 
+    /// <summary>
+    /// 记录一次施放的会话标识和技能引用
+    /// </summary>
+    /// <param name="id">本次施法会话的标识</param>
+    /// <param name="skill">本次操作的技能定义</param>
     internal SkillCastSession(int id, SkillDefinition skill)
     {
         Id = id;
@@ -24,7 +30,7 @@ public sealed class SkillCastSession
     }
 
     /// <summary>
-    /// 记录本次施放的一次有效命中。
+    /// 记录本次施放的一次有效命中
     /// </summary>
     internal bool RegisterHit(GameObject target)
     {

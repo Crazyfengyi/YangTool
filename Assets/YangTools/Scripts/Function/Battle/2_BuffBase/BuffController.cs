@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Buff控制器类，用于管理游戏中的增益效果
-/// 继承自MonoBehaviour，可附加到游戏对象上
+/// Buff控制器类 用于管理游戏中的增益效果
+/// 继承自MonoBehaviour 可附加到游戏对象上
 /// </summary>
 [RequireComponent(typeof(CharacterStats))]
 public class BuffController : MonoBehaviour

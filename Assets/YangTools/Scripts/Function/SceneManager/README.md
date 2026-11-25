@@ -1,13 +1,27 @@
-# SceneManager
+# SceneManager 场景加载
 
-`GameSceneManager` 是基于 `MonoSingleton` 的场景切换管理器，提供异步加载进度回调和渐进式加载协程入口。
+## 功能与入口
+
+[GameSceneManager.cs](GameSceneManager.cs) 通过 Unity `SceneManager.LoadSceneAsync` 加载场景，并提供开始、进度和完成回调。`IsAutoSkip` 控制异步操作是否允许激活新场景。
+
+## 依赖与配置
+
+依赖项目 `MonoSingleton`。目标场景应加入当前构建的场景列表；本实现没有通过 Addressables 或 YooAsset 加载场景。先配置回调，再发起加载。
+
+## 最小接入
 
 ```csharp
-GameSceneManager.Instance.SetOnProgress(new LoadOnProgress
+YangTools.GameSceneManager.Instance.SetOnProgress(new YangTools.LoadOnProgress
 {
     OnLoading = progress => UpdateLoadingUI(progress)
 });
-GameSceneManager.Instance.Load("Level01");
+YangTools.GameSceneManager.Instance.Load("Level01");
 ```
 
-`Load` 默认使用 `LoadSceneMode.Single` 并自动跳过加载界面（具体跳转逻辑按配置）；需要保留当前场景时传入 `LoadSceneMode.Additive`。Build Settings/Addressable 场景配置必须包含目标场景。`SetOnProgress` 的回调需在发起加载前设置；界面对象销毁时应解除或替换旧回调。
+默认 Single 模式并自动激活，可传入 Additive 保留已有场景。关闭自动激活后需由调用方适时将 `IsAutoSkip` 设置为 true。
+
+## 示例与限制
+
+本目录没有演示场景。回调由管理器持有，界面结束使用时应解除或替换引用。`DoGentleSceneLoad` 会主动销毁当前场景根对象、卸载场景、回收未使用资源后加载新场景，调用方需准备好过渡流程。
+
+编辑器条件下的 `Loading(string sceneName)` 仅 yield 一帧，用于隐藏动画事件中的同名选项；实际加载使用无参 `Loading()` 协程，不要误用占位重载。

@@ -55,6 +55,10 @@ public class ProjectilePatternTests
     /// 读写私有配置以验证既有公开施放入口
     /// </summary>
     private static void Set(object value, string name, object field) => value.GetType().GetField(name, Flags).SetValue(value, field);
+    /// <summary>
+    /// 通过反射读取投射物测试所需的私有字段
+    /// </summary>
+    /// <param name="value">需要读取私有字段的测试对象</param>
     private static T Get<T>(object value, string name) => (T)value.GetType().GetField(name, Flags).GetValue(value);
 
     /// <summary>

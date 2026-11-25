@@ -12,17 +12,28 @@ using UnityEngine.UI;
 using TMPro;
 using YangTools;
 
+/// <summary>
+/// 演示血条目标注册 护盾设置与按键受伤
+/// </summary>
 public class TestHealthBarRegister : MonoBehaviour
 {
+	// 测试目标注册到的血条管理器
 	[SerializeField] private HealthBarManager manager;
+	// 示例操作的目标对象
 	private HealthBarTarget target;
 
+	/// <summary>
+	/// 取得同物体的血条目标并注册到配置的管理器
+	/// </summary>
 	private void Start()
 	{
 		target = GetComponent<HealthBarTarget>();
 		manager.RegisterTarget(target);
 	}
 
+	/// <summary>
+	/// 在目标与管理器仍有效时取消血条注册
+	/// </summary>
 	private void OnDestroy()
 	{
 		if (manager != null && target != null)
@@ -31,6 +42,9 @@ public class TestHealthBarRegister : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 按 A 设置测试护盾与血量 按 S 扣除测试生命
+	/// </summary>
 	public void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.A))

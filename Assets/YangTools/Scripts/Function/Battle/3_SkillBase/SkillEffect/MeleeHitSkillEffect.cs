@@ -2,16 +2,17 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-/**
- * 近战打击技能效果类
- */
+/// <summary>
+/// 近战打击技能效果类
+/// </summary>
+
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Melee Hit")]
 public class MeleeHitSkillEffect : SkillEffect
 {
-    /**
-     * 近战打击形状枚举
-     * 定义了近战攻击的范围形状：球形或长方体
-     */
+    /// <summary>
+    /// 近战打击形状枚举 定义了近战攻击的范围形状 球形或长方体
+    /// </summary>
+
     public enum MeleeHitShape
     {
         [LabelText("球形")]
@@ -38,10 +39,11 @@ public class MeleeHitSkillEffect : SkillEffect
     [LabelText("加成属性")]
     [SerializeField] private SkillPowerType powerType = SkillPowerType.Attack;  // 技能伤害类型
 
-    /**
-     * 执行技能效果
-     * @param context 技能上下文，包含技能执行所需的各种信息
-     */
+    /// <summary>
+    /// 执行技能效果
+    /// </summary>
+    /// <param name="context">技能上下文 包含技能执行所需的各种信息</param>
+
     public override void Execute(SkillContext context)
     {
         if (context == null)  // 检查上下文是否有效

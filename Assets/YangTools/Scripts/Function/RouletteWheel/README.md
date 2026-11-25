@@ -1,11 +1,21 @@
-# RouletteWheel
+# RouletteWheel UGUI 转盘
 
-该目录实现 UGUI 转盘及条目数据。`RouletteWheel` 负责设置奖项、指定索引/ID 旋转、随机旋转和立即停止；`WheelItemData` 包含条目 ID、名称、图标、权重和业务载荷。目录内 Prefab 用于展示转盘层级和视觉配置。
+## 功能与入口
+
+[RouletteWheel.cs](RouletteWheel.cs) 提供按索引、ID 或权重随机旋转以及立即停止。[WheelItemData.cs](WheelItemData.cs) 保存条目名称、图标、权重和业务载荷，[RouletteWheelItemUI.cs](RouletteWheelItemUI.cs) 负责布局与图文展示。
+
+## 依赖与配置
+
+依赖 UGUI、TMP、DOTween 和 Odin。配置转盘根节点、指针、条目容器与模板；可选按钮绑定在 Awake 完成。
+
+## 最小接入
 
 ```csharp
 wheel.SetItems(items);
 wheel.SpinToId(targetId);
-// 也可调用 SpinToIndex(index) 或 SpinRandom()
+// 也可使用 SpinToIndex(index) 或 SpinRandom()
 ```
 
-确保转盘 Prefab 的指针、条目容器、动画/回调引用完整；随机结果受条目权重配置影响。若在旋转期间重设数据或调用 `StopImmediately`，调用方需按组件回调约定处理结果，不要重复结算奖励。
+## 示例与限制
+
+[Demo.prefab](Demo.prefab) 与 [Are.prefab](Are.prefab) 为参考资源，[RouletteWheelDemo.cs](RouletteWheelDemo.cs) 负责初始化演示条目和记录结果。组件停用或销毁会停止旋转；运行中重设列表和提前停止时，业务应按实际回调处理，避免重复结算。动画表现不负责服务端奖励裁定或存档。

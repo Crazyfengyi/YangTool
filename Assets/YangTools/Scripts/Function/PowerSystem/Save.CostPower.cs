@@ -68,6 +68,7 @@ namespace GameMain
                                            LastInfiniteCostPowerStartTime <
                                            InfiniteCostPowerTime;
 
+        // 背包中表示体力的道具表标识
         private const int CostPowerTableId = 1001;
 
         [SerializeField] public float lookInfiniteCostPowerAdCount; //无限体力看广告次数
@@ -79,6 +80,10 @@ namespace GameMain
         public float LookInfiniteCostPowerAdCount => lookInfiniteCostPowerAdCount;
 
         
+        /// <summary>
+        /// 初始化体力上限 无限体力时长和恢复时间记录
+        /// </summary>
+        /// <param name="tableData">预留的表数据文本 当前默认初始化未读取此参数</param>
         public override void SetDefaultData(string tableData)
         {
             //BagMgr.Instance.AddBagProp(CostPowerTableId, ConfigMgr.Instance.Tables.GlobalConfigCategory.InitCostPower);
@@ -164,6 +169,11 @@ namespace GameMain
             return true;
         }
 
+        /// <summary>
+        /// 按背包中的体力道具数量判断是否足够
+        /// </summary>
+        /// <param name="value">本次设置的数值</param>
+        /// <returns>背包中的体力道具足够时返回 true</returns>
         public bool PowerIsEnough(int value)
         {
             float currentValue = BagMgr.Instance.GetBagPropCount(CostPowerTableId);

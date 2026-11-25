@@ -5,13 +5,14 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 怪物生成器类，用于在游戏中生成怪物，支持连续生成和波次生成两种模式
+/// 怪物生成器类 用于在游戏中生成怪物 支持连续生成和波次生成两种模式
 /// </summary>
 public class MonsterSpawner : MonoBehaviour
 {
     [Header("Common")] //通用参数
     [SerializeField] 
     private SpawnMode mode = SpawnMode.Waves; //生成模式：波次或连续
+    // 怪物生成点列表
     [SerializeField] 
     [LabelText("怪物生成点列表")]
     private List<MonsterSpawnPoint> spawnPoints = new();
@@ -53,6 +54,9 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 按自动启动设置开启生成流程
+    /// </summary>
     private void Start()
     {
         if (autoStart)

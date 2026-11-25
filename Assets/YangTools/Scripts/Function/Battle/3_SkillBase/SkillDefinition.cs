@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-/**
- * 技能定义类,存储和定义技能的基本属性和行为
- */
+/// <summary>
+/// 技能定义类 存储和定义技能的基本属性和行为
+/// </summary>
+
 [CreateAssetMenu(menuName = "Game/Skills/Skill Definition")]
 public class SkillDefinition : ScriptableObject
 {

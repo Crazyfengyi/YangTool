@@ -7,56 +7,45 @@ using UnityEngine;
 
 namespace YangTools
 {
+    /// <summary>
+    /// 定时烘焙蒙皮网格并绘制逐渐消退的运动残影
+    /// </summary>
     [RequireComponent(typeof(SkinnedMeshRenderer))]
     public class GhostTrail : MonoBehaviour
     {
-        /// <summary>
-        /// 是否打开残影拖尾
-        /// </summary>
+        // 是否打开残影拖尾
         public bool openGhostTrail = true;
-        /// <summary>
-        /// 间隔时间
-        /// </summary>
+        // 间隔时间
         [Range(0.05f, 0.5f)]
         public float intervalTime = 0.1f;
-        /// <summary>
-        /// 生命时间
-        /// </summary>
+        // 生命时间
         [Range(0.1f, 1.0f)]
         public float lifeTime = 0.5f;
-        /// <summary>
-        /// 隐藏时间
-        /// </summary>
+        // 隐藏时间
         [Range(0.1f, 1.0f)]
         public float fadeTime = 0.3f;
-        /// <summary>
-        /// 更新时间
-        /// </summary>
+        // 更新时间
         private float updateTime = 0.2f;
-        /// <summary>
-        /// 残影列表
-        /// </summary>
+        // 残影列表
         private List<GhostInfo> ghostList = new List<GhostInfo>();
-        /// <summary>
-        /// 渲染器
-        /// </summary>
+        // 渲染器
         private SkinnedMeshRenderer skinnedMesh;
-        /// <summary>
-        /// 是否使用残影材质
-        /// </summary>
+        // 是否使用残影材质
         public bool useGhostMaterial = false;
-        /// <summary>
-        /// 残影材质
-        /// </summary>
+        // 残影材质
         public Material ghostMaterial;
-        /// <summary>
-        /// 上一帧的位置
-        /// </summary>
+        // 上一帧的位置
         private Vector3 lastPos;
+        /// <summary>
+        /// 缓存需要生成残影的蒙皮网格渲染器
+        /// </summary>
         void Start()
         {
             skinnedMesh = GetComponent<SkinnedMeshRenderer>();
         }
+        /// <summary>
+        /// 按位移与采样间隔创建残影并更新现存残影的淡出绘制
+        /// </summary>
         void LateUpdate()
         {
             if ((lastPos - transform.position).sqrMagnitude > 0.01f * 0.01f)
@@ -152,6 +141,12 @@ namespace YangTools
         //透明度
         public float alpha = 1.0f;
 
+        /// <summary>
+        /// 记录残影网格 世界变换矩阵与材质
+        /// </summary>
+        /// <param name="_mesh">残影烘焙后的网格</param>
+        /// <param name="_matrix">残影生成时的世界变换矩阵</param>
+        /// <param name="_material">残影独立使用的材质</param>
         public GhostInfo(Mesh _mesh, Matrix4x4 _matrix, Material _material)
         {
             mesh = _mesh;

@@ -38,6 +38,13 @@ public class RouletteWheelItemUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 保存条目布局与图文视图的显式引用
+    /// </summary>
+    /// <param name="root">条目根矩形</param>
+    /// <param name="backgroundImage">条目背景图像</param>
+    /// <param name="iconImage">条目图标图像</param>
+    /// <param name="nameText">条目名称文本</param>
     public void BindReferences(RectTransform root, Image backgroundImage, Image iconImage, TextMeshProUGUI nameText)
     {
         this.root = root;
@@ -46,6 +53,11 @@ public class RouletteWheelItemUI : MonoBehaviour
         this.nameText = nameText;
     }
 
+    /// <summary>
+    /// 按顺时针角度和半径布局条目并将背景移至底层
+    /// </summary>
+    /// <param name="angle">从顶部顺时针量取的角度</param>
+    /// <param name="radius">条目中心到转盘中心的距离</param>
     public void SetLayout(
         float angle,
         float radius)
@@ -85,6 +97,9 @@ public class RouletteWheelItemUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 取得配置的根矩形 未配置时使用当前矩形
+    /// </summary>
     private RectTransform GetRoot()
     {
         if (root == null)
@@ -95,6 +110,10 @@ public class RouletteWheelItemUI : MonoBehaviour
         return root;
     }
 
+    /// <summary>
+    /// 将从顶部顺时针量取的角度转换为平面单位方向
+    /// </summary>
+    /// <param name="angle">从顶部顺时针量取的角度</param>
     private static Vector2 DirectionFromTopClockwise(float angle)
     {
         float radians = angle * Mathf.Deg2Rad;

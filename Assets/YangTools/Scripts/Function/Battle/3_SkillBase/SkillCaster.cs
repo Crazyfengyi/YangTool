@@ -5,46 +5,73 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 技能施放器，负责处理技能学习、冷却、资源和施放时机。
+/// 技能施放器 负责处理技能学习 冷却 资源和施放时机
 /// </summary>
 public class SkillCaster : MonoBehaviour
 {
     public IReadOnlyList<SkillDefinition> Skills => skills;
 
+    // 技能列表
     [SerializeField]
     [LabelText("技能列表")]
     private List<SkillDefinition> skills = new List<SkillDefinition>();
 
+    // 施法时校验与扣除的资源组件
     [SerializeField] private SkillResource resource;
+    // 施法世界坐标起点
     [SerializeField] private Transform castOrigin;
 
+    // 技能开始施放时通知
     public event Action<SkillDefinition> OnCastStarted;
+    // 技能效果执行完成时通知
     public event Action<SkillDefinition> OnCastCompleted;
+    // 技能请求校验失败时通知
     public event Action<SkillDefinition, SkillCastFailReason> OnCastFailed;
+    // 运行时施法会话创建时通知
     public event Action<SkillCastSession> OnCastSessionStarted;
+    // 运行时施法会话完成时通知
     public event Action<SkillCastSession> OnCastSessionCompleted;
+    // 技能效果上报实际命中时通知
     public event Action<SkillCastSession, GameObject> OnSkillHit;
 
+    // 按技能记录基于游戏时间的冷却结束时刻
     private readonly Dictionary<SkillDefinition, float> cooldownEndTimes = new Dictionary<SkillDefinition, float>();
+    // 当前施法协程句柄
     private Coroutine castingRoutine;
+    // 等待动画事件生效的技能请求
     private SkillCastRequest pendingAnimationEventRequest;
+    // 本次等待是否已收到动画事件
     private bool receivedAnimationEvent;
+    // 当前尚未完成的施法会话
     private SkillCastSession activeSession;
+    // 为每次施法分配递增会话标识
     private int castSessionSeed;
 
     public bool IsCasting => activeSession != null && !activeSession.IsCompleted;
 
+    /// <summary>
+    /// 在编辑器添加或重置组件时取得资源组件和默认施法起点
+    /// </summary>
     private void Reset()
     {
         resource = GetComponent<SkillResource>();
         castOrigin = transform;
     }
 
+    /// <summary>
+    /// 判断技能是否存在于已学习列表
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <returns>已学习时返回 true</returns>
     public bool KnowsSkill(SkillDefinition skill)
     {
         return skill != null && skills.Contains(skill);
     }
 
+    /// <summary>
+    /// 将有效且未重复的技能加入已学习列表
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
     public void AddSkill(SkillDefinition skill)
     {
         if (skill != null && !skills.Contains(skill))
@@ -53,6 +80,10 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 从已学习列表移除指定技能
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
     public void RemoveSkill(SkillDefinition skill)
     {
         if (skill != null)
@@ -61,6 +92,12 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 校验技能请求并尝试开始一次施放
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="target">目标对象</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCast(SkillDefinition skill, GameObject target = null)
     {
         var origin = GetOriginPosition();
@@ -78,6 +115,12 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 构造指定世界坐标的技能请求并尝试施放
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="point">世界空间目标坐标</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCastAtPoint(SkillDefinition skill, Vector3 point)
     {
         return TryCast(new SkillCastRequest
@@ -89,6 +132,12 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 构造指定方向的技能请求并尝试施放
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="direction">世界空间方向</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCastInDirection(SkillDefinition skill, Vector3 direction)
     {
         Vector3 castDirection = SafeDirection(direction);
@@ -101,6 +150,14 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 携带武器与实例标识向目标施放技能
+    /// </summary>
+    /// <param name="weapon">发起施法的武器定义</param>
+    /// <param name="sourceInstanceId">来源武器的运行时实例标识</param>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="target">目标对象</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCastFromWeapon(WeaponDefinition weapon, int sourceInstanceId, SkillDefinition skill, GameObject target = null)
     {
         var origin = GetOriginPosition();
@@ -115,6 +172,14 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 携带武器与实例标识向世界坐标施放技能
+    /// </summary>
+    /// <param name="weapon">发起施法的武器定义</param>
+    /// <param name="sourceInstanceId">来源武器的运行时实例标识</param>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="point">世界空间目标坐标</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCastFromWeaponAtPoint(WeaponDefinition weapon, int sourceInstanceId, SkillDefinition skill, Vector3 point)
     {
         return TryCast(new SkillCastRequest
@@ -127,6 +192,14 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 携带武器与实例标识沿指定方向施放技能
+    /// </summary>
+    /// <param name="weapon">发起施法的武器定义</param>
+    /// <param name="sourceInstanceId">来源武器的运行时实例标识</param>
+    /// <param name="skill">本次操作的技能定义</param>
+    /// <param name="direction">世界空间方向</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCastFromWeaponInDirection(WeaponDefinition weapon, int sourceInstanceId, SkillDefinition skill, Vector3 direction)
     {
         Vector3 castDirection = SafeDirection(direction);
@@ -140,13 +213,18 @@ public class SkillCaster : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 校验技能请求并尝试开始一次施放
+    /// </summary>
+    /// <param name="request">包含技能来源与瞄准信息的请求</param>
+    /// <returns>请求被接受时返回 true 不代表已经命中目标</returns>
     public bool TryCast(SkillCastRequest request)
     {
         return TryCast(request, out _);
     }
 
     /// <summary>
-    /// 尝试施放技能，并返回本次施放的运行时会话。
+    /// 尝试施放技能 并返回本次施放的运行时会话
     /// </summary>
     public bool TryCast(SkillCastRequest request, out SkillCastSession session)
     {
@@ -172,6 +250,10 @@ public class SkillCaster : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 取得技能剩余冷却秒数 未处于冷却时返回零
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
     public float GetCooldownRemaining(SkillDefinition skill)
     {
         if (skill == null || !cooldownEndTimes.TryGetValue(skill, out float endTime))
@@ -182,11 +264,17 @@ public class SkillCaster : MonoBehaviour
         return Mathf.Max(0f, endTime - Time.time);
     }
 
+    /// <summary>
+    /// 取得配置的施法起点 缺失时使用角色位置
+    /// </summary>
     public Vector3 GetOriginPosition()
     {
         return castOrigin != null ? castOrigin.position : transform.position;
     }
 
+    /// <summary>
+    /// 标记收到待处理施法请求的动画事件
+    /// </summary>
     public void TriggerSkillEffect()
     {
         if (pendingAnimationEventRequest != null)
@@ -195,13 +283,16 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 提供可供动画事件调用的技能生效入口
+    /// </summary>
     public void AnimationEvent_TriggerSkillEffect()
     {
         TriggerSkillEffect();
     }
 
     /// <summary>
-    /// 处理伤害效果上报的实际命中。
+    /// 处理伤害效果上报的实际命中
     /// </summary>
     internal void ReportSkillHit(SkillContext context, GameObject target)
     {
@@ -220,6 +311,11 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 等待施法时间或动画事件后执行效果并结束施法会话
+    /// </summary>
+    /// <param name="request">包含技能来源与瞄准信息的请求</param>
+    /// <param name="session">本次施法的运行时会话</param>
     private IEnumerator CastRoutine(SkillCastRequest request, SkillCastSession session)
     {
         SkillDefinition skill = request.Skill;
@@ -262,6 +358,11 @@ public class SkillCaster : MonoBehaviour
         castingRoutine = null;
     }
 
+    /// <summary>
+    /// 为本次请求创建技能上下文并依次执行配置的效果
+    /// </summary>
+    /// <param name="request">包含技能来源与瞄准信息的请求</param>
+    /// <param name="session">本次施法的运行时会话</param>
     private void ExecuteSkill(SkillCastRequest request, SkillCastSession session)
     {
         var context = new SkillContext
@@ -287,6 +388,10 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 按当前游戏时间记录技能冷却结束时刻
+    /// </summary>
+    /// <param name="skill">本次操作的技能定义</param>
     private void StartCooldown(SkillDefinition skill)
     {
         if (skill != null && skill.Cooldown > 0f)
@@ -295,6 +400,10 @@ public class SkillCaster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 依次校验技能学习状态 施法占用 冷却 资源与目标
+    /// </summary>
+    /// <param name="request">包含技能来源与瞄准信息的请求</param>
     private SkillCastFailReason CanCast(SkillCastRequest request)
     {
         if (request == null || request.Skill == null)
@@ -326,6 +435,11 @@ public class SkillCaster : MonoBehaviour
         return IsTargetValid(request) ? SkillCastFailReason.None : SkillCastFailReason.InvalidTarget;
     }
 
+    /// <summary>
+    /// 根据技能目标类型校验目标对象 坐标或方向
+    /// </summary>
+    /// <param name="request">包含技能来源与瞄准信息的请求</param>
+    /// <returns>满足目标类型要求时返回 true</returns>
     private bool IsTargetValid(SkillCastRequest request)
     {
         SkillDefinition skill = request.Skill;
@@ -347,6 +461,12 @@ public class SkillCaster : MonoBehaviour
         return request.Direction.sqrMagnitude > 0f;
     }
 
+    /// <summary>
+    /// 判断世界坐标是否在施法距离内 非正距离表示不限制
+    /// </summary>
+    /// <param name="point">世界空间目标坐标</param>
+    /// <param name="range">施法距离 非正值表示不限距离</param>
+    /// <returns>在范围内或不限制距离时返回 true</returns>
     private bool IsWithinRange(Vector3 point, float range)
     {
         if (range <= 0f)
@@ -357,11 +477,18 @@ public class SkillCaster : MonoBehaviour
         return Vector3.Distance(GetOriginPosition(), point) <= range;
     }
 
+    /// <summary>
+    /// 归一化非零方向 零向量回退到角色前方
+    /// </summary>
+    /// <param name="direction">世界空间方向</param>
     private Vector3 SafeDirection(Vector3 direction)
     {
         return direction.sqrMagnitude > 0f ? direction.normalized : transform.forward;
     }
 
+    /// <summary>
+    /// 停止施法协程并清理当前会话与动画事件等待状态
+    /// </summary>
     private void OnDisable()
     {
         if (castingRoutine != null)
@@ -381,6 +508,9 @@ public class SkillCaster : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    /// <summary>
+    /// 在编辑器中使用列表首个技能向首个生命组件目标测试施放
+    /// </summary>
     [Button("测试技能")]
     public void UseSkill()
     {

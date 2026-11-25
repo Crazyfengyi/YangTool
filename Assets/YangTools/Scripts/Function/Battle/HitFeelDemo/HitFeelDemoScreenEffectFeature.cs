@@ -9,9 +9,12 @@ using UnityEngine.Rendering.Universal;
 /// </summary>
 public sealed class HitFeelDemoScreenEffectFeature : ScriptableRendererFeature
 {
+    // 屏幕反馈使用的着色器
     [SerializeField] private Shader screenEffectShader;
 
+    // 渲染特性创建的屏幕效果材质
     private Material effectMaterial;
+    // 注入渲染管线的屏幕效果通道
     private HitFeelDemoScreenEffectPass effectPass;
 
     /// <summary>
@@ -56,21 +59,30 @@ public sealed class HitFeelDemoScreenEffectFeature : ScriptableRendererFeature
         effectPass = null;
     }
 
-    /// <summary>执行一次 Demo 局部屏幕效果合成</summary>
+    /// <summary>
+    /// 执行一次 Demo 局部屏幕效果合成
+    /// </summary>
     private sealed class HitFeelDemoScreenEffectPass : ScriptableRenderPass
     {
+        // 绘制时传入的材质属性块
         private readonly MaterialPropertyBlock properties = new MaterialPropertyBlock();
+        // 当前绘制使用的材质
         private Material material;
+        // 当前相机的屏幕反馈参数来源
         private HitFeelDemoScreenEffects effects;
 
-        /// <summary>设置本帧使用的材质与相机效果状态</summary>
+        /// <summary>
+        /// 设置本帧使用的材质与相机效果状态
+        /// </summary>
         public void Setup(Material sourceMaterial, HitFeelDemoScreenEffects sourceEffects)
         {
             material = sourceMaterial;
             effects = sourceEffects;
         }
 
-        /// <summary>将来源画面经过 Demo 屏幕效果后写回相机颜色缓冲</summary>
+        /// <summary>
+        /// 将来源画面经过 Demo 屏幕效果后写回相机颜色缓冲
+        /// </summary>
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
             if (material == null || effects == null || !effects.IsPlaying)

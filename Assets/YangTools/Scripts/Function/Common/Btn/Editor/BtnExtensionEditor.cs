@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
  
+/// <summary>
+/// 绘制按钮扩展组件的条件化事件配置面板
+/// </summary>
 [CustomEditor(typeof(BtnExtension))]
 public class BtnExtensionEditor : UnityEditor.UI.ButtonEditor    
 {
+    /// <summary>
+    /// 根据交互开关绘制相应的按钮参数和事件
+    /// </summary>
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();

@@ -8,9 +8,7 @@ namespace YangTools
     public class ParabolaPath
     {
         #region 字段
-        /// <summary>
-        /// 是否夹紧起点和终点
-        /// </summary>
+        // 是否夹紧起点和终点
         public bool IsClampStartEnd;
 
         private float mHeight;//高度
@@ -95,8 +93,8 @@ namespace YangTools
         #endregion
 
         #region 方法
-        /// <summary> 
-        /// 初始化抛物线运动轨迹 
+        /// <summary>
+        /// 初始化抛物线运动轨迹
         /// </summary>
         /// <param name="start">起点</param>
         /// <param name="end">终点</param>
@@ -107,7 +105,7 @@ namespace YangTools
             Init(start, end, height, gravity);
         }
         /// <summary>
-        /// 初始化抛物线运动轨迹 
+        /// 初始化抛物线运动轨迹
         /// </summary>
         /// <param name="start">起点</param>
         /// <param name="end">终点</param>
@@ -145,8 +143,8 @@ namespace YangTools
             mPosition = Start;
             mTime = 0;
         }
-        /// <summary> 
-        /// 获取某个时间点的位置 
+        /// <summary>
+        /// 获取某个时间点的位置
         /// </summary>
         public Vector3 GetPosition(float time)
         {
@@ -155,8 +153,8 @@ namespace YangTools
             float dY = 0.5f * mGravity * time * time;//自由落体运动---h=1/2*g*t*t
             return Start + mVelocityStart * time + new Vector3(0, dY, 0);
         }
-        /// <summary> 
-        /// 获取某个时间点的速度 
+        /// <summary>
+        /// 读取时间点速度 当前实现会在非零时刻重复叠加初始竖直速度
         /// </summary>
         public Vector3 GetVelocity(float time)
         {
@@ -165,7 +163,7 @@ namespace YangTools
             return mVelocityStart + new Vector3(0, mVelocityStart.y + mGravity * time, 0);
         }
         /// <summary>
-        /// 获得抛物线位置数组
+        /// 离散采样抛物线位置 当前数组长度与循环上界不一致会导致越界
         /// </summary>
         public Vector3[] GetParabolaList(int segmentNum)
         {

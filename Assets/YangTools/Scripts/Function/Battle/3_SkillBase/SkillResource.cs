@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 技能资源类,管理技能所需的资源值
+/// 技能资源类 管理技能所需的资源值
 /// </summary>
 public class SkillResource : MonoBehaviour
 {

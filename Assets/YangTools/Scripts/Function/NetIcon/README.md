@@ -1,9 +1,19 @@
-# NetIcon
+# NetIcon 网络图片
 
-`NetIcon` 要求同一物体上存在 UGUI `Image`，通过 `LoadImageByWeb(string url)` 下载网络图片并创建 Sprite 显示到图像。
+## 功能与入口
+
+[NetIcon.cs](NetIcon.cs) 下载 URL 指向的图片，为 UGUI Image 创建并显示 Sprite。
+
+## 依赖与配置
+
+同物体需要 `Image`，联网使用 UnityWebRequest。调用方传入可访问的图片地址，并确保目标平台网络权限和证书配置可用。
+
+## 最小接入
 
 ```csharp
 GetComponent<NetIcon>().LoadImageByWeb(imageUrl);
 ```
 
-新的请求会停止旧请求；下载失败会记录警告；组件销毁时会释放自身创建的纹理/Sprite。调用方需提供可访问的图片 URL，并考虑网络失败/超时。移动平台需确认网络权限、HTTPS/TLS 和证书策略；不要将不可信 URL 用于敏感流程。
+## 示例与限制
+
+本目录没有演示场景。新请求会停止旧请求，失败记录警告；组件销毁时释放自己创建的纹理与 Sprite。未提供跨组件共享缓存或业务层重试策略。

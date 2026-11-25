@@ -1,17 +1,30 @@
-# Common
+# Common 通用组件
 
-本目录收纳 UI 与特效可复用小组件、按钮扩展及翻译辅助。根目录含 `BaiduTranslate`（百度翻译 HTTP 请求封装，需自行提供有效 App ID/密钥并考虑网络/平台限制）、特效生命周期脚本、网格残影 `GhostTrail`、文字走马灯脚本及“走马灯效果”示例 Prefab。部分历史类名使用 `Destory` 拼写，引用时以源码类型名为准。
+## 功能与入口
 
-## 按钮子模块
+本目录收纳按钮交互、特效生命周期、残影、走马灯与翻译辅助。
 
-- `Btn`：`BtnExtension` 扩展 Unity Button 的双击/按压交互，`TemplateBtn` 提供点击、双击、长按回调，`YangToggleGroup` 管理带索引回调的 Toggle 集合；`Editor/BtnExtensionEditor` 提供对应 Inspector 编辑扩展。
-- `CommonBtn`：`UICustomButton`、`UICustomSlider`、`UICustomToggle` 为通用 UI 控件封装。
+| 入口 | 内容 |
+| --- | --- |
+| [Btn](Btn) | BtnExtension 单击 双击 长按 TemplateBtn 外观切换 YangToggleGroup 索引选择 |
+| [CommonBtn](CommonBtn) | UICustomButton UICustomSlider UICustomToggle |
+| [EffectAutoDestory.cs](EffectAutoDestory.cs) | 非循环粒子播放完成后的物体销毁 |
+| [LoopEffectDestory.cs](LoopEffectDestory.cs) | 停止循环粒子后等待消散并销毁 |
+| [WaitLineDestory.cs](WaitLineDestory.cs) | 等待拖尾消散后销毁 |
+| [GhostTrail.cs](GhostTrail.cs) | 蒙皮网格采样与残影绘制 |
+| [TextWalkingLantern.cs](TextWalkingLantern.cs) | 旧版 UGUI Text 走马灯 |
+| [BaiduTranslate.cs](BaiduTranslate.cs) | 百度翻译请求与响应数据封装 |
 
-常见接入是在 UI 物体上添加对应 Button/Toggle 及扩展组件，并在 Inspector 或代码中绑定事件：
+## 依赖与配置
 
-```csharp
-templateBtn.SetClick(() => OpenPanel(), () => ClosePanel());
-toggleGroup.SetAction(index => SelectTab(index));
-```
+UI 依赖 UGUI 和 EventSystem，部分组件使用 DOTween、TMP、Odin 及项目音频服务。特效依赖粒子或 TrailRenderer；残影要求 SkinnedMeshRenderer 以及支持透明度属性的材质。翻译请求依赖 LitJson 和网络环境，调用方需要配置自己的 App ID 与密钥。
 
-`BtnExtensionEditor` 只影响编辑器 Inspector，不是运行时组件。特效销毁组件通常由 Prefab 生命周期驱动；需要循环播放的效果应显式调用其停止/销毁入口，并避免重复创建协程或残影对象。
+## 最小接入
+
+在按钮上配置 `BtnExtension` 的单击、双击或长按开关与事件。`TemplateBtn` 需要同时配置两种外观按钮；组选择可通过 `toggleGroup.SetAction(index => SelectTab(index))` 接入业务。
+
+循环特效不再使用时调用 `LoopEffectDestroy.DestoryLoopEffect()`，让现存粒子消散后再销毁。历史文件名使用 `Destory` 拼写，引用类与方法时以源码为准。
+
+## 示例与限制
+
+[走马灯效果.prefab](走马灯效果.prefab) 为走马灯参考。`Btn/Editor` 仅负责编辑器绘制。`TemplateBtn.SetClick` 当前和 `SetDoubleClick` 一样写入双击事件，接入单击时应检查实际绑定；`UICustomToggle` 的点击回调不会自动反转 `isOn`。自动销毁特效不处理循环粒子的正常结束逻辑。百度翻译封装使用同步 HTTP 请求，不要据此假定已具备异步、重试或跨平台联网保障。

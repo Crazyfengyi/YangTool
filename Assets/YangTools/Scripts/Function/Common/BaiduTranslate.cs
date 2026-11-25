@@ -16,6 +16,10 @@ namespace YangTools.Translate
     /// </summary>
     public class BaiduTranslate
     {
+        /// <summary>
+        /// 计算 UTF8 文本的 MD5 小写十六进制摘要用于请求签名
+        /// </summary>
+        /// <param name="str">待处理的原始文本</param>
         private string EncryptString(string str)
         {
             MD5 md5 = MD5.Create();
@@ -33,13 +37,9 @@ namespace YangTools.Translate
             // 返回加密的字符串
             return sb.ToString();
         }
-        /// <summary>
-        /// AppID
-        /// </summary>
+        // AppID
         public string appID;
-        /// <summary>
-        /// 密钥
-        /// </summary>
+        // 密钥
         public string secretkey;
         /// <summary>
         /// 构造函数
@@ -93,20 +93,17 @@ namespace YangTools.Translate
     }
 }
 
+/// <summary>
+/// 承接百度翻译响应中的源文本与翻译结果
+/// </summary>
 [Serializable]
 public class TransObj
 {
-    /// <summary>
-    /// 原语言
-    /// </summary>
+    // 原语言
     public string from;
-    /// <summary>
-    /// 目标语言
-    /// </summary>
+    // 目标语言
     public string to;
-    /// <summary>
-    /// 翻译结果
-    /// </summary>
+    // 翻译结果
     public List<TransResult> trans_result;
 }
 
@@ -116,13 +113,9 @@ public class TransObj
 [Serializable]
 public class TransResult
 {
-    /// <summary>
-    /// 原文
-    /// </summary>
+    // 原文
     public string src;
-    /// <summary>
-    /// 译文
-    /// </summary>
+    // 译文
     public string dst;
 }
 

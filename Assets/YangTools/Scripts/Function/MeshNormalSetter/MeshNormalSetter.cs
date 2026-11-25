@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 将顶点法线与从指定中心指向顶点的径向法线混合
+/// </summary>
 [RequireComponent(typeof(MeshFilter))]
 public class MeshNormalSetter : MonoBehaviour
 {
@@ -18,6 +21,9 @@ public class MeshNormalSetter : MonoBehaviour
     [Range(0, 1)]
     public float combineRate = 1f;
 
+    /// <summary>
+    /// 复制源网格后混合法线并替换 MeshFilter 的网格引用
+    /// </summary>
     [ContextMenu("Set Normals")]
     public void SetNormals()
     {

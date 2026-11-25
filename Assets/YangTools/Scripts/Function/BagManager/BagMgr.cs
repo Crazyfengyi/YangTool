@@ -10,11 +10,18 @@ using YangTools.Scripts.Core.YangSaveData;
 
 namespace GameMain
 {
+    /// <summary>
+    /// 管理道具数量缓存并同步到本地背包存档
+    /// </summary>
     public class BagMgr : MonoSingleton<BagMgr>
     {
+        // 按道具标识缓存运行时数量
         private readonly Dictionary<int, ItemData_BagProp> _bagPropDict = new();
         public List<ItemData_BagProp> AllBagPropList => _bagPropDict.Values.ToList();
 
+        /// <summary>
+        /// 初始化单例并从存档构建道具缓存
+        /// </summary>
         protected override void Awake()
         {
             base.Awake();
@@ -39,11 +46,19 @@ namespace GameMain
             }
         }
 
+        /// <summary>
+        /// 查询缓存中的道具数据 未持有时返回空
+        /// </summary>
+        /// <param name="propId">道具标识</param>
         public ItemData_BagProp TryGetBagProp(int propId)
         {
             return _bagPropDict.GetValueOrDefault(propId);
         }
 
+        /// <summary>
+        /// 查询道具数量 未持有时返回零
+        /// </summary>
+        /// <param name="propId">道具标识</param>
         public float GetBagPropCount(int propId)
         {
             var bagProp = TryGetBagProp(propId);
@@ -51,6 +66,11 @@ namespace GameMain
             return bagProp?.PropCount ?? 0;
         }
 
+        /// <summary>
+        /// 增加道具数量并按配置同步到本地存档
+        /// </summary>
+        /// <param name="bagProps">需要批量增加的道具数据</param>
+        /// <param name="saveToLocal">是否同步更新本地存档</param>
         public void AddBagProp(List<ItemData_BagProp> bagProps, bool saveToLocal = true)
         {
             for (int i = 0; i < bagProps.Count; i++)
@@ -59,6 +79,12 @@ namespace GameMain
             }
         }
 
+        /// <summary>
+        /// 设置道具的绝对数量并按配置保存
+        /// </summary>
+        /// <param name="bagPropId">道具标识</param>
+        /// <param name="addCount">设置后的绝对数量 此参数不表示增量</param>
+        /// <param name="saveToLocal">是否同步更新本地存档</param>
         public void SetBagProp(int bagPropId, float addCount, bool saveToLocal)
         {
             ItemData_BagProp bagPropItem = TryGetBagProp(bagPropId);
@@ -173,6 +199,11 @@ namespace GameMain
             return true;
         }
 
+        /// <summary>
+        /// 数量足够时扣除道具并按配置保存
+        /// </summary>
+        /// <param name="bagPropId">道具标识</param>
+        /// <param name="removeCount">扣除的道具数量</param>
         public void RemoveBagProp(int bagPropId, float removeCount)
         {
             var bagPropItem = TryGetBagProp(bagPropId);
@@ -203,6 +234,9 @@ namespace GameMain
             // temp.SendEvent();
         }
 
+        /// <summary>
+        /// 释放单例并清空道具缓存
+        /// </summary>
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -215,8 +249,13 @@ namespace GameMain
     /// </summary>
     public class Save_BagProp : SaveDataBase
     {
+        // 参与本地存档的道具记录列表
         public List<SaveBagPropItem> savePropList;
 
+        /// <summary>
+        /// 创建空的背包存档列表
+        /// </summary>
+        /// <param name="tableData">预留的表数据文本 当前默认初始化未读取此参数</param>
         public override void SetDefaultData(string tableData)
         {
             savePropList = new List<SaveBagPropItem>();
@@ -226,6 +265,10 @@ namespace GameMain
             // }
         }
 
+        /// <summary>
+        /// 取得道具存档项 不存在时创建零数量记录
+        /// </summary>
+        /// <param name="propId">道具标识</param>
         private SaveBagPropItem SafeGetBagPropItem(int propId)
         {
             for (int i = 0; i < savePropList.Count; i++)
@@ -246,6 +289,10 @@ namespace GameMain
             return newBagProp;
         }
 
+        /// <summary>
+        /// 移除道具存档记录或扣减数量并清理非正数记录
+        /// </summary>
+        /// <param name="propId">道具标识</param>
         private void RemoveBagPropItem(int propId)
         {
             for (int i = 0; i < savePropList.Count; i++)
@@ -258,18 +305,33 @@ namespace GameMain
             }
         }
 
+        /// <summary>
+        /// 累加指定道具的存档数量
+        /// </summary>
+        /// <param name="propId">道具标识</param>
+        /// <param name="addCount">增加的道具数量</param>
         public void AddBagPropItem(int propId, float addCount)
         {
             var bagPropItem = SafeGetBagPropItem(propId);
             bagPropItem.bagPropCount += addCount;
         }
 
+        /// <summary>
+        /// 设置指定道具的存档数量
+        /// </summary>
+        /// <param name="propId">道具标识</param>
+        /// <param name="propCount">本次使用的道具数量</param>
         public void SetBagPropItem(int propId, float propCount)
         {
             var bagPropItem = SafeGetBagPropItem(propId);
             bagPropItem.bagPropCount = propCount;
         }
 
+        /// <summary>
+        /// 移除道具存档记录或扣减数量并清理非正数记录
+        /// </summary>
+        /// <param name="propId">道具标识</param>
+        /// <param name="removeCount">扣除的道具数量</param>
         public void RemoveBagPropItem(int propId, float removeCount)
         {
             var bagPropItem = SafeGetBagPropItem(propId);
@@ -287,12 +349,20 @@ namespace GameMain
         }
     }
 
+    /// <summary>
+    /// 保存单个道具的标识和数量
+    /// </summary>
     [System.Serializable]
     public class SaveBagPropItem
     {
+        // 道具标识
         public int bagPropId;
+        // 道具数量
         public float bagPropCount;
 
+        /// <summary>
+        /// 生成包含道具标识与数量的调试文本
+        /// </summary>
         public override string ToString()
         {
             return $"背包,道具Id:{bagPropId} 道具数量:{bagPropCount}";

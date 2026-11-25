@@ -1,5 +1,17 @@
-# TextAdaptiveImage
+# TextAdaptiveImage 文本布局最大宽度
 
-本组件依据 TextMeshPro 文本首选宽度调整布局尺寸，适用于文本长度变化的 UI 标签。组件要求同一物体上有 `TextMeshProUGUI` 和 `LayoutElement`，并通过 `maxWidth` 限制最大宽度。
+## 功能与入口
 
-在 Inspector 设置 `maxWidth` 后更新 TMP 文本；组件会读取首选尺寸并更新布局。布局父级应使用兼容的 LayoutGroup/ContentSizeFitter 配置，避免多个布局控制器互相争写尺寸。超长文本的换行与高度行为受 TMP 宽度、换行设置和父布局影响。
+[TextAdaptiveImage.cs](TextAdaptiveImage.cs) 在 TMP 文本顶点变化后检查首选宽度，达到上限时将 `LayoutElement.preferredWidth` 设为 `maxWidth`，否则设为 -1 交回布局系统。
+
+## 依赖与配置
+
+同物体需要 `TextMeshProUGUI` 和 `LayoutElement`。父级应使用能读取布局元素的 LayoutGroup 或相关布局结构，Inspector 配置正数 `maxWidth`。
+
+## 最小接入
+
+在目标 TMP 物体上添加组件和 LayoutElement，设置最大宽度后更新文本即可。该脚本通过文本顶点变化回调刷新，不需要额外业务调用。
+
+## 示例与限制
+
+[Canvas.prefab](Canvas.prefab) 为布局参考。组件限制的是布局首选宽度，不直接修改字体大小，也不直接缩放背景图片。换行、高度和背景自适应仍取决于 TMP、父级布局与 ContentSizeFitter 配置。

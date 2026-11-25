@@ -13,26 +13,22 @@ namespace YangTools
     [RequireComponent(typeof(Image), typeof(RectMask2D))]
     public class TextWalkingLantern : MonoBehaviour
     {
-        /// <summary>
-        /// 遮罩框
-        /// </summary>
+        // 遮罩框
         private Image maskImage;
-        /// <summary>
-        /// Text组件
-        /// </summary>
+        // Text组件
         [FormerlySerializedAs("m_Text")]
         public Text mText;
-        /// <summary>
-        /// 开始位置
-        /// </summary>
+        // 开始位置
         private float startPos = 0;
-        /// <summary>
-        /// 结束位置
-        /// </summary>
+        // 结束位置
         private float moveEndPos = 0;
 
+        // 走马灯初始文本对齐方式
         private DefaultShow defaultShow = DefaultShow.None;
 
+        /// <summary>
+        /// 取得遮罩和文本引用 注册文本变化回调并初始化显示位置
+        /// </summary>
         private void Awake()
         {
             maskImage = GetComponent<Image>();
@@ -46,6 +42,9 @@ namespace YangTools
             SetText(mText.text, DefaultShow.中间);
         }
 
+        /// <summary>
+        /// 取消文本顶点变化回调
+        /// </summary>
         private void OnDestroy()
         {
             mText.UnregisterDirtyVerticesCallback(OnTextChange);
@@ -53,7 +52,7 @@ namespace YangTools
         /// <summary>
         /// 文本循环滚动
         /// </summary>
-        /// <returns></returns>
+        /// <returns>供 Unity 启动的循环滚动协程</returns>
         private IEnumerator TextCycle()
         {
             mText.transform.ChangeLocalPosX(startPos);

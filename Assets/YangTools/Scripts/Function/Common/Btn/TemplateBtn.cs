@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 封装按钮的选中外观与单击 双击 长按回调
+/// </summary>
 public class TemplateBtn : MonoBehaviour
 {
+    // 选中状态显示的按钮
     public BtnExtension clickBtn;
+    // 未选中状态显示的按钮
     public BtnExtension unClickBtn;
 
     /// <summary>
@@ -19,7 +24,7 @@ public class TemplateBtn : MonoBehaviour
     }
     
     /// <summary>
-    /// 设置单击
+    /// 设置两种外观的回调 当前实现绑定双击事件
     /// </summary>
     public void SetClick(Action clickBtnAction = null,Action unClickBtnAction = null)
     {

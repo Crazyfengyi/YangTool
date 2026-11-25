@@ -7,50 +7,65 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class HitFeelDemoScreenEffects : MonoBehaviour
 {
-    /// <summary>单种屏幕反馈的强度和时长配置</summary>
+    /// <summary>
+    /// 单种屏幕反馈的强度和时长配置
+    /// </summary>
     [Serializable]
     private sealed class EffectProfile
     {
+        // 径向模糊持续秒数
         [Header("局部径向模糊")]
         /// <summary>径向模糊时长</summary>
         [Min(0f)] public float radialBlurDuration = 0.2f;
-        /// <summary>径向模糊强度</summary>
+        // 径向模糊强度
         [Range(0f, 1f)] public float radialBlurIntensity = 0.22f;
 
+        // 灰度效果持续秒数
         [Header("黑白")]
         /// <summary>黑白效果时长</summary>
         [Min(0f)] public float grayscaleDuration = 0.16f;
-        /// <summary>黑白效果强度</summary>
+        // 黑白效果强度
         [Range(0f, 1f)] public float grayscaleIntensity = 0.45f;
 
+        // 色彩扭曲持续秒数
         [Header("反色与色彩失真")]
         /// <summary>色彩失真时长</summary>
         [Min(0f)] public float colorDistortionDuration = 0.18f;
-        /// <summary>色彩失真强度</summary>
+        // 色彩失真强度
         [Range(0f, 1f)] public float colorDistortionIntensity = 0.2f;
 
+        // 冲击波持续秒数
         [Header("冲击光圈")]
         /// <summary>冲击光圈时长</summary>
         [Min(0f)] public float shockwaveDuration = 0.28f;
-        /// <summary>冲击光圈强度</summary>
+        // 冲击光圈强度
         [Range(0f, 0.1f)] public float shockwaveStrength = 0.025f;
-        /// <summary>冲击光圈宽度</summary>
+        // 冲击光圈宽度
         [Range(0.005f, 0.08f)] public float shockwaveWidth = 0.025f;
     }
 
+    // 屏幕效果中心点着色器属性标识
     private static readonly int CenterId = Shader.PropertyToID("_HitFeelCenter");
+    // 画面宽高比着色器属性标识
     private static readonly int AspectId = Shader.PropertyToID("_HitFeelAspect");
+    // 径向模糊着色器属性标识
     private static readonly int RadialBlurId = Shader.PropertyToID("_HitFeelRadialBlur");
+    // 灰度着色器属性标识
     private static readonly int GrayscaleId = Shader.PropertyToID("_HitFeelGrayscale");
+    // 色彩扭曲着色器属性标识
     private static readonly int ColorDistortionId = Shader.PropertyToID("_HitFeelColorDistortion");
+    // 冲击波强度着色器属性标识
     private static readonly int ShockwaveId = Shader.PropertyToID("_HitFeelShockwave");
+    // 冲击波半径着色器属性标识
     private static readonly int ShockwaveRadiusId = Shader.PropertyToID("_HitFeelShockwaveRadius");
+    // 冲击波宽度着色器属性标识
     private static readonly int ShockwaveWidthId = Shader.PropertyToID("_HitFeelShockwaveWidth");
 
+    // 普通命中反馈参数组
     [Header("强度预设")]
     /// <summary>普通命中屏幕效果参数</summary>
     [SerializeField] private EffectProfile normalProfile = new EffectProfile();
-    /// <summary>强打击屏幕效果参数</summary>
+    // 强打击屏幕效果参数
     [SerializeField] private EffectProfile strongProfile = new EffectProfile
     {
         radialBlurDuration = 0.24f,
@@ -64,20 +79,35 @@ public sealed class HitFeelDemoScreenEffects : MonoBehaviour
         shockwaveWidth = 0.035f
     };
 
+    // 提供命中坐标投影的相机
     private Camera effectCamera;
+    // 屏幕空间命中效果中心
     private Vector2 hitCenter = new Vector2(0.5f, 0.5f);
+    // 径向模糊剩余时间
     private float radialBlurTime;
+    // 径向模糊持续秒数
     private float radialBlurDuration;
+    // 径向模糊峰值强度
     private float radialBlurPeak;
+    // 灰度效果剩余时间
     private float grayscaleTime;
+    // 灰度效果持续秒数
     private float grayscaleDuration;
+    // 灰度效果峰值强度
     private float grayscalePeak;
+    // 色彩扭曲剩余时间
     private float colorDistortionTime;
+    // 色彩扭曲持续秒数
     private float colorDistortionDuration;
+    // 色彩扭曲峰值强度
     private float colorDistortionPeak;
+    // 冲击波剩余时间
     private float shockwaveTime;
+    // 冲击波持续秒数
     private float shockwaveDuration;
+    // 冲击波峰值强度
     private float shockwavePeak;
+    // 冲击波环带宽度
     private float shockwaveWidth;
 
     /// <summary>

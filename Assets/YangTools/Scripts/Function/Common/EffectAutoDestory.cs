@@ -7,23 +7,18 @@ namespace YangTools
     /// </summary>
     public class EffectAutoDestroy : MonoBehaviour
     {
-        /// <summary>
-        /// 最大生命周期
-        /// </summary>
+        // 最大生命周期
         private float maxLifeTime;
-        /// <summary>
-        /// 计时
-        /// </summary>
+        // 计时
         private float currentTime;
-        /// <summary>
-        /// 是否活着的
-        /// </summary>
+        // 是否活着的
         private bool isSurvive = true;
-        /// <summary>
-        /// 是否开启自动删除
-        /// </summary>
+        // 是否开启自动删除
         private bool isOpen = true;
 
+        /// <summary>
+        /// 统计非循环粒子的最长播放时间 遇到循环粒子时关闭自动销毁
+        /// </summary>
         public void Awake()
         {
             ParticleSystem[] list = transform.GetComponentsInChildren<ParticleSystem>(true);
@@ -46,6 +41,9 @@ namespace YangTools
                 }
             }
         }
+        /// <summary>
+        /// 在允许计时且存活时累积时间并于播放结束后销毁物体
+        /// </summary>
         public void Update()
         {
             if (!isOpen) return;

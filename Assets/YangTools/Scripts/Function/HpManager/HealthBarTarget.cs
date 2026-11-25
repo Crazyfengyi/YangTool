@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 通用血条目标适配器。将外部战斗逻辑转换成血条可读取的数据快照。
+/// 通用血条目标适配器 将外部战斗逻辑转换成血条可读取的数据快照
 /// </summary>
 public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
 {
+    // 投影到屏幕的血条跟随锚点
     [SerializeField] private Transform healthBarAnchor;
+    // 面向界面显示的名称
     [SerializeField] private string displayName;
+    // 角色等级
     [SerializeField] private int level;
+    // 当前生命值
     [SerializeField] private float currentHealth = 100f;
+    // 生命上限
     [SerializeField] private float maxHealth = 100f;
+    // 当前护盾值
     [SerializeField] private float shield;
+    // 当前状态图标列表
     [SerializeField] private List<HealthBarStatusData> statuses = new List<HealthBarStatusData>();
+    // 当前增益图标列表
     [SerializeField] private List<HealthBarBuffData> buffs = new List<HealthBarBuffData>();
 
+    // 血条相关数据变化时通知订阅者
     public event Action OnHealthBarDataChanged;
     public Transform HealthBarAnchor => healthBarAnchor == null ? transform : healthBarAnchor;
 
     /// <summary>
-    /// 获取当前血条数据快照。
+    /// 获取当前血条数据快照
     /// </summary>
     public HealthBarDisplayData GetHealthBarData()
     {
@@ -37,7 +46,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 设置目标名称和等级。
+    /// 设置目标名称和等级
     /// </summary>
     public void SetDisplayInfo(string targetName, int targetLevel)
     {
@@ -47,7 +56,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 设置生命值和最大生命值。
+    /// 设置生命值和最大生命值
     /// </summary>
     public void SetHealth(float health, float maximumHealth)
     {
@@ -57,7 +66,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 扣除生命值并通知血条播放受伤表现。
+    /// 扣除生命值并通知血条播放受伤表现
     /// </summary>
     public void TakeDamage(float amount)
     {
@@ -66,7 +75,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 增加生命值并通知血条播放治疗表现。
+    /// 增加生命值并通知血条播放治疗表现
     /// </summary>
     public void Heal(float amount)
     {
@@ -75,7 +84,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 设置护盾值。
+    /// 设置护盾值
     /// </summary>
     public void SetShield(float value)
     {
@@ -84,7 +93,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 替换状态图标列表。
+    /// 替换状态图标列表
     /// </summary>
     public void SetStatuses(IList<HealthBarStatusData> values)
     {
@@ -94,7 +103,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 替换 Buff 图标列表。
+    /// 替换 Buff 图标列表
     /// </summary>
     public void SetBuffs(IList<HealthBarBuffData> values)
     {
@@ -104,7 +113,7 @@ public class HealthBarTarget : MonoBehaviour, IHealthBarDataSource
     }
 
     /// <summary>
-    /// 手动通知血条重新读取数据。
+    /// 手动通知血条重新读取数据
     /// </summary>
     public void NotifyDataChanged()
     {

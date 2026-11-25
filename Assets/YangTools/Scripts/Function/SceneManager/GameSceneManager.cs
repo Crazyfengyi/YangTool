@@ -11,17 +11,11 @@ namespace YangTools
     /// </summary>
     public class LoadOnProgress
     {
-        /// <summary>
-        /// 加载开始回调
-        /// </summary>
+        // 加载开始回调
         public Action<string> OnStartLoad;
-        /// <summary>
-        /// 加载中回调
-        /// </summary>
+        // 加载中回调
         public Action<float> OnLoading;
-        /// <summary>
-        /// 加载结束回调
-        /// </summary>
+        // 加载结束回调
         public Action<string> OnEndLoad;
     }
 
@@ -31,11 +25,13 @@ namespace YangTools
     public class GameSceneManager : MonoSingleton<GameSceneManager>
     {
         #region 变量
+        // 本次加载请求的场景名称
         private string sceneName;
         /// <summary>
         /// 场景名称
         /// </summary>
         public string SceneName => sceneName;
+        // 本次加载请求的场景叠加方式
         private LoadSceneMode sceneLoadType;
         /// <summary>
         /// 场景加载类型
@@ -68,6 +64,7 @@ namespace YangTools
         {
             get { return async != null; }
         }
+        // 当前归一化加载进度
         private float progress = 0;
         /// <summary>
         /// 加载进度
@@ -75,6 +72,7 @@ namespace YangTools
         public float Progress => progress;
         //异步加载信息
         private AsyncOperation async;
+        // 加载开始 进度与完成时的回调集合
         private LoadOnProgress onProgressEvent;
         /// <summary>
         /// 加载事件
@@ -134,7 +132,10 @@ namespace YangTools
         }
 
 #if UNITY_EDITOR
-        //屏蔽Animation关键帧事件中的loading()可选项---会提示警告-并且事件函数会失效
+        /// <summary>
+        /// 保留加载协程入口 同名带参重载仅用于隐藏动画事件选项
+        /// </summary>
+        /// <param name="sceneName">该编辑器占位重载不使用此参数</param>
         private IEnumerator Loading(string sceneName)
         {
             yield return null;

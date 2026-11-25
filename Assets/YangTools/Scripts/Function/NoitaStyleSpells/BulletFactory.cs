@@ -3,14 +3,24 @@ using UnityEngine;
 
 namespace NoitaStyleSpells
 {
+    /// <summary>
+    /// 按预制体分别维护独立法杖系统的弹体对象池
+    /// </summary>
     public sealed class BulletFactory : MonoBehaviour
     {
+        // 按弹体预制体维护的可复用队列
         private readonly Dictionary<Bullet, Queue<Bullet>> pools = new Dictionary<Bullet, Queue<Bullet>>();
 
+        // 停用弹体的收纳节点
         [SerializeField] private Transform poolRoot;
+        // 每个指定预制体的预热数量
         [SerializeField] private int prewarmCount = 0;
+        // 启动时需要预热的弹体预制体列表
         [SerializeField] private Bullet[] prewarmPrefabs;
 
+        /// <summary>
+        /// 准备对象池根节点并预热指定的弹体预制体
+        /// </summary>
         private void Awake()
         {
             if (poolRoot == null)
@@ -23,6 +33,11 @@ namespace NoitaStyleSpells
             Prewarm();
         }
 
+        /// <summary>
+        /// 按数量与水平散射角生成弹体并为每枚弹体复制运行时配置
+        /// </summary>
+        /// <param name="config">本次弹体使用的运行时配置</param>
+        /// <param name="context">本次效果使用的施法上下文</param>
         public void Spawn(ProjectileRuntimeConfig config, CastContext context)
         {
             if (config == null || config.Prefab == null || context == null)
@@ -40,6 +55,10 @@ namespace NoitaStyleSpells
             }
         }
 
+        /// <summary>
+        /// 停用弹体并归还所属预制体队列 无预制体键时销毁
+        /// </summary>
+        /// <param name="bullet">待回收的弹体实例</param>
         public void Despawn(Bullet bullet)
         {
             if (bullet == null)
@@ -66,6 +85,10 @@ namespace NoitaStyleSpells
             pool.Enqueue(bullet);
         }
 
+        /// <summary>
+        /// 从指定预制体队列取得弹体 或创建新实例
+        /// </summary>
+        /// <param name="prefab">弹体预制体与对象池索引</param>
         private Bullet Get(Bullet prefab)
         {
             if (!pools.TryGetValue(prefab, out Queue<Bullet> pool))
@@ -90,6 +113,9 @@ namespace NoitaStyleSpells
             return bullet;
         }
 
+        /// <summary>
+        /// 为指定预制体预创建配置数量的停用弹体
+        /// </summary>
         private void Prewarm()
         {
             if (prewarmPrefabs == null || prewarmCount <= 0)
@@ -122,6 +148,13 @@ namespace NoitaStyleSpells
             }
         }
 
+        /// <summary>
+        /// 在水平面按索引均匀计算散射方向
+        /// </summary>
+        /// <param name="baseDirection">散射中心的基准方向</param>
+        /// <param name="spreadAngle">全部弹体覆盖的总角度</param>
+        /// <param name="count">同次发射的弹体总数</param>
+        /// <param name="index">从零开始的元素索引</param>
         private static Vector3 GetSpreadDirection(Vector3 baseDirection, float spreadAngle, int count, int index)
         {
             Vector3 direction = baseDirection.sqrMagnitude > 0f ? baseDirection.normalized : Vector3.forward;

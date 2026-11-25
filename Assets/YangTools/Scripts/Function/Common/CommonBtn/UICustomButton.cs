@@ -16,23 +16,36 @@ namespace GameMain
     [RequireComponent(typeof(Button))]
     public class UICustomButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
+        // 点击音效
         [LabelText("点击音效")] 
         public bool needClickAudio = true;
+        // 音效名称
         [LabelText("音效名称")] [ShowIf("ClickAudio")]
         public string clipName;
+        // 点击动画
         [LabelText("点击动画")] 
         public bool needAni = true;
+        // 点击间隔
         [LabelText("点击间隔")] 
         public float clickInterval = 0.2f;
 
+        // 接收 Unity 点击事件的按钮
         private Button targetButton;
+        // 按钮背景图像
         private Image btnImgBg;
+        // 通用按钮点击回调
         private Action callback;
         
+        // 按压前的初始缩放
         private Vector3 startScale;
+        // 上次点击的非缩放时间
         private float lastClickTime;
         
+        // 默认按钮音效名称
         private static readonly string DefaultAudioName = "ClickDefaultAudio";
+        /// <summary>
+        /// 初始化按钮引用 初始缩放与点击事件
+        /// </summary>
         private void Awake()
         {
             targetButton = GetComponent<Button>();
@@ -78,6 +91,10 @@ namespace GameMain
 
 #region 点击
 
+        /// <summary>
+        /// 按配置播放按钮按压缩放
+        /// </summary>
+        /// <param name="eventData">本次指针交互数据</param>
         public void OnPointerDown(PointerEventData eventData)
         {
             DOTween.Kill(gameObject);
@@ -87,6 +104,10 @@ namespace GameMain
             }
         }
 
+        /// <summary>
+        /// 按配置恢复按钮缩放
+        /// </summary>
+        /// <param name="eventData">本次指针交互数据</param>
         public void OnPointerUp(PointerEventData eventData)
         {
             DOTween.Kill(gameObject);
@@ -121,6 +142,9 @@ namespace GameMain
 
 #if UNITY_EDITOR
         private bool ClickAudio => needClickAudio;
+        /// <summary>
+        /// 在编辑器校验时补充按钮相关组件引用
+        /// </summary>
         private void OnValidate()
         {
             targetButton = GetComponent<Button>();

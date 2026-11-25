@@ -1,11 +1,10 @@
 using System;
 using UnityEngine;
 
-/**
- * SimpleHealth类 - 实现IDamageable接口，用于管理游戏对象的健康状态
- * 包含最大生命值、当前生命值和死亡后是否销毁等属性
- * 提供受伤和治疗的功能，并通过事件通知生命值变化和死亡状态
- */
+/// <summary>
+/// SimpleHealth类 - 实现IDamageable接口 用于管理游戏对象的健康状态 包含最大生命值 当前生命值和死亡后是否销毁等属性 提供受伤和治疗的功能 并通过事件通知生命值变化和死亡状态
+/// </summary>
+
 public class SimpleHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f; // 最大生命值，默认为100
@@ -22,9 +21,10 @@ public class SimpleHealth : MonoBehaviour, IDamageable
     //最大生命值的属性，只读
     public float Max => maxHealth;
 
-    /**
-     * 受到伤害
-     */
+    /// <summary>
+    /// 受到伤害
+    /// </summary>
+
     public bool TakeDamage(float amount, SkillContext context)
     {
         // 如果伤害值小于等于0或对象已经死亡，则直接返回
@@ -49,9 +49,10 @@ public class SimpleHealth : MonoBehaviour, IDamageable
         return true;
     }
 
-    /**
-     * 治疗方法
-     */
+    /// <summary>
+    /// 治疗方法
+    /// </summary>
+
     public void Heal(float amount)
     {
         // 如果治疗量小于等于0或对象已经死亡，则直接返回

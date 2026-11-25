@@ -7,9 +7,13 @@ namespace YangTools
     /// </summary>
     public class WaitLineDestroy : MonoBehaviour
     {
+        // 需要等待消散的拖尾组件
         private TrailRenderer[] trailRenderers;
 
         private float timer; //删除延时
+        /// <summary>
+        /// 缓存拖尾组件并统计最长拖尾消散时间
+        /// </summary>
         private void Awake()
         {
             trailRenderers = GetComponentsInChildren<TrailRenderer>();

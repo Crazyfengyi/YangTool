@@ -3,16 +3,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 血条 Buff 图标条目。
+/// 血条 Buff 图标条目
 /// </summary>
 public class HealthBarBuffItem : MonoBehaviour
 {
+    // 显示状态或增益的图标
     [SerializeField] private Image icon;
+    // 显示增益层数的文本
     [SerializeField] private TMP_Text stackText;
+    // 显示增益剩余秒数的文本
     [SerializeField] private TMP_Text remainingTimeText;
 
     /// <summary>
-    /// 自动查找预制体中的 Buff 子节点引用。
+    /// 自动查找预制体中的 Buff 子节点引用
     /// </summary>
     private void Awake()
     {
@@ -22,7 +25,7 @@ public class HealthBarBuffItem : MonoBehaviour
     }
 
     /// <summary>
-    /// 刷新 Buff 图标、层数和剩余时间。
+    /// 刷新 Buff 图标 层数和剩余时间
     /// </summary>
     public void Refresh(HealthBarBuffData data)
     {
@@ -48,7 +51,7 @@ public class HealthBarBuffItem : MonoBehaviour
     }
 
     /// <summary>
-    /// 清理条目显示状态。
+    /// 清理条目显示状态
     /// </summary>
     public void Clear()
     {

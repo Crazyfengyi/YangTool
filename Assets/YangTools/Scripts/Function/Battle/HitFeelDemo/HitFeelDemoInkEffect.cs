@@ -7,26 +7,29 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class HitFeelDemoInkEffect : MonoBehaviour
 {
+    // 命中墨迹效果的渲染器
     [Header("资源引用")]
     /// <summary>水墨主体渲染器</summary>
     [SerializeField] private SpriteRenderer inkRenderer;
-    /// <summary>墨点粒子系统</summary>
+    // 墨点粒子系统
     [SerializeField] private ParticleSystem inkParticles;
 
+    // 普通反馈下的墨迹尺寸
     [Header("普通命中")]
     /// <summary>普通命中墨迹尺寸</summary>
     [SerializeField, Min(0.1f)] private float normalSize = 0.8f;
-    /// <summary>普通命中墨迹持续时间</summary>
+    // 普通命中墨迹持续时间
     [SerializeField, Min(0.1f)] private float normalLifetime = 0.5f;
-    /// <summary>普通命中墨点数量</summary>
+    // 普通命中墨点数量
     [SerializeField, Min(0)] private int normalParticleCount = 5;
 
+    // 强反馈下的墨迹尺寸倍率
     [Header("强打击")]
     /// <summary>强打击墨迹尺寸倍率</summary>
     [SerializeField, Min(1f)] private float strongSizeMultiplier = 1.45f;
-    /// <summary>强打击墨迹持续时间倍率</summary>
+    // 强打击墨迹持续时间倍率
     [SerializeField, Min(1f)] private float strongLifetimeMultiplier = 1.25f;
-    /// <summary>强打击额外墨点数量</summary>
+    // 强打击额外墨点数量
     [SerializeField, Min(0)] private int strongExtraParticleCount = 5;
 
     /// <summary>
@@ -81,7 +84,7 @@ public sealed class HitFeelDemoInkEffect : MonoBehaviour
     }
 
     /// <summary>
-    /// 设置墨点数量、颜色与散开速度
+    /// 设置墨点数量 颜色与散开速度
     /// </summary>
     private static void ConfigureParticles(ParticleSystem particles, float size, float lifetime, int count)
     {

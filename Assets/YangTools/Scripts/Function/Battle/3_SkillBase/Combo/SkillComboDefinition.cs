@@ -4,12 +4,14 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 线性技能连击配置,定义连续释放的技能组合
+/// 线性技能连击配置 定义连续释放的技能组合
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Skills/Skill Combo Definition")]
 public class SkillComboDefinition : ScriptableObject
 {
+    // 技能效果名称
     [LabelText("技能效果名称")] [SerializeField] private string effectName;
+    // 技能效果描述
     [LabelText("技能效果描述")] [SerializeField] private string effectDescription;
     // 连击输入缓冲时间（单位：秒）,玩家在这个时间内按下下一个技能键，会被视为有效输入
     [LabelText("输入缓冲时间（秒）")]
@@ -30,7 +32,7 @@ public class SkillComboDefinition : ScriptableObject
     public int StepCount => steps.Count;
 
     /// <summary>
-    /// 获取指定位置的连击步骤。
+    /// 获取指定位置的连击步骤
     /// </summary>
     /// <param name="index">要获取的步骤索引</param>
     /// <returns>如果索引有效则返回对应的连击步骤，否则返回null</returns>
@@ -41,8 +43,8 @@ public class SkillComboDefinition : ScriptableObject
 }
 
 /// <summary>
-/// 单个连击步骤配置。
-/// 定义了连击中的每一个具体步骤，包括使用的技能、动画触发器等。
+/// 单个连击步骤配置
+/// 定义了连击中的每一个具体步骤 包括使用的技能 动画触发器等
 /// </summary>
 [Serializable]
 public class SkillComboStep

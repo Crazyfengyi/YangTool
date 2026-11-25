@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// Buff技能效果类,施加Buff效果到目标角色
+/// Buff技能效果类 施加Buff效果到目标角色
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Buff")]
 public class BuffSkillEffect : SkillEffect

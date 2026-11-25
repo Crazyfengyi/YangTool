@@ -13,6 +13,9 @@ namespace YangTools
         public float gravity = -9.8f;   // 重力加速度
         private ParabolaPath path;      // 抛物线运动轨迹
 
+        /// <summary>
+        /// 以启动时的目标坐标和随机抬升高度创建夹紧的抛物线路径
+        /// </summary>
         private void Start()
         {
             path = new ParabolaPath(transform.position, target.position, Random.Range(10, 16), gravity)
@@ -22,6 +25,9 @@ namespace YangTools
             transform.LookAt(path.GetPosition(path.Time + Time.deltaTime));
         }
 
+        /// <summary>
+        /// 沿预计算路径更新位置与朝向 到达终点后停用组件
+        /// </summary>
         private void Update()
         {
             // 计算位移

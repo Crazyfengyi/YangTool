@@ -9,14 +9,23 @@ using Vector3 = UnityEngine.Vector3;
 [RequireComponent(typeof(MeshFilter))]
 public class CreateInMeshPoint : MonoBehaviour
 {
+    // 在网格表面生成的对象模板
     public GameObject spawnObject;
 
+    // 提供采样网格的组件
     MeshFilter meshFilter;
+    // 缓存的网格局部顶点
     Vector3[] vertices;
+    // 缓存的网格顶点法线
     Vector3[] normals;
+    // 缓存的网格三角形顶点索引
     int[] triangles;
+    // 按三角形面积选择落点的抽样器
     WeightedRandom weightedRandom;
 
+    /// <summary>
+    /// 缓存网格数据并按三角形面积建立加权抽样表
+    /// </summary>
     void Start()
     {
         meshFilter = GetComponent<MeshFilter>();
@@ -44,6 +53,9 @@ public class CreateInMeshPoint : MonoBehaviour
         weightedRandom = new WeightedRandom(areas);
     }
 
+    /// <summary>
+    /// 按空格键时在网格表面生成一个对象
+    /// </summary>
     void Update()
     {
         //按下空格键后生成对象
@@ -53,7 +65,9 @@ public class CreateInMeshPoint : MonoBehaviour
         }
     }
 
-    //在随机位置创建对象
+    /// <summary>
+    /// 按三角形面积抽样位置并以平均顶点法线确定生成朝向
+    /// </summary>
     void Spawn()
     {
         if (spawnObject == null) return;
@@ -84,7 +98,12 @@ public class CreateInMeshPoint : MonoBehaviour
         Instantiate(spawnObject, pos, Quaternion.LookRotation(normal), transform);
     }
 
-    //返回三角形内部的随机点
+    /// <summary>
+    /// 使用反射后的重心权重在三角形内部均匀抽取一点
+    /// </summary>
+    /// <param name="p1">三角形第一个顶点</param>
+    /// <param name="p2">三角形第二个顶点</param>
+    /// <param name="p3">三角形第三个顶点</param>
     Vector3 RandomPointInsideTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
     {
         float a = Random.value;
@@ -105,10 +124,14 @@ public class CreateInMeshPoint : MonoBehaviour
 /// </summary>
 public class WeightedRandom
 {
+    // 构建别名表使用的原始权重数组
     float[] weights;
+    // 非负权重总和
     float totalWeight = 0;
 
+    // 别名抽样各槽位的概率阈值
     float[] thresholds;
+    // 各抽样槽位对应的补偿索引
     int[] aliases;
 
     /// <summary>
@@ -133,8 +156,9 @@ public class WeightedRandom
         CreateAliasList();
     }
 
-    // 建立抽签用的内部列表
-    // 将每个元素作为一个块来处理，每个块的权重调整为1
+    /// <summary>
+    /// 归一化非负权重并建立常数时间抽样使用的别名表
+    /// </summary>
     void CreateAliasList()
     {
         int length = weights.Length;

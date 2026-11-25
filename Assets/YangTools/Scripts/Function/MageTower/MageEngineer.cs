@@ -21,7 +21,11 @@ namespace YangToolMageEngineer
     /// </summary>
     public class MageEngineer
     {
+        // 负责顺序消费法术的示例射击系统
         private ShooterSystem shooter;
+        /// <summary>
+        /// 构建内置的示例法术序列并初始化射击系统
+        /// </summary>
         public MageEngineer()
         {
             shooter = new ShooterSystem();
@@ -72,6 +76,9 @@ namespace YangToolMageEngineer
             shooter.Init(allWordList);
         }
 
+        /// <summary>
+        /// 委托示例射击系统读取并触发下一枚逻辑子弹
+        /// </summary>
         public void Shoot()
         {
             Debug.LogError("使用法术");
@@ -80,17 +87,29 @@ namespace YangToolMageEngineer
 
     }
 
+    /// <summary>
+    /// 顺序消费示例法术并组合常驻增益 一次性增益与多重施法
+    /// </summary>
     public class ShooterSystem
     {
+        // 示例使用的完整法术序列
         public List<Spells> AllWordList = new List<Spells>();
+        // 当前累计的常驻增益法术
         public List<Spells> LongBuff = new List<Spells>();
 
+        /// <summary>
+        /// 保存参与模拟射击的法术序列
+        /// </summary>
+        /// <param name="allWordList">按顺序处理的法术列表</param>
         public void Init(List<Spells> allWordList)
         {
             AllWordList = allWordList;
             LongBuff = AllWordList.Where((item) => { return item.type == SpellsType.LongBuff; }).ToList();
         }
 
+        /// <summary>
+        /// 取得下一枚逻辑子弹并调用其开始钩子
+        /// </summary>
         public Bullet Shoot()
         {
             Bullet bullet = GetBullet();
@@ -187,7 +206,9 @@ namespace YangToolMageEngineer
             MultipleCast = 0;
             return null;
 
-            //重置检测
+            /// <summary>
+            /// 检查序列末尾或后续无可用子弹时是否需要重置使用状态
+            /// </summary>
             bool CheckIsLast(int index)
             {
                 //最后一个重置--TODO:进入冷却
@@ -208,7 +229,9 @@ namespace YangToolMageEngineer
                 return false;
             }
 
-            //多重施法检测
+            /// <summary>
+            /// 消费多重施法次数并触发下一枚逻辑子弹
+            /// </summary>
             void Multiple()
             {
                 if (MultipleCast > 0)
@@ -220,6 +243,7 @@ namespace YangToolMageEngineer
             }
         }
 
+        // 预留的多重施法次数缓存
         private int TempMultipleCast = 0;
 
         /// <summary>
@@ -286,27 +310,47 @@ namespace YangToolMageEngineer
         }
     }
 
+    /// <summary>
+    /// 保存示例逻辑子弹与增益数据 并提供空的生命周期扩展钩子
+    /// </summary>
     public class Bullet
     {
+        // 示例法术或逻辑子弹名称
         public string name;
+        // 示例逻辑子弹类别
         public BuletsType buttleType;
+        // 附着在逻辑子弹上的增益
         public List<Spells> buffList = new List<Spells>();
+        // 示例逻辑子弹集合
         public List<Spells> bulletList = new List<Spells>();
+        // 包装器持有的下一枚逻辑子弹
         public Bullet subBullet;
 
+        /// <summary>
+        /// 提供逻辑子弹开始阶段的扩展钩子 基类不执行表现
+        /// </summary>
         public virtual void OnStart()
         {
         }
 
+        /// <summary>
+        /// 提供逻辑子弹更新阶段的扩展钩子 基类不执行移动
+        /// </summary>
         public virtual void OnUpdate()
         {
         }
 
+        /// <summary>
+        /// 提供逻辑子弹结束阶段的扩展钩子 基类不执行回收
+        /// </summary>
         public virtual void OnEnd()
         {
         }
     }
 
+    /// <summary>
+    /// 保留逻辑子弹派生类型的示例占位
+    /// </summary>
     public class Bullet1 : Bullet
     {
     }
@@ -316,14 +360,19 @@ namespace YangToolMageEngineer
     /// </summary>
     public class Spells
     {
+        // 示例法术或逻辑子弹名称
         public string name;
+        // 示例法术类型
         public SpellsType type;
+        // 示例增益类型
         public BuffType buffType;
+        // 示例逻辑子弹类别
         public BuletsType buttleType;
 
         //多重施法次数
         public int MultipleCastCount;
 
+        // 一次性法术或子弹是否已消费
         private bool isUsed;
 
         public bool CanUse
@@ -348,6 +397,9 @@ namespace YangToolMageEngineer
             }
         }
 
+        /// <summary>
+        /// 按法术类型标记一次性使用状态并记录示例日志
+        /// </summary>
         public void Use()
         {
             switch (type)
@@ -366,6 +418,9 @@ namespace YangToolMageEngineer
             Debug.LogError($"法术使用:{name}");
         }
 
+        /// <summary>
+        /// 清除法术的已使用标记
+        /// </summary>
         public void ResetUse()
         {
             isUsed = false;

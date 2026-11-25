@@ -1,12 +1,17 @@
-# Adaptive
+# Adaptive 文本字号适配
 
-`TextAdaptive` 根据文本首选尺寸缩小 Unity UGUI `Text` 的字号，使内容适配自身 `RectTransform`。组件位于 [TextAdaptive.cs](TextAdaptive.cs)，并要求同物体上有 `UnityEngine.UI.Text`。
+## 功能与入口
 
-在 Inspector 添加组件，选择横向或纵向适配，并保证文本区域尺寸已布局完成。默认纵向适配；`isReuse` 适用于运行时会反复改字的文本。脚本会在 LateUpdate 测量并缩小字号，不会自动放大。中文相邻半角空格会替换为不换行空格；需要保留这类空格行为时请留意。
+[TextAdaptive.cs](TextAdaptive.cs) 根据 UGUI `Text` 的首选尺寸缩小字号，支持横向或纵向适配。默认纵向，不会主动把字号放大超过初始字号。
 
-```csharp
-text.text = "任务已完成";
-textAdaptive.OnTextChange(); // 需要时可显式标记重新适配
-```
+## 依赖与配置
 
-普通使用由 `Text` 的顶点变化回调触发重新测量；避免同时启用 Text 自带的 Best Fit（组件会关闭该设置）。
+同物体需要 `Text` 和有效尺寸的 `RectTransform`，Inspector 标签依赖 Odin。组件初始化会关闭 Text 的 Best Fit 并记录初始字号；`isReuse` 用于会反复修改内容的文本。
+
+## 最小接入
+
+在文本物体上添加 `TextAdaptive`，选择适配方向并设置文本区域。更新 `text.text` 后由顶点变化回调标记重新适配，也可调用 `textAdaptive.OnTextChange()`。测量和字号缩小发生在 `LateUpdate`。
+
+## 示例与限制
+
+本目录没有独立场景或 Prefab。仅适用于旧版 UGUI Text；TMP 的布局宽度限制参见 [TextAdaptiveImage](../TextAdaptiveImage/README.md)。中文相邻的半角空格会转换为不换行空格；最终字号还受最小字号和迭代次数约束。

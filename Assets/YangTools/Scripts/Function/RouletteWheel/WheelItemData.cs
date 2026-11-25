@@ -1,27 +1,18 @@
 using UnityEngine;
 
 /// <summary>
-/// 转盘项目数据类，用于存储转盘上每个项目的信息
+/// 转盘项目数据类 用于存储转盘上每个项目的信息
 /// </summary>
 [System.Serializable]
 public class WheelItemData
 {
-    /// <summary>
-    /// 项目唯一标识符
-    /// </summary>
+    // 项目唯一标识符
     [SerializeField] private string id;
-    /// <summary>
-    /// 项目显示名称
-    /// </summary>
+    // 项目显示名称
     [SerializeField] private string displayName;
-    /// <summary>
-    /// 项目图标
-    /// </summary>
+    // 项目图标
     [SerializeField] private Sprite icon;
-    /// <summary>
-    /// 项目权重，用于控制转盘中的概率分布
-    /// 默认值为1
-    /// </summary>
+    // 项目权重 用于控制转盘中的概率分布 默认值为1
     [SerializeField] private int weight = 1;
     /// <summary>
     /// 获取项目ID
@@ -44,7 +35,7 @@ public class WheelItemData
     /// </summary>
     public object Payload { get; private set; }
     /// <summary>
-    /// 构造函数，用于创建转盘项目数据实例
+    /// 构造函数 用于创建转盘项目数据实例
     /// </summary>
     /// <param name="id">项目唯一标识符</param>
     /// <param name="displayName">项目显示名称</param>

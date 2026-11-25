@@ -25,7 +25,7 @@ public class TextAdaptiveImage : MonoBehaviour
     }
 
     /// <summary>
-    /// 文本值变化时的回调函数,根据文本宽度调整布局元素的大小
+    /// 文本值变化时的回调函数 根据文本宽度调整布局元素的大小
     /// </summary>
     void OnTextValueChanged()
     {

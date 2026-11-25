@@ -117,16 +117,12 @@ public enum SkillPowerType
 }
 
 /// <summary>
-/// 技能伤害结果类，用于存储技能造成的伤害数据
+/// 技能伤害结果类 用于存储技能造成的伤害数据
 /// </summary>
 public class SkillDamageResult
 {
-    /// <summary>
-    /// 伤害数值
-    /// </summary>
+    // 伤害数值
     public float Amount;
-    /// <summary>
-    /// 是否为暴击伤害
-    /// </summary>
+    // 是否为暴击伤害
     public bool IsCritical;
 }

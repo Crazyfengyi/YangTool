@@ -47,10 +47,8 @@ public class Monster : RoleBase
     public float AIFindTargetDistance { get; set; }
     public cfg.monster.Monster TableData { get; set; }
     public List<RunTimeSkillData> SkillsList { get; set; }
-    //公共CD
-    private bool startSkillCommonCD;
-    private float skillCommonCDTimer;
-    private float skillCommonCDInterval = 2;
+    // 复用候选列表 避免每次选技创建集合
+    private readonly List<RunTimeSkillData> skillCandidates = new List<RunTimeSkillData>();
 
     #region 生命周期
     /// <summary>
@@ -62,21 +60,26 @@ public class Monster : RoleBase
 
         //技能列表
         SkillsList = new List<RunTimeSkillData>();
-        List<SkillWeight> skillList = tableData.SkillList;
+        List<SkillWeight> skillList = tableData?.SkillList;
+        if (skillList == null) return;
 
         for (int i = 0; i < skillList.Count; i++)
         {
+            if (skillList[i] == null || skillList[i].Weight <= 0) continue;
             Skill data = GameTableManager.Instance.Tables.TbSkill.Get(skillList[i].Id);
+            if (data == null) continue;
             SkillsList.Add(new RunTimeSkillData
             {
                 skill = data,
-                weight = skillList[i].Id
+                weight = skillList[i].Weight
             });
         }
     }
     public override void IInit()
     {
         base.IInit();
+        SkillControl.RegisterSkills(SkillsList);
+        RefreshSkillApproachDistance();
         campType = ActorCampType.Monster;
         canAtkCamp = ActorCampType.PlayerAndBuilding;
         findCampType = ActorCampType.Player;
@@ -107,50 +110,58 @@ public class Monster : RoleBase
         emitter?.OnUpdate();
     }
 
+    /// <summary>
+    /// 冷却由角色控制器独立更新 此处只选择并提交可用技能
+    /// </summary>
     public void SkillUse()
     {
-        if (startSkillCommonCD)
+        if (SkillControl == null || SkillsList == null || !isActiveAndEnabled) return;
+        RefreshSkillApproachDistance();
+        if (AstarPath.active == null || AIPath == null || !AIPath.isStopped || Target == null ||
+            SkillControl.NeedUseSkill || SkillControl.CommonCooldownRemaining > 0) return;
+
+        skillCandidates.Clear();
+        foreach (RunTimeSkillData data in SkillsList)
         {
-            skillCommonCDTimer -= Time.deltaTime;
+            if (data?.skill == null || data.weight <= 0) continue;
+            if (SkillControl.CanUseSkill(data, Target) == SkillUseFailReason.None) skillCandidates.Add(data);
         }
-
-        if (AstarPath.active != null && AIPath != null && AIPath.isStopped == true && Target)
-        {
-            for (int i = 0; i < SkillsList.Count; i++)
-            {
-                SkillsList[i].UpdateCd(Time.deltaTime);
-            }
-
-            if (SkillsList != null && SkillControl.NeedUseSkill == false && skillCommonCDTimer <= 0)
-            {
-                var canUseSkills = new List<RunTimeSkillData>();
-                for (int i = 0; i < SkillsList.Count; i++)
-                {
-                    if (SkillsList[i].currentCD <= 0)
-                    {
-                        canUseSkills.Add(SkillsList[i]);
-                    }
-                }
-
-                RunTimeSkillData target = YangExtend.GetRandomInfo(canUseSkills);
-                if (target != null)
-                {
-                    target.ToCd();
-                    AIFindTargetDistance = target.skill.AtkRang;
-                    SkillControl.UseSkill(target);
-                    skillCommonCDTimer = skillCommonCDInterval;
-                    startSkillCommonCD = false;
-                }
-            }
-        }
+        if (skillCandidates.Count == 0) return;
+        RunTimeSkillData selected = YangExtend.GetRandomInfo(skillCandidates);
+        if (selected != null && SkillControl.TryUseSkill(selected, Target, out _))
+            AIFindTargetDistance = selected.skill.AtkRang;
     }
 
     /// <summary>
-    /// 开始计算技能公共CD(间隔CD)
+    /// 空闲时按可用技能刷新追击停止距离 等待时保持请求技能的范围
+    /// </summary>
+    private void RefreshSkillApproachDistance()
+    {
+        if (SkillControl == null || SkillsList == null) return;
+        if (SkillControl.NeedUseSkill)
+        {
+            AIFindTargetDistance = SkillControl.CurrentRunTimeSkillData.skill.AtkRang;
+            return;
+        }
+        float distance = 0;
+        float fallback = 0;
+        foreach (RunTimeSkillData data in SkillsList)
+        {
+            if (data?.skill == null || data.weight <= 0) continue;
+            if (!SkillControl.HasSkillResources(data)) continue;
+            fallback = Mathf.Max(fallback, data.skill.AtkRang);
+            if (SkillControl.GetCooldownRemaining(data) <= 0)
+                distance = Mathf.Max(distance, data.skill.AtkRang);
+        }
+        AIFindTargetDistance = Mathf.Max(0.1f, distance > 0 ? distance : fallback);
+    }
+
+    /// <summary>
+    /// 保留旧公共冷却入口 控制器保证不会重复延长间隔
     /// </summary>
     public void StartCommonSkillCD()
     {
-        startSkillCommonCD = true;
+        SkillControl?.StartCommonCooldown();
     }
 
     public override void ILateUpdate()

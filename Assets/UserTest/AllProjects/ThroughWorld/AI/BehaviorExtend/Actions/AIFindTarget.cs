@@ -35,11 +35,12 @@ public class AIFindTarget : Action
     public override void OnAwake()
     {
         monster = gameObject.GetComponent<Monster>();
-        AIPath = monster.AIPath;
+        AIPath = monster != null ? monster.AIPath : null;
     }
 
     public override void OnStart()
     {
+        if (AIPath == null) return;
         AIPath.isStopped = false;
         if (UseGuardRang)
         {
@@ -54,23 +55,21 @@ public class AIFindTarget : Action
     // 寻找目标。代理到达目的地后返回success
     public override TaskStatus OnUpdate()
     {
-        if (AstarPath.active != null && AIPath != null && monster.Target)
+        if (monster != null && AstarPath.active != null && AIPath != null && monster.Target)
         {
+            distance = UseGuardRang ? monster.GetRoleAttributeValue(RoleAttribute.GuardRang) : monster.AIFindTargetDistance;
             AIPath.destination = monster.Target.transform.position;
 
             if (Vector3.Distance(transform.position.SetYValue(), monster.Target.transform.position.SetYValue()) <= distance)
             {
-                if (!AIPath.isStopped)
-                {
-                    Stop();
-                    return TaskStatus.Success;
-                }
+                Stop();
+                return TaskStatus.Success;
             }
             else
             {
                 AIPath.isStopped = false;
             }
-            monster.Animator.SetFloat("Speed", AIPath.velocity.magnitude);
+            if (monster.Animator != null) monster.Animator.SetFloat("Speed", AIPath.velocity.magnitude);
         }
         else
         {
@@ -98,6 +97,6 @@ public class AIFindTarget : Action
     /// </summary>
     protected void Stop()
     {
-        AIPath.isStopped = true;
+        if (AIPath != null) AIPath.isStopped = true;
     }
 }

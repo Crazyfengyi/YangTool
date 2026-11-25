@@ -33,7 +33,17 @@ public abstract class RoleBase : GameActor
     [ShowInInspector]
     protected Dictionary<RoleFlag, float> flagkeyValue = new Dictionary<RoleFlag, float>();
     [HideInEditorMode]
+    [SerializeField, LabelText("AI调度行为树")]
     protected BehaviorTree aiBehavior;
+    // 技能执行树与 AI 调度树分别配置
+    [SerializeField, LabelText("技能执行行为树")]
+    private BehaviorTree skillBehavior;
+    // 等待 AI 开始执行的最长秒数
+    [SerializeField, Min(0.1f), LabelText("技能调度等待时限（秒）")]
+    private float skillRequestTimeout = 5f;
+    // 实际执行结束后才开始计算的间隔
+    [SerializeField, Min(0), LabelText("技能公共间隔（秒）")]
+    private float skillCommonInterval = 2f;
     [HideInEditorMode]
     protected PlayableDirector timeLine;
     /// <summary>
@@ -107,16 +117,70 @@ public abstract class RoleBase : GameActor
             GameActorManager.Instance.RemoveActor(this);
         });
 
-        aiBehavior = GetComponent<BehaviorTree>();
-        timeLine = GetComponent<PlayableDirector>();
         if (!ModelInfo)
         {
             ModelInfo = GetComponentInChildren<ModelInfo>(true);
         }
 
-        if (aiBehavior) skillControl = new SkillControl(this,aiBehavior, timeLine);
+        InitializeSkillControl();
 
         InitRecord();
+    }
+
+    /// <summary>
+    /// 初始化技能执行引用 并兼容旧预制体中未显式绑定的双行为树
+    /// </summary>
+    protected void InitializeSkillControl()
+    {
+        skillControl?.BreakSkill();
+        if (aiBehavior == null) aiBehavior = GetComponent<BehaviorTree>();
+        if (skillBehavior == null)
+        {
+            foreach (BehaviorTree tree in GetComponents<BehaviorTree>())
+            {
+                if (tree != aiBehavior)
+                {
+                    skillBehavior = tree;
+                    break;
+                }
+            }
+        }
+        timeLine = GetComponent<PlayableDirector>();
+        skillControl = new SkillControl(this, skillBehavior, timeLine);
+        skillControl.Configure(skillRequestTimeout, skillCommonInterval);
+    }
+
+    /// <summary>
+    /// 冷却与调度等待不依赖正式管理器的寻路或选敌分支
+    /// </summary>
+    protected virtual void Update()
+    {
+        skillControl?.Tick(Time.deltaTime);
+    }
+
+    /// <summary>
+    /// 停用角色时停止技能并中止其 AI 调度
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        StopRoleSkills();
+    }
+
+    /// <summary>
+    /// 直接销毁物体时也保证技能退出
+    /// </summary>
+    protected virtual void OnDestroy()
+    {
+        StopRoleSkills();
+    }
+
+    /// <summary>
+    /// 幂等清理技能与 AI 调度树
+    /// </summary>
+    private void StopRoleSkills()
+    {
+        skillControl?.BreakSkill();
+        if (aiBehavior != null) aiBehavior.DisableBehavior(false);
     }
     public override void IUpdate()
     {
@@ -133,10 +197,12 @@ public abstract class RoleBase : GameActor
     }
     public override void IDie()
     {
+        StopRoleSkills();
         OnDieAction?.Invoke();
     }
     public override void IDestroy()
     {
+        StopRoleSkills();
         healthControl?.IDestroy();
         GameActorManager.Instance.RemoveActor(this, false);
     }
@@ -355,12 +421,12 @@ public abstract class RoleBase : GameActor
 
     public override bool IsCanAtk()
     {
-        return true;
+        return isActiveAndEnabled && (healthControl == null || healthControl.GetCurrentHp() > 0);
     }
 
     public override bool IsCanBeHit()
     {
-        return true;
+        return isActiveAndEnabled && (healthControl == null || healthControl.GetCurrentHp() > 0);
     }
 
     public override void ShowAtkEffect(EffectInfo atkEffectInfo)
@@ -380,6 +446,7 @@ public abstract class RoleBase : GameActor
     /// <param name="checkConfig"></param>
     public bool DamageCheck(CheckConfig checkConfig)
     {
+        if (skillControl == null || !skillControl.IsExecuting || !IsCanAtk()) return false;
         PhysicsCheckManager.Instance.PhysicCheck(checkConfig, this, out Collider[] array);
 
         for (int i = 0; i < array.Length; i++)

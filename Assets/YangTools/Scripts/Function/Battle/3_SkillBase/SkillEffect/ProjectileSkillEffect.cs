@@ -3,25 +3,32 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 投射物技能效果 支持排列 轨迹和生命周期派生
+/// 投射物技能效果类
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Projectile")]
 public class ProjectileSkillEffect : SkillEffect
 {
-    // 投射物预制体
-    [Title("基础配置"), LabelText("投射物预制体")]
+    //投射物预制体
+    [LabelText("投射物预制体")]
     [SerializeField] private SkillProjectile projectilePrefab;
-    // 弹体飞行速度
-    [LabelText("飞行速度"), MinValue(0)] [SerializeField] private float speed = 12f;
-    // 基础伤害
-    [LabelText("基础伤害")] [SerializeField] private float baseDamage = 10f;
-    // 属性加成系数
-    [LabelText("属性加成系数")] [SerializeField] private float powerScale = 1f;
-    // 加成属性
-    [LabelText("加成属性")] [SerializeField] private SkillPowerType powerType = SkillPowerType.Attack;
-    // 弹体最大存活秒数 非正值不按寿命消亡
-    [LabelText("存活时间（秒）"), PropertyTooltip("小于等于零时不按寿命消亡 且不触发飞行节点")]
+    //投射物的移动速度
+    [LabelText("飞行速度")]
+    [SerializeField] private float speed = 12f;
+    //投射物的基础伤害值
+    [LabelText("基础伤害")]
+    [SerializeField] private float baseDamage = 10f;
+    //伤害的系数缩放
+    [LabelText("属性加成系数")]
+    [PropertyTooltip("基础伤害加上所选属性乘以此系数后再参与后续伤害计算")]
+    [SerializeField] private float powerScale = 1f;
+    //技能伤害类型
+    [LabelText("加成属性")]
+    [SerializeField] private SkillPowerType powerType = SkillPowerType.Attack;
+    //投射物的生命周期（秒）
+    [LabelText("存活时间（秒）")]
+    [PropertyTooltip("大于零时在指定秒数后销毁投射物 小于等于零时不按时间销毁")]
     [SerializeField] private float lifeSeconds = 5f;
+
     // 投射物出生位置与排列方式配置
     [Title("发射配置"), InlineProperty, HideLabel] [SerializeField] private ProjectileEmissionSettings emission = new ProjectileEmissionSettings();
     // 投射物运动轨迹配置

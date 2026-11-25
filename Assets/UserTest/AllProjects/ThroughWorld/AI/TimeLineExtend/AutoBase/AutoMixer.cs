@@ -7,17 +7,17 @@ public class AutoMixer : PlayableBehaviour
 {
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        //»ìºÏ
+        //æ··åˆ
         int inputCount = playable.GetInputCount();
         for (int i = 0; i < inputCount; i++)
         {
-            //µ±Ç°clipµÄÈ¨ÖØ
+            //å½“å‰clipçš„æƒé‡
             float inputWeight = playable.GetInputWeight(i);
-            //°ü×°Àà
+            //åŒ…è£…ç±»
             ScriptPlayable<AutoBehaviour> temp = (ScriptPlayable<AutoBehaviour>)playable.GetInput(i);
-            //»ñµÃ¾ßÌåÀà
+            //è·å¾—å…·ä½“ç±»
             AutoBehaviour behaviour = temp.GetBehaviour();
-            //ÆäÖĞÒ»¸ö»ìºÏÂß¼­
+            //å…¶ä¸­ä¸€ä¸ªæ··åˆé€»è¾‘
             if (behaviour.GetType() == typeof(DamageCheckBehaviour))
             {
                 DamageCheckBehaviour input = (DamageCheckBehaviour)behaviour;

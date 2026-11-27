@@ -1,43 +1,21 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-///// <summary>
-///// ����Ƿ���Ŀ��
-///// </summary>
-//public class CheckIsHaveTarget : Conditional
-//{
-//    /// <summary>
-//    /// ������ɫ�ű�
-//    /// </summary>
-//    private RoleBase roleBase;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-       
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (roleBase.GetTarget())
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-
-//    public override void OnEnd()
-//    {
-       
-//    }
-//}
+/// <summary>
+/// 检查角色是否有有效目标
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("检查角色是否有有效目标")]
+public class CheckIsHaveTarget : Conditional
+{
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Result(GetComponent<RoleBase>()?.Target != null);
+    }
+}

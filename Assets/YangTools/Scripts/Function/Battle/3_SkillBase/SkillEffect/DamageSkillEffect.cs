@@ -7,6 +7,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Damage")]
 public class DamageSkillEffect : SkillEffect
 {
+    // 旧资产默认使用资产数值 新技能可切换为技能表
+    [LabelText("伤害数值来源")] [SerializeField] private SkillDamageSource damageSource = SkillDamageSource.Asset;
+
     //基础伤害值
     [LabelText("基础伤害")]
     [SerializeField] private float baseDamage = 10f;
@@ -23,6 +26,10 @@ public class DamageSkillEffect : SkillEffect
     /// </summary>
     public override void Execute(SkillContext context)
     {
+        if (context == null) return;
+        float resolvedBase = baseDamage, resolvedScale = powerScale;
+        SkillPowerType resolvedPower = powerType;
+        if (!SkillDamageBridge.Resolve(context, damageSource, ref resolvedBase, ref resolvedScale, ref resolvedPower)) return;
         // 检查目标是否存在，不存在则直接返回
         if (context.Target == null) return;
 
@@ -40,9 +47,9 @@ public class DamageSkillEffect : SkillEffect
         var result = SkillDamageTool.Calculate(
             context,
             target,
-            baseDamage,
-            powerScale,
-            powerType);
+            resolvedBase,
+            resolvedScale,
+            resolvedPower);
 
         // 让目标受到计算出的伤害
         if (damageable.TakeDamage(result.Amount, context))

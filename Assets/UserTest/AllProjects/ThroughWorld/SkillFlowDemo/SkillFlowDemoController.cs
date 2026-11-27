@@ -97,6 +97,8 @@ public class SkillFlowDemoController : MonoBehaviour
     /// </summary>
     private bool Cast(RunTimeSkillData data, string modeName)
     {
+        var battleCaster = caster.GetComponent<SkillCaster>();
+        if (battleCaster != null && battleCaster.IsCasting) return false;
         if (pending || caster.SkillControl.NeedUseSkill) return false;
         mode = modeName;
         hitsBeforeCast = target.ReceivedHits;

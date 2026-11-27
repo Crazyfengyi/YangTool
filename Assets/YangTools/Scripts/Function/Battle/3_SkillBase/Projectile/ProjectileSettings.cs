@@ -190,7 +190,7 @@ internal sealed class ProjectileRuntime
     internal SkillContext ContextAt(Vector3 point, Vector3 forward, GameObject target)
     {
         return new SkillContext { Caster = context.Caster, Skill = context.Skill, SourceWeapon = context.SourceWeapon,
-            SourceInstanceId = context.SourceInstanceId, Session = context.Session, Target = target,
+            SourceInstanceId = context.SourceInstanceId, Session = context.Session, TableDamage = context.TableDamage, Target = target,
             OriginPoint = point, Point = point, Direction = forward };
     }
 }

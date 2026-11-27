@@ -1,46 +1,14 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("Ê¹ÓÃµ±Ç°¼¼ÄÜ")]
-///// <summary>
-///// Ê¹ÓÃµ±Ç°¼¼ÄÜ
-///// </summary>
-//public class UseCurrentSkill : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ÊÇ·ñÁ¢¼´½øÈëÄÜÈ´
-//    /// </summary>
-//    public bool isImmediatelyCooling;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        roleBase.UseCurrentSkill(isImmediatelyCooling);
-
-//        return TaskStatus.Success;
-//    }
-
-//    public override void OnEnd()
-//    {
-
-//    }
-//}
+/// <summary>
+/// ä½¿ç”¨ç»Ÿä¸€æ§åˆ¶å™¨å¯åŠ¨å½“å‰å¾…æ‰§è¡ŒæŠ€èƒ½
+/// </summary>
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("ä½¿ç”¨ç»Ÿä¸€æ§åˆ¶å™¨å¯åŠ¨å½“å‰å¾…æ‰§è¡ŒæŠ€èƒ½")]
+public class UseCurrentSkill : SkillUseAction
+{
+    [HideInInspector] public bool isImmediatelyCooling; // å…¼å®¹æ—§é…ç½® å†·å´æ—¶ç‚¹ç”±æ§åˆ¶å™¨ç»Ÿä¸€å¤„ç†
+}

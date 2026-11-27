@@ -1,46 +1,23 @@
-///** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       YangWork 
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-05-18 
-//*/
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime;
-//using UnityEngine;
-//using System.Collections;
-//using YangToolDebuger;
-//using DataStruct;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-//public class CheckIsState : Conditional
-//{
-//    /// <summary>
-//    /// 自身角色脚本
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// 正面状态
-//    /// </summary>
-//    public ControlStateType controlStateType;
+/// <summary>
+/// 当前角色没有旧控制状态查询接口
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("当前角色没有旧控制状态查询接口")]
+public class CheckIsState : Conditional
+{
+    public ControlStateType controlStateType; // 保留原节点配置
 
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//        if (!roleBase)
-//        {
-//            Debuger.ToError($"{gameObject.name}的CheckIsDie中RoleBase未找到");
-//        }
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (roleBase.roleState.IsHaveState(controlStateType))
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-//}
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "当前角色没有旧控制状态查询接口");
+    }
+}

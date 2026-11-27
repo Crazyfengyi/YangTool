@@ -1,122 +1,72 @@
-///** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       YangWork 
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-05-18 
-//*/
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime.Tasks.Movement;
-//using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine.AI;
-//using DataStruct;
-//using YangTools;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
+using Pathfinding;
 
-//[TaskIcon(BehaviorSetting.path + "跳跃.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("需要至少记录一个点")]
-//public class JumpToPos : Action
-//{
-//    /// <summary>
-//    /// 是否看向目标点
-//    /// </summary>
-//    public bool isLookTargetPoint = true;
-//    /// <summary>
-//    /// 转向速度
-//    /// </summary>
-//    public float rotaSpeed = 10f;
-//    /// <summary>
-//    /// 自身角色脚本
-//    /// </summary>
-//    private RoleBase roleBase;
-//    private Vector3 startPos;
-//    /// <summary>
-//    /// 目标点
-//    /// </summary>
-//    private Vector3 targetPos;
-//    /// <summary>
-//    /// 记时
-//    /// </summary>
-//    private float time = 0f;
-//    /// <summary>
-//    /// 速度
-//    /// </summary>
-//    public float speed = 2f;
-//    /// <summary>
-//    /// 移动时间
-//    /// </summary>
-//    public float moveTime = 1f;
-//    /// <summary>
-//    /// 开始旋转
-//    /// </summary>
-//    private Vector3 startRota;
-//    /// <summary>
-//    /// 目标旋转
-//    /// </summary>
-//    private Vector3 targetRota;
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
+/// <summary>
+/// 按配置时长移动到记录点并暂时让出寻路控制
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "跳跃.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("按配置时长移动到记录点并暂时让出寻路控制")]
+public class JumpToPos : Action
+{
+    public bool isLookTargetPoint = true; // 是否转向记录点
+    public float rotaSpeed = 10f; // 转向速度
+    public float speed = 2f; // 时间推进倍率
+    public float moveTime = 1f; // 移动时长
+    private RoleBase role; // 本轮移动角色
+    private AIPath path; // 临时停用的寻路组件
+    private bool previousCanMove; // 寻路原有移动状态
+    private Vector3 from, to; // 本轮起终点
+    private float elapsed; // 已经过的移动时间
+    private bool started; // 本节点是否已接管移动
 
-//    public override void OnStart()
-//    {
-//        time = 0;
-//        startRota = gameObject.transform.eulerAngles;
-//        startPos = roleBase.transform.position;
-//        targetPos = roleBase.recordPointList[0];
-//        targetRota = targetPos - gameObject.transform.position;
-
-//        if (targetRota == Vector3.zero)
-//        {
-//            targetRota = roleBase.Model.forward;
-//        }
-
-//        //TODO 需要阶段回调?播特效之类的
-//        GameObject effect = roleBase.PlayEffectAtSelf("猩猩跳跃拖尾", EffectPointType.Body);
-//        roleBase.loopEffectList.Add(effect);
-//    }
-
-//    // 寻找目标。代理到达目的地后返回success
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (isLookTargetPoint)
-//        {
-//            //转向到于3度时
-//            if (Vector3.Angle(roleBase.Model.forward.normalized, targetRota.normalized) > 3)
-//            {
-//                roleBase.Model.forward = Vector3.Slerp(roleBase.Model.forward, targetRota.normalized, rotaSpeed * Time.deltaTime);
-//            }
-//        }
-
-//        Vector3 tempPos = startPos;
-//        //时间内移动到目标点
-//        if (Mathf.Abs(time - moveTime) > 0.03f)
-//        {
-//            tempPos = Vector3.Lerp(startPos, targetPos, time / moveTime);
-//        }
-//        else
-//        {
-//            tempPos = targetPos;
-//        }
-//        tempPos.y = Mathf.Lerp(startPos.y, targetPos.y, time / moveTime);
-
-//        gameObject.transform.position = tempPos;
-//        time += Time.deltaTime * speed;
-
-//        if (time > moveTime)
-//        {
-//            roleBase.ClearAllTempEffect();
-//            gameObject.transform.position = targetPos;
-//            roleBase.rigbody.velocity = Vector3.zero;
-//            return TaskStatus.Success;
-//        }
-//        return TaskStatus.Running;
-//    }
-//    public override void OnEnd()
-//    {
-//    }
-//}
+    /// <summary>
+    /// 保存起终点并暂时接管移动
+    /// </summary>
+    public override void OnStart()
+    {
+        started = false;
+        elapsed = 0;
+        role = GetComponent<RoleBase>();
+        if (role == null || !(speed > 0) || !(moveTime > 0) || float.IsInfinity(speed) || float.IsInfinity(moveTime)) return;
+        var point = BehaviorSetting.Record(role).Position;
+        if (!point.HasValue) return;
+        var body = GetComponent<Rigidbody>();
+        if (body != null && !body.isKinematic) return;
+        from = role.transform.position;
+        to = point.Value;
+        path = GetComponent<AIPath>();
+        if (path != null)
+        {
+            previousCanMove = path.canMove;
+            path.canMove = false;
+        }
+        started = true;
+    }
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        if (!started || role == null) return TaskStatus.Failure;
+        if (isLookTargetPoint) BehaviorSetting.Face(BehaviorSetting.Root(role), to - from, rotaSpeed);
+        elapsed += Time.deltaTime * speed;
+        role.transform.position = Vector3.Lerp(from, to, elapsed / moveTime);
+        return elapsed >= moveTime ? TaskStatus.Success : TaskStatus.Running;
+    }
+    /// <summary>
+    /// 同步当前位移并恢复寻路移动控制
+    /// </summary>
+    public override void OnEnd()
+    {
+        if (started && role != null && path != null)
+        {
+            path.Teleport(role.transform.position, false);
+            path.canMove = previousCanMove;
+        }
+        started = false;
+    }
+}

@@ -1,174 +1,83 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "Common.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("Í¨¹ıAction")]
-///// <summary>
-///// Ê¹ÓÃµ±Ç°¼¼ÄÜ
-///// </summary>
-//public class CommonAction : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ÀàĞÍ
-//    /// </summary>
-//    public CommonActionType commonActionType;
-//    /// <summary>
-//    /// boolÖµ
-//    /// </summary>
-//    public bool boolValue;
-//    /// <summary>
-//    /// ÊıÖµ
-//    /// </summary>
-//    public float floatVaule;
-//    /// <summary>
-//    /// ×Ö·û´®
-//    /// </summary>
-//    public string strValue;
+/// <summary>
+/// æ‰§è¡Œå½“å‰è§’è‰²æ”¯æŒçš„é€šç”¨åŠ¨ä½œ æ—§èŒä¸šæ­¦å™¨å’Œå® ç‰©åˆ†æ”¯ç¼ºå°‘æ¥å£
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "Common.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("æ‰§è¡Œå½“å‰è§’è‰²æ”¯æŒçš„é€šç”¨åŠ¨ä½œ æ—§èŒä¸šæ­¦å™¨å’Œå® ç‰©åˆ†æ”¯ç¼ºå°‘æ¥å£")]
+public class CommonAction : Action
+{
+    public CommonActionType commonActionType; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public bool boolValue; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float floatVaule; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public string strValue; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-//    public override TaskStatus OnUpdate()
-//    {
-//        switch (commonActionType)
-//        {
-//            case CommonActionType.ÉèÖÃÑªÌõÏÔÒş:
-//                roleBase.SetHpBarShow(boolValue);
-//                break;
-//            case CommonActionType.ÉèÖÃÊÇ·ñ¼¤»î:
-//                roleBase.SetBoolMark(BoolUseEnum.IsInactive, boolValue);
-//                break;
-//            case CommonActionType.ÉèÖÃÊÇ·ñ¹¥»÷ÖĞ:
-//                roleBase.SetBoolMark(BoolUseEnum.IsInAttackTag, boolValue);
-//                break;
-//            case CommonActionType.ÉèÖÃÆÕ¹¥ÀäÈ´Ê±¼ä:
-//                roleBase.SetFloatMark(DataStruct.FloatUseEnum.AttackCooling, floatVaule);
-//                roleBase.SetBoolMark(DataStruct.BoolUseEnum.IsAttackCooling, true);
-//                break;
-//            case CommonActionType.ÉèÖÃÊÖÉÏÎäÆ÷ÏÔÒş:
-//                if (roleBase as Player)
-//                {
-//                    ((Player)roleBase).SetHandWeaponShow(boolValue);
-//                }
-//                else
-//                {
-//                    roleBase.SetHandWeaponShow(boolValue);
-//                }
-//                break;
-//            case CommonActionType.ÉèÖÃ±³ÉÏÎäÆ÷ÏÔÒş:
-//                roleBase.SetBackWeaponShow(boolValue);
-//                break;
-//            case CommonActionType.ÉèÖÃ¼¼ÄÜ½øÈëÀäÈ´:
-//                roleBase.UseCurrentSkill();
-//                break;
-//            case CommonActionType.Íæ¼Ò×¨ÓÃ_ÉèÖÃÌØÊâ¶¯×÷½áÊø:
-//                ((Player)roleBase).SetDogeOver();
-//                break;
-//            case CommonActionType.ÉèÖÃÇĞ»»Ö°ÒµÍê³É:
-//                {
-//                    roleBase.SetBoolMark(BoolUseEnum.IsTakeBackWeapon, false);
-//                    break;
-//                }
-//            case CommonActionType.Íæ¼Ò×¨ÓÃ_ÇĞ»»Ö°Òµ:
-//                //((Player)roleBase).ChangeJob();
-//                ((Player)roleBase).SetBoolMark(BoolUseEnum.ÊÇ·ñĞèÒªÇĞ»»Ö°Òµ, true);
-//                break;
-//            case CommonActionType.Íæ¼Ò×¨ÓÃ_ÄÃ³öÎäÆ÷½áÊø:
-//                roleBase.SetBoolMark(BoolUseEnum.IsTakeWeapon, false);
-//                break;
-//            case CommonActionType.Íæ¼Ò×¨ÓÃ_ĞèÒªÄÃ³öÎäÆ÷:
-//                roleBase.SetBoolMark(BoolUseEnum.IsTakeWeapon, true);
-//                break;
-//            case CommonActionType.²¥·ÅÌØĞ§_¸úËæ:
-//                roleBase.PlayEffectAtSelf(strValue, (EffectPointType)floatVaule);
-//                break;
-//            case CommonActionType.²¥·ÅÌØĞ§_²»¸úËæ:
-//                roleBase.PlayEffect(strValue, (EffectPointType)floatVaule);
-//                break;
-//            case CommonActionType.ÇåÀíÑ­»·ÌØĞ§:
-//                roleBase.ClearAllTempEffect();
-//                break;
-//            case CommonActionType.ÉèÖÃ¸ºÃæ×´Ì¬:
-//                roleBase.SetDeState((DeControlStateType)floatVaule, boolValue);
-//                break;
-//            case CommonActionType.ÇåÀíÑ­»·ÒôĞ§:
-//                roleBase.CleanLoopAudio();
-//                break;
-//            case CommonActionType.ËÀÍö¹Ø±ÕÅö×²Ìå:
-//                roleBase.DieCloseCollider();
-//                break;
-//            case CommonActionType.ÉèÖÃ»¬²½´ò¶ÏÖµ:
-//                roleBase.SetBoolMark(BoolUseEnum.»¬²½´ò¶ÏÖµ, boolValue);
-//                break;
-//            case CommonActionType.³èÎï×¨ÓÃ_¸úËæÖ÷ÈË:
-//                ((PetBase)roleBase).SetFlowMaster(boolValue);
-//                break;
-//            case CommonActionType.ÉèÖÃÊÇ·ñÇ¿ÖÆ¸úËæÖĞ:
-//                roleBase.SetBoolMark(BoolUseEnum.Ç¿ÖÆ¸úËæÖ÷ÈËÖĞ, boolValue);
-//                break;
-//            case CommonActionType.¼¤»îµã:
-//                roleBase.ActiveTime();
-//                break;
-//            case CommonActionType.NULL_Õ¼Î»:
-//                {
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        if (role == null) return TaskStatus.Failure;
+        switch (commonActionType)
+        {
+            case CommonActionType.è®¾ç½®è¡€æ¡æ˜¾éš:
+                if (role.HealthControl?.healthBar == null) return TaskStatus.Failure;
+                role.HealthControl.ToogleHpBarShow(boolValue);
+                return TaskStatus.Success;
+            case CommonActionType.æ’­æ”¾ç‰¹æ•ˆ_è·Ÿéš:
+            case CommonActionType.æ’­æ”¾ç‰¹æ•ˆ_ä¸è·Ÿéš:
+                return BehaviorSetting.PlayRoleEffect(this, role, strValue, (ModelPointType)floatVaule,
+                    commonActionType == CommonActionType.æ’­æ”¾ç‰¹æ•ˆ_è·Ÿéš);
+            case CommonActionType.è®¾ç½®æŠ€èƒ½è¿›å…¥å†·å´:
+                if (role.SkillControl == null || role.SkillControl.NeedUseSkill) return TaskStatus.Failure;
+                role.SkillControl.StartCommonCooldown();
+                return TaskStatus.Success;
+            case CommonActionType.æ­»äº¡å…³é—­ç¢°æ’ä½“:
+                if (role.HealthControl == null || role.HealthControl.GetCurrentHp() > 0 || role.FirstCollider == null) return TaskStatus.Failure;
+                role.FirstCollider.enabled = false;
+                return TaskStatus.Success;
+            case CommonActionType.NULL_å ä½:
+                return TaskStatus.Success;
+            default:
+                return BehaviorSetting.Unsupported(this, $"æ—§é€šç”¨åŠ¨ä½œæœªæ˜ å°„ {commonActionType}");
+        }
+    }
+}
 
-//                }
-//                break;
-//            case CommonActionType.ËÀÍö¶¯»­Ç°:
-//                //roleBase.DieFront();
-//                break;
-//            case CommonActionType.Çå¿ÕÁÙÊ±ÌØĞ§:
-//                roleBase.ClearTempEffect();
-//                break;
-//            default:
-//                Debuger.ToError("Ã»Ê¶±ğµ½Í¨ÓÃActionÀàĞÍ");
-//                break;
-//        }
-
-//        return TaskStatus.Success;
-//    }
-//}
-
-///// <summary>
-///// Í¨ÓÃÃ¶¾Ù
-///// </summary>
-//public enum CommonActionType
-//{
-//    None,
-//    ÉèÖÃÑªÌõÏÔÒş,
-//    ÉèÖÃÊÇ·ñ¼¤»î,
-//    ÉèÖÃÊÇ·ñ¹¥»÷ÖĞ,
-//    ÉèÖÃÆÕ¹¥ÀäÈ´Ê±¼ä,
-//    ÉèÖÃÊÖÉÏÎäÆ÷ÏÔÒş,
-//    ÉèÖÃ±³ÉÏÎäÆ÷ÏÔÒş,
-//    ÉèÖÃ¼¼ÄÜ½øÈëÀäÈ´,
-//    Íæ¼Ò×¨ÓÃ_ÉèÖÃÌØÊâ¶¯×÷½áÊø,
-//    ÉèÖÃÇĞ»»Ö°ÒµÍê³É,
-//    Íæ¼Ò×¨ÓÃ_ÇĞ»»Ö°Òµ,
-//    Íæ¼Ò×¨ÓÃ_ÄÃ³öÎäÆ÷½áÊø,
-//    Íæ¼Ò×¨ÓÃ_ĞèÒªÄÃ³öÎäÆ÷,
-//    ²¥·ÅÌØĞ§_¸úËæ,
-//    ²¥·ÅÌØĞ§_²»¸úËæ,
-//    ÇåÀíÑ­»·ÌØĞ§,
-//    ÉèÖÃ¸ºÃæ×´Ì¬,
-//    ÇåÀíÑ­»·ÒôĞ§,
-//    ËÀÍö¹Ø±ÕÅö×²Ìå,
-//    ÉèÖÃ»¬²½´ò¶ÏÖµ,
-//    ³èÎï×¨ÓÃ_¸úËæÖ÷ÈË,
-//    ÉèÖÃÊÇ·ñÇ¿ÖÆ¸úËæÖĞ,
-//    ¼¤»îµã,
-//    NULL_Õ¼Î»,
-//    ËÀÍö¶¯»­Ç°,
-//    Çå¿ÕÁÙÊ±ÌØĞ§,
-//}
+/// <summary>
+/// ä¿ç•™æ—§è¡Œä¸ºæ ‘çš„é€‰é¡¹é¡ºåº
+/// </summary>
+public enum CommonActionType
+{
+    None,
+    è®¾ç½®è¡€æ¡æ˜¾éš,
+    è®¾ç½®æ˜¯å¦æ¿€æ´»,
+    è®¾ç½®æ˜¯å¦æ”»å‡»ä¸­,
+    è®¾ç½®æ™®æ”»å†·å´æ—¶é—´,
+    è®¾ç½®æ‰‹ä¸Šæ­¦å™¨æ˜¾éš,
+    è®¾ç½®èƒŒä¸Šæ­¦å™¨æ˜¾éš,
+    è®¾ç½®æŠ€èƒ½è¿›å…¥å†·å´,
+    ç©å®¶ä¸“ç”¨_è®¾ç½®ç‰¹æ®ŠåŠ¨ä½œç»“æŸ,
+    è®¾ç½®åˆ‡æ¢èŒä¸šå®Œæˆ,
+    ç©å®¶ä¸“ç”¨_åˆ‡æ¢èŒä¸š,
+    ç©å®¶ä¸“ç”¨_æ‹¿å‡ºæ­¦å™¨ç»“æŸ,
+    ç©å®¶ä¸“ç”¨_éœ€è¦æ‹¿å‡ºæ­¦å™¨,
+    æ’­æ”¾ç‰¹æ•ˆ_è·Ÿéš,
+    æ’­æ”¾ç‰¹æ•ˆ_ä¸è·Ÿéš,
+    æ¸…ç†å¾ªç¯ç‰¹æ•ˆ,
+    è®¾ç½®è´Ÿé¢çŠ¶æ€,
+    æ¸…ç†å¾ªç¯éŸ³æ•ˆ,
+    æ­»äº¡å…³é—­ç¢°æ’ä½“,
+    è®¾ç½®æ»‘æ­¥æ‰“æ–­å€¼,
+    å® ç‰©ä¸“ç”¨_è·Ÿéšä¸»äºº,
+    è®¾ç½®æ˜¯å¦å¼ºåˆ¶è·Ÿéšä¸­,
+    æ¿€æ´»ç‚¹,
+    NULL_å ä½,
+    æ­»äº¡åŠ¨ç”»å‰,
+    æ¸…ç©ºä¸´æ—¶ç‰¹æ•ˆ,
+}

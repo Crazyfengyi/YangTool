@@ -25,20 +25,22 @@ public static class SkillDamageTool
         // 获取施法者和目标的CharacterStats组件，如果对象不存在则为null
         var casterStats = context.Caster != null ? context.Caster.GetComponent<CharacterStats>() : null;
         var targetStats = target != null ? target.GetComponent<CharacterStats>() : null;
+        var casterProvider = context.Caster != null ? context.Caster.GetComponent<ISkillStatProvider>() : null;
+        var targetProvider = target != null ? target.GetComponent<ISkillStatProvider>() : null;
 
         // 伤害类型
-        float power = GetPower(casterStats, powerType);
+        float power = casterProvider != null ? GetPower(casterProvider, powerType) : GetPower(casterStats, powerType);
         // 获取施法者的技能伤害加成
-        float multiplier = 1f + GetStat(casterStats, StatType.SkillDamageMultiplier);
+        float multiplier = 1f + GetStat(casterStats, casterProvider, StatType.SkillDamageMultiplier);
         // 计算原始伤害值 = (基础伤害 + 伤害类型值 * 类型倍率) * 伤害倍率
         float rawDamage = (baseDamage + power * powerScale) * multiplier;
         // 应用目标的防御力,计算减伤后的伤害值
-        float reducedDamage = ApplyDefense(rawDamage, GetStat(targetStats, StatType.Defense));
+        float reducedDamage = ApplyDefense(rawDamage, GetStat(targetStats, targetProvider, StatType.Defense));
 
         // 获取施法者的暴击率，并限制在0-1之间
-        float critRate = Mathf.Clamp01(GetStat(casterStats, StatType.CritRate));
+        float critRate = Mathf.Clamp01(GetStat(casterStats, casterProvider, StatType.CritRate));
         // 获取施法者的暴击伤害倍率，确保至少为1
-        float critDamage = Mathf.Max(1f, GetStat(casterStats, StatType.CritDamage));
+        float critDamage = Mathf.Max(1f, GetStat(casterStats, casterProvider, StatType.CritDamage));
         // 判断本次攻击是否暴击
         bool isCritical = Random.value < critRate;
 
@@ -100,6 +102,24 @@ public static class SkillDamageTool
     private static float GetStat(CharacterStats stats, StatType type)
     {
         return stats != null ? stats.GetValue(type) : 0f;
+    }
+
+    /// <summary>
+    /// 优先使用角色适配器 旧角色继续读取 Battle 属性组件
+    /// </summary>
+    private static float GetStat(CharacterStats stats, ISkillStatProvider provider, StatType type)
+    {
+        return provider != null ? provider.GetSkillStat(type) : GetStat(stats, type);
+    }
+
+    /// <summary>
+    /// 从适配器读取技能使用的攻击属性
+    /// </summary>
+    private static float GetPower(ISkillStatProvider provider, SkillPowerType type)
+    {
+        if (type == SkillPowerType.Attack) return provider.GetSkillStat(StatType.Attack);
+        if (type == SkillPowerType.MagicPower) return provider.GetSkillStat(StatType.MagicPower);
+        return provider.GetSkillStat(StatType.Attack) + provider.GetSkillStat(StatType.MagicPower);
     }
 }
 

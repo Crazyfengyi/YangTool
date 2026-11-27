@@ -1,62 +1,25 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "±êÊ¶_Ì¾ºÅ.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("¾ØĞÎ¾¯¸æÇøÓòAction")]
-///// <summary>
-///// ²¥·ÅÌØĞ§
-///// </summary>
-//public class PlayWarningRectangle : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ³ÖĞøÊ±¼ä
-//    /// </summary>
-//    public float time = 1;
-//    /// <summary>
-//    /// ³¤¶È
-//    /// </summary>
-//    public float length = 5f;
-//    /// <summary>
-//    /// ¿í¶È
-//    /// </summary>
-//    public float width = 2;
+/// <summary>
+/// å½“å‰é¡¹ç›®ç¼ºå°‘çŸ©å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "æ ‡è¯†_å¹å·.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("å½“å‰é¡¹ç›®ç¼ºå°‘çŸ©å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£")]
+public class PlayWarningRectangle : Action
+{
+    public float time = 1; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float length = 5f; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float width = 2; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //Ä¿±êµã
-//        Vector3 targetPos = roleBase.recordPointList[0];
-//        targetPos.y = 0.002f;
-
-//        //×ÔÉíÎ»ÖÃ
-//        Vector3 nowPos = transform.position;
-//        nowPos.y = 0.002f;
-//        Vector3 direction = targetPos - nowPos;
-
-//        float len = length / 4 + 1;
-
-//        //ÌØĞ§
-//        GameObject effectPrefabs = Resources.Load<GameObject>($"¾ØĞÎÔ¤¾¯");
-//        GameObject effectObj = GameObject.Instantiate(effectPrefabs, nowPos, Quaternion.identity);
-//        effectObj.transform.forward = roleBase.modelInfo.Root.transform.forward;
-//        //Ëõ·Å
-//        Vector3 resultScale = Vector3.one;
-//        resultScale.z *= len;
-//        resultScale.x *= width;
-//        effectObj.transform.localScale = resultScale;
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "å½“å‰é¡¹ç›®ç¼ºå°‘çŸ©å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£");
+    }
+}

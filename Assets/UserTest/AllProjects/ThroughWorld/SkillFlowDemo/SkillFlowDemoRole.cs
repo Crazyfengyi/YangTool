@@ -9,8 +9,13 @@ public class SkillFlowDemoRole : RoleBase
 {
     [SerializeField, LabelText("模型信息")] private ModelInfo demoModel; // 场景显式绑定的模型
     [SerializeField, Min(1), LabelText("初始生命")] private float initialHealth = 200; // 靶子的重置生命
+    [SerializeField, LabelText("演示攻击力")] private float demoAttack = 30; // 表倍率参与计算的攻击力
+    [SerializeField, LabelText("演示防御力")] private float demoDefense = 20; // Battle 比例减伤使用的防御力
     private float currentHealth; // 当前演示生命
     private int receivedHits; // 实际收到的伤害次数
+    [SerializeField, LabelText("整合技能目标")] private GameObject integrationTarget; // 示例 AI 节点使用的目标
+
+    public override GameObject Target => integrationTarget != null ? integrationTarget : base.Target;
 
     public float CurrentHealth => currentHealth;
     public int ReceivedHits => receivedHits;
@@ -21,6 +26,9 @@ public class SkillFlowDemoRole : RoleBase
     public override void IInit()
     {
         ModelInfo = demoModel;
+        roleAttributeControl = new RoleAttributeControl(this);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Atk, demoAttack);
+        roleAttributeControl.ChangeAttribute(RoleAttribute.Def, demoDefense);
         InitializeSkillControl();
         InitRecord();
         ResetHealth();

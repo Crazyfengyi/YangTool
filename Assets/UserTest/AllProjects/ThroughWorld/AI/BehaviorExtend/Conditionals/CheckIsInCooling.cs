@@ -1,44 +1,24 @@
-///** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       YangWork 
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-05-18 
-//*/
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime;
-//using UnityEngine;
-//using System.Collections;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-///// <summary>
-///// 是否在攻击冷却中
-///// </summary>
-//public class CheckIsInCooling : Conditional
-//{
-//    /// <summary>
-//    /// 自身角色脚本
-//    /// </summary>
-//    private RoleBase roleBase;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//        if (!roleBase)
-//        {
-//            Debuger.ToError($"{gameObject.name}的CheakIsInActive中RoleBase未找到");
-//        }
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (roleBase.GetBoolMark(DataStruct.BoolUseEnum.IsAttackCooling))
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-//}
+/// <summary>
+/// 检查当前技能或公共间隔是否冷却中
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("检查当前技能或公共间隔是否冷却中")]
+public class CheckIsInCooling : Conditional
+{
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var control = GetComponent<RoleBase>()?.SkillControl;
+        if (control == null) return TaskStatus.Failure;
+        var skill = control.CurrentRunTimeSkillData ?? control.LastResult.Skill;
+        return BehaviorSetting.Result(control.CommonCooldownRemaining > 0 || control.GetCooldownRemaining(skill) > 0);
+    }
+}

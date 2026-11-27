@@ -9,6 +9,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Melee Hit")]
 public class MeleeHitSkillEffect : SkillEffect
 {
+    // 旧资产默认使用资产数值 新技能可切换为技能表
+    [LabelText("伤害数值来源")] [SerializeField] private SkillDamageSource damageSource = SkillDamageSource.Asset;
+
     /// <summary>
     /// 近战打击形状枚举 定义了近战攻击的范围形状 球形或长方体
     /// </summary>
@@ -46,6 +49,10 @@ public class MeleeHitSkillEffect : SkillEffect
 
     public override void Execute(SkillContext context)
     {
+        if (context == null) return;
+        float resolvedBase = baseDamage, resolvedScale = powerScale;
+        SkillPowerType resolvedPower = powerType;
+        if (!SkillDamageBridge.Resolve(context, damageSource, ref resolvedBase, ref resolvedScale, ref resolvedPower)) return;
         if (context == null)  // 检查上下文是否有效
         {
             return;
@@ -85,7 +92,7 @@ public class MeleeHitSkillEffect : SkillEffect
             }
 
             // 计算伤害并应用
-            SkillDamageResult result = SkillDamageTool.Calculate(context, target, baseDamage, powerScale, powerType);
+            SkillDamageResult result = SkillDamageTool.Calculate(context, target, resolvedBase, resolvedScale, resolvedPower);
             if (damageable.TakeDamage(result.Amount, context))
             {
                 context.ReportHit(target);

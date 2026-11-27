@@ -8,6 +8,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Area Damage")]
 public class AreaDamageSkillEffect : SkillEffect
 {
+    // 旧资产默认使用资产数值 新技能可切换为技能表
+    [LabelText("伤害数值来源")] [SerializeField] private SkillDamageSource damageSource = SkillDamageSource.Asset;
+
     [LabelText("范围半径")] [SerializeField] private float radius = 3f; //技能影响半径
     [LabelText("目标层级")] [SerializeField] private LayerMask targetMask = ~0; //目标层级掩码，~0表示所有层级
     [LabelText("基础伤害")] [SerializeField] private float baseDamage = 10f; //基础伤害值
@@ -25,6 +28,10 @@ public class AreaDamageSkillEffect : SkillEffect
     /// </summary>
     public override void Execute(SkillContext context)
     {
+        if (context == null) return;
+        float resolvedBase = baseDamage, resolvedScale = powerScale;
+        SkillPowerType resolvedPower = powerType;
+        if (!SkillDamageBridge.Resolve(context, damageSource, ref resolvedBase, ref resolvedScale, ref resolvedPower)) return;
         //确定伤害中心点：如果有目标且centerOnTarget为true，则以目标为中心，否则使用指定点
         var center = centerOnTarget && context.Target != null
             ? context.Target.transform.position
@@ -50,9 +57,9 @@ public class AreaDamageSkillEffect : SkillEffect
             SkillDamageResult result = SkillDamageTool.Calculate(
                 context,
                 target,
-                baseDamage,
-                powerScale,
-                powerType);
+                resolvedBase,
+                resolvedScale,
+                resolvedPower);
 
             Debug.LogError($"对目标{target.name}造成伤害：{result.Amount}");
             //对目标造成伤害

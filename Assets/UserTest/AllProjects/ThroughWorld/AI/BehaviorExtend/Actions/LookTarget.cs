@@ -1,93 +1,42 @@
-/** 
- *Copyright(C) 2020 by XCHANGE 
- *All rights reserved. 
- *Author:       YangWork 
- *UnityVersion：2020.3.7f1c1 
- *创建时间:         2021-05-11 
-*/
-using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
-using System.Collections;
-using YangTools.Scripts.Core.YangExtend;
 
+/// <summary>
+/// 按配置转向当前目标
+/// </summary>
 [TaskCategory("RoleAI/Motion")]
+[TaskDescription("沿水平方向转向当前目标")]
 public class LookTarget : Action
 {
-    /// <summary>
-    /// 自身角色脚本
-    /// </summary>
-    private RoleBase roleBase;
-    /// <summary>
-    /// 转向类型
-    /// </summary>
-    public LookType lookType;
-    /// <summary>
-    /// 转身速度
-    /// </summary>
-    public float speed = 10f;
-    /// <summary>
-    /// 开始方向
-    /// </summary>
-    private Vector3 startDirection;
-    /// <summary>
-    /// 目标方向
-    /// </summary>
-    private Vector3 targetDirection;
+    public LookType lookType; // 转向方式
+    public float speed = 10f; // 转向速度
+    private RoleBase roleBase; // 当前角色
 
+    /// <summary>
+    /// 缓存角色引用
+    /// </summary>
     public override void OnAwake()
     {
-        roleBase = gameObject.GetComponent<RoleBase>();
+        roleBase = GetComponent<RoleBase>();
     }
 
-    public override void OnStart()
-    {
-        startDirection = roleBase.ModelInfo.Root.forward;
-
-        if (roleBase.Target)
-        {
-            targetDirection = (roleBase.Target.transform.position - gameObject.transform.position).SetYValue(gameObject.transform.position.y).normalized;
-        }
-        else
-        {
-            targetDirection = roleBase.ModelInfo.Root.forward;
-        }
-    }
-
+    /// <summary>
+    /// 目标丢失时结束 转向完成后返回成功
+    /// </summary>
     public override TaskStatus OnUpdate()
     {
-        switch (lookType)
-        {
-            case LookType.Lerp:
-                {
-                    roleBase.ModelInfo.Root.forward = Vector3.RotateTowards(roleBase.ModelInfo.Root.forward, targetDirection, speed * Time.deltaTime, 0f);
-                    //roleBase.ModelInfo.Root.rotation = Quaternion.LookRotation(newDirection);
-                    //转向到小于1度时
-                    if (Vector3.Angle(roleBase.ModelInfo.Root.forward, targetDirection) < 1F)
-                    {
-                        return TaskStatus.Success;
-                    }
-                }
-                break;
-            case LookType.Immediate:
-                roleBase.ModelInfo.Root.LookAt(targetDirection);
-                return TaskStatus.Success;
-            default:
-                break;
-        }
-
-        return TaskStatus.Running;
+        var root = BehaviorSetting.Root(roleBase);
+        if (root == null || roleBase.Target == null) return TaskStatus.Failure;
+        if (lookType != LookType.Lerp && lookType != LookType.Immediate) return TaskStatus.Failure;
+        return BehaviorSetting.Face(root, roleBase.Target.transform.position - root.position, speed, lookType == LookType.Immediate);
     }
 }
 
+/// <summary>
+/// 转向执行方式
+/// </summary>
 public enum LookType
 {
-    /// <summary>
-    /// 缓动
-    /// </summary>
     Lerp,
-    /// <summary>
-    /// 立刻
-    /// </summary>
     Immediate,
 }

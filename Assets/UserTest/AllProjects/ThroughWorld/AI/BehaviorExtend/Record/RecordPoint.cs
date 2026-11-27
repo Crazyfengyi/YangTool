@@ -1,137 +1,72 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "ÂÌµã.png")]
-//[TaskCategory("RoleAI/Record")]
-//[TaskDescription("¼ÇÂ¼µã--ÓĞĞ©ĞèÒª±£Ö¤Ä¿±ê´æÔÚ")]
-///// <summary>
-///// ¼ÇÂ¼¹¥»÷µã
-///// </summary>
-//public class RecordPoint : Conditional
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// Ñ¡µãÀàĞÍ
-//    /// </summary>
-//    public RecordPointType recordPointType;
-//    /// <summary>
-//    /// Ñ¡µãÁÙÊ±ÁĞ±í
-//    /// </summary>
-//    private List<Vector3> tempList = new List<Vector3>();
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
+/// <summary>
+/// è®°å½•è‡ªèº«æˆ–ç›®æ ‡æ¨¡å‹æŒ‚ç‚¹ æ—§è·³è·ƒé€‰ç‚¹å’Œæ›²çº¿é€‰ç‚¹éœ€è¦ä¸“ç”¨æ¥å£
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "ç»¿ç‚¹.png")]
+[TaskCategory("RoleAI/Record")]
+[TaskDescription("è®°å½•è‡ªèº«æˆ–ç›®æ ‡æ¨¡å‹æŒ‚ç‚¹ æ—§è·³è·ƒé€‰ç‚¹å’Œæ›²çº¿é€‰ç‚¹éœ€è¦ä¸“ç”¨æ¥å£")]
+public class RecordPoint : Conditional
+{
+    public RecordPointType recordPointType; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    public override TaskStatus OnUpdate()
-//    {
-//        tempList.Clear();
-//        try
-//        {
-//            switch (recordPointType)
-//            {
-//                case RecordPointType.¼ÇÂ¼¹ÖÎïÌøÔ¾µ½Íæ¼ÒÉí±ßµÄÑ¡µã:
-//                    {
-//                        //TODO:ÏÈÕâÑù
-//                        //»ñÈ¡½ÇÉ«·¶Î§1µÄµã
-//                        //List<Position> list = RoomsMgr.Ins.GetPlayerRangPoint(RoleManager.Ins.Heros[0].transform.position, 1);
-//                        //Vector3 result = roleBase.transform.position;
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        if (role == null) return TaskStatus.Failure;
+        var record = BehaviorSetting.Record(role);
+        if (recordPointType == RecordPointType.è®°å½•åˆå§‹æ—‹è½¬åˆ°å…¬å…±åˆ—è¡¨)
+        {
+            var root = BehaviorSetting.Root(role);
+            record.Direction = root != null ? root.forward : (Vector3?)null;
+            return BehaviorSetting.Result(record.Direction.HasValue);
+        }
+        record.Position = null;
+        var type = recordPointType;
+        if (type == RecordPointType.è®°å½•æ€ªç‰©è·³è·ƒåˆ°ç©å®¶èº«è¾¹çš„é€‰ç‚¹ || type == RecordPointType.è®°å½•è¿œç¨‹æ”»å‡»ç‚¹_è´å¡å°”ç›®æ ‡ç‚¹)
+            return BehaviorSetting.Unsupported(this, "æ²¡æœ‰æ­¤ä¸“ç”¨é€‰ç‚¹æ¥å£");
+        bool useTarget = type >= RecordPointType.æ”»å‡»ç›®æ ‡ä½ç½® && type <= RecordPointType.æ”»å‡»ç›®æ ‡èº«ä½“ä½ç½®;
+        var actor = useTarget ? (role.Target != null ? role.Target.GetComponentInParent<RoleBase>() : null) : role;
+        if (actor == null || type < RecordPointType.æ”»å‡»ç›®æ ‡ä½ç½® || type > RecordPointType.è‡ªèº«èº«ä½“ä½ç½®)
+            return TaskStatus.Failure;
+        ModelPointType pointType = type switch
+        {
+            RecordPointType.æ”»å‡»ç›®æ ‡å·¦æ‰‹ä½ç½® or RecordPointType.è‡ªèº«å·¦æ‰‹ä½ç½® => ModelPointType.LeftHand,
+            RecordPointType.æ”»å‡»ç›®æ ‡å³æ‰‹ä½ç½® or RecordPointType.è‡ªèº«å³æ‰‹ä½ç½® => ModelPointType.RightHand,
+            RecordPointType.æ”»å‡»ç›®æ ‡å¤´éƒ¨ä½ç½® or RecordPointType.è‡ªèº«å¤´éƒ¨ä½ç½® => ModelPointType.Head,
+            RecordPointType.æ”»å‡»ç›®æ ‡èº«ä½“ä½ç½® or RecordPointType.è‡ªèº«èº«ä½“ä½ç½® => ModelPointType.Body,
+            _ => ModelPointType.Foot
+        };
+        var point = actor.ModelInfo != null ? actor.ModelInfo.GetEffectPoint(pointType) : null;
+        if (point == null) return TaskStatus.Failure;
+        record.Position = point.position;
+        return TaskStatus.Success;
+    }
+}
 
-//                        //float minDistance = int.MaxValue;
-//                        //for (int i = 0; i < list.Count; i++)
-//                        //{
-//                        //    Vector3 pos = new Vector3(list[i].x, 0, list[i].z);
-//                        //    float distance = Vector3.Distance(roleBase.transform.position, pos);
-//                        //    if (distance < minDistance)
-//                        //    {
-//                        //        minDistance = distance;
-//                        //        result = pos;
-//                        //    }
-//                        //}
-
-//                        Vector3 result = RoleManager.Ins.Heros.Count > 0 ? RoleManager.Ins.Heros[0].transform.position : roleBase.transform.position;
-//                        tempList.Add(result);
-//                    }
-//                    break;
-//                case RecordPointType.¹¥»÷Ä¿±êÎ»ÖÃ:
-//                    tempList.Add(roleBase.GetTarget().roleModelInfo.GetEffectPoint(EffectPointType.Foot).position);
-//                    break;
-//                case RecordPointType.¹¥»÷Ä¿±êÓÒÊÖÎ»ÖÃ:
-//                    tempList.Add(roleBase.GetTarget().roleModelInfo.GetEffectPoint(EffectPointType.RightHand).position);
-//                    break;
-//                case RecordPointType.¹¥»÷Ä¿±ê×óÊÖÎ»ÖÃ:
-//                    tempList.Add(roleBase.GetTarget().roleModelInfo.GetEffectPoint(EffectPointType.LeftHand).position);
-//                    break;
-//                case RecordPointType.¹¥»÷Ä¿±êÍ·²¿Î»ÖÃ:
-//                    tempList.Add(roleBase.GetTarget().roleModelInfo.GetEffectPoint(EffectPointType.Head).position);
-//                    break;
-//                case RecordPointType.¹¥»÷Ä¿±êÉíÌåÎ»ÖÃ:
-//                    tempList.Add(roleBase.GetTarget().roleModelInfo.GetEffectPoint(EffectPointType.Body).position);
-//                    break;
-//                case RecordPointType.×ÔÉíÎ»ÖÃ:
-//                    tempList.Add(roleBase.roleModelInfo.GetEffectPoint(EffectPointType.Foot).position);
-//                    break;
-//                case RecordPointType.×ÔÉí×óÊÖÎ»ÖÃ:
-//                    tempList.Add(roleBase.roleModelInfo.GetEffectPoint(EffectPointType.LeftHand).position);
-//                    break;
-//                case RecordPointType.×ÔÉíÓÒÊÖÎ»ÖÃ:
-//                    tempList.Add(roleBase.roleModelInfo.GetEffectPoint(EffectPointType.RightHand).position);
-//                    break;
-//                case RecordPointType.×ÔÉíÍ·²¿Î»ÖÃ:
-//                    tempList.Add(roleBase.roleModelInfo.GetEffectPoint(EffectPointType.Head).position);
-//                    break;
-//                case RecordPointType.×ÔÉíÉíÌåÎ»ÖÃ:
-//                    tempList.Add(roleBase.roleModelInfo.GetEffectPoint(EffectPointType.Body).position);
-//                    break;
-//                case RecordPointType.¼ÇÂ¼³õÊ¼Ğı×ªµ½¹«¹²ÁĞ±í:
-//                    tempList.Add(roleBase.initialDirection);
-//                    break;
-//                case RecordPointType.¼ÇÂ¼Ô¶³Ì¹¥»÷µã_±´Èû¶ûÄ¿±êµã:
-//                    tempList.Add(roleBase.GetAtkPointForBessel());
-//                    break;
-//                default:
-//                    tempList.Add(roleBase.transform.position);
-//                    Debuger.ToError($"{roleBase.gameObject.name}:Ñ¡µãÊ§°Ü,½øÈëdefault");
-//                    break;
-//            }
-//        }
-//        catch (System.Exception)
-//        {
-//            Debuger.ToError($"½ÇÉ«:{roleBase.transform.name}µÄ¼ÇÂ¼µãÓĞÎÊÌâ,ÇëÏÈ±£Ö¤ÓĞÄ¿±ê");
-//            throw;
-//        }
-
-//        roleBase.RecordPoints(tempList.ToArray());
-
-//        return TaskStatus.Success;
-//    }
-//}
-
-///// <summary>
-///// ¼ÇÂ¼µãÎ»ÖÃ
-///// </summary>
-//public enum RecordPointType
-//{
-//    None,
-//    ¼ÇÂ¼¹ÖÎïÌøÔ¾µ½Íæ¼ÒÉí±ßµÄÑ¡µã,
-//    ¹¥»÷Ä¿±êÎ»ÖÃ,
-//    ¹¥»÷Ä¿±ê×óÊÖÎ»ÖÃ,
-//    ¹¥»÷Ä¿±êÓÒÊÖÎ»ÖÃ,
-//    ¹¥»÷Ä¿±êÍ·²¿Î»ÖÃ,
-//    ¹¥»÷Ä¿±êÉíÌåÎ»ÖÃ,
-//    ×ÔÉíÎ»ÖÃ,
-//    ×ÔÉí×óÊÖÎ»ÖÃ,
-//    ×ÔÉíÓÒÊÖÎ»ÖÃ,
-//    ×ÔÉíÍ·²¿Î»ÖÃ,
-//    ×ÔÉíÉíÌåÎ»ÖÃ,
-//    ¼ÇÂ¼³õÊ¼Ğı×ªµ½¹«¹²ÁĞ±í,
-//    ¼ÇÂ¼Ô¶³Ì¹¥»÷µã_±´Èû¶ûÄ¿±êµã,
-//}
+/// <summary>
+/// ä¿ç•™æ—§è¡Œä¸ºæ ‘çš„é€‰é¡¹é¡ºåº
+/// </summary>
+public enum RecordPointType
+{
+    None,
+    è®°å½•æ€ªç‰©è·³è·ƒåˆ°ç©å®¶èº«è¾¹çš„é€‰ç‚¹,
+    æ”»å‡»ç›®æ ‡ä½ç½®,
+    æ”»å‡»ç›®æ ‡å·¦æ‰‹ä½ç½®,
+    æ”»å‡»ç›®æ ‡å³æ‰‹ä½ç½®,
+    æ”»å‡»ç›®æ ‡å¤´éƒ¨ä½ç½®,
+    æ”»å‡»ç›®æ ‡èº«ä½“ä½ç½®,
+    è‡ªèº«ä½ç½®,
+    è‡ªèº«å·¦æ‰‹ä½ç½®,
+    è‡ªèº«å³æ‰‹ä½ç½®,
+    è‡ªèº«å¤´éƒ¨ä½ç½®,
+    è‡ªèº«èº«ä½“ä½ç½®,
+    è®°å½•åˆå§‹æ—‹è½¬åˆ°å…¬å…±åˆ—è¡¨,
+    è®°å½•è¿œç¨‹æ”»å‡»ç‚¹_è´å¡å°”ç›®æ ‡ç‚¹,
+}

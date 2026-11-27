@@ -1,41 +1,21 @@
-///** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       YangWork 
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-05-17 
-//*/
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime;
-//using UnityEngine;
-//using System.Collections;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-//public class CheckIsInSlide : Conditional
-//{
-//    /// <summary>
-//    /// 自身角色脚本
-//    /// </summary>
-//    private RoleBase roleBase;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//        if (!roleBase)
-//        {
-//            Debuger.ToError($"{gameObject.name}的CheckIsDie中RoleBase未找到");
-//        }
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (((Player)roleBase).isInDodgeSlide)
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-//}
+/// <summary>
+/// 当前角色没有旧滑步状态接口
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("当前角色没有旧滑步状态接口")]
+public class CheckIsInSlide : Conditional
+{
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "当前角色没有旧滑步状态接口");
+    }
+}

@@ -1,104 +1,27 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "music.jpeg")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("²¥·Å±³¾°ÒôÀÖAction")]
-///// <summary>
-///// Ê¹ÓÃµ±Ç°¼¼ÄÜ
-///// </summary>
-//public class PlayBGMusic : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
+/// <summary>
+/// æ’­æ”¾èƒŒæ™¯éŸ³ä¹ æ—§å åŠ ç§»é™¤è¯­ä¹‰éœ€è¦æ¸¸æˆéŸ³ä¹æ ˆ
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "music.jpeg")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("æ’­æ”¾èƒŒæ™¯éŸ³ä¹ æ—§å åŠ ç§»é™¤è¯­ä¹‰éœ€è¦æ¸¸æˆéŸ³ä¹æ ˆ")]
+public class PlayBGMusic : Action
+{
+    public string name; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public bool isAdd = true; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    /// <summary>
-//    /// ×ÊÔ´Ãû×Ö
-//    /// </summary>
-//    public string name;
-
-//    /// <summary>
-//    ///  ÊÇÌí¼Ó»¹ÊÇÒÆ³ı
-//    /// </summary>
-//    public bool isAdd = true;
-
-//    private static Dictionary<string,int>  bgMgr = new Dictionary<string,int>(); //±³¾°ÒôĞ§¹ÜÀí
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //if (name == null || name == "") return TaskStatus.Failure;
-//        //MusicAudioPlayer map = AudioMgr.Ins.GetAudioPlayer<MusicAudioPlayer>();
-//        //if (isAdd) //Ìí¼Ó
-//        //{
-//        //    if(bgMgr.ContainsKey(name))
-//        //    {
-//        //        bgMgr[name] += 1;
-//        //    }
-//        //    else
-//        //    {
-//        //        bgMgr[name] = 1;
-//        //    }
-
-//        //    if(name == "sfx_bgm_forest_battle_loop" && map.audioState.Name == "sfx_bgm_forest_boss_loop") //Ğ¡¹Ö±³¾°,Èç¹ûµ±Ç°ÊÇ´ó¹Ö£¬Ôò²»¸²¸Ç
-//        //    {
-//        //        return TaskStatus.Success;
-//        //    }
-
-//        //    AudioMgr.Ins.Play<MusicAudioPlayer>(name, true, null);
-//        //}
-//        //else //ÒÆ³ı
-//        //{
-//        //    if (bgMgr.ContainsKey(name))
-//        //    {
-//        //        bgMgr[name] -= 1;
-//        //    }
-//        //    else
-//        //    {
-//        //        bgMgr[name] = 0;
-//        //    }
-
-//        //    if (name == "sfx_bgm_forest_battle_loop") //Ğ¡¹Ö
-//        //    {
-//        //        if (bgMgr[name] == 0 && map.audioState.Name == name) //²¥·ÅÆÕÍ¨³¡¾°ÒôĞ§
-//        //        {
-//        //            AudioMgr.Ins.Play<MusicAudioPlayer>("sfx_bgm_forest_idle_loop", true, null);
-//        //        }
-//        //    }
-//        //    else if(name == "sfx_bgm_forest_boss_loop") //BossÒôĞ§
-//        //    {
-//        //        if(bgMgr.ContainsKey("sfx_bgm_forest_battle_loop") && bgMgr["sfx_bgm_forest_battle_loop"]>0) //²¥·ÅĞ¡¹Ö±³¾°ÒôÀÖ
-//        //        {
-//        //            AudioMgr.Ins.Play<MusicAudioPlayer>("sfx_bgm_forest_battle_loop", true, null);
-//        //        }
-//        //        else
-//        //        {
-//        //            AudioMgr.Ins.Play<MusicAudioPlayer>("sfx_bgm_forest_idle_loop", true, null);//²¥·ÅÆÕÍ¨±³¾°ÒôÀÖ
-//        //        }
-//        //    }
-//        //}
-        
-//        return TaskStatus.Success;
-//    }
-
-//    public override void OnEnd()
-//    {
-
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        if (string.IsNullOrWhiteSpace(name)) return TaskStatus.Failure;
+        if (!isAdd) return BehaviorSetting.Unsupported(this, "å½“å‰é¡¹ç›®æ²¡æœ‰æŒ‰åç§°ç§»é™¤çš„èƒŒæ™¯éŸ³ä¹æ ˆ");
+        GameSoundManager.Instance.PlayMusic(name);
+        return TaskStatus.Success;
+    }
+}

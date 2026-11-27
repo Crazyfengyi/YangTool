@@ -2,7 +2,7 @@
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
-    [TaskDescription("The random probability task will return success when the random probability is above the succeed probability. It will otherwise return failure.")]
+    [TaskDescription("The random probability task will return success when the random probability is below the succeed probability. It will otherwise return failure.")]
     public class RandomProbability : Conditional
     {
         [Tooltip("The chance that the task will return success")]

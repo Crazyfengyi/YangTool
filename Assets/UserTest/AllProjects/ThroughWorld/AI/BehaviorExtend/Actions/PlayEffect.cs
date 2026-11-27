@@ -1,58 +1,25 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "effect.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("²¥·ÅÌØĞ§Action")]
-///// <summary>
-///// ²¥·ÅÌØĞ§
-///// </summary>
-//public class PlayEffect : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ×ÊÔ´Ãû×Ö
-//    /// </summary>
-//    public string name;
-//    /// <summary>
-//    /// ×Ô¼ºÉíÉÏ
-//    /// </summary>
-//    public bool isSelf;
-//    /// <summary>
-//    /// Î»ÖÃ
-//    /// </summary>
-//    public EffectPointType effectPointType;
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (name == null || name == "")
-//        {
-//            Debuger.ToError($"½ÇÉ«:{roleBase.transform.name}µÄÌØĞ§Îª¿Õ");
-//            return TaskStatus.Success;
-//        }
+/// <summary>
+/// åœ¨è§’è‰²æ¨¡å‹æŒ‚ç‚¹æ’­æ”¾è·Ÿéšæˆ–ä¸–ç•Œç‰¹æ•ˆ
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "effect.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("åœ¨è§’è‰²æ¨¡å‹æŒ‚ç‚¹æ’­æ”¾è·Ÿéšæˆ–ä¸–ç•Œç‰¹æ•ˆ")]
+public class PlayEffect : Action
+{
+    public string name; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public bool isSelf; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public ModelPointType effectPointType; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//        if (isSelf)
-//        {
-//            GameObject effect = roleBase.PlayEffectAtSelf(name, effectPointType);
-//            roleBase.AddTempEffect(effect);
-//        }
-//        else
-//        {
-//            GameObject effect = roleBase.PlayEffect(name, effectPointType);
-//            roleBase.AddTempEffect(effect);
-//        }
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.PlayRoleEffect(this, GetComponent<RoleBase>(), name, effectPointType, isSelf);
+    }
+}

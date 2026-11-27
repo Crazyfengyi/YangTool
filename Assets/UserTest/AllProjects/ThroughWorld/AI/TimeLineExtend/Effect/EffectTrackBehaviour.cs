@@ -12,52 +12,52 @@ namespace TimelineExtend
     public class EffectTrackBehaviour : PlayableBehaviour
     {
         [HideInEditorMode]
-        [LabelText("°ó¶¨µÄ½ÇÉ«")]
+        [LabelText("ç»‘å®šçš„è§’è‰²")]
         public RoleBase role;
-        [LabelText("ÌØĞ§Ãû³Æ")]
+        [LabelText("ç‰¹æ•ˆåç§°")]
         public string effectName;
-        [LabelText("ÌØĞ§ÊÇ·ñÔÚ×Ô¼ºÉíÉÏ")]
+        [LabelText("ç‰¹æ•ˆæ˜¯å¦åœ¨è‡ªå·±èº«ä¸Š")]
         public bool isInSelf;
-        [LabelText("ÌØĞ§µã")]
+        [LabelText("ç‰¹æ•ˆç‚¹")]
         public ModelPointType effectPoint = ModelPointType.Root;
-        [LabelText("Æ«ÒÆÖµ")]
+        [LabelText("åç§»å€¼")]
         public Vector3 offsetVector = new Vector3();
 
-        [HideInInspector]
         /// <summary>
-        /// ÌØĞ§
+        /// ç‰¹æ•ˆ
         /// </summary>
+        [HideInInspector]
         public GameObject effect;
         [HideInInspector]
         public ParticleSystem particleSystem;
         public override void OnGraphStart(Playable playable)
         {
-           // Debug.LogError($"²âÊÔ:OnGraphStart");
+           // Debug.LogError($"æµ‹è¯•:OnGraphStart");
         }
         public override void OnGraphStop(Playable playable)
         {
-           // Debug.LogError($"²âÊÔ:OnGraphStop");
+           // Debug.LogError($"æµ‹è¯•:OnGraphStop");
         }
         public override void OnPlayableCreate(Playable playable)
         {
-           // Debug.LogError($"²âÊÔ:OnPlayableCreate");
+           // Debug.LogError($"æµ‹è¯•:OnPlayableCreate");
         }
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
-            //Debug.LogError($"²âÊÔ:OnBehaviourPlay");
+            //Debug.LogError($"æµ‹è¯•:OnBehaviourPlay");
         }
         public override void OnBehaviourPause(Playable playable, FrameData info)
         {
-            //Debug.LogError($"²âÊÔ:OnBehaviourPause");
+            //Debug.LogError($"æµ‹è¯•:OnBehaviourPause");
             Destory();
         }
         public override void PrepareData(Playable playable, FrameData info)
         {
-            //Debug.LogError($"²âÊÔ:PrepareData");
+            //Debug.LogError($"æµ‹è¯•:PrepareData");
         }
         public override void PrepareFrame(Playable playable, FrameData info)
         {
-            //Debug.LogError($"²âÊÔ:PrepareFrame");
+            //Debug.LogError($"æµ‹è¯•:PrepareFrame");
         }
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
@@ -93,7 +93,7 @@ namespace TimelineExtend
 
         public override void OnPlayableDestroy(Playable playable)
         {
-            //Debug.LogError($"²âÊÔ:OnPlayableDestroy");
+            //Debug.LogError($"æµ‹è¯•:OnPlayableDestroy");
             Destory();
         }
 

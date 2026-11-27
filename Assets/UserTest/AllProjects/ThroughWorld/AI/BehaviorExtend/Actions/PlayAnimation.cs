@@ -1,331 +1,248 @@
-/** 
- *Copyright(C) 2020 by XCHANGE 
- *All rights reserved. 
- *Author:       YangWork 
- *UnityVersion：2020.3.7f1c1 
- *创建时间:         2021-05-11 
-*/
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-using UnityEngine;
-using System.Collections;
 using System;
 using System.Collections.Generic;
-using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
 using System.Reflection;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
-using YangTools.Log;
-using Sirenix.OdinInspector;
-using UnityEngine.Diagnostics;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
 using DataStruct;
+using UnityEngine;
 using YangTools.Scripts.Core.YangExtend;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
+using TooltipAttribute = BehaviorDesigner.Runtime.Tasks.TooltipAttribute;
 
-//[BehaviorDesigner.Runtime.Tasks.HelpURL("http://www.baidu.com")]
+/// <summary>
+/// 播放角色动画并在配置时间执行事件
+/// </summary>
 [TaskIcon(BehaviorSetting.path + "AniAndEventIcon.png")]
 [TaskCategory("RoleAI/Animator")]
-[TaskDescription("注意:动画事件倒序遍历(同一时间点,后加先执行)")]
-/// <summary>
-/// 播放动画
-/// </summary>
+[TaskDescription("播放动画并触发事件 同一时间点后配置的事件先执行")]
 public class PlayAnimation : Action
 {
-    /// <summary>
-    /// 自身角色脚本
-    /// </summary>
-    private RoleBase roleBase;
+    private static readonly int AttackSpeedParameter = Animator.StringToHash("atkSpeedAffect"); // Animator 攻速参数
+    public string aniName; // 动画名称
+    public bool ExitImmediately; // 进入状态后立即结束任务
+    public AtkSpeedDepend depend; // 攻速换算方式
+    public float dependPercent; // 攻速换算比例
+    public float dependValue; // 固定时长
+    public List<AniEventInfo> aniEventInfos = new List<AniEventInfo>(); // 动画事件配置
+
+    private Animator animator; // 本轮动画组件
+    private float timer; // 已播放时间
+    private float duration; // 本轮播放时长
+    private float previousSpeed; // 原 Animator 攻速参数
+    private bool changedSpeed; // 本轮是否写入参数
+    private bool valid; // 本轮配置是否有效
+    private bool started; // 是否已请求播放
+    private int stateHash; // 本轮 Animator 状态
+    private float crossFade; // 本轮动画过渡时长
+
+    #region 播放与结束
 
     /// <summary>
-    /// 动画名称
+    /// 校验动画状态 攻速配置和事件绑定
     /// </summary>
-    public string aniName;
-    /// <summary>
-    /// 立即退出
-    /// </summary>
-    public bool ExitImmediately;
-
-    /// <summary>
-    /// 攻速依赖
-    /// </summary>
-    public AtkSpeedDepend depend;
-    /// <summary>
-    /// 攻速依赖百分比
-    /// </summary>
-    public float dependPercent;
-    /// <summary>
-    /// 攻速依赖值
-    /// </summary>
-    public float dependValue;
-
-    /// <summary>
-    /// 事件信息
-    /// </summary>
-    public List<AniEventInfo> aniEventInfos = new List<AniEventInfo>();
-
-    //动画速度缩放
-    private float aniScale;
-    //时间
-    private float timer;
-    //动画片段长度
-    private float aniMaxTime;
-    [ShowInInspector]
-    //运行时拿到的动画
-    private AnimationClip resultClipInfo;
-
-    public override void OnAwake()
-    {
-        roleBase = gameObject.GetComponent<RoleBase>();
-        GetAniEvent();
-
-        try
-        {
-            //获取动画片段
-            resultClipInfo = roleBase.Animator.GetAnimClipByName(aniName);
-        }
-        catch (Exception)
-        {
-            Debuger.ToError($"{roleBase.transform.name}角色:获取{aniName}动画出错");
-            throw;
-        }
-    }
-
-    private void GetAniEvent()
-    {
-        #region 动画事件反射
-        for (int i = 0; i < aniEventInfos.Count; i++)
-        {
-            aniEventInfos[i].targetGameObject = gameObject;
-            AniEventInfo info = aniEventInfos[i];
-
-            //目标脚本(组件)
-            Type type = TaskUtility.GetTypeWithinAssembly(info.componentName);
-            if (type == null)
-            {
-                Debuger.ToError($"{gameObject.name}:无法调用-类型{info.componentName}为空");
-            }
-            //获得脚本
-            Component component = GetDefaultGameObject(info.targetGameObject).GetComponent(type);
-            if (component == null)
-            {
-                Debuger.ToError($"{gameObject.name}的脚本{info.componentName}为空,不能调用");
-            }
-
-            //方法
-            MethodInfo method = component.GetType().GetMethod(info.methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            //方法参数
-            ParameterInfo[] parmaInfo = method.GetParameters();
-            //参数类型列表
-            List<Type> parameterTypeList = new List<Type>();
-            //参数数组
-            object[] parmaArray = new object[parmaInfo.Length];
-            //临时参数
-            string tempParma = string.Empty;
-            string[] parmeterList = info.parmeterString.Split('|');
-
-            for (int j = 0; j < parmaInfo.Length; j++)
-            {
-                if (j >= parmeterList.Length || string.IsNullOrEmpty(parmeterList[j]))
-                {
-                    if (parmaInfo[j].HasDefaultValue)
-                    {
-                        //用默认值
-                        parmaArray[j] = parmaInfo[j].DefaultValue;
-                        parameterTypeList.Add(parmaInfo[j].ParameterType);
-                        continue;
-                    }
-                    else
-                    {
-                        Debuger.ToError($"{roleBase.transform.name}角色:动画{aniName}的事件:{method}第{j}个参数缺失,请填写所有参数!");
-                        throw null;
-                    }
-                }
-                else
-                {
-                    tempParma = parmeterList[j];
-                }
-
-                switch (Type.GetTypeCode(parmaInfo[j].ParameterType))
-                {
-                    case TypeCode.Int32:
-                        parmaArray[j] = int.Parse(tempParma);
-                        break;
-                    case TypeCode.Single:
-                        parmaArray[j] = float.Parse(tempParma);
-                        break;
-                    case TypeCode.Boolean:
-                        parmaArray[j] = bool.Parse(tempParma);
-                        break;
-                    case TypeCode.String:
-                        parmaArray[j] = tempParma;
-                        break;
-                    case TypeCode.Int64:
-                        parmaArray[j] = long.Parse(tempParma);
-                        break;
-                    default:
-                        Debuger.ToError("AniAndEvent中参数只支持int,float,string,bool");
-                        break;
-                }
-                parameterTypeList.Add(parmaInfo[j].ParameterType);
-            }
-
-            //获得方法
-            MethodInfo methodInfo = component.GetType().GetMethod(info.methodName, parameterTypeList.ToArray());
-
-            if (methodInfo == null)
-            {
-                Debuger.ToError($"脚本{info.componentName}上方法{info.methodName}未找到,参数列表{parameterTypeList.ToArray()}");
-            }
-
-            info.component = component;
-            info.methodInfo = methodInfo;
-            info.parmaArray = parmaArray;
-        }
-        #endregion
-    }
-
     public override void OnStart()
     {
         timer = 0;
-        isPlay = false;
+        valid = false;
+        started = false;
+        changedSpeed = false;
+        var role = GetComponent<RoleBase>();
+        animator = role != null ? role.Animator : null;
+        if (animator == null || !animator.isActiveAndEnabled || animator.runtimeAnimatorController == null) return;
 
-        //roleBase.Animator.Play("None");
-        if (resultClipInfo == null) return;
-
-        #region 计算动画速度
-        //动画速度缩放
-        aniScale = 1;
-        if (depend != AtkSpeedDepend.None)
+        if (aniName == "None")
         {
-            //攻击前摇时长不依赖于动画播放，而是动画播放依赖于攻击前摇
-            //当前攻速
-            ValueTotal atkSpeedInfo = roleBase.GetRoleAttribute(RoleAttribute.AtkSpeed);
-            float atkSpeed = atkSpeedInfo.Value;
-            float scale = 1;
+            valid = true;
+            return;
+        }
 
-            switch (depend)
-            {
-                case AtkSpeedDepend.百分比:
-                    {
-                        //基础前摇
-                        float baseBeforeAtk = dependPercent * atkSpeed;
-                        //攻击前摇时间 = 基础攻击前摇 / (1 + 额外攻速)
-                        float beforeAtk = baseBeforeAtk / (1 + atkSpeed - atkSpeedInfo.BaseValue);
-                        //缩放比例 = 逻辑攻击奏效帧时间点 / 动画攻击奏效帧时间点
-                        scale = beforeAtk / resultClipInfo.length;
-                    }
-                    break;
-                case AtkSpeedDepend.固定值:
-                    {
-                        //缩放比例 = 逻辑攻击奏效帧时间点 / 动画攻击奏效帧时间点
-                        scale = dependValue / resultClipInfo.length;
-                    }
-                    break;
-                default:
-                    break;
-            }
+        if (string.IsNullOrWhiteSpace(aniName)) return;
+        stateHash = Animator.StringToHash($"{animator.GetLayerName(0)}.{aniName}");
+        if (!animator.HasState(0, stateHash)) stateHash = Animator.StringToHash(aniName);
+        if (!animator.HasState(0, stateHash)) return;
 
-            //动画速度缩放
-            aniScale = 1 / scale;
-            roleBase.Animator.SetFloat("atkSpeedAffect", aniScale);
-            //事件点时间缩放
-            for (int i = 0; i < aniEventInfos.Count; i++)
+        var clip = animator.GetAnimClipByName(aniName);
+        if (clip == null || !(clip.length > 0))
+        {
+            if (!ExitImmediately || depend != AtkSpeedDepend.None || (aniEventInfos?.Count ?? 0) != 0) return;
+            crossFade = Utility.AniCrossTime;
+            duration = 1f;
+            valid = true;
+            return;
+        }
+        crossFade = Mathf.Min(Utility.AniCrossTime, clip.length);
+        duration = clip.length;
+        if (depend == AtkSpeedDepend.固定值) duration = dependValue;
+        if (depend == AtkSpeedDepend.百分比)
+        {
+            if (role.roleAttributeControl == null || role.roleAttributeControl.attributesDic == null) return;
+            ValueTotal speed = role.GetRoleAttribute(RoleAttribute.AtkSpeed);
+            if (speed == null) return;
+            duration = dependPercent * speed.Value / (1 + speed.Value - speed.BaseValue);
+        }
+        if (!(duration > 0) || float.IsInfinity(duration)) return;
+
+        if (aniEventInfos != null)
+        {
+            foreach (var info in aniEventInfos)
             {
-                aniEventInfos[i].usetimePoint = aniEventInfos[i].timePoint * scale;
+                if (info == null || !Bind(info)) return;
+                info.isTrigger = false;
+                info.usetimePoint = Mathf.Clamp(info.timePoint * duration / clip.length, 0, duration);
             }
         }
 
-        aniMaxTime = resultClipInfo.length / aniScale;//动画播放时间
-        //限制动画事件点位置
-        for (int i = 0; i < aniEventInfos.Count; i++)
+        foreach (var parameter in animator.parameters)
         {
-            var item = aniEventInfos[i];
-            item.usetimePoint = item.timePoint / aniScale;
-            item.usetimePoint = Mathf.Clamp(item.usetimePoint, 0, aniMaxTime);
+            if (parameter.nameHash != AttackSpeedParameter || parameter.type != AnimatorControllerParameterType.Float) continue;
+            previousSpeed = animator.GetFloat(AttackSpeedParameter);
+            animator.SetFloat(AttackSpeedParameter, clip.length / duration);
+            changedSpeed = true;
+            break;
         }
-        #endregion
+        if (depend != AtkSpeedDepend.None && !changedSpeed) return;
+        valid = true;
     }
 
-    private bool isPlay;
+    /// <summary>
+    /// 播放片段并推进事件或等待进入动画状态
+    /// </summary>
     public override TaskStatus OnUpdate()
     {
-        if (resultClipInfo == null)
+        if (!valid || animator == null || !animator.isActiveAndEnabled)
+            return BehaviorSetting.Unsupported(this, $"动画或事件配置无效 {aniName}");
+        if (aniName == "None")
         {
-            roleBase.Animator.Play("None");
-            if (aniName != "None")
-            {
-                Debuger.ToError($"{gameObject.name}动画:{aniName}为空,不能调用");
-            }
+            if (animator.HasState(0, Animator.StringToHash(aniName))) animator.Play(aniName);
             return TaskStatus.Success;
         }
 
-        #region 播放动画
-        if (!isPlay)
+        if (!started)
         {
-            isPlay = true;
-            //是否已是目标片段
-            if (roleBase.Animator.GetCurrentAnimatorStateInfo(0).IsName(resultClipInfo.name))
-            {
-                roleBase.Animator.Play(resultClipInfo.name);
-            }
-            else
-            {
-                //这里用动画长度和百分比的原因是放在动画倍数变慢影响融合
-                roleBase.Animator.CrossFade(resultClipInfo.name, Mathf.Min(Utility.AniCrossTime, resultClipInfo.length));
-            }
-            #endregion
+            started = true;
+            if (IsCurrentState()) animator.Play(stateHash, 0, 0);
+            else animator.CrossFade(stateHash, crossFade, 0);
         }
 
-        //立即退出
         if (ExitImmediately)
         {
-            if (roleBase.Animator.GetCurrentAnimatorStateInfo(0).IsName(resultClipInfo.name))
-            {
-                return TaskStatus.Success;
-            }
-            return TaskStatus.Running;
+            if (IsCurrentState()) return TaskStatus.Success;
+            timer += Time.deltaTime;
+            return timer > duration + 1f ? TaskStatus.Failure : TaskStatus.Running;
         }
+        if (!(animator.speed > 0)) return TaskStatus.Failure;
 
-        //时间增加--动画状态机速度
-        timer += Time.deltaTime * roleBase.Animator.speed;
-        //事件触发
-        for (int i = aniEventInfos.Count - 1; i >= 0; i--)
+        timer += Time.deltaTime * animator.speed;
+        for (int i = (aniEventInfos?.Count ?? 0) - 1; i >= 0; i--)
         {
-            AniEventInfo item = aniEventInfos[i];
-            if (timer >= item.usetimePoint && !item.isTrigger)
+            var info = aniEventInfos[i];
+            if (info.isTrigger || timer < info.usetimePoint) continue;
+            if (info.component == null) return TaskStatus.Failure;
+            info.isTrigger = true;
+            try { info.InVoke(); }
+            catch (TargetInvocationException exception)
             {
-                Invoke(item);
+                return BehaviorSetting.Unsupported(this, exception.InnerException?.Message ?? exception.Message);
             }
         }
-
-        if (timer >= aniMaxTime) return TaskStatus.Success;
-        return TaskStatus.Running;
+        return timer >= duration ? TaskStatus.Success : TaskStatus.Running;
     }
 
+    /// <summary>
+    /// 释放本轮动画事件和攻速状态
+    /// </summary>
     public override void OnEnd()
     {
-        timer = 0;
-        for (int i = 0; i < aniEventInfos.Count; i++)
+        if (changedSpeed && animator != null) animator.SetFloat(AttackSpeedParameter, previousSpeed);
+        changedSpeed = false;
+        valid = false;
+        if (aniEventInfos == null) return;
+        foreach (var info in aniEventInfos)
         {
-            AniEventInfo item = aniEventInfos[i];
-            item.isTrigger = false;
-        }
-    }
-
-    public override void OnReset()
-    {
-        for (int i = 0; i < aniEventInfos.Count; i++)
-        {
-            aniEventInfos[i].OnReset();
+            if (info == null) continue;
+            info.isTrigger = false;
+            info.component = null;
+            info.methodInfo = null;
+            info.parmaArray = null;
         }
     }
 
     /// <summary>
-    /// 调用事件方法
+    /// 清理编辑器中的事件设置
     /// </summary>
-    private void Invoke(AniEventInfo info)
+    public override void OnReset()
     {
-        info.InVoke();
-        info.isTrigger = true;
+        if (aniEventInfos == null) return;
+        foreach (var info in aniEventInfos) info?.OnReset();
     }
+
+    /// <summary>
+    /// 比较当前 Animator 状态的完整路径或短名称
+    /// </summary>
+    private bool IsCurrentState()
+    {
+        var state = animator.GetCurrentAnimatorStateInfo(0);
+        return state.fullPathHash == stateHash || state.shortNameHash == stateHash;
+    }
+
+    #endregion
+
+    #region 动画事件
+
+    /// <summary>
+    /// 为事件解析唯一可调用的组件方法和参数
+    /// </summary>
+    private bool Bind(AniEventInfo info)
+    {
+        if (string.IsNullOrWhiteSpace(info.componentName) || string.IsNullOrWhiteSpace(info.methodName)) return false;
+        var target = info.targetGameObject != null ? info.targetGameObject : gameObject;
+        var targetType = TaskUtility.GetTypeWithinAssembly(info.componentName);
+        var component = targetType != null && typeof(Component).IsAssignableFrom(targetType)
+            ? target.GetComponent(targetType) : target.GetComponent(info.componentName);
+        if (component == null) return false;
+        MethodInfo match = null;
+        object[] arguments = null;
+        var values = string.IsNullOrEmpty(info.parmeterString) ? Array.Empty<string>() : info.parmeterString.Split('|');
+        foreach (var candidate in component.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        {
+            if (candidate.Name != info.methodName || candidate.ContainsGenericParameters) continue;
+            var parameters = candidate.GetParameters();
+            if (values.Length > parameters.Length) continue;
+            var converted = new object[parameters.Length];
+            bool compatible = true;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+                if (i < values.Length && !string.IsNullOrEmpty(values[i]))
+                {
+                    if (ReflectionCallMethod.TryConvert(values[i], parameter.ParameterType, out converted[i])) continue;
+                }
+                else if (parameter.HasDefaultValue)
+                {
+                    converted[i] = parameter.DefaultValue;
+                    continue;
+                }
+                else if (i < values.Length && parameter.ParameterType == typeof(string))
+                {
+                    converted[i] = string.Empty;
+                    continue;
+                }
+                compatible = false;
+                break;
+            }
+            if (!compatible) continue;
+            if (match != null) return false;
+            match = candidate;
+            arguments = converted;
+        }
+        if (match == null) return false;
+        info.component = component;
+        info.methodInfo = match;
+        info.parmaArray = arguments;
+        return true;
+    }
+
+    #endregion
 }
 
 /// <summary>

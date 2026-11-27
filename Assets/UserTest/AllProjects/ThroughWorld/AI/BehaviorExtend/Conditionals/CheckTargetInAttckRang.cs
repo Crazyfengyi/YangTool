@@ -1,46 +1,21 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon("Assets/0.Game/_Assets/CoreScript/Behavior_Extend/Gizmos/IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-///// <summary>
-///// ¼ì²âÊÇ·ñÓĞÄ¿±ê
-///// </summary>
-//public class CheckTargetInAttckRang : Conditional
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //Debuger.ToError($"ÊÇ·ñÔÚ¹¥»÷·¶Î§ÄÚ:{roleBase.CheckTargetInAttackRange()}");
-
-//        if (roleBase.CheckTargetInAttackRange())
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-
-//    public override void OnEnd()
-//    {
-
-//    }
-//}
+/// <summary>
+/// æ£€æŸ¥ç›®æ ‡æ˜¯å¦åœ¨å½“å‰æŠ€èƒ½æ°´å¹³èŒƒå›´å†…
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("æ£€æŸ¥ç›®æ ‡æ˜¯å¦åœ¨å½“å‰æŠ€èƒ½æ°´å¹³èŒƒå›´å†…")]
+public class CheckTargetInAttckRang : Conditional
+{
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Result(BehaviorSetting.InSkillRange(GetComponent<RoleBase>()));
+    }
+}

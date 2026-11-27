@@ -39,6 +39,7 @@ public class SkillUseAction : Action
     /// </summary>
     public override void OnEnd()
     {
-        if (control != null && control.ExecutionId == executionId && control.NeedUseSkill) control.BreakSkill();
+        if (accepted && control != null && control.ExecutionId == executionId && control.NeedUseSkill) control.BreakSkill();
+        accepted = false;
     }
 }

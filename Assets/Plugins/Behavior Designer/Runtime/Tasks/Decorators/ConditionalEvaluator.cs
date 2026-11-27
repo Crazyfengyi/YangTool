@@ -10,6 +10,8 @@ namespace BehaviorDesigner.Runtime.Tasks
         [InspectTask]
         [Tooltip("The conditional task to evaluate")]
         public Conditional conditionalTask;
+        [Tooltip("Should the inspected conditional task be labeled within the graph?")]
+        public bool graphLabel;
 
         // The status of the child after it has finished running.
         private TaskStatus executionStatus = TaskStatus.Inactive;
@@ -88,6 +90,15 @@ namespace BehaviorDesigner.Runtime.Tasks
             if (conditionalTask != null) {
                 conditionalTask.OnEnd();
             }
+        }
+
+        public override string OnDrawNodeText()
+        {
+            if (conditionalTask == null || !graphLabel) {
+                return string.Empty;
+            }
+
+            return conditionalTask.GetType().Name;
         }
 
         public override void OnReset()

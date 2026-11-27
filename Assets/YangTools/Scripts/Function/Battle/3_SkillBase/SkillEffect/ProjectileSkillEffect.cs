@@ -8,6 +8,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Skills/Effects/Projectile")]
 public class ProjectileSkillEffect : SkillEffect
 {
+    // 旧资产默认使用资产数值 新技能可切换为技能表
+    [LabelText("伤害数值来源")] [SerializeField] private SkillDamageSource damageSource = SkillDamageSource.Asset;
+
     //投射物预制体
     [LabelText("投射物预制体")]
     [SerializeField] private SkillProjectile projectilePrefab;
@@ -64,6 +67,9 @@ public class ProjectileSkillEffect : SkillEffect
     internal void Emit(SkillContext context, ProjectileChainBudget budget, int depth, HashSet<GameObject> history)
     {
         if (projectilePrefab == null || context == null || depth > budget.maxDepth) return;
+        float resolvedBase = baseDamage, resolvedScale = powerScale;
+        SkillPowerType resolvedPower = powerType;
+        if (!SkillDamageBridge.Resolve(context, damageSource, ref resolvedBase, ref resolvedScale, ref resolvedPower)) return;
         int count = Mathf.Clamp(emission.count, 1, 512);
         bool ringRows = emission.mode == ProjectileEmissionMode.CircleRow || emission.mode == ProjectileEmissionMode.LaunchCircleRow;
         int rows = ringRows ? Mathf.Clamp(emission.rows, 1, 512) : 1;
@@ -92,8 +98,8 @@ public class ProjectileSkillEffect : SkillEffect
                     if (emission.mode == ProjectileEmissionMode.OutsideIn) direction = -direction;
                     break;
             }
-            var runtime = new ProjectileRuntime { context = context, speed = speed, damage = baseDamage, scale = powerScale,
-                power = powerType, lifetime = lifeSeconds, flight = JsonUtility.FromJson<ProjectileFlightSettings>(JsonUtility.ToJson(flight)),
+            var runtime = new ProjectileRuntime { context = context, speed = speed, damage = resolvedBase, scale = resolvedScale,
+                power = resolvedPower, lifetime = lifeSeconds, flight = JsonUtility.FromJson<ProjectileFlightSettings>(JsonUtility.ToJson(flight)),
                 lifecycle = lifecycle.Snapshot(), targetMask = targetMask,
                 blockingMask = blockingMask, piercing = Mathf.Max(0, piercing), sweepRadius = Mathf.Max(0.001f, sweepRadius),
                 center = context.OriginPoint, direction = direction, budget = budget, depth = depth,

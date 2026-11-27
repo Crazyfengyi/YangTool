@@ -1,46 +1,27 @@
-//    /** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       John
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-07-13 
-//*/
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime;
-//using UnityEngine;
-//using System.Collections;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-///// <summary>
-/////  获取通用bool变量值
-///// </summary>
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-//public class CommonBoolCheck : Conditional
-//{
-//    /// <summary>
-//    /// 自身角色脚本
-//    /// </summary>
-//    private RoleBase roleBase;
+/// <summary>
+/// 读取现有角色标记 旧系统专用标记需重新配置
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("读取现有角色标记 旧系统专用标记需重新配置")]
+public class CommonBoolCheck : Conditional
+{
+    [HideInInspector] public int boolUseEnum; // 保留旧标记值供迁移时核对
+    public RoleFlag roleFlag; // 在编辑器选择当前项目的角色标记
 
-//    public DataStruct.BoolUseEnum boolUseEnum; //bool值
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//        if (!roleBase)
-//        {
-//            Debuger.ToError($"{gameObject.name}RoleBase未找到");
-//        }
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (roleBase.GetBoolMark(boolUseEnum))
-//        {
-//            return TaskStatus.Success;
-//        }
-
-//        return TaskStatus.Failure;
-//    }
-//} 
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        if (role == null) return TaskStatus.Failure;
+        if (roleFlag == RoleFlag.None) return BehaviorSetting.Unsupported(this, "请重新选择角色布尔标记");
+        return BehaviorSetting.Result(role.GetFlag(roleFlag) != 0);
+    }
+}

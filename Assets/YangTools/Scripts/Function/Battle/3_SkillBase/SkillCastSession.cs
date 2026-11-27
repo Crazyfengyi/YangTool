@@ -11,6 +11,7 @@ public sealed class SkillCastSession
     public int Id { get; }
     public SkillDefinition Skill { get; }
     public bool IsCompleted { get; internal set; }
+    public bool WasInterrupted { get; internal set; }
     public int HitCount => hitCount;
     public bool HasHit => HitCount > 0;
     /// <summary>

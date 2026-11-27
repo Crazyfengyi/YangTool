@@ -1,64 +1,25 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "±êÊ¶_Ì¾ºÅ.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("ÉÈĞÎ¾¯¸æÇøÓòAction")]
-///// <summary>
-///// ²¥·ÅÌØĞ§
-///// </summary>
-//public class PlayWarningSector : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
+/// <summary>
+/// å½“å‰é¡¹ç›®ç¼ºå°‘æ‰‡å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "æ ‡è¯†_å¹å·.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("å½“å‰é¡¹ç›®ç¼ºå°‘æ‰‡å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£")]
+public class PlayWarningSector : Action
+{
+    public float time = 1; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float angle = 36f; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float radius = 1; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    /// <summary>
-//    /// ³ÖĞøÊ±¼ä
-//    /// </summary>
-//    public float time = 1;
-
-//    /// <summary>
-//    /// ½Ç¶È(ÉÈĞÎ:½Ç¶È)
-//    /// </summary>
-//    public float angle = 36f;
-
-//    /// <summary>
-//    /// ÉÈĞÎ°ë¾¶
-//    /// </summary>
-//    public float radius = 1;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //Ä¿±êµã
-//        Vector3 targetPos = roleBase.recordPointList[0];
-//        targetPos.y = 0.002f;
-//        //×ÔÉíÎ»ÖÃ
-//        Vector3 nowPos = transform.position;
-//        nowPos.y = 0.002f;
-//        Vector3 direction = targetPos - nowPos;
-
-//        //ÌØĞ§
-//        GameObject effectPrefabs = Resources.Load<GameObject>($"É¡ĞÎÔ¤¾¯");
-//        //Quaternion quat = Quaternion.Euler(direction);
-//        GameObject effectObj = GameObject.Instantiate(effectPrefabs);
-//        effectObj.transform.position = roleBase.transform.position;
-//        effectObj.transform.GetChild(0).transform.localScale = new Vector3(radius,1, radius);
-//        effectObj.transform.LookAt(roleBase.GetTarget().transform.position);
-
-//        effectObj.GetComponent<DelayDestory>().InitAndStart(time);
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "å½“å‰é¡¹ç›®ç¼ºå°‘æ‰‡å½¢é¢„è­¦èµ„æºå’Œæ’­æ”¾æ¥å£");
+    }
+}

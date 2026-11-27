@@ -1,3 +1,4 @@
+#if !UNITY_6000_3_OR_NEWER
 using UnityEngine;
 
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityLight
@@ -42,3 +43,4 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityLight
         }
     }
 }
+#endif

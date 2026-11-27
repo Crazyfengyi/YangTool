@@ -33,7 +33,9 @@ public enum SkillCastFailReason
     [LabelText("无效目标")]
     InvalidTarget,
     [LabelText("正在施法")]
-    AlreadyCasting
+    AlreadyCasting,
+    [LabelText("时间线配置无效")]
+    InvalidTimeline
 }
 
 /// <summary>
@@ -53,6 +55,11 @@ public class SkillCost
 /// </summary>
 public class SkillCastRequest
 {
+    // 可选的整合技能时间线及表数值快照
+    public UnityEngine.Timeline.TimelineAsset Timeline;
+    public SkillTableDamage? TableDamage;
+    public float? RangeOverride;
+    public float? CooldownOverride;
     // 要施放的技能定义
     public SkillDefinition Skill;
     // 技能施法的目标对象（如果有）
@@ -72,6 +79,8 @@ public class SkillCastRequest
 /// </summary>
 public class SkillContext
 {
+    // 本次施法从技能表读取的伤害快照
+    public SkillTableDamage? TableDamage;
     // 技能施放者
     public SkillCaster Caster;
     // 技能定义 包含技能的各种属性和行为

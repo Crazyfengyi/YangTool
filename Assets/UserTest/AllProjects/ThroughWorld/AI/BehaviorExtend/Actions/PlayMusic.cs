@@ -1,53 +1,28 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
+using YangTools.Scripts.Core.YangAudio;
 
-//[TaskIcon(BehaviorSetting.path + "music.jpeg")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("��������Action")]
-///// <summary>
-///// ʹ�õ�ǰ����
-///// </summary>
-//public class PlayMusic : Action
-//{
-//    /// <summary>
-//    /// ������ɫ�ű�
-//    /// </summary>
-//    private RoleBase roleBase;
+/// <summary>
+/// 播放一次或循环角色音效
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "music.jpeg")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("播放一次或循环角色音效")]
+public class PlayMusic : Action
+{
+    public string name; // 保留原节点配置
+    public bool loop = false; // 保留原节点配置
 
-//    /// <summary>
-//    /// ��Դ����
-//    /// </summary>
-//    public string name;
-
-//    /// <summary>
-//    /// loop ֵ
-//    /// </summary>
-//    public bool loop = false;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (name == null || name == "") return TaskStatus.Failure;
-//        roleBase.PlayAudio(name,loop);
-//        return TaskStatus.Success;
-//    }
-
-//    public override void OnEnd()
-//    {
-
-//    }
-//}
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        if (role == null || string.IsNullOrWhiteSpace(name)) return TaskStatus.Failure;
+        YangAudioManager.Instance.PlayWorldSound(role.gameObject, name, loop);
+        return TaskStatus.Success;
+    }
+}

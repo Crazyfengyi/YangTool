@@ -1,85 +1,49 @@
-///** 
-// *Copyright(C) 2020 by XCHANGE 
-// *All rights reserved. 
-// *Author:       YangWork 
-// *UnityVersion：2020.3.7f1c1 
-// *创建时间:         2021-06-30 
-//*/
-//using UnityEngine;
-//using System.Collections;
-//using BehaviorDesigner.Runtime.Tasks;
-//using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("开始执行行为树")]
-//[TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
-//public class StartSkillBehaviorTree : Action
-//{
-//    public SharedInt group;
-//    public SharedBool waitForCompletion = false;
-//    //是否完成
-//    private bool behaviorComplete;
-//    private Behavior behavior;
-//    private RoleBase roleBase;
+/// <summary>
+/// 启动配置的技能树并按配置等待同一请求结束
+/// </summary>
+[TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("启动配置的技能树并按配置等待同一请求结束")]
+public class StartSkillBehaviorTree : SkillUseAction
+{
+    public SharedInt group; // 技能树分组
+    public SharedBool waitForCompletion = false; // 是否等待技能树执行完成
+    private bool started; // 本轮已尝试启动
+    private bool shouldWait; // 本轮是否等待技能结束
 
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-//    public override void OnStart()
-//    {
-//        Behavior[] behaviorTrees = roleBase.GetComponents<Behavior>();
-
-//        for (int i = 0; i < behaviorTrees.Length; ++i)
-//        {
-//            if (behaviorTrees[i].Group == group.Value)
-//            {
-//                behavior = behaviorTrees[i];
-//                break;
-//            }
-//        }
-
-//        if (behavior != null)
-//        {
-//            //技能树资源名称
-//            string treeName = roleBase.GetCurrentSkill().SkillData.actionAssetsName;
-//            ExternalBehavior tree = AAResMgr.Ins.LoadAsset<ExternalBehavior>(treeName);
-//            behavior.ExternalBehavior = tree;
-//            behavior.EnableBehavior();
-
-//            if (waitForCompletion.Value)
-//            {
-//                behaviorComplete = false;
-//                behavior.OnBehaviorEnd += BehaviorEnded;
-//            }
-//        }
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (behavior == null)
-//        {
-//            return TaskStatus.Failure;
-//        }
-//        //等待行为树执行完成
-//        if (waitForCompletion.Value && !behaviorComplete)
-//        {
-//            return TaskStatus.Running;
-//        }
-
-//        return TaskStatus.Success;
-//    }
-
-//    private void BehaviorEnded(Behavior behavior)
-//    {
-//        behaviorComplete = true;
-//    }
-
-//    public override void OnEnd()
-//    {
-//        if (behavior != null && waitForCompletion.Value)
-//        {
-//            behavior.OnBehaviorEnd -= BehaviorEnded;
-//        }
-//    }
-//}
+    /// <summary>
+    /// 校验技能树分组并启动请求
+    /// </summary>
+    public override void OnStart()
+    {
+        started = false;
+        var role = GetComponent<RoleBase>();
+        var tree = role != null ? role.SkillControl?.SkillTree : null;
+        if (tree == null || tree == Owner || role.SkillControl.IsTimeLine || (group != null && tree.Group != group.Value)) return;
+        shouldWait = waitForCompletion?.Value == true;
+        base.OnStart();
+        started = true;
+    }
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        if (!started) return TaskStatus.Failure;
+        var status = base.OnUpdate();
+        return status == TaskStatus.Running && !shouldWait ? TaskStatus.Success : status;
+    }
+    /// <summary>
+    /// 等待被打断时结束自己启动的技能
+    /// </summary>
+    public override void OnEnd()
+    {
+        if (started && shouldWait) base.OnEnd();
+        started = false;
+    }
+}

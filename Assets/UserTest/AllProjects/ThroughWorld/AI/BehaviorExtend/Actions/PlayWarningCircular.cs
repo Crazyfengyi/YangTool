@@ -1,56 +1,24 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "��ʶ_̾��.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("Բ�ξ�������Action")]
-///// <summary>
-///// ������Ч
-///// </summary>
-//public class PlayWarningCircular : Action
-//{
-//    /// <summary>
-//    /// ������ɫ�ű�
-//    /// </summary>
-//    private RoleBase roleBase;
+/// <summary>
+/// 当前项目缺少圆形预警资源和播放接口
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "标识_叹号.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("当前项目缺少圆形预警资源和播放接口")]
+public class PlayWarningCircular : Action
+{
+    public float time = 1; // 保留原节点配置
+    public float radius = 5f; // 保留原节点配置
 
-//    /// <summary>
-//    /// ����ʱ��
-//    /// </summary>
-//    public float time = 1;
-
-//    /// <summary>
-//    /// �뾶
-//    /// </summary>
-//    public float radius = 5f;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //Ŀ���
-//        Vector3 targetPos = roleBase.recordPointList[0];
-//        targetPos.y = 0.002f;
-
-//        //����λ��
-//        Vector3 nowPos = transform.position;
-//        nowPos.y = 0.002f;
-//        Vector3 direction = targetPos - nowPos;
-
-//        //��Ч
-//        GameObject effectPrefabs = Resources.Load<GameObject>($"Բ��Ԥ��");
-//        GameObject effectObj = GameObject.Instantiate(effectPrefabs, targetPos, Quaternion.identity);
-//        effectObj.transform.localScale = Vector3.one * radius;
-//        effectObj.GetComponent<DelayDestory>().InitAndStart(time);
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "当前项目缺少圆形预警资源和播放接口");
+    }
+}

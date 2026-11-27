@@ -1,53 +1,31 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "ºìµã.png")]
-//[TaskCategory("RoleAI/Record")]
-//[TaskDescription("³¢ÊÔ¼ÇÂ¼¹¥»÷µã,ĞèÒª±£Ö¤ÓĞ¹¥»÷Ä¿±ê")]
-///// <summary>
-///// ¼ÇÂ¼¹¥»÷µã
-///// </summary>
-//public class RecordAtkPoint : Conditional
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ¹¥»÷µãÎ»ÖÃ
-//    /// </summary>
-//    public EffectPointType attackPointType = EffectPointType.Body;
+/// <summary>
+/// è®°å½•å½“å‰ç›®æ ‡çš„æŒ‡å®šæ¨¡å‹æŒ‚ç‚¹
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "çº¢ç‚¹.png")]
+[TaskCategory("RoleAI/Record")]
+[TaskDescription("è®°å½•å½“å‰ç›®æ ‡çš„æŒ‡å®šæ¨¡å‹æŒ‚ç‚¹")]
+public class RecordAtkPoint : Conditional
+{
+    public ModelPointType attackPointType = ModelPointType.Body; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override void OnStart()
-//    {
-
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (roleBase.GetTarget())
-//        {
-//            roleBase.atkPoint = roleBase.GetTarget().roleModelInfo.GetEffectPoint(attackPointType).position;
-//        }
-//        else
-//        {
-//            roleBase.atkPoint = roleBase.transform.position;
-//            Debuger.ToError("Ñ¡µãÊ§°Ü");
-//        }
-//        return TaskStatus.Success;
-//    }
-
-//    public override void OnEnd()
-//    {
-
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        if (role == null) return TaskStatus.Failure;
+        var record = BehaviorSetting.Record(role);
+        record.Attack = null;
+        var target = role.Target != null ? role.Target.GetComponentInParent<RoleBase>() : null;
+        var point = target != null && target.ModelInfo != null ? target.ModelInfo.GetEffectPoint(attackPointType) : null;
+        if (point == null) return TaskStatus.Failure;
+        record.Attack = point.position;
+        return TaskStatus.Success;
+    }
+}

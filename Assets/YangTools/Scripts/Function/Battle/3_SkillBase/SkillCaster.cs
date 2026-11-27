@@ -46,6 +46,7 @@ public class SkillCaster : MonoBehaviour
     private SkillCastSession activeSession;
     // 为每次施法分配递增会话标识
     private int castSessionSeed;
+    private SkillTimelinePlayer timelinePlayer; // 当前施法使用的时间线执行器
 
     public bool IsCasting => activeSession != null && !activeSession.IsCompleted;
 
@@ -236,6 +237,16 @@ public class SkillCaster : MonoBehaviour
             return false;
         }
 
+        if (request.Timeline != null)
+        {
+            SkillTimelinePlayer player = GetComponent<SkillTimelinePlayer>();
+            if (player == null || !player.CanPlay(request.Timeline))
+            {
+                OnCastFailed?.Invoke(request.Skill, SkillCastFailReason.InvalidTimeline);
+                return false;
+            }
+        }
+
         if (request.Skill.Cost != null && resource != null)
         {
             resource.TryCost(request.Skill.Cost.Resource);
@@ -245,8 +256,9 @@ public class SkillCaster : MonoBehaviour
         activeSession = session;
         OnCastSessionStarted?.Invoke(session);
 
+        if (session.IsCompleted || activeSession != session) return true;
         Coroutine startedRoutine = StartCoroutine(CastRoutine(request, session));
-        castingRoutine = session.IsCompleted ? null : startedRoutine;
+        if (activeSession == session && !session.IsCompleted) castingRoutine = startedRoutine;
         return true;
     }
 
@@ -262,6 +274,14 @@ public class SkillCaster : MonoBehaviour
         }
 
         return Mathf.Max(0f, endTime - Time.time);
+    }
+
+    /// <summary>
+    /// 在明确重置战斗状态时清除该施法器的技能冷却
+    /// </summary>
+    public void ResetCooldowns()
+    {
+        cooldownEndTimes.Clear();
     }
 
     /// <summary>
@@ -320,6 +340,29 @@ public class SkillCaster : MonoBehaviour
     {
         SkillDefinition skill = request.Skill;
         OnCastStarted?.Invoke(skill);
+        if (session.IsCompleted || activeSession != session) yield break;
+
+        if (request.Timeline != null)
+        {
+            timelinePlayer = GetComponent<SkillTimelinePlayer>();
+            if (timelinePlayer == null || !timelinePlayer.Begin(request.Timeline, CreateContext(request, session)))
+            {
+                session.WasInterrupted = true;
+                session.IsCompleted = true;
+                if (activeSession == session) activeSession = null;
+                OnCastSessionCompleted?.Invoke(session);
+                yield break;
+            }
+            yield return new WaitUntil(() => session.IsCompleted || !timelinePlayer.IsPlaying);
+            if (session.IsCompleted) yield break;
+            if (request.SourceWeapon == null) StartCooldown(skill, request.CooldownOverride);
+            session.IsCompleted = true;
+            if (activeSession == session) activeSession = null;
+            castingRoutine = null;
+            OnCastCompleted?.Invoke(skill);
+            OnCastSessionCompleted?.Invoke(session);
+            yield break;
+        }
 
         if (skill.ExecuteOnAnimationEvent)
         {
@@ -348,14 +391,14 @@ public class SkillCaster : MonoBehaviour
         {
             StartCooldown(skill);
         }
-        OnCastCompleted?.Invoke(skill);
         session.IsCompleted = true;
         if (activeSession == session)
         {
             activeSession = null;
         }
-        OnCastSessionCompleted?.Invoke(session);
         castingRoutine = null;
+        OnCastCompleted?.Invoke(skill);
+        OnCastSessionCompleted?.Invoke(session);
     }
 
     /// <summary>
@@ -365,18 +408,7 @@ public class SkillCaster : MonoBehaviour
     /// <param name="session">本次施法的运行时会话</param>
     private void ExecuteSkill(SkillCastRequest request, SkillCastSession session)
     {
-        var context = new SkillContext
-        {
-            Caster = this,
-            Skill = request.Skill,
-            Target = request.Target,
-            Point = request.Point,
-            Direction = SafeDirection(request.Direction),
-            OriginPoint = GetOriginPosition(),
-            SourceWeapon = request.SourceWeapon,
-            SourceInstanceId = request.SourceInstanceId,
-            Session = session
-        };
+        var context = CreateContext(request, session);
 
         for (int i = 0; i < request.Skill.Effects.Count; i++)
         {
@@ -389,14 +421,34 @@ public class SkillCaster : MonoBehaviour
     }
 
     /// <summary>
+    /// 为普通技能和时间线技能构建相同的独立施法上下文
+    /// </summary>
+    private SkillContext CreateContext(SkillCastRequest request, SkillCastSession session)
+    {
+        return new SkillContext
+        {
+            Caster = this,
+            Skill = request.Skill,
+            Target = request.Target,
+            Point = request.Point,
+            Direction = SafeDirection(request.Direction),
+            OriginPoint = GetOriginPosition(),
+            SourceWeapon = request.SourceWeapon,
+            SourceInstanceId = request.SourceInstanceId,
+            Session = session,
+            TableDamage = request.TableDamage
+        };
+    }
+
+    /// <summary>
     /// 按当前游戏时间记录技能冷却结束时刻
     /// </summary>
     /// <param name="skill">本次操作的技能定义</param>
-    private void StartCooldown(SkillDefinition skill)
+    private void StartCooldown(SkillDefinition skill, float? duration = null)
     {
-        if (skill != null && skill.Cooldown > 0f)
+        if (skill != null && (duration ?? skill.Cooldown) > 0f)
         {
-            cooldownEndTimes[skill] = Time.time + skill.Cooldown;
+            cooldownEndTimes[skill] = Time.time + (duration ?? skill.Cooldown);
         }
     }
 
@@ -450,12 +502,12 @@ public class SkillCaster : MonoBehaviour
 
         if (skill.TargetType == SkillTargetType.Unit)
         {
-            return request.Target != null && IsWithinRange(request.Target.transform.position, skill.Range);
+            return request.Target != null && IsWithinRange(request.Target.transform.position, request.RangeOverride ?? skill.Range);
         }
 
         if (skill.TargetType == SkillTargetType.Point)
         {
-            return IsWithinRange(request.Point, skill.Range);
+            return IsWithinRange(request.Point, request.RangeOverride ?? skill.Range);
         }
 
         return request.Direction.sqrMagnitude > 0f;
@@ -491,20 +543,31 @@ public class SkillCaster : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        CancelCast();
+    }
+
+    /// <summary>
+    /// 中止当前施法并通知等待该会话的调用方
+    /// </summary>
+    public void CancelCast()
+    {
+        SkillCastSession session = activeSession;
+        if (session == null || session.IsCompleted) return;
         if (castingRoutine != null)
         {
             StopCoroutine(castingRoutine);
         }
 
-        if (activeSession != null)
-        {
-            activeSession.IsCompleted = true;
-        }
+        session.WasInterrupted = true;
+        session.IsCompleted = true;
 
         castingRoutine = null;
         activeSession = null;
         pendingAnimationEventRequest = null;
         receivedAnimationEvent = false;
+        if (timelinePlayer != null) timelinePlayer.Stop();
+        timelinePlayer = null;
+        OnCastSessionCompleted?.Invoke(session);
     }
 
 #if UNITY_EDITOR

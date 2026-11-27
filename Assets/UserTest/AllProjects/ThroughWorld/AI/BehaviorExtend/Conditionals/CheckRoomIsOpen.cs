@@ -1,30 +1,21 @@
-//using UnityEngine;
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
-//[TaskCategory("RoleAI/CheckCondition")]
-///// <summary>
-///// ��鷿���Ƿ���
-///// </summary>
-//public class CheckRoomIsOpen : Conditional
-//{
-//    /// <summary>
-//    /// ������ɫ�ű�
-//    /// </summary>
-//    private RoleBase roleBase;
-
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-
-//    public override TaskStatus OnUpdate()
-//    {
-//        //if (LayerMgr.Ins.MonsterExistCurRoom((MonsterBase)roleBase))
-//        //{
-//        //    return TaskStatus.Success;
-//        //}
-//        return TaskStatus.Failure;
-//    }
-//}
+/// <summary>
+/// 当前项目缺少旧房间开启状态接口
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "IsOkIcon.png")]
+[TaskCategory("RoleAI/CheckCondition")]
+[TaskDescription("当前项目缺少旧房间开启状态接口")]
+public class CheckRoomIsOpen : Conditional
+{
+    /// <summary>
+    /// 执行当前节点并返回处理结果
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        return BehaviorSetting.Unsupported(this, "当前项目缺少旧房间开启状态接口");
+    }
+}

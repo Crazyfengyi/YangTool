@@ -1,7 +1,7 @@
 ﻿namespace BehaviorDesigner.Runtime.Tasks
 {
     [TaskDescription("The selector evaluator is a selector task which reevaluates its children every tick. It will run the lowest priority child which returns a task status of running. " +
-                     "This is done each tick. If a higher priority child is running and the next frame a lower priority child wants to run it will interrupt the higher priority child. " +
+                     "This is done each tick. If a lower priority child is running and the next frame a higher priority child wants to run it will interrupt the higher priority child. " +
                      "The selector evaluator will return success as soon as the first child returns success otherwise it will keep trying higher priority children. This task mimics " +
                      "the conditional abort functionality except the child tasks don't always have to be conditional tasks.")]
     [TaskIcon("{SkinColor}SelectorEvaluatorIcon.png")]

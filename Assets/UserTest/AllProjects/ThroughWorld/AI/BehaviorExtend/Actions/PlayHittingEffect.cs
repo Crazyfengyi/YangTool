@@ -1,71 +1,28 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "effect.png")]
-//[TaskCategory("RoleAI/Motion")]
-//[TaskDescription("ÔÚ±»»÷Ä¿±êÉíÉÏ²¥·ÅÌØĞ§")]
-///// <summary>
-///// ²¥·ÅÌØĞ§
-///// </summary>
-//public class PlayHittingEffect : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ×ÊÔ´Ãû×Ö
-//    /// </summary>
-//    public string name;
-//    /// <summary>
-//    /// ÔÚÄ¿±êÉíÉÏ²¥
-//    /// </summary>
-//    public bool isFollow;
-//    /// <summary>
-//    /// Î»ÖÃ
-//    /// </summary>
-//    public EffectPointType effectPointType = EffectPointType.Foot;
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
-//    public override TaskStatus OnUpdate()
-//    {
-//        if (name == null || name == "")
-//        {
-//            Debuger.ToError($"½ÇÉ«:{roleBase.transform.name}µÄÌØĞ§Îª¿Õ");
-//            return TaskStatus.Success;
-//        }
+/// <summary>
+/// åœ¨å‰ç½®èŠ‚ç‚¹ç¡®è®¤çš„å‘½ä¸­ç›®æ ‡ä¸Šæ’­æ”¾ç‰¹æ•ˆ
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "effect.png")]
+[TaskCategory("RoleAI/Motion")]
+[TaskDescription("åœ¨é…ç½®çš„å‘½ä¸­ç›®æ ‡ä¸Šæ’­æ”¾ç‰¹æ•ˆ")]
+public class PlayHittingEffect : Action
+{
+    public string name; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public bool isFollow; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public ModelPointType effectPointType = ModelPointType.Foot; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public SharedGameObject hitTarget; // ç”±å‰ç½®å‘½ä¸­èŠ‚ç‚¹å†™å…¥çš„ç›®æ ‡
 
-//        //TODO:ÌØĞ§¹ÜÀí
-//        if (isFollow)
-//        {
-//            for (int i = 0; i < roleBase.beAttackedList.Count; i++)
-//            {
-//                if (roleBase.beAttackedList[i])
-//                {
-//                    roleBase.beAttackedList[i].PlayEffectAtSelf(name, effectPointType);
-//                }
-//            }
-//        }
-//        else
-//        {
-//            for (int i = 0; i < roleBase.beAttackedList.Count; i++)
-//            {
-//                if (roleBase.beAttackedList[i])
-//                {
-//                    roleBase.beAttackedList[i].PlayEffect(name, effectPointType);
-//                }
-//            }
-//        }
-
-//        roleBase.beAttackedList.Clear();
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var hit = hitTarget?.Value;
+        if (hit == null) return BehaviorSetting.Unsupported(this, "è¯·ç»‘å®šç”±å‰ç½®èŠ‚ç‚¹ç¡®è®¤çš„å‘½ä¸­ç›®æ ‡");
+        return BehaviorSetting.PlayRoleEffect(this, hit.GetComponentInParent<RoleBase>(), name, effectPointType, isFollow);
+    }
+}

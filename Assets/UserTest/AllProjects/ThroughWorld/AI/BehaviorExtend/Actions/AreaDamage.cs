@@ -1,74 +1,42 @@
-//using BehaviorDesigner.Runtime;
-//using BehaviorDesigner.Runtime.Tasks;
-//using DataStruct;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using YangToolDebuger;
+using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks;
+using DataStruct;
+using UnityEngine;
 
-//[TaskIcon(BehaviorSetting.path + "¹¥»÷.png")]
-//[TaskCategory("RoleAI/Atk")]
-//[TaskDescription("ĞèÒªÏÈ¼ÇÂ¼¹¥»÷µã")]
-///// <summary>
-///// ·¶Î§ÉËº¦
-///// </summary>
-//public class AreaDamage : Action
-//{
-//    /// <summary>
-//    /// ×ÔÉí½ÇÉ«½Å±¾
-//    /// </summary>
-//    private RoleBase roleBase;
-//    /// <summary>
-//    /// ·¶Î§ÀàĞÍ
-//    /// </summary>
-//    public HitCheckType areaDamageType;
-//    /// <summary>
-//    /// ·¶Î§(Ô²ĞÎ:°ë¾¶ ¾ØĞÎ:³¤ É¡ĞÎ:Ö±¾¶)
-//    /// </summary>
-//    public float rang = 10f;
-//    /// <summary>
-//    /// ½Ç¶È(ÉÈĞÎ:½Ç¶È)
-//    /// </summary>
-//    public float angle = 0f;
-//    /// <summary>
-//    /// Æ«ÒÆÁ¿
-//    /// </summary>
-//    public Vector3 OffsetVector;
-//    /// <summary>
-//    /// Ğı×ª
-//    /// </summary>
-//    public Vector3 Rotate;
-//    /// <summary>
-//    /// »÷ÖĞÌØĞ§
-//    /// </summary>
-//    public string hitEffectName;
-//    /// <summary>
-//    /// »÷ÖĞÉùÒô
-//    /// </summary>
-//    public string hitSoundName;
-//    public override void OnAwake()
-//    {
-//        roleBase = gameObject.GetComponent<RoleBase>();
-//    }
+/// <summary>
+/// ä»è®°å½•ç‚¹å‘èµ·å½“å‰æŠ€èƒ½çš„èŒƒå›´ä¼¤å®³æ£€æµ‹
+/// </summary>
+[TaskIcon(BehaviorSetting.path + "æ”»å‡».png")]
+[TaskCategory("RoleAI/Atk")]
+[TaskDescription("ä»è®°å½•ç‚¹å‘èµ·å½“å‰æŠ€èƒ½çš„èŒƒå›´ä¼¤å®³æ£€æµ‹")]
+public class AreaDamage : Action
+{
+    public HitCheckType areaDamageType; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float rang = 10f; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public float angle = 0f; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public Vector3 OffsetVector; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public Vector3 Rotate; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public string hitEffectName; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
+    public string hitSoundName; // ä¿ç•™åŸèŠ‚ç‚¹é…ç½®
 
-//    public override TaskStatus OnUpdate()
-//    {
-
-//        switch (areaDamageType)
-//        {
-//            case HitCheckType.Ô²ĞÎ:
-//                roleBase.CircleRangAtk(roleBase.recordPointList[0], rang, OffsetVector, Rotate, hitEffectName, hitSoundName);
-//                break;
-//            case HitCheckType.ÉÈĞÎ:
-//                roleBase.SectorRangAtk(roleBase.recordPointList[0], rang, angle, OffsetVector, Rotate, hitEffectName, hitSoundName);
-//                break;
-//            case HitCheckType.¾ØĞÎ:
-//                roleBase.RectRangAtk(roleBase.recordPointList[0], rang, angle, OffsetVector, Rotate, hitEffectName, hitSoundName);
-//                break;
-//            default:
-//                break;
-//        }
-
-//        return TaskStatus.Success;
-//    }
-//}
+    /// <summary>
+    /// æ‰§è¡Œå½“å‰èŠ‚ç‚¹å¹¶è¿”å›å¤„ç†ç»“æœ
+    /// </summary>
+    public override TaskStatus OnUpdate()
+    {
+        var role = GetComponent<RoleBase>();
+        var root = BehaviorSetting.Root(role);
+        if (root == null || role.SkillControl?.IsExecuting != true || !role.IsCanAtk() || !(rang > 0)) return TaskStatus.Failure;
+        var point = BehaviorSetting.Record(role).Position;
+        if (!point.HasValue) return TaskStatus.Failure;
+        if (areaDamageType != HitCheckType.åœ†å½¢ && areaDamageType != HitCheckType.çŸ©å½¢ && areaDamageType != HitCheckType.æ‰‡å½¢)
+            return TaskStatus.Failure;
+        if (Rotate != Vector3.zero || !string.IsNullOrWhiteSpace(hitEffectName) || !string.IsNullOrWhiteSpace(hitSoundName))
+            return BehaviorSetting.Unsupported(this, "å½“å‰ä¼¤å®³æ£€æµ‹å…¥å£ä¸æ”¯æŒç‹¬ç«‹æ—‹è½¬æˆ–å‘½ä¸­ç‰¹æ•ˆéŸ³æ•ˆé…ç½®");
+        var delta = point.Value - role.transform.position;
+        var config = new CheckConfig { checkType = areaDamageType, radius = rang, diameter = rang * 2,
+            Angle = angle, Long = rang, Width = angle > 0 ? angle : rang, Hight = rang,
+            offsetVector = OffsetVector + new Vector3(Vector3.Dot(root.right, delta), Vector3.Dot(root.up, delta), Vector3.Dot(root.forward, delta)) };
+        return BehaviorSetting.Result(role.DamageCheck(config));
+    }
+}

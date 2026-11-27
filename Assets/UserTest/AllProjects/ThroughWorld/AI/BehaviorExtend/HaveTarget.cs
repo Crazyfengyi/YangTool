@@ -1,24 +1,27 @@
-using UnityEngine;
-using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-[TaskDescription("����Ŀ��")]
+/// <summary>
+/// 判断角色是否持有目标
+/// </summary>
 [TaskCategory("RoleAI/Conditionals")]
-//[TaskIcon("{SkinColor}StartBehaviorTreeIcon.png")]
+[TaskDescription("检查角色当前目标")]
 public class HaveTarget : Conditional
 {
-    private RoleBase role;
-    public override void OnStart()
+    private RoleBase role; // 当前角色
+
+    /// <summary>
+    /// 缓存角色引用
+    /// </summary>
+    public override void OnAwake()
     {
         role = GetComponent<RoleBase>();
     }
+
+    /// <summary>
+    /// 角色及目标均有效时通过
+    /// </summary>
     public override TaskStatus OnUpdate()
     {
-        if (role && role.SkillControl != null)
-        {
-            return role.Target ? TaskStatus.Success : TaskStatus.Failure;
-        }
-
-        return TaskStatus.Failure;
+        return BehaviorSetting.Result(role != null && role.Target != null);
     }
 }
